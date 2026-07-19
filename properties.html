@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Properties for Sale & Rent in Nigeria | MoonLat</title>
+<meta name="description" content="Browse verified properties for sale and rent across Nigeria. Filter by location, price, type, and more.">
+<meta name="theme-color" content="#09063d">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="home.css">
+
+<link rel="stylesheet" href="credit.css">
+<style>
+/* ============================================
+   PROPERTIES PAGE - PREMIUM LISTING LAYOUT
+   ============================================ */
+
+/* Page Header (compact) */
+.page-header {
+    background: linear-gradient(135deg, #09063d 0%, #0a0638 100%);
+    padding: 100px 0 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(52, 101, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(23, 216, 194, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.breadcrumb a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+    color: #ffffff;
+}
+
+.breadcrumb .separator {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.breadcrumb .current {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+    letter-spacing: -0.8px;
+    margin-bottom: 10px;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+    max-width: 600px;
+}
+
+/* Main Layout */
+.properties-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 32px 0 60px;
+}
+
+@media (min-width: 1024px) {
+    .properties-layout {
+        grid-template-columns: 280px 1fr;
+        gap: 32px;
+    }
+}
+
+/* Filter Sidebar */
+.filter-sidebar {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(9, 6, 61, 0.06);
+    height: fit-content;
+    position: sticky;
+    top: 80px;
+}
+
+.filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #edf1f7;
+}
+
+.filter-header h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #09063d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-header h3 svg {
+    width: 20px;
+    height: 20px;
+    color: #3465f6;
+}
+
+.clear-filters {
+    font-size: 0.82rem;
+    color: #3465f6;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.clear-filters:hover {
+    color: #1e40af;
+}
+
+.filter-group {
+    margin-bottom: 24px;
+}
+
+.filter-group:last-child {
+    margin-bottom: 0;
+}
+
+.filter-group-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #09063d;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+}
+
+/* Search Input */
+.filter-search {
+    position: relative;
+}
+
+.filter-search svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: #71798b;
+    pointer-events: none;
+}
+
+.filter-search input {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px 0 42px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    color: #222;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.filter-search input:focus {
+    border-color: #3465f6;
+    box-shadow: 0 0 0 3px rgba(52, 101, 246, 0.1);
+    outline: none;
+}
+
+.filter-search input::placeholder {
+    color: #a3adbe;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 6px 0;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 4px;
+    cursor: pointer;
+    accent-color: #3465f6;
+    flex-shrink: 0;
+}
+
+.checkbox-item label {
+    font-size: 0.88rem;
+    color: #2f3545;
+    cursor: pointer;
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.checkbox-item label .count {
+    font-size: 0.75rem;
+    color: #8b93a5;
+    font-weight: 500;
+}
+
+/* Price Range */
+.price-range {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.price-input {
+    flex: 1;
+    position: relative;
+}
+
+.price-input span {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.82rem;
+    color: #71798b;
+    font-weight: 600;
+    pointer-events: none;
+}
+
+.price-input input {
+    width: 100%;
+    height: 42px;
+    padding: 0 10px 0 26px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    color: #222;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.price-input input:focus {
+    border-color: #3465f6;
+    box-shadow: 0 0 0 3px rgba(52, 101, 246, 0.1);
+    outline: none;
+}
+
+.price-separator {
+    color: #8b93a5;
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+
+/* Bedroom Buttons */
+.bed-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.bed-btn {
+    height: 40px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    color: #2f3545;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.bed-btn:hover {
+    border-color: #3465f6;
+    color: #3465f6;
+}
+
+.bed-btn.active {
+    background: #3465f6;
+    border-color: #3465f6;
+    color: #fff;
+}
+
+/* Apply Button (mobile) */
+.apply-filters-btn {
+    width: 100%;
+    height: 48px;
+    background: #09063d;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    display: none;
+}
+
+.apply-filters-btn:hover {
+    background: #12094f;
+}
+
+@media (max-width: 1023px) {
+    .apply-filters-btn {
+        display: block;
+    }
+}
+
+/* Mobile Filter Toggle */
+.filter-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 48px;
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: #09063d;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.filter-toggle-btn:hover {
+    border-color: #3465f6;
+    color: #3465f6;
+}
+
+.filter-toggle-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+@media (min-width: 1024px) {
+    .filter-toggle-btn {
+        display: none;
+    }
+    
+    .filter-sidebar {
+        display: block !important;
+    }
+}
+
+@media (max-width: 1023px) {
+    .filter-sidebar {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 9999;
+        border-radius: 0;
+        overflow-y: auto;
+        padding-bottom: 80px;
+    }
+    
+    .filter-sidebar.show {
+        display: block;
+    }
+    
+    .filter-sidebar-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: #f3f4f6;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+        color: #09063d;
+    }
+}
+
+@media (min-width: 1024px) {
+    .filter-sidebar-close {
+        display: none;
+    }
+}
+
+/* Results Area */
+.results-area {
+    min-width: 0;
+}
+
+.results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.results-count {
+    font-size: 0.95rem;
+    color: #2f3545;
+    font-weight: 500;
+}
+
+.results-count strong {
+    color: #09063d;
+    font-weight: 700;
+}
+
+.results-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort-select {
+    height: 40px;
+    padding: 0 36px 0 14px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 0.85rem;
+    color: #2f3545;
+    font-weight: 500;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371798b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    transition: all 0.3s ease;
+}
+
+.sort-select:focus {
+    border-color: #3465f6;
+    outline: none;
+}
+
+.view-toggle {
+    display: flex;
+    background: #f3f4f6;
+    border-radius: 8px;
+    padding: 3px;
+}
+
+.view-btn {
+    width: 36px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #71798b;
+    transition: all 0.25s ease;
+}
+
+.view-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.view-btn.active {
+    background: #fff;
+    color: #3465f6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Active Filters */
+.active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #eef7ff;
+    border: 1px solid #d1e3ff;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    color: #3465f6;
+    font-weight: 600;
+}
+
+.filter-chip button {
+    background: none;
+    border: none;
+    color: #3465f6;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+    margin-left: 2px;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.filter-chip button:hover {
+    opacity: 1;
+}
+
+/* Property Grid - 2 columns on mobile, 2 on tablet, 3 on desktop */
+.property-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+@media (min-width: 640px) {
+    .property-grid {
+        gap: 16px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .property-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .property-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+}
+
+/* Mobile 2-column compact card adjustments */
+@media (max-width: 639px) {
+    .property-grid .property-card {
+        font-size: 0.85rem;
+    }
+    
+    .property-grid .property-body {
+        padding: 10px;
+    }
+    
+    .property-grid .property-title {
+        font-size: 0.88rem;
+        line-height: 1.25;
+        margin-bottom: 6px;
+        /* Truncate to 2 lines */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .property-grid .property-location {
+        font-size: 0.75rem;
+        margin-bottom: 8px;
+        gap: 4px;
+    }
+    
+    .property-grid .property-location svg {
+        width: 13px;
+        height: 13px;
+    }
+    
+    .property-grid .property-features {
+        gap: 4px;
+        padding: 8px 0;
+    }
+    
+    .property-grid .feature svg {
+        width: 15px;
+        height: 15px;
+    }
+    
+    .property-grid .feature span {
+        font-size: 0.65rem;
+    }
+    
+    .property-grid .property-footer {
+        padding-top: 8px;
+    }
+    
+    .property-grid .price-label {
+        font-size: 0.6rem;
+        margin-bottom: 2px;
+    }
+    
+    .property-grid .price {
+        font-size: 1.1rem;
+        letter-spacing: -0.3px;
+    }
+    
+    .property-grid .price-period {
+        font-size: 0.68rem;
+    }
+    
+    .property-grid .property-badge {
+        font-size: 0.65rem;
+        padding: 4px 0;
+        width: 110px;
+        left: -40px;
+        top: 10px;
+    }
+    
+    .property-grid .property-save {
+        width: 30px;
+        height: 30px;
+        top: 8px;
+        right: 8px;
+        border-radius: 8px;
+    }
+    
+    .property-grid .property-save svg {
+        width: 13px;
+        height: 13px;
+    }
+    
+    .property-grid .property-count {
+        font-size: 0.65rem;
+        padding: 3px 6px;
+        bottom: 8px;
+        right: 8px;
+        border-radius: 6px;
+    }
+}
+
+
+
+/* Property Card (list view override) */
+.property-grid.list-view {
+    grid-template-columns: 1fr;
+}
+
+.property-grid.list-view .property-card {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    flex: none;
+    width: 100%;
+}
+
+.property-grid.list-view .property-image {
+    aspect-ratio: 4/3;
+}
+
+@media (max-width: 639px) {
+    .property-grid.list-view .property-card {
+        grid-template-columns: 120px 1fr;
+        gap: 10px;
+    }
+    
+    .property-grid.list-view .property-body {
+        padding: 8px;
+    }
+    
+    .property-grid.list-view .property-title {
+        font-size: 0.82rem;
+        -webkit-line-clamp: 2;
+    }
+    
+    .property-grid.list-view .property-features {
+        display: none;
+    }
+    
+    .property-grid.list-view .price {
+        font-size: 1rem;
+    }
+}
+
+
+
+/* Pagination */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #edf1f7;
+}
+
+.page-btn {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    color: #2f3545;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-btn:hover:not(:disabled) {
+    border-color: #3465f6;
+    color: #3465f6;
+}
+
+.page-btn.active {
+    background: #3465f6;
+    border-color: #3465f6;
+    color: #fff;
+}
+
+.page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.page-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Empty State */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background: #f8f9fc;
+    border-radius: 16px;
+    border: 1px dashed #d1d5db;
+}
+
+.empty-state svg {
+    width: 64px;
+    height: 64px;
+    color: #d1d5db;
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    font-size: 1.25rem;
+    color: #09063d;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.empty-state p {
+    font-size: 0.92rem;
+    color: #6b7280;
+    max-width: 400px;
+    margin: 0 auto 20px;
+    line-height: 1.5;
+}
+
+.empty-state button {
+    padding: 12px 24px;
+    background: #3465f6;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.empty-state button:hover {
+    background: #2952d3;
+    transform: translateY(-2px);
+}
+
+/* Loading skeleton for grid - matches property grid */
+.skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+@media (min-width: 640px) {
+    .skeleton-grid {
+        gap: 16px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .skeleton-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .skeleton-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+}
+
+
+
+.skeleton-card-v {
+    height: 360px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 16px;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Mobile adjustments */
+@media (max-width: 639px) {
+    .page-header {
+        padding: 90px 0 32px;
+    }
+    
+    .page-title {
+        font-size: 1.6rem;
+    }
+    
+    .page-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .results-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .results-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .sort-select {
+        flex: 1;
+    }
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+<!-- DRAWER (same as homepage) -->
+<div class="drawer-overlay"></div>
+<aside class="app-drawer">
+    <div class="drawer-header">
+        <button class="drawer-close" aria-label="Close Menu">✕</button>
+        <div class="drawer-title">
+            <h2>Menu</h2>
+            <p>Discover verified homes, apartments, shortlets and commercial properties across Nigeria.</p>
+        </div>
+    </div>
+
+    <div class="drawer-card">
+        <a href="dashboard/sign-in.html" class="drawer-item drawer-primary" id="drawerAuthLink">
+            <div class="drawer-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-7 8a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div>
+                <strong id="drawerAuthTitle">Login / Sign Up</strong>
+                <span id="drawerAuthSubtitle">Access your saved properties</span>
+            </div>
+            <span class="drawer-arrow">›</span>
+        </a>
+    </div>
+
+    <div class="drawer-section">
+        <h4>Browse Properties</h4>
+        <a href="properties.html" class="drawer-link">
+            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M5 3h14v18H5V3Zm4 4h2m-2 4h2m4-4h2m-2 4h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>All Properties</span>
+            <span>›</span>
+        </a>
+        <a href="properties.html?type=Apartment" class="drawer-link">
+            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M3 11L12 4l9 7v10H3V11Z" stroke="currentColor" stroke-width="2"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="2"/></svg>Apartments</span>
+            <span>›</span>
+        </a>
+        <a href="properties.html?type=House" class="drawer-link">
+            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M3 11L12 4l9 7v10H3V11Z" stroke="currentColor" stroke-width="2"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="2"/></svg>Houses</span>
+            <span>›</span>
+        </a>
+        <a href="properties.html?type=Shortlet" class="drawer-link">
+            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M4 10h16M6 6h12a2 2 0 0 1 2 2v8H4V8a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2"/><path d="M7 16v2m10-2v2" stroke="currentColor" stroke-width="2"/></svg>Shortlets</span>
+            <span>›</span>
+        </a>
+        <a href="properties.html?type=Commercial" class="drawer-link">
+            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M4 21V5h10v16M14 9h6v12" stroke="currentColor" stroke-width="2"/></svg>Commercial</span>
+            <span>›</span>
+        </a>
+    </div>
+
+    <div class="drawer-section">
+        <h4>Quick Access</h4>
+        <a href="#" class="drawer-link" onclick="requireAuth(event, 'saved properties')">
+            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M6 3h12v18l-6-4-6 4V3Z" stroke="currentColor" stroke-width="2"/></svg>Saved Properties</span>
+            <span>›</span>
+        </a>
+        <a href="#" class="drawer-link" onclick="requireAuth(event, 'property alerts')">
+            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3a5 5 0 0 1 5 5v4l2 3H5l2-3V8a5 5 0 0 1 5-5Z" stroke="currentColor" stroke-width="2"/><path d="M10 19a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="2"/></svg>Property Alerts</span>
+            <span>›</span>
+        </a>
+    </div>
+
+    <div class="drawer-section">
+        <h4>Follow MoonLat</h4>
+        <div class="drawer-socials">
+            <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7h2.3l.4-3h-2.7V9.2c0-.9.2-1.5 1.5-1.5H16V5c-.5-.1-1.4-.2-2.3-.2-2.4 0-3.9 1.4-3.9 4V11H7v3h2.8v7h3.7z"/></svg></a>
+            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+            <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.3L6.7 21H3.6l7.3-8.4L1 3h6.2l4.4 5.8L18.9 3z"/></svg></a>
+        </div>
+    </div>
+
+    <div class="drawer-footer">
+        <div><strong>MoonLat</strong><br><small>Version 2.0.0</small></div>
+        <div style="text-align:right"><small>© 2026</small><br><small>All Rights Reserved</small></div>
+    </div>
+</aside>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="container header__container">
+        <a href="index.html" class="logo">
+            <img src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png" alt="MoonLat Logo">
+        </a>
+        <button class="menu-btn" aria-label="Open navigation">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</header>
+
+<main>
+<!-- PAGE HEADER -->
+<section class="page-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">Home</a>
+            <span class="separator">/</span>
+            <span class="current">Properties</span>
+        </div>
+        <h1 class="page-title">Properties for Sale & Rent in Nigeria</h1>
+        <p class="page-subtitle">Browse verified apartments, houses, shortlets and commercial spaces from trusted property owners and agents.</p>
+    </div>
+</section>
+
+<!-- MAIN LAYOUT -->
+<section class="properties-layout">
+    <div class="container" style="display:grid;grid-template-columns:1fr;gap:24px;">
+        
+        <!-- Mobile Filter Toggle -->
+        <button class="filter-toggle-btn" id="filterToggleBtn">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 6h18M6 12h12M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Filter Properties</span>
+        </button>
+
+        <div style="display:grid;gap:24px;" class="layout-grid">
+            
+            <!-- FILTER SIDEBAR -->
+            <aside class="filter-sidebar" id="filterSidebar">
+                <div class="filter-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M3 6h18M6 12h12M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Filters
+                    </h3>
+                    <div style="display:flex;gap:10px;align-items:center;">
+                        <button class="clear-filters" id="clearFilters">Clear All</button>
+                        <button class="filter-sidebar-close" id="filterCloseBtn">✕</button>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="filter-group">
+                    <div class="filter-group-title">Location</div>
+                    <div class="filter-search">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M12 21s7-5 7-11a7 7 0 1 0-14 0c0 6 7 11 7 11z" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <input type="text" id="filterLocation" placeholder="City, State or Area">
+                    </div>
+                </div>
+
+                <!-- Property Type -->
+                <div class="filter-group">
+                    <div class="filter-group-title">Property Type</div>
+                    <div class="checkbox-group" id="typeFilters">
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Apartment">
+                            <label>Apartment <span class="count" data-type="Apartment"></span></label>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="House">
+                            <label>House <span class="count" data-type="House"></span></label>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Villa">
+                            <label>Villa <span class="count" data-type="Villa"></span></label>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Townhouse">
+                            <label>Townhouse <span class="count" data-type="Townhouse"></span></label>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Shortlet">
+                            <label>Shortlet <span class="count" data-type="Shortlet"></span></label>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Commercial">
+                            <label>Commercial <span class="count" data-type="Commercial"></span></label>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Office">
+                            <label>Office <span class="count" data-type="Office"></span></label>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Land">
+                            <label>Land <span class="count" data-type="Land"></span></label>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Price Range -->
+                <div class="filter-group">
+                    <div class="filter-group-title">Price Range (₦)</div>
+                    <div class="price-range">
+                        <div class="price-input">
+                            <span>₦</span>
+                            <input type="number" id="priceMin" placeholder="Min">
+                        </div>
+                        <span class="price-separator">—</span>
+                        <div class="price-input">
+                            <span>₦</span>
+                            <input type="number" id="priceMax" placeholder="Max">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bedrooms -->
+                <div class="filter-group">
+                    <div class="filter-group-title">Bedrooms</div>
+                    <div class="bed-buttons" id="bedButtons">
+                        <button class="bed-btn" data-beds="any">Any</button>
+                        <button class="bed-btn" data-beds="1">1</button>
+                        <button class="bed-btn" data-beds="2">2</button>
+                        <button class="bed-btn" data-beds="3">3</button>
+                        <button class="bed-btn" data-beds="4">4+</button>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="filter-group">
+                    <div class="filter-group-title">Status</div>
+                    <div class="checkbox-group" id="statusFilters">
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Active">
+                            <label>For Sale</label>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Rented">
+                            <label>For Rent</label>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Shortlet">
+                            <label>Shortlet</label>
+                        </label>
+                    </div>
+                </div>
+
+                <button class="apply-filters-btn" id="applyFiltersBtn">Apply Filters</button>
+            </aside>
+
+            <!-- RESULTS AREA -->
+            <div class="results-area">
+                <!-- Results Header -->
+                <div class="results-header">
+                    <div class="results-count">
+                        Showing <strong id="resultCount">0</strong> properties
+                    </div>
+                    <div class="results-controls">
+                        <select class="sort-select" id="sortSelect">
+                            <option value="newest">Newest First</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="popular">Most Popular</option>
+                        </select>
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid" aria-label="Grid view">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+                                    <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+                                    <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+                                    <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                            </button>
+                            <button class="view-btn" data-view="list" aria-label="List view">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Filters -->
+                <div class="active-filters" id="activeFilters"></div>
+
+                <!-- Property Grid -->
+                <div class="property-grid" id="propertyGrid">
+                    <!-- Skeleton loaders -->
+                    <div class="skeleton-card-v"></div>
+                    <div class="skeleton-card-v"></div>
+                    <div class="skeleton-card-v"></div>
+                    <div class="skeleton-card-v"></div>
+                    <div class="skeleton-card-v"></div>
+                    <div class="skeleton-card-v"></div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </div>
+    </div>
+</section>
+</main>
+
+<!-- FOOTER (same as homepage) -->
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-top">
+            <img src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png" alt="MoonLat Logo" class="footer-logo">
+            <p class="footer-text">Join thousands of Nigerians discovering verified homes, apartments, shortlets and commercial properties.</p>
+            <form class="footer-newsletter" id="newsletterForm">
+                <input type="email" id="newsletterEmail" placeholder="Enter your email address" required>
+                <button type="submit" id="newsletterBtn">Subscribe</button>
+            </form>
+            <div class="footer-socials">
+                <a href="#" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none"><path d="M20 12A8 8 0 1 0 5.1 16.1L4 20l4-1.1A8 8 0 1 0 20 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.2L6.7 21H3.6l7.3-8.3L1 3h6.2l4.4 5.8L18.9 3Z"/></svg></a>
+                <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7h2.3l.4-3h-2.7V9.1c0-.9.2-1.5 1.5-1.5H16V5c-.5-.1-1.4-.2-2.3-.2-2.3 0-3.9 1.4-3.9 4V11H7v3h2.8v7h3.7Z"/></svg></a>
+                <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/></svg></a>
+            </div>
+        </div>
+        <div class="footer-links">
+            <div class="footer-column">
+                <h4>Properties</h4>
+                <a href="properties.html?type=Apartment">Apartments</a>
+                <a href="properties.html?type=House">Houses</a>
+                <a href="properties.html?type=Shortlet">Shortlets</a>
+                <a href="properties.html?type=Commercial">Commercial</a>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <a href="#">About Us</a>
+                <a href="#">Advertise</a>
+                <a href="#">Partners</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <a href="#">Help Center</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+               <div class="footer-divider"></div>
+        <div class="footer-bottom">
+            <div class="footer-bottom-links">
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+                <a href="#">Cookies</a>
+                <a href="#">Sitemap</a>
+            </div>
+            <p>© 2026 MoonLat. All rights reserved.</p>
+        </div>
+        
+        <!-- FOOTER CREDIT - KAALI NG -->
+        <div class="footer-credit">
+            <div class="credit-content">
+                <span class="credit-label">Built by</span>
+                <a href="kaali.space" class="credit-logo" title="KAALI NG - Crafting Digital Excellence">
+                    <span class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L2 7v10l10 5 10-5V7L12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                            <path d="M12 22V12M2 7l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                            <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                        </svg>
+                    </span>
+                    <span class="logo-text">
+                        <span class="logo-kaali">KAALI</span>
+                        <span class="logo-ng">NG</span>
+                    </span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+    <div class="toast-icon"><i class="fas fa-check"></i></div>
+    <div class="toast-content">
+        <div class="toast-title" id="toastTitle">Success</div>
+        <div class="toast-message" id="toastMessage">Action completed</div>
+    </div>
+</div>
+
+<style>
+/* Layout grid for properties page */
+@media (min-width: 1024px) {
+    .layout-grid {
+        grid-template-columns: 280px 1fr !important;
+        gap: 32px !important;
+    }
+}
+</style>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { getFirestore, collection, query, where, limit, onSnapshot, doc, getDoc, updateDoc, arrayUnion, arrayRemove, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+    authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+    projectId: "moonlat-estate-dashboard",
+    storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+    messagingSenderId: "289878951289",
+    appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// =================== STATE ===================
+let currentUser = null;
+let allProperties = [];
+let filteredProperties = [];
+let savedPropertyIds = [];
+let currentPage = 1;
+const itemsPerPage = 12;
+
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop';
+
+// Filter state
+let filters = {
+    location: '',
+    types: [],
+    priceMin: null,
+    priceMax: null,
+    beds: 'any',
+    statuses: [],
+    sort: 'newest',
+    view: 'grid'
+};
+
+// =================== URL PARAMS ===================
+function loadFiltersFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    
+    if (params.get('location')) {
+        filters.location = params.get('location');
+        document.getElementById('filterLocation').value = filters.location;
+    }
+    if (params.get('type')) {
+        filters.types = params.get('type').split(',');
+        filters.types.forEach(type => {
+            const checkbox = document.querySelector(`#typeFilters input[value="${type}"]`);
+            if (checkbox) checkbox.checked = true;
+        });
+    }
+    if (params.get('minPrice')) {
+        filters.priceMin = parseInt(params.get('minPrice'));
+        document.getElementById('priceMin').value = filters.priceMin;
+    }
+    if (params.get('maxPrice')) {
+        filters.priceMax = parseInt(params.get('maxPrice'));
+        document.getElementById('priceMax').value = filters.priceMax;
+    }
+    if (params.get('beds')) {
+        filters.beds = params.get('beds');
+        document.querySelectorAll('.bed-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.beds === filters.beds);
+        });
+    }
+    if (params.get('sort')) {
+        filters.sort = params.get('sort');
+        document.getElementById('sortSelect').value = filters.sort;
+    }
+}
+
+function updateURL() {
+    const params = new URLSearchParams();
+    
+    if (filters.location) params.set('location', filters.location);
+    if (filters.types.length) params.set('type', filters.types.join(','));
+    if (filters.priceMin) params.set('minPrice', filters.priceMin);
+    if (filters.priceMax) params.set('maxPrice', filters.priceMax);
+    if (filters.beds !== 'any') params.set('beds', filters.beds);
+    if (filters.sort !== 'newest') params.set('sort', filters.sort);
+    
+    const newURL = params.toString() 
+        ? `${window.location.pathname}?${params.toString()}`
+        : window.location.pathname;
+    
+    window.history.replaceState({}, '', newURL);
+}
+
+// =================== AUTH ===================
+onAuthStateChanged(auth, async (user) => {
+    currentUser = user;
+    if (user) {
+        try {
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            if (userDoc.exists()) {
+                savedPropertyIds = userDoc.data().savedPropertyIds || [];
+            }
+        } catch (err) {
+            console.error('Error loading user data:', err);
+        }
+    }
+    updateAuthUI();
+});
+
+function updateAuthUI() {
+    const link = document.getElementById('drawerAuthLink');
+    const title = document.getElementById('drawerAuthTitle');
+    const subtitle = document.getElementById('drawerAuthSubtitle');
+    
+    if (currentUser) {
+        const name = currentUser.displayName || currentUser.email?.split('@')[0] || 'Dashboard';
+        title.textContent = name;
+        subtitle.textContent = 'Go to your dashboard';
+        link.href = 'dashboard/dashboard.html';
+    } else {
+        title.textContent = 'Login / Sign Up';
+        subtitle.textContent = 'Access your saved properties';
+        link.href = 'dashboard/sign-in.html';
+    }
+}
+
+// =================== DATA LOADING ===================
+const allQuery = query(
+    collection(db, 'properties'),
+    where('status', 'in', ['Active', 'Rented']),
+    limit(200)
+);
+
+onSnapshot(allQuery, (snapshot) => {
+    allProperties = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    allProperties.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    
+    updateTypeCounts();
+    applyFilters();
+}, (err) => {
+    console.error('Properties query error:', err);
+    document.getElementById('propertyGrid').innerHTML = `
+        <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <h3>Unable to load properties</h3>
+            <p>Please check your connection and try again.</p>
+            <button onclick="location.reload()">Retry</button>
+        </div>
+    `;
+});
+
+function updateTypeCounts() {
+    const counts = {};
+    allProperties.forEach(p => {
+        counts[p.type] = (counts[p.type] || 0) + 1;
+    });
+    
+    document.querySelectorAll('[data-type]').forEach(el => {
+        const type = el.dataset.type;
+        el.textContent = counts[type] ? `(${counts[type]})` : '';
+    });
+}
+
+// =================== FILTERING ===================
+function applyFilters() {
+    filteredProperties = [...allProperties];
+    
+    // Location filter
+    if (filters.location) {
+        const loc = filters.location.toLowerCase();
+        filteredProperties = filteredProperties.filter(p => 
+            (p.location && p.location.toLowerCase().includes(loc)) ||
+            (p.title && p.title.toLowerCase().includes(loc))
+        );
+    }
+    
+    // Type filter
+    if (filters.types.length > 0) {
+        filteredProperties = filteredProperties.filter(p => 
+            filters.types.includes(p.type)
+        );
+    }
+    
+    // Price filter
+    if (filters.priceMin !== null) {
+        filteredProperties = filteredProperties.filter(p => p.price >= filters.priceMin);
+    }
+    if (filters.priceMax !== null) {
+        filteredProperties = filteredProperties.filter(p => p.price <= filters.priceMax);
+    }
+    
+    // Bedrooms filter
+    if (filters.beds !== 'any') {
+        const beds = parseInt(filters.beds);
+        if (beds === 4) {
+            filteredProperties = filteredProperties.filter(p => (p.beds || 0) >= 4);
+        } else {
+            filteredProperties = filteredProperties.filter(p => (p.beds || 0) === beds);
+        }
+    }
+    
+    // Sort
+    switch (filters.sort) {
+        case 'price-low':
+            filteredProperties.sort((a, b) => (a.price || 0) - (b.price || 0));
+            break;
+        case 'price-high':
+            filteredProperties.sort((a, b) => (b.price || 0) - (a.price || 0));
+            break;
+        case 'newest':
+            filteredProperties.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            break;
+        case 'popular':
+            filteredProperties.sort((a, b) => (b.viewings || 0) - (a.viewings || 0));
+            break;
+    }
+    
+    currentPage = 1;
+    updateURL();
+    renderActiveFilters();
+    renderProperties();
+    renderPagination();
+}
+
+// =================== RENDERING ===================
+function formatPrice(price) {
+    if (!price || price === 0) return 'Contact for price';
+    if (price >= 1000000) {
+        const m = price / 1000000;
+        return '₦' + (m % 1 === 0 ? m.toFixed(0) : m.toFixed(1)) + 'M';
+    }
+    if (price >= 1000) {
+        const k = price / 1000;
+        return '₦' + k.toFixed(0) + 'K';
+    }
+    return '₦' + price.toLocaleString();
+}
+
+function getBadge(property) {
+    if (property.type === 'Shortlet') return 'Shortlet';
+    if (property.type === 'Office' || property.type === 'Commercial') return 'For Lease';
+    if (property.status === 'Rented') return 'For Rent';
+    return 'For Sale';
+}
+
+function getPeriod(property) {
+    if (property.type === 'Shortlet') return '/ Night';
+    if (property.status === 'Rented' || property.type === 'Office' || property.type === 'Commercial') return '/ Year';
+    return '';
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function renderPropertyCard(p) {
+    const badge = getBadge(p);
+    const price = formatPrice(p.price);
+    const period = getPeriod(p);
+    const isSaved = savedPropertyIds.includes(p.id);
+    const image = p.image || DEFAULT_IMAGE;
+    const photoCount = (p.photos && p.photos.length) || p.viewings || 5;
+
+    return `
+        <article class="property-card" data-id="${p.id}" onclick="viewProperty('${p.id}')">
+            <div class="property-image">
+                <img src="${escapeHtml(image)}" alt="${escapeHtml(p.title)}" onerror="this.src='${DEFAULT_IMAGE}'" loading="lazy">
+                <span class="property-badge">${escapeHtml(badge)}</span>
+                <button class="property-save ${isSaved ? 'saved' : ''}" onclick="event.stopPropagation(); toggleSave('${p.id}')" aria-label="Save property">
+                    <svg viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}">
+                        <path d="M6 3h12v18l-6-4-6 4V3z" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </button>
+                <span class="property-count">+${photoCount} Photos</span>
+            </div>
+            <div class="property-body">
+                <h3 class="property-title">${escapeHtml(p.title)}</h3>
+                <div class="property-location">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M12 21s7-5 7-11a7 7 0 10-14 0c0 6 7 11 7 11z" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    <span>${escapeHtml(p.location || 'Nigeria')}</span>
+                </div>
+                <div class="property-features">
+                    <div class="feature">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5V20H4z" stroke="currentColor" stroke-width="2"/></svg>
+                        <span>${escapeHtml(p.type || 'Property')}</span>
+                    </div>
+                    <div class="feature">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M12 4v16" stroke="currentColor" stroke-width="2"/></svg>
+                        <span>${p.area ? p.area + ' sqm' : 'N/A'}</span>
+                    </div>
+                    <div class="feature">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 17.3l-5.2 2.7 1-5.8L3.5 10l5.9-.9L12 4l2.6 5.1 5.9.9-4.3 4.2 1 5.8z" stroke="currentColor" stroke-width="2"/></svg>
+                        <span>${p.beds || 0} Bed${p.beds !== 1 ? 's' : ''}</span>
+                    </div>
+                </div>
+                <div class="property-footer">
+                    <div>
+                        <span class="price-label">${period ? 'Starting From' : 'Price'}</span>
+                        <div class="price">${price}</div>
+                    </div>
+                    ${period ? `<div class="price-period">${period}</div>` : ''}
+                </div>
+            </div>
+        </article>
+    `;
+}
+
+function renderProperties() {
+    const grid = document.getElementById('propertyGrid');
+    const countEl = document.getElementById('resultCount');
+    
+    countEl.textContent = filteredProperties.length;
+    
+    if (filteredProperties.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                    <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <h3>No properties found</h3>
+                <p>Try adjusting your filters or search criteria to find more properties.</p>
+                <button onclick="clearAllFilters()">Clear All Filters</button>
+            </div>
+        `;
+        return;
+    }
+    
+    // Paginate
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageItems = filteredProperties.slice(start, end);
+    
+    grid.innerHTML = pageItems.map(renderPropertyCard).join('');
+}
+
+function renderPagination() {
+    const pagination = document.getElementById('pagination');
+    const totalPages = Math.ceil(filteredProperties.length / itemsPerPage);
+    
+    if (totalPages <= 1) {
+        pagination.innerHTML = '';
+        return;
+    }
+    
+    let html = '';
+    
+    // Previous button
+    html += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>`;
+    
+    // Page numbers
+    const maxVisible = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+    
+    if (endPage - startPage < maxVisible - 1) {
+        startPage = Math.max(1, endPage - maxVisible + 1);
+    }
+    
+    if (startPage > 1) {
+        html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+        if (startPage > 2) html += `<span style="padding:0 6px;color:#8b93a5;">...</span>`;
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+    }
+    
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) html += `<span style="padding:0 6px;color:#8b93a5;">...</span>`;
+        html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+    }
+    
+    // Next button
+    html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>`;
+    
+    pagination.innerHTML = html;
+}
+
+function renderActiveFilters() {
+    const container = document.getElementById('activeFilters');
+    const chips = [];
+    
+    if (filters.location) {
+        chips.push({ label: `Location: ${filters.location}`, key: 'location' });
+    }
+    filters.types.forEach(type => {
+        chips.push({ label: type, key: 'type', value: type });
+    });
+    if (filters.priceMin !== null || filters.priceMax !== null) {
+        const min = filters.priceMin ? `₦${filters.priceMin.toLocaleString()}` : '₦0';
+        const max = filters.priceMax ? `₦${filters.priceMax.toLocaleString()}` : '∞';
+        chips.push({ label: `${min} - ${max}`, key: 'price' });
+    }
+    if (filters.beds !== 'any') {
+        chips.push({ label: `${filters.beds === '4' ? '4+' : filters.beds} Bed${filters.beds !== '1' ? 's' : ''}`, key: 'beds' });
+    }
+    
+    if (chips.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+    
+    container.innerHTML = chips.map(chip => `
+        <div class="filter-chip">
+            ${chip.label}
+            <button onclick="removeFilter('${chip.key}', '${chip.value || ''}')" aria-label="Remove filter">×</button>
+        </div>
+    `).join('');
+}
+
+// =================== INTERACTIONS ===================
+window.viewProperty = function(id) {
+    window.location.href = `property-detail.html?id=${id}`;
+};
+
+window.toggleSave = async function(propertyId) {
+    if (!currentUser) {
+        showToast('error', 'Sign In Required', 'Please sign in to save properties');
+        setTimeout(() => {
+            window.location.href = 'dashboard/sign-in.html';
+        }, 1500);
+        return;
+    }
+
+    const isSaved = savedPropertyIds.includes(propertyId);
+    const userRef = doc(db, 'users', currentUser.uid);
+
+    try {
+        if (isSaved) {
+            await updateDoc(userRef, { savedPropertyIds: arrayRemove(propertyId) });
+            savedPropertyIds = savedPropertyIds.filter(id => id !== propertyId);
+            showToast('info', 'Removed', 'Property removed from saved list');
+        } else {
+            await updateDoc(userRef, { savedPropertyIds: arrayUnion(propertyId) });
+            savedPropertyIds.push(propertyId);
+            showToast('success', 'Saved!', 'Property added to your saved list');
+        }
+        renderProperties();
+    } catch (err) {
+        console.error('Save error:', err);
+        showToast('error', 'Error', 'Failed to save property. Please try again.');
+    }
+};
+
+window.goToPage = function(page) {
+    const totalPages = Math.ceil(filteredProperties.length / itemsPerPage);
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    renderProperties();
+    renderPagination();
+    window.scrollTo({ top: 400, behavior: 'smooth' });
+};
+
+window.removeFilter = function(key, value) {
+    if (key === 'location') {
+        filters.location = '';
+        document.getElementById('filterLocation').value = '';
+    } else if (key === 'type') {
+        filters.types = filters.types.filter(t => t !== value);
+        const checkbox = document.querySelector(`#typeFilters input[value="${value}"]`);
+        if (checkbox) checkbox.checked = false;
+    } else if (key === 'price') {
+        filters.priceMin = null;
+        filters.priceMax = null;
+        document.getElementById('priceMin').value = '';
+        document.getElementById('priceMax').value = '';
+    } else if (key === 'beds') {
+        filters.beds = 'any';
+        document.querySelectorAll('.bed-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.beds === 'any');
+        });
+    }
+    applyFilters();
+};
+
+window.clearAllFilters = function() {
+    filters = {
+        location: '',
+        types: [],
+        priceMin: null,
+        priceMax: null,
+        beds: 'any',
+        statuses: [],
+        sort: 'newest',
+        view: filters.view
+    };
+    
+    document.getElementById('filterLocation').value = '';
+    document.getElementById('priceMin').value = '';
+    document.getElementById('priceMax').value = '';
+    document.querySelectorAll('#typeFilters input').forEach(cb => cb.checked = false);
+    document.querySelectorAll('.bed-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.beds === 'any');
+    });
+    document.getElementById('sortSelect').value = 'newest';
+    
+    applyFilters();
+};
+
+window.requireAuth = function(event, feature) {
+    if (!currentUser) {
+        event.preventDefault();
+        showToast('error', 'Sign In Required', `Please sign in to access ${feature}`);
+        setTimeout(() => {
+            window.location.href = 'dashboard/sign-in.html';
+        }, 1500);
+    }
+};
+
+// =================== EVENT LISTENERS ===================
+document.addEventListener('DOMContentLoaded', () => {
+    // Load URL filters
+    loadFiltersFromURL();
+    
+    // Filter toggle (mobile)
+    const filterToggleBtn = document.getElementById('filterToggleBtn');
+    const filterSidebar = document.getElementById('filterSidebar');
+    const filterCloseBtn = document.getElementById('filterCloseBtn');
+    
+    filterToggleBtn.addEventListener('click', () => {
+        filterSidebar.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    filterCloseBtn.addEventListener('click', () => {
+        filterSidebar.classList.remove('show');
+        document.body.style.overflow = '';
+    });
+    
+    // Location filter (debounced)
+    let locationTimeout;
+    document.getElementById('filterLocation').addEventListener('input', (e) => {
+        clearTimeout(locationTimeout);
+        locationTimeout = setTimeout(() => {
+            filters.location = e.target.value.trim();
+            applyFilters();
+        }, 400);
+    });
+    
+    // Type checkboxes
+    document.querySelectorAll('#typeFilters input').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            filters.types = Array.from(document.querySelectorAll('#typeFilters input:checked'))
+                .map(cb => cb.value);
+            applyFilters();
+        });
+    });
+    
+    // Price inputs (debounced)
+    let priceTimeout;
+    ['priceMin', 'priceMax'].forEach(id => {
+        document.getElementById(id).addEventListener('input', (e) => {
+            clearTimeout(priceTimeout);
+            priceTimeout = setTimeout(() => {
+                const val = e.target.value ? parseInt(e.target.value) : null;
+                if (id === 'priceMin') filters.priceMin = val;
+                else filters.priceMax = val;
+                applyFilters();
+            }, 500);
+        });
+    });
+    
+    // Bedroom buttons
+    document.querySelectorAll('.bed-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.bed-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filters.beds = btn.dataset.beds;
+            applyFilters();
+        });
+    });
+    
+    // Initialize "Any" bed button as active
+    document.querySelector('.bed-btn[data-beds="any"]').classList.add('active');
+    
+    // Sort select
+    document.getElementById('sortSelect').addEventListener('change', (e) => {
+        filters.sort = e.target.value;
+        applyFilters();
+    });
+    
+    // View toggle
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const view = btn.dataset.view;
+            filters.view = view;
+            const grid = document.getElementById('propertyGrid');
+            grid.classList.toggle('list-view', view === 'list');
+        });
+    });
+    
+    // Clear all filters
+    document.getElementById('clearFilters').addEventListener('click', clearAllFilters);
+    
+    // Apply filters button (mobile)
+    document.getElementById('applyFiltersBtn').addEventListener('click', () => {
+        filterSidebar.classList.remove('show');
+        document.body.style.overflow = '';
+    });
+    
+    // Drawer
+    const menuBtn = document.querySelector('.menu-btn');
+    const drawer = document.querySelector('.app-drawer');
+    const overlay = document.querySelector('.drawer-overlay');
+    const closeBtn = document.querySelector('.drawer-close');
+
+    function openDrawer() {
+        drawer.classList.add('show');
+        overlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+        drawer.classList.remove('show');
+        overlay.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    if (menuBtn) menuBtn.addEventListener('click', openDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (overlay) overlay.addEventListener('click', closeDrawer);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeDrawer();
+            filterSidebar.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // Newsletter
+    document.getElementById('newsletterForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('newsletterEmail').value.trim();
+        const btn = document.getElementById('newsletterBtn');
+        
+        if (!email) return;
+        
+        btn.disabled = true;
+        btn.textContent = 'Subscribing...';
+        
+        try {
+            await addDoc(collection(db, 'newsletter'), {
+                email: email,
+                subscribedAt: serverTimestamp(),
+                source: 'properties_page'
+            });
+            showToast('success', 'Subscribed!', 'You\'ll receive our latest listings');
+            document.getElementById('newsletterForm').reset();
+        } catch (err) {
+            console.error('Newsletter error:', err);
+            showToast('error', 'Error', 'Failed to subscribe. Please try again.');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Subscribe';
+        }
+    });
+});
+
+// =================== TOAST ===================
+function showToast(type, title, message) {
+    const toast = document.getElementById('toast');
+    const icon = document.querySelector('.toast-icon');
+    
+    toast.className = `toast ${type}`;
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastMessage').textContent = message;
+    
+    const icons = {
+        success: '✓',
+        error: '✕',
+        info: 'ℹ'
+    };
+    icon.textContent = icons[type] || 'ℹ';
+    
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 4000);
+}
+</script>
+
+</body>
+</html>
+
