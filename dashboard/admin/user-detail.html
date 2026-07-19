@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Details - MoonLat Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/space-grotesk@latest/index.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="scroll-smooth">
+
+<div class="stars"></div>
+
+<!-- Auth Guard -->
+<div id="authGuard" class="fixed inset-0 bg-black z-[9999] flex items-center justify-center">
+  <div class="spinner"></div>
+</div>
+
+<div id="app" class="flex min-h-screen hidden">
+  <!-- Sidebar -->
+  <aside class="sidebar sidebar-glass w-72 fixed h-full z-40 flex flex-col">
+    <div class="p-6 border-b border-white/10">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+          <i class="fas fa-shield-alt text-black"></i>
+        </div>
+        <div>
+          <h1 class="display font-bold text-lg">MoonLat Admin</h1>
+          <p class="text-xs opacity-60">Control Center</p>
+        </div>
+      </div>
+    </div>
+    
+    <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+      <a href="index.html" class="sidebar-link">
+        <i class="fas fa-arrow-left w-5"></i> Back to Dashboard
+      </a>
+      <a href="index.html#users" class="sidebar-link">
+        <i class="fas fa-users w-5"></i> All Users
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 ml-72">
+    <header class="nav-glass sticky top-0 z-30 px-8 py-4">
+      <div class="flex items-center justify-between">
+        <h2 class="display text-xl font-bold">User Details</h2>
+        <button onclick="handleLogout()" class="btn-ghost text-sm">
+          <i class="fas fa-sign-out-alt"></i> Sign Out
+        </button>
+      </div>
+    </header>
+
+    <div id="pageContent" class="p-8 relative">
+      <div class="flex items-center justify-center" style="min-height: 400px;">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toastContainer" class="fixed bottom-6 right-6 z-50"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+  projectId: "moonlat-estate-dashboard",
+  storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+  messagingSenderId: "289878951289",
+  appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let userId = null;
+let allProperties = [];
+
+// Get user ID from URL
+const urlParams = new URLSearchParams(window.location.search);
+userId = urlParams.get('id');
+
+if (!userId) {
+  window.location.href = 'index.html';
+}
+
+onAuthStateChanged(auth, async (user) => {
+  try {
+    if (!user) {
+      window.location.href = '../sign-in.html';
+      return;
+    }
+    
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    
+    if (!userDoc.exists() || userDoc.data().role !== 'admin') {
+      await signOut(auth);
+      window.location.href = '../sign-in.html';
+      return;
+    }
+    
+    currentUser = userDoc.data();
+    document.getElementById('authGuard').style.display = 'none';
+    document.getElementById('app').classList.remove('hidden');
+    
+    loadUserData();
+    
+  } catch (error) {
+    console.error('Auth error:', error);
+    window.location.href = '../sign-in.html';
+  }
+});
+
+function loadUserData() {
+  onSnapshot(doc(db, 'users', userId), async (doc) => {
+    if (!doc.exists()) {
+      document.getElementById('pageContent').innerHTML = `
+        <div class="card-glass p-12 text-center fade-in">
+          <i class="fas fa-user-slash text-6xl opacity-30 mb-4"></i>
+          <h2 class="display text-3xl font-bold mb-2">User Not Found</h2>
+          <p class="opacity-70 mb-6">This user may have been deleted.</p>
+          <a href="index.html#users" class="btn-ghost"><i class="fas fa-arrow-left"></i> Back to Users</a>
+        </div>
+      `;
+      return;
+    }
+    
+    const user = { id: doc.id, ...doc.data() };
+    
+    // Load user's properties
+    onSnapshot(collection(db, 'properties'), (snap) => {
+      allProperties = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderUserDetail(user);
+    });
+  });
+}
+
+function renderUserDetail(user) {
+  const userProperties = allProperties.filter(p => p.ownerId === user.id);
+  const joinDate = new Date(user.createdAt || Date.now());
+  const daysSinceJoined = Math.floor((Date.now() - joinDate.getTime()) / (1000 * 60 * 60 * 24));
+  
+  document.getElementById('pageContent').innerHTML = `
+    <a href="index.html#users" class="btn-ghost mb-8 fade-in">
+      <i class="fas fa-arrow-left"></i> Back to Users
+    </a>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Profile Card -->
+      <div class="lg:col-span-1">
+        <div class="card-glass p-8 fade-in text-center">
+          <div class="avatar mx-auto mb-4" style="width: 96px; height: 96px; font-size: 2rem;">
+            ${(user.name || 'U')[0].toUpperCase()}
+          </div>
+          <h2 class="display text-3xl font-bold mb-1">${user.name || 'Unnamed User'}</h2>
+          <p class="opacity-60 mb-4">${user.email || 'No email'}</p>
+          <span class="badge ${user.status === 'suspended' ? 'badge-suspended' : 'badge-active'} mb-6 inline-block">
+            ${user.status === 'suspended' ? 'Suspended' : 'Active'}
+          </span>
+          
+          <div class="space-y-3 text-left mt-6 pt-6 border-t border-white/10">
+            <div class="flex justify-between text-sm">
+              <span class="opacity-60">User ID</span>
+              <span class="font-mono text-xs">${user.id.slice(0, 12)}...</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="opacity-60">Role</span>
+              <span class="font-semibold">${user.role || 'buyer'}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="opacity-60">Phone</span>
+              <span>${user.phone || 'Not provided'}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="opacity-60">Member Since</span>
+              <span>${joinDate.toLocaleDateString()}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="opacity-60">Days Active</span>
+              <span>${daysSinceJoined}</span>
+            </div>
+          </div>
+          
+          <div class="flex flex-col gap-2 mt-6">
+            <button onclick="toggleUserStatus('${user.id}', '${user.status}')" class="btn-ghost w-full justify-center">
+              <i class="fas ${user.status === 'suspended' ? 'fa-check' : 'fa-ban'}"></i>
+              ${user.status === 'suspended' ? 'Activate Account' : 'Suspend Account'}
+            </button>
+            <button onclick="deleteUser('${user.id}')" class="btn-danger w-full justify-center">
+              <i class="fas fa-trash"></i> Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Details -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="card-glass p-6 fade-in">
+            <p class="text-xs opacity-60 mb-2">Properties</p>
+            <p class="display text-3xl font-bold">${userProperties.length}</p>
+          </div>
+          <div class="card-glass p-6 fade-in">
+            <p class="text-xs opacity-60 mb-2">Days Active</p>
+            <p class="display text-3xl font-bold">${daysSinceJoined}</p>
+          </div>
+          <div class="card-glass p-6 fade-in">
+            <p class="text-xs opacity-60 mb-2">Status</p>
+            <p class="display text-xl font-bold ${user.status === 'suspended' ? 'text-red-400' : 'text-green-400'}">
+              ${user.status === 'suspended' ? 'Suspended' : 'Active'}
+            </p>
+          </div>
+          <div class="card-glass p-6 fade-in">
+            <p class="text-xs opacity-60 mb-2">Verified</p>
+            <p class="display text-xl font-bold ${user.verified ? 'text-green-400' : 'text-yellow-400'}">
+              ${user.verified ? 'Yes' : 'No'}
+            </p>
+          </div>
+        </div>
+        
+        <!-- Bio -->
+        <div class="card-glass p-6 fade-in">
+          <h3 class="display text-2xl font-bold mb-4">Bio</h3>
+          <p class="opacity-80 leading-relaxed">
+            ${user.bio || 'No bio provided by this user.'}
+          </p>
+        </div>
+        
+        <!-- Activity Log -->
+        <div class="card-glass p-6 fade-in">
+          <h3 class="display text-2xl font-bold mb-4">Account Activity</h3>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-white/5">
+              <i class="fas fa-user-plus text-green-400"></i>
+              <div class="flex-1">
+                <p class="font-semibold text-sm">Account Created</p>
+                <p class="text-xs opacity-60">${joinDate.toLocaleString()}</p>
+              </div>
+            </div>
+            ${user.status === 'suspended' ? `
+              <div class="flex items-center gap-3 p-3 rounded-lg bg-red-500/10">
+                <i class="fas fa-ban text-red-400"></i>
+                <div class="flex-1">
+                  <p class="font-semibold text-sm">Account Suspended</p>
+                  <p class="text-xs opacity-60">${user.suspendedAt?.toDate ? user.suspendedAt.toDate().toLocaleString() : 'Recently'}</p>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  setTimeout(() => document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible')), 100);
+}
+
+window.toggleUserStatus = async function(userId, currentStatus) {
+  try {
+    await updateDoc(doc(db, 'users', userId), {
+      status: currentStatus === 'suspended' ? 'active' : 'suspended',
+      updatedAt: serverTimestamp()
+    });
+    showToast(`User ${currentStatus === 'suspended' ? 'activated' : 'suspended'} successfully`, 'success');
+  } catch (error) {
+    console.error('Error:', error);
+    showToast('Failed to update user status', 'error');
+  }
+};
+
+window.deleteUser = async function(userId) {
+  if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+  
+  try {
+    await deleteDoc(doc(db, 'users', userId));
+    showToast('User deleted successfully', 'success');
+    setTimeout(() => window.location.href = 'index.html#users', 800);
+  } catch (error) {
+    console.error('Error:', error);
+    showToast('Failed to delete user', 'error');
+  }
+};
+
+window.handleLogout = async function() {
+  await signOut(auth);
+  window.location.href = '../sign-in.html';
+};
+
+function showToast(message, type = 'info', duration = 4000) {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  const icons = {
+    success: 'fa-check-circle',
+    error: 'fa-exclamation-circle',
+    warning: 'fa-exclamation-triangle',
+    info: 'fa-info-circle'
+  };
+  
+  toast.innerHTML = `
+    <i class="fas ${icons[type]} text-xl"></i>
+    <div class="flex-1">
+      <p class="font-semibold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+      <p class="text-sm opacity-80 mt-0.5">${message}</p>
+    </div>
+    <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+  
+  container.appendChild(toast);
+  
+  if (duration > 0) {
+    setTimeout(() => {
+      toast.classList.add('hiding');
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  }
+}
+</script>
+
+</body>
+</html>
