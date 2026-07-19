@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account - MoonLat Real Estate</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/index.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5.0.3/index.min.css">
+<style>
+  * { font-family: 'Inter', system-ui, sans-serif; }
+  h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
+  body { background: #f8fafc; }
+  .auth-container { min-height: 100vh; display: flex; }
+  .auth-brand {
+    flex: 1; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    position: relative; overflow: hidden; display: none;
+  }
+  @media (min-width: 1024px) { .auth-brand { display: flex; } }
+  .auth-brand::before {
+    content: ''; position: absolute; top: -50%; right: -20%;
+    width: 80%; height: 200%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+  }
+  .brand-content { position: relative; z-index: 1; padding: 3rem; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+  .auth-form-side { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; background: white; }
+  .auth-card { width: 100%; max-width: 480px; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .input-wrapper { position: relative; }
+  .input-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.875rem; }
+  .auth-input {
+    width: 100%; padding: 0.875rem 1rem 0.875rem 2.75rem;
+    border: 1.5px solid #e2e8f0; border-radius: 12px;
+    font-size: 0.9375rem; transition: all 0.2s; background: white;
+  }
+  .auth-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+  .btn-primary {
+    width: 100%; padding: 0.875rem;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: white; border: none; border-radius: 12px;
+    font-weight: 600; font-size: 0.9375rem; cursor: pointer;
+    transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
+  }
+  .btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(15, 23, 42, 0.4); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+  .role-card {
+    padding: 1.25rem; border: 2px solid #e2e8f0; border-radius: 12px;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+    position: relative;
+  }
+  .role-card:hover { border-color: #cbd5e1; background: #f8fafc; }
+  .role-card.selected {
+    border-color: #3b82f6; background: #eff6ff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  }
+  .role-card.selected::after {
+    content: '\f058'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+    position: absolute; top: 8px; right: 8px; color: #3b82f6; font-size: 1.125rem;
+  }
+  .role-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 0.75rem; font-size: 1.25rem;
+  }
+  .alert { padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.8125rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; animation: fadeIn 0.2s; }
+  .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; }
+  .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="auth-container">
+  <div class="auth-brand">
+    <div class="brand-content">
+      <div>
+        <div class="flex items-center gap-3 mb-12">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+            <i class="fas fa-moon text-xl text-white"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-white tracking-tight">MoonLat</h1>
+            <p class="text-sm text-blue-200/80">Premium Real Estate Platform</p>
+          </div>
+        </div>
+        <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+          Start closing deals<br><span class="text-blue-400">today</span>
+        </h2>
+        <p class="text-lg text-blue-100/80 max-w-md">
+          Join thousands of top-performing agents and buyers finding their dream properties with MoonLat.
+        </p>
+      </div>
+      <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-red-500 border-2 border-white/20"></div>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 border-2 border-white/20"></div>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-teal-500 border-2 border-white/20"></div>
+          </div>
+          <div class="flex items-center gap-1 text-amber-400 text-sm">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <span class="text-white/80 ml-1">4.9/5</span>
+          </div>
+        </div>
+        <p class="text-white/90 text-sm italic">"MoonLat transformed how I manage my listings. I closed 30% more deals in my first month."</p>
+        <p class="text-blue-200 text-xs mt-3 font-semibold">— Sarah M., Top Producer</p>
+      </div>
+      <p class="text-sm text-blue-200/60">© 2024 MoonLat. All rights reserved.</p>
+    </div>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-card">
+      <div class="mb-6">
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">Create account</h2>
+        <p class="text-gray-500">Get started with your free account today.</p>
+      </div>
+
+      <div id="alertBox"></div>
+
+      <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">First Name</label>
+            <div class="input-wrapper">
+              <i class="fas fa-user input-icon"></i>
+              <input type="text" id="regFirstName" class="auth-input" placeholder="John" required>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Last Name</label>
+            <div class="input-wrapper">
+              <i class="fas fa-user input-icon"></i>
+              <input type="text" id="regLastName" class="auth-input" placeholder="Doe" required>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="regEmail" class="auth-input" placeholder="you@example.com" required>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="regPassword" class="auth-input pr-10" placeholder="Min 8 characters" required minlength="8" oninput="checkStrength(this.value)">
+            <i class="fas fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-gray-600" onclick="togglePassword('regPassword', this)"></i>
+          </div>
+          <div id="strengthMeter" class="hidden mt-2">
+            <div class="flex gap-1 mb-1">
+              <div class="h-1.5 flex-1 rounded bg-gray-200 transition-colors" id="str1"></div>
+              <div class="h-1.5 flex-1 rounded bg-gray-200 transition-colors" id="str2"></div>
+              <div class="h-1.5 flex-1 rounded bg-gray-200 transition-colors" id="str3"></div>
+              <div class="h-1.5 flex-1 rounded bg-gray-200 transition-colors" id="str4"></div>
+            </div>
+            <p class="text-xs text-gray-500" id="strText">Password strength</p>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">I am a...</label>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="role-card selected" data-role="agent" onclick="selectRole(this)">
+              <div class="role-icon bg-blue-100 text-blue-600">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <p class="text-base font-semibold text-gray-900">Agent</p>
+              <p class="text-xs text-gray-500 mt-1">List properties, manage clients & close deals</p>
+            </div>
+            <div class="role-card" data-role="buyer" onclick="selectRole(this)">
+              <div class="role-icon bg-emerald-100 text-emerald-600">
+                <i class="fas fa-home"></i>
+              </div>
+              <p class="text-base font-semibold text-gray-900">Buyer</p>
+              <p class="text-xs text-gray-500 mt-1">Browse listings & schedule viewings</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-2 pt-1">
+          <input type="checkbox" id="agreeTerms" class="w-4 h-4 mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" required>
+          <label for="agreeTerms" class="text-xs text-gray-600 leading-relaxed">
+            I agree to the <a href="#" class="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button type="submit" id="registerBtn" class="btn-primary mt-6">
+          <span>Create Account</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <p class="text-center text-sm text-gray-600 mt-8">
+        Already have an account? 
+        <a href="sign-in.html" class="font-semibold text-blue-600 hover:underline">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+  projectId: "moonlat-estate-dashboard",
+  storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+  messagingSenderId: "289878951289",
+  appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Flag to prevent redirect during registration
+let isRegistering = false;
+
+// Redirect if already logged in (but not during registration)
+onAuthStateChanged(auth, (user) => {
+  if (user && !isRegistering) {
+    window.location.href = 'dashboard.html';
+  }
+});
+
+let selectedRole = 'agent';
+
+function showAlert(type, msg) {
+  const box = document.getElementById('alertBox');
+  const icon = type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle';
+  box.innerHTML = `<div class="alert alert-${type}"><i class="fas ${icon}"></i><span>${msg}</span></div>`;
+  setTimeout(() => box.innerHTML = '', 5000);
+}
+
+function getErrorMessage(code) {
+  const errors = {
+    'auth/email-already-in-use': 'This email is already registered. Try signing in.',
+    'auth/invalid-email': 'Please enter a valid email address.',
+    'auth/weak-password': 'Password should be at least 8 characters.',
+    'auth/operation-not-allowed': 'Registration is currently disabled.',
+    'auth/network-request-failed': 'Network error. Check your connection.'
+  };
+  return errors[code] || 'An error occurred. Please try again.';
+}
+
+window.selectRole = (el) => {
+  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedRole = el.dataset.role;
+};
+
+window.togglePassword = (id, icon) => {
+  const input = document.getElementById(id);
+  input.type = input.type === 'password' ? 'text' : 'password';
+  icon.classList.toggle('fa-eye');
+  icon.classList.toggle('fa-eye-slash');
+};
+
+window.checkStrength = (pwd) => {
+  const meter = document.getElementById('strengthMeter');
+  if (pwd.length === 0) { meter.classList.add('hidden'); return; }
+  meter.classList.remove('hidden');
+  
+  let score = 0;
+  if (pwd.length >= 8) score++;
+  if (/[A-Z]/.test(pwd)) score++;
+  if (/[0-9]/.test(pwd)) score++;
+  if (/[^A-Za-z0-9]/.test(pwd)) score++;
+  
+  const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500'];
+  const texts = ['Weak', 'Fair', 'Good', 'Strong'];
+  
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('str' + i).className = `h-1.5 flex-1 rounded transition-colors ${i <= score ? colors[score - 1] : 'bg-gray-200'}`;
+  }
+  document.getElementById('strText').textContent = texts[score - 1] || 'Password strength';
+};
+
+window.handleRegister = async (e) => {
+  e.preventDefault();
+  const firstName = document.getElementById('regFirstName').value.trim();
+  const lastName = document.getElementById('regLastName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const agreed = document.getElementById('agreeTerms').checked;
+  
+  if (!agreed) return showAlert('error', 'Please agree to the Terms of Service');
+  if (password.length < 8) return showAlert('error', 'Password must be at least 8 characters');
+  
+  const btn = document.getElementById('registerBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Creating account...';
+  
+  // Set flag to prevent premature redirect
+  isRegistering = true;
+  
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    const fullName = `${firstName} ${lastName}`.trim();
+    
+    await updateProfile(result.user, { displayName: fullName });
+    
+    // Build user profile based on role
+    const userProfile = {
+      name: fullName,
+      email: email,
+      role: selectedRole,  // THIS IS NOW SAVED CORRECTLY
+      avatar: fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
+      createdAt: Date.now(),
+      memberSince: new Date().toLocaleDateString('en', { month: 'short', year: 'numeric' }),
+      phone: '',
+      bio: '',
+      updatedAt: serverTimestamp()
+    };
+    
+    // Add role-specific fields
+    if (selectedRole === 'agent') {
+      userProfile.agency = '';
+      userProfile.license = '';
+      userProfile.serviceArea = '';
+      userProfile.commissionRate = '3%';
+    }
+    
+    // CRITICAL: Wait for Firestore write to complete BEFORE redirecting
+    await setDoc(doc(db, 'users', result.user.uid), userProfile);
+    
+    showAlert('success', 'Account created! Redirecting...');
+    
+    // Now it's safe to redirect
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 1000);
+    
+  } catch (err) {
+    isRegistering = false;
+    showAlert('error', getErrorMessage(err.code));
+    btn.disabled = false;
+    btn.innerHTML = '<span>Create Account</span><i class="fas fa-arrow-right"></i>';
+  }
+};
+</script>
+</body>
+</html>
+
