@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Details - MoonLat Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/space-grotesk@latest/index.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="scroll-smooth">
+
+<div class="stars"></div>
+
+<div id="authGuard" class="fixed inset-0 bg-black z-[9999] flex items-center justify-center">
+  <div class="spinner"></div>
+</div>
+
+<div id="app" class="flex min-h-screen hidden">
+  <aside class="sidebar sidebar-glass w-72 fixed h-full z-40 flex flex-col">
+    <div class="p-6 border-b border-white/10">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+          <i class="fas fa-shield-alt text-black"></i>
+        </div>
+        <div>
+          <h1 class="display font-bold text-lg">MoonLat Admin</h1>
+          <p class="text-xs opacity-60">Control Center</p>
+        </div>
+      </div>
+    </div>
+    
+    <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+      <a href="index.html" class="sidebar-link">
+        <i class="fas fa-arrow-left w-5"></i> Back to Dashboard
+      </a>
+      <a href="index.html#agents" class="sidebar-link">
+        <i class="fas fa-user-tie w-5"></i> All Agents
+      </a>
+    </nav>
+  </aside>
+
+  <main class="flex-1 ml-72">
+    <header class="nav-glass sticky top-0 z-30 px-8 py-4">
+      <div class="flex items-center justify-between">
+        <h2 class="display text-xl font-bold">Agent Details</h2>
+        <button onclick="handleLogout()" class="btn-ghost text-sm">
+          <i class="fas fa-sign-out-alt"></i> Sign Out
+        </button>
+      </div>
+    </header>
+
+    <div id="pageContent" class="p-8 relative">
+      <div class="flex items-center justify-center" style="min-height: 400px;">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toastContainer" class="fixed bottom-6 right-6 z-50"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+  projectId: "moonlat-estate-dashboard",
+  storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+  messagingSenderId: "289878951289",
+  appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let agentId = null;
+let allProperties = [];
+
+const urlParams = new URLSearchParams(window.location.search);
+agentId = urlParams.get('id');
+
+if (!agentId) {
+  window.location.href = 'index.html';
+}
+
+onAuthStateChanged(auth, async (user) => {
+  try {
+    if (!user) {
+      window.location.href = '../sign-in.html';
+      return;
+    }
+    
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    
+    if (!userDoc.exists() || userDoc.data().role !== 'admin') {
+      await signOut(auth);
+      window.location.href = '../sign-in.html';
+      return;
+    }
+    
+    currentUser = userDoc.data();
+    document.getElementById('authGuard').style.display = 'none';
+    document.getElementById('app').classList.remove('hidden');
+    
+    loadAgentData();
+    
+  } catch (error) {
+    console.error('Auth error:', error);
+    window.location.href = '../sign-in.html';
+  }
+});
+
+function loadAgentData() {
+  onSnapshot(doc(db, 'users', agentId), async (doc) => {
+    if (!doc.exists()) {
+      document.getElementById('pageContent').innerHTML = `
+        <div class="card-glass p-12 text-center fade-in">
+          <i class="fas fa-user-slash text-6xl opacity-30 mb-4"></i>
+          <h2 class="display text-3xl font-bold mb-2">Agent Not Found</h2>
+          <p class="opacity-70 mb-6">This agent may have been deleted.</p>
+          <a href="index.html#agents" class="btn-ghost"><i class="fas fa-arrow-left"></i> Back to Agents</a>
+        </div>
+      `;
+      return;
+    }
+    
+    const agent = { id: doc.id, ...doc.data() };
+    
+    onSnapshot(collection(db, 'properties'), (snap) => {
+      allProperties = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderAgentDetail(agent);
+    });
+  });
+}
+
+function renderAgentDetail(agent) {
+  const agentProperties = allProperties.filter(p => p.ownerId === agent.id);
+  const activeListings = agentProperties.filter(p => p.status === 'Active').length;
+  const pendingListings = agentProperties.filter(p => p.status === 'Pending').length;
+  const soldListings = agentProperties.filter(p => p.status === 'Sold').length;
+  const totalValue = agentProperties.reduce((sum, p) => sum + (p.price || 0), 0);
+  const joinDate = new Date(agent.createdAt || Date.now());
+  
+  document.getElementById('pageContent').innerHTML = `
+    <a href="index.html#agents" class="btn-ghost mb-8 fade-in">
+      <i class="fas fa-arrow-left"></i> Back to Agents
+    </a>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Profile Card -->
+      <div class="lg:col-span-1">
+        <div class="card-glass p-8 fade-in text-center">
+          <div class="avatar mx-auto mb-4" style="width: 96px; height: 96px; font-size: 2rem;">
+            ${(agent.name || 'A')[0].toUpperCase()}
+          </div>
+          <h2 class="display text-3xl font-bold mb-1">${agent.name || 'Unnamed Agent'}</h2>
+          <p class="opacity-60 mb-4">${agent.email || 'No email'}</p>
+          
+          <div class="flex gap-2 justify-center mb-6">
+            <span class="badge ${agent.verified ? 'badge-verified' : 'badge-pending'}">
+              ${agent.verified ? 'Verified' : 'Unverified'}
+            </span>
+            <span class="badge ${agent.status === 'suspended' ? 'badge-suspended' : 'badge-active'}">
+              ${agent.status === 'suspended' ? 'Suspended' : 'Active'}
+            </span>
+          </div>
+          
+          <div class="space-y-3 text-left mt-6 pt-6 border-t border-white/10">
+            <div class="flex justify-between text-sm">
+              <span class="opacity-60">Agent ID</span>
+              <span class="font-mono text-xs">${agent.id.slice(0, 12)}...</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="opacity-60">Agency</span>
+              <span class="font-semibold">${agent.agency || 'Independent'}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="opacity-60">License</span>
+              <span>${agent.license || 'Not provided'}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="opacity-60">Phone</span>
+              <span>${agent.phone || 'Not provided'}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="opacity-60">Member Since</span>
+              <span>${joinDate.toLocaleDateString()}</span>
+            </div>
+          </div>
+          
+          <div class="flex flex-col gap-2 mt-6">
+            ${!agent.verified ? `
+              <button onclick="verifyAgent('${agent.id}')" class="btn-primary w-full justify-center">
+                <i class="fas fa-check"></i> Verify Agent
+              </button>
+            ` : ''}
+            <button onclick="toggleAgentStatus('${agent.id}', '${agent.status}')" class="btn-ghost w-full justify-center">
+              <i class="fas ${agent.status === 'suspended' ? 'fa-check' : 'fa-ban'}"></i>
+              ${agent.status === 'suspended' ? 'Activate Account' : 'Suspend Account'}
+            </button>
+            <button onclick="deleteAgent('${agent.id}')" class="btn-danger w-full justify-center">
+              <i class="fas fa-trash"></i> Delete Agent
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Details -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="card-glass p-6 fade-in">
+            <p class="text-xs opacity-60 mb-2">Total Listings</p>
+            <p class="display text-3xl font-bold">${agentProperties.length}</p>
+          </div>
+          <div class="card-glass p-6 fade-in">
+            <p class="text-xs opacity-60 mb-2">Active</p>
+            <p class="display text-3xl font-bold text-green-400">${activeListings}</p>
+          </div>
+          <div class="card-glass p-6 fade-in">
+            <p class="text-xs opacity-60 mb-2">Pending</p>
+            <p class="display text-3xl font-bold text-yellow-400">${pendingListings}</p>
+          </div>
+          <div class="card-glass p-6 fade-in">
+            <p class="text-xs opacity-60 mb-2">Sold</p>
+            <p class="display text-3xl font-bold text-blue-400">${soldListings}</p>
+          </div>
+        </div>
+        
+        <!-- Portfolio Value -->
+        <div class="card-glass p-6 fade-in">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="display text-2xl font-bold">Portfolio Value</h3>
+            <p class="display text-3xl font-bold text-green-400">₦${(totalValue / 1000000).toFixed(1)}M</p>
+          </div>
+          <p class="opacity-70 text-sm">Total value of all properties listed by this agent</p>
+        </div>
+        
+        <!-- Bio -->
+        <div class="card-glass p-6 fade-in">
+          <h3 class="display text-2xl font-bold mb-4">About</h3>
+          <p class="opacity-80 leading-relaxed">
+            ${agent.bio || 'No bio provided by this agent.'}
+          </p>
+        </div>
+        
+        <!-- Properties List -->
+        <div class="card-glass p-6 fade-in">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="display text-2xl font-bold">Properties (${agentProperties.length})</h3>
+          </div>
+          
+          ${agentProperties.length === 0 ? `
+            <div class="text-center py-12 opacity-60">
+              <i class="fas fa-building text-4xl mb-3 opacity-30"></i>
+              <p>No properties listed yet</p>
+            </div>
+          ` : `
+            <div class="space-y-3">
+              ${agentProperties.slice(0, 5).map(p => `
+                <a href="property-detail.html?id=${p.id}" class="flex items-center gap-4 p-4 rounded-lg bg-white/5 hover:bg-white/10 transition">
+                  <img src="${p.image || 'https://via.placeholder.com/60'}" class="w-16 h-16 rounded-lg object-cover" onerror="this.src='https://via.placeholder.com/60'">
+                  <div class="flex-1 min-w-0">
+                    <p class="font-semibold truncate">${p.title || 'Untitled'}</p>
+                    <p class="text-xs opacity-60 truncate">${p.location || '-'}</p>
+                    <p class="text-sm font-bold mt-1">₦${(p.price || 0).toLocaleString()}</p>
+                  </div>
+                  <span class="badge ${p.status === 'Active' ? 'badge-active' : p.status === 'Pending' ? 'badge-pending' : 'badge-suspended'}">
+                    ${p.status || 'Active'}
+                  </span>
+                </a>
+              `).join('')}
+              ${agentProperties.length > 5 ? `
+                <p class="text-center text-sm opacity-60 pt-2">+ ${agentProperties.length - 5} more properties</p>
+              ` : ''}
+            </div>
+          `}
+        </div>
+      </div>
+    </div>
+  `;
+  
+  setTimeout(() => document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible')), 100);
+}
+
+window.verifyAgent = async function(agentId) {
+  try {
+    await updateDoc(doc(db, 'users', agentId), {
+      verified: true,
+      verifiedAt: serverTimestamp(),
+      verifiedBy: currentUser.uid
+    });
+    showToast('Agent verified successfully', 'success');
+  } catch (error) {
+    console.error('Error:', error);
+    showToast('Failed to verify agent', 'error');
+  }
+};
+
+window.toggleAgentStatus = async function(agentId, currentStatus) {
+  try {
+    await updateDoc(doc(db, 'users', agentId), {
+      status: currentStatus === 'suspended' ? 'active' : 'suspended',
+      updatedAt: serverTimestamp()
+    });
+    showToast(`Agent ${currentStatus === 'suspended' ? 'activated' : 'suspended'} successfully`, 'success');
+  } catch (error) {
+    console.error('Error:', error);
+    showToast('Failed to update agent status', 'error');
+  }
+};
+
+window.deleteAgent = async function(agentId) {
+  if (!confirm('Are you sure you want to delete this agent? All their properties will also be affected.')) return;
+  
+  try {
+    await deleteDoc(doc(db, 'users', agentId));
+    showToast('Agent deleted successfully', 'success');
+    setTimeout(() => window.location.href = 'index.html#agents', 800);
+  } catch (error) {
+    console.error('Error:', error);
+    showToast('Failed to delete agent', 'error');
+  }
+};
+
+window.handleLogout = async function() {
+  await signOut(auth);
+  window.location.href = '../sign-in.html';
+};
+
+function showToast(message, type = 'info', duration = 4000) {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  const icons = {
+    success: 'fa-check-circle',
+    error: 'fa-exclamation-circle',
+    warning: 'fa-exclamation-triangle',
+    info: 'fa-info-circle'
+  };
+  
+  toast.innerHTML = `
+    <i class="fas ${icons[type]} text-xl"></i>
+    <div class="flex-1">
+      <p class="font-semibold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+      <p class="text-sm opacity-80 mt-0.5">${message}</p>
+    </div>
+    <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+  
+  container.appendChild(toast);
+  
+  if (duration > 0) {
+    setTimeout(() => {
+      toast.classList.add('hiding');
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  }
+}
+</script>
+
+</body>
+</html>
