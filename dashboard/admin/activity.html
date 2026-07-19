@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity Center - MoonLat Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/space-grotesk@latest/index.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="scroll-smooth">
+
+<div class="stars"></div>
+
+<div id="authGuard" class="fixed inset-0 bg-black z-[9999] flex items-center justify-center">
+  <div class="spinner"></div>
+</div>
+
+<div id="app" class="flex min-h-screen hidden">
+  <aside class="sidebar sidebar-glass w-72 fixed h-full z-40 flex flex-col">
+    <div class="p-6 border-b border-white/10">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+          <i class="fas fa-shield-alt text-black"></i>
+        </div>
+        <div>
+          <h1 class="display font-bold text-lg">MoonLat Admin</h1>
+          <p class="text-xs opacity-60">Control Center</p>
+        </div>
+      </div>
+    </div>
+    
+    <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+      <a href="index.html" class="sidebar-link">
+        <i class="fas fa-arrow-left w-5"></i> Back to Dashboard
+      </a>
+      <a href="index.html#dashboard" class="sidebar-link">
+        <i class="fas fa-chart-line w-5"></i> Dashboard
+      </a>
+      <a href="activity.html" class="sidebar-link active">
+        <i class="fas fa-bell w-5"></i> Activity Center
+      </a>
+    </nav>
+  </aside>
+
+  <main class="flex-1 ml-72">
+    <header class="nav-glass sticky top-0 z-30 px-8 py-4">
+      <div class="flex items-center justify-between">
+        <h2 class="display text-xl font-bold">Activity Center</h2>
+        <button onclick="markAllRead()" class="btn-ghost text-sm">
+          <i class="fas fa-check-double"></i> Mark All Read
+        </button>
+      </div>
+    </header>
+
+    <div id="pageContent" class="p-8 relative">
+      <div class="flex items-center justify-center" style="min-height: 400px;">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toastContainer" class="fixed bottom-6 right-6 z-50"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+  projectId: "moonlat-estate-dashboard",
+  storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+  messagingSenderId: "289878951289",
+  appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let allActivities = [];
+let currentFilter = 'all';
+let initialLoadComplete = false;
+
+// =================== AUTH CHECK ===================
+onAuthStateChanged(auth, async (user) => {
+  try {
+    if (!user) {
+      window.location.href = '../sign-in.html';
+      return;
+    }
+    
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    
+    if (!userDoc.exists() || userDoc.data().role !== 'admin') {
+      await signOut(auth);
+      window.location.href = '../sign-in.html';
+      return;
+    }
+    
+    currentUser = userDoc.data();
+    document.getElementById('authGuard').style.display = 'none';
+    document.getElementById('app').classList.remove('hidden');
+    
+    loadActivities();
+    
+  } catch (error) {
+    console.error('Auth error:', error);
+    window.location.href = '../sign-in.html';
+  }
+});
+
+// =================== LOAD REAL-TIME ACTIVITIES ===================
+function loadActivities() {
+  // Listen to USERS collection
+  onSnapshot(collection(db, 'users'), (snap) => {
+    const userActivities = [];
+    
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      const timestamp = data.createdAt?.toDate ? data.createdAt.toDate() : 
+                       (data.createdAt ? new Date(data.createdAt) : new Date());
+      
+      // Only add if has valid timestamp
+      if (!isNaN(timestamp.getTime())) {
+        if (data.role === 'agent') {
+          userActivities.push({
+            id: docSnap.id,
+            type: 'agent_registered',
+            title: 'New Agent Registered',
+            message: `${data.name || 'An agent'} has registered on the platform`,
+            icon: 'fa-user-tie',
+            color: 'purple',
+            timestamp: timestamp,
+            read: false,
+            metadata: data
+          });
+        } else if (data.role === 'buyer' || data.role === 'user') {
+          userActivities.push({
+            id: docSnap.id,
+            type: 'user_registered',
+            title: 'New User Registered',
+            message: `${data.name || 'A user'} has created an account`,
+            icon: 'fa-user',
+            color: 'blue',
+            timestamp: timestamp,
+            read: false,
+            metadata: data
+          });
+        }
+      }
+    });
+    
+    mergeActivities(userActivities, 'user');
+  });
+  
+  // Listen to PROPERTIES collection
+  onSnapshot(collection(db, 'properties'), (snap) => {
+    const propertyActivities = [];
+    
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      const timestamp = data.createdAt?.toDate ? data.createdAt.toDate() : 
+                       (data.createdAt ? new Date(data.createdAt) : new Date());
+      
+      if (!isNaN(timestamp.getTime())) {
+        // New property listed
+        propertyActivities.push({
+          id: docSnap.id,
+          type: 'property_listed',
+          title: 'Property Listed',
+          message: `${data.title || 'A property'} has been listed for ₦${(data.price || 0).toLocaleString()}`,
+          icon: 'fa-building',
+          color: 'yellow',
+          timestamp: timestamp,
+          read: false,
+          metadata: data
+        });
+        
+        // If property was approved
+        if (data.approvedAt) {
+          const approvedTime = data.approvedAt.toDate ? data.approvedAt.toDate() : new Date(data.approvedAt);
+          propertyActivities.push({
+            id: docSnap.id + '_approved',
+            type: 'property_approved',
+            title: 'Property Approved',
+            message: `${data.title || 'A property'} was approved and is now active`,
+            icon: 'fa-check-circle',
+            color: 'green',
+            timestamp: approvedTime,
+            read: false,
+            metadata: data
+          });
+        }
+        
+        // If property was suspended
+        if (data.suspendedAt) {
+          const suspendedTime = data.suspendedAt.toDate ? data.suspendedAt.toDate() : new Date(data.suspendedAt);
+          propertyActivities.push({
+            id: docSnap.id + '_suspended',
+            type: 'property_suspended',
+            title: 'Property Suspended',
+            message: `${data.title || 'A property'} has been suspended`,
+            icon: 'fa-ban',
+            color: 'red',
+            timestamp: suspendedTime,
+            read: false,
+            metadata: data
+          });
+        }
+      }
+    });
+    
+    mergeActivities(propertyActivities, 'property');
+  });
+  
+  // Listen to TRANSACTIONS collection
+  onSnapshot(collection(db, 'transactions'), (snap) => {
+    const transactionActivities = [];
+    
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      const timestamp = data.createdAt?.toDate ? data.createdAt.toDate() : 
+                       (data.createdAt ? new Date(data.createdAt) : new Date());
+      
+      if (!isNaN(timestamp.getTime())) {
+        transactionActivities.push({
+          id: docSnap.id,
+          type: 'transaction_created',
+          title: 'New Transaction',
+          message: `Transaction of ₦${(data.amount || 0).toLocaleString()} for ${data.property || 'a property'}`,
+          icon: 'fa-wallet',
+          color: 'green',
+          timestamp: timestamp,
+          read: false,
+          metadata: data
+        });
+      }
+    });
+    
+    mergeActivities(transactionActivities, 'transaction');
+  });
+}
+
+// =================== MERGE ACTIVITIES ===================
+function mergeActivities(newActivities, source) {
+  // Remove old activities from same source
+  allActivities = allActivities.filter(a => {
+    if (source === 'user') return !a.type.includes('user') && !a.type.includes('agent');
+    if (source === 'property') return !a.type.includes('property');
+    if (source === 'transaction') return !a.type.includes('transaction');
+    return true;
+  });
+  
+  // Add new activities
+  allActivities = [...allActivities, ...newActivities];
+  
+  // Sort by timestamp (newest first)
+  allActivities.sort((a, b) => b.timestamp - a.timestamp);
+  
+  // Limit to 100 most recent
+  allActivities = allActivities.slice(0, 100);
+  
+  initialLoadComplete = true;
+  renderActivities();
+}
+
+// =================== RENDER ACTIVITIES ===================
+function renderActivities() {
+  const filtered = currentFilter === 'all' 
+    ? allActivities 
+    : allActivities.filter(a => a.type.includes(currentFilter));
+  
+  const grouped = groupByDate(filtered);
+  const unreadCount = allActivities.filter(a => !a.read).length;
+  
+  document.getElementById('pageContent').innerHTML = `
+    <div class="mb-8 fade-in">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <p class="text-xs tracking-[0.3em] opacity-60 mb-2">REAL-TIME UPDATES</p>
+          <h1 class="display text-4xl md:text-5xl font-bold">Activity Center</h1>
+          <p class="text-lg opacity-80 mt-2">Monitor all platform activities and events</p>
+        </div>
+        ${unreadCount > 0 ? `
+          <div class="px-4 py-2 rounded-full bg-red-500/20 text-red-400 text-sm font-semibold">
+            <i class="fas fa-circle text-xs mr-2"></i>${unreadCount} Unread
+          </div>
+        ` : ''}
+      </div>
+      
+      <!-- Filter Tabs -->
+      <div class="flex gap-2 mb-8 overflow-x-auto pb-2">
+        <button onclick="setFilter('all')" class="filter-btn px-4 py-2 rounded-full text-sm font-medium transition whitespace-nowrap ${currentFilter === 'all' ? 'bg-yellow-500 text-black' : 'bg-white/10 hover:bg-white/20'}">
+          <i class="fas fa-stream mr-2"></i>All Activity
+        </button>
+        <button onclick="setFilter('user')" class="filter-btn px-4 py-2 rounded-full text-sm font-medium transition whitespace-nowrap ${currentFilter === 'user' ? 'bg-blue-500 text-white' : 'bg-white/10 hover:bg-white/20'}">
+          <i class="fas fa-user mr-2"></i>Users
+        </button>
+        <button onclick="setFilter('agent')" class="filter-btn px-4 py-2 rounded-full text-sm font-medium transition whitespace-nowrap ${currentFilter === 'agent' ? 'bg-purple-500 text-white' : 'bg-white/10 hover:bg-white/20'}">
+          <i class="fas fa-user-tie mr-2"></i>Agents
+        </button>
+        <button onclick="setFilter('property')" class="filter-btn px-4 py-2 rounded-full text-sm font-medium transition whitespace-nowrap ${currentFilter === 'property' ? 'bg-yellow-500 text-black' : 'bg-white/10 hover:bg-white/20'}">
+          <i class="fas fa-building mr-2"></i>Properties
+        </button>
+        <button onclick="setFilter('transaction')" class="filter-btn px-4 py-2 rounded-full text-sm font-medium transition whitespace-nowrap ${currentFilter === 'transaction' ? 'bg-green-500 text-white' : 'bg-white/10 hover:bg-white/20'}">
+          <i class="fas fa-wallet mr-2"></i>Transactions
+        </button>
+      </div>
+      
+      <!-- Activity Timeline -->
+      <div class="space-y-8">
+        ${Object.keys(grouped).length === 0 ? `
+          <div class="text-center py-16 opacity-60">
+            <i class="fas fa-bell-slash text-6xl mb-4 opacity-30"></i>
+            <p class="text-lg">No activities yet</p>
+            <p class="text-sm mt-2">Activities will appear here as users register, properties are listed, and transactions occur</p>
+          </div>
+        ` : Object.entries(grouped).map(([date, activities]) => `
+          <div class="fade-in">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+              <span class="text-sm font-semibold opacity-60">${date}</span>
+              <div class="h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+            </div>
+            
+            <div class="space-y-3">
+              ${activities.map(activity => `
+                <div class="card-glass p-4 hover:bg-white/10 transition cursor-pointer ${!activity.read ? 'border-l-4 border-l-yellow-500' : ''}" onclick="viewActivity('${activity.id}', '${activity.type}')">
+                  <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(${getColorRGB(activity.color)}, 0.2); color: ${getColorHex(activity.color)};">
+                      <i class="fas ${activity.icon}"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-start justify-between gap-2">
+                        <div>
+                          <h3 class="font-semibold text-sm mb-1">${activity.title}</h3>
+                          <p class="text-sm opacity-70">${activity.message}</p>
+                          ${activity.metadata?.email ? `
+                            <p class="text-xs opacity-50 mt-1"><i class="fas fa-envelope mr-1"></i>${activity.metadata.email}</p>
+                          ` : ''}
+                        </div>
+                        <span class="text-xs opacity-50 whitespace-nowrap">${formatTime(activity.timestamp)}</span>
+                      </div>
+                    </div>
+                    ${!activity.read ? '<div class="w-2 h-2 rounded-full bg-yellow-500 flex-shrink-0 mt-2"></div>' : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  
+  setTimeout(() => document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible')), 100);
+}
+
+// =================== HELPER FUNCTIONS ===================
+function groupByDate(activities) {
+  const groups = {};
+  
+  activities.forEach(activity => {
+    const date = activity.timestamp;
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    let dateKey;
+    if (date.toDateString() === today.toDateString()) {
+      dateKey = 'Today';
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      dateKey = 'Yesterday';
+    } else {
+      dateKey = date.toLocaleDateString('en', { weekday: 'long', month: 'short', day: 'numeric' });
+    }
+    
+    if (!groups[dateKey]) {
+      groups[dateKey] = [];
+    }
+    groups[dateKey].push(activity);
+  });
+  
+  return groups;
+}
+
+function setFilter(filter) {
+  currentFilter = filter;
+  renderActivities();
+}
+
+function formatTime(date) {
+  const now = new Date();
+  const diff = now - date;
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+  
+  if (minutes < 1) return 'Just now';
+  if (minutes < 60) return `${minutes}m ago`;
+  if (hours < 24) return `${hours}h ago`;
+  if (days < 7) return `${days}d ago`;
+  
+  return date.toLocaleDateString('en', { month: 'short', day: 'numeric' });
+}
+
+function getColorRGB(color) {
+  const colors = {
+    blue: '59, 130, 246',
+    purple: '139, 92, 246',
+    yellow: '250, 204, 21',
+    green: '34, 197, 94',
+    red: '239, 68, 68'
+  };
+  return colors[color] || '156, 163, 175';
+}
+
+function getColorHex(color) {
+  const colors = {
+    blue: '#3b82f6',
+    purple: '#8b5cf6',
+    yellow: '#facc15',
+    green: '#22c55e',
+    red: '#ef4444'
+  };
+  return colors[color] || '#9ca3af';
+}
+
+function viewActivity(id, type) {
+  // Mark as read
+  const cleanId = id.replace('_approved', '').replace('_suspended', '');
+  const activity = allActivities.find(a => a.id === id);
+  if (activity) {
+    activity.read = true;
+    renderActivities();
+  }
+  
+  // Navigate based on type
+  if (type === 'user_registered') {
+    window.location.href = `user-detail.html?id=${cleanId}`;
+  } else if (type === 'agent_registered') {
+    window.location.href = `agent-detail.html?id=${cleanId}`;
+  } else if (type.includes('property')) {
+    window.location.href = `property-detail.html?id=${cleanId}`;
+  }
+}
+
+function markAllRead() {
+  allActivities.forEach(a => a.read = true);
+  renderActivities();
+  showToast('All notifications marked as read', 'success');
+}
+
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  toast.innerHTML = `
+    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'} text-xl"></i>
+    <div class="flex-1">
+      <p class="font-semibold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+      <p class="text-sm opacity-80 mt-0.5">${message}</p>
+    </div>
+    <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+  
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('hiding');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+</script>
+
+</body>
+</html>
