@@ -1,0 +1,119 @@
+/* ============================================
+   FOOTER CREDIT - KAALI NG
+   ============================================ */
+
+.footer-credit {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
+}
+
+.credit-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.credit-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+}
+
+.credit-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.credit-logo:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.logo-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.logo-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.logo-text {
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.logo-kaali {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: 0.02em;
+}
+
+.logo-ng {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1px 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+.credit-logo:hover .logo-kaali {
+    color: #ffffff;
+}
+
+.credit-logo:hover .logo-ng {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+/* Mobile adjustments */
+@media (max-width: 639px) {
+    .footer-credit {
+        margin-top: 12px;
+        padding-top: 12px;
+    }
+    
+    .credit-label {
+        font-size: 0.7rem;
+    }
+    
+    .credit-logo {
+        padding: 5px 10px;
+        gap: 6px;
+    }
+    
+    .logo-icon {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .logo-kaali {
+        font-size: 0.85rem;
+    }
+    
+    .logo-ng {
+        font-size: 0.6rem;
+        padding: 1px 3px;
+    }
+}
+
