@@ -2551,7 +2551,7 @@ function renderUsers(c) {
                 </td>
               </tr>
             ` : filtered.map(u => `
-              <tr class="cursor-pointer" onclick="window.location.href='admin/user-detail.html?id=${u.id}'">
+              <tr class="cursor-pointer" onclick="window.location.href='user-detail.html?id=${u.id}'">
                 <td>
                   <div class="flex items-center gap-3">
                     <div class="avatar">${(u.name || 'U')[0].toUpperCase()}</div>
