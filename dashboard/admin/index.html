@@ -2631,7 +2631,7 @@ function renderAgents(c) {
             ` : allAgents.map(a => {
               const agentProps = allProperties.filter(p => p.ownerId === a.id).length;
               return `
-              <tr class="cursor-pointer" onclick="window.location.href='agent-detail.html?id=${a.id}'">
+              <tr class="cursor-pointer" onclick="window.location.href='./agent-detail.html?id=${a.id}'">
                 <td>
                   <div class="flex items-center gap-3">
                     <div class="avatar">${(a.name || 'A')[0].toUpperCase()}</div>
