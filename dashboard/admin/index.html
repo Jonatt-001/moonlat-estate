@@ -2632,7 +2632,7 @@ function renderAgents(c) {
             ` : allAgents.map(a => {
               const agentProps = allProperties.filter(p => p.ownerId === a.id).length;
               return `
-              <tr class="cursor-pointer" onclick="window.location.href='admin/agent-detail.html?id=${a.id}'">
+              <tr class="cursor-pointer" onclick="window.location.href='agent-detail.html?id=${a.id}'">
                 <td>
                   <div class="flex items-center gap-3">
                     <div class="avatar">${(a.name || 'A')[0].toUpperCase()}</div>
@@ -2726,7 +2726,7 @@ function renderProperties(c) {
             ` : allProperties.map(p => {
               const agent = allAgents.find(a => a.id === p.ownerId);
               return `
-              <tr class="cursor-pointer" onclick="window.location.href='admin/property-detail.html?id=${p.id}'">
+              <tr class="cursor-pointer" onclick="window.location.href='property-detail.html?id=${p.id}'">
                 <td>
                   <div class="flex items-center gap-3">
                     <img src="${p.image || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-lg object-cover" onerror="this.src='https://via.placeholder.com/40'">
