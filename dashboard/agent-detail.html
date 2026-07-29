@@ -1,0 +1,3473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoonLat — Admin Control Center</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/space-grotesk@latest/index.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+  * { font-family: 'Inter', sans-serif; }
+  h1, h2, h3, .display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+  
+  body {
+    background: #000;
+    color: #fff;
+    overflow-x: hidden;
+  }
+  
+  .stars {
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+      radial-gradient(1px 1px at 40px 70px, #fff, transparent),
+      radial-gradient(1px 1px at 50px 160px, #fff, transparent),
+      radial-gradient(2px 2px at 90px 40px, #fff, transparent),
+      radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+      radial-gradient(1px 1px at 160px 120px, #fff, transparent),
+      radial-gradient(2px 2px at 200px 50px, #fff, transparent);
+    background-size: 200px 200px;
+    opacity: 0.6;
+    z-index: 0;
+    animation: twinkle 8s infinite;
+  }
+  
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+  
+  .nav-glass {
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  
+  .sidebar-glass {
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+  
+  .card-glass {
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    transition: all 0.3s;
+  }
+  
+  .card-glass:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.15);
+    transform: translateY(-4px);
+  }
+  
+  .stat-card {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #FACC15, transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .stat-card:hover::before {
+    opacity: 1;
+  }
+  
+  .btn-primary {
+    background: #fff;
+    color: #000;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .btn-primary:hover {
+    background: transparent;
+    color: #fff;
+    box-shadow: inset 0 0 0 1px #fff;
+  }
+  
+  .btn-ghost {
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+  }
+  
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: #fff;
+  }
+  
+  .btn-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+  
+  .btn-danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+  }
+  
+  .fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .stat-num {
+    font-variant-numeric: tabular-nums;
+  }
+  
+  .divider-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  }
+  
+  .glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  
+  .scroll-smooth { scroll-behavior: smooth; }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  .float-anim { animation: float 6s ease-in-out infinite; }
+  
+  .marquee {
+    display: flex;
+    gap: 4rem;
+    animation: scroll 30s linear infinite;
+  }
+  
+  @keyframes scroll {
+    to { transform: translateX(-50%); }
+  }
+  
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: rgba(255,255,255,0.6);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  
+  .sidebar-link:hover {
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+  }
+  
+  .sidebar-link.active {
+    background: rgba(250, 204, 21, 0.1);
+    color: #FACC15;
+    border: 1px solid rgba(250, 204, 21, 0.2);
+  }
+  
+  .badge {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  
+  .badge-active {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+  }
+  
+  .badge-pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+  
+  .badge-suspended {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+  
+  .badge-verified {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+  }
+  
+  .input {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: #fff;
+    transition: all 0.3s;
+  }
+  
+  .input:focus {
+    outline: none;
+    border-color: #FACC15;
+    background: rgba(255,255,255,0.08);
+  }
+  
+  .input::placeholder {
+    color: rgba(255,255,255,0.4);
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th {
+    text-align: left;
+    padding: 16px 24px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.6);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  td {
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  tr:hover {
+    background: rgba(255,255,255,0.02);
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #000;
+    background: linear-gradient(135deg, #FACC15, #A16207);
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: #FACC15;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .toast {
+    background: rgba(0,0,0,0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    animation: slideIn 0.4s;
+    min-width: 320px;
+  }
+  
+  .toast.success { border-left: 4px solid #22c55e; }
+  .toast.error { border-left: 4px solid #ef4444; }
+  .toast.warning { border-left: 4px solid #f59e0b; }
+  .toast.info { border-left: 4px solid #3b82f6; }
+  
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  
+  .toast.hiding {
+    animation: slideOut 0.3s forwards;
+  }
+  
+  @keyframes slideOut {
+    to { transform: translateX(100%); opacity: 0; }
+  }
+  
+  .toggle {
+    position: relative;
+    width: 48px;
+    height: 24px;
+  }
+  
+  .toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 999px;
+    transition: 0.3s;
+  }
+  
+  .toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    transition: 0.3s;
+  }
+  
+  input:checked + .toggle-slider {
+    background: rgba(250, 204, 21, 0.2);
+    border-color: #FACC15;
+  }
+  
+  input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+    background: #FACC15;
+  }
+  
+  @media (max-width: 1024px) {
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+    }
+    
+    .sidebar.open {
+      transform: translateX(0);
+    }
+    
+    main {
+      margin-left: 0 !important;
+    }
+  }
+
+
+/* =========================================
+   MOBILE-FIRST RESPONSIVE OVERRIDES
+   Append this to the bottom of your <style> block
+   ========================================= */
+
+/* Base Mobile Styles - Compact Desktop Feel */
+@media (max-width: 767px) {
+  /* Reduce overall spacing */
+  body {
+    font-size: 14px;
+  }
+  
+  /* Sidebar adjustments */
+  .sidebar {
+    width: 280px !important;
+  }
+  
+  .sidebar .p-6 {
+    padding: 1rem !important;
+  }
+  
+  .sidebar-link {
+    padding: 10px 12px !important;
+    font-size: 0.875rem !important;
+    gap: 10px !important;
+  }
+  
+  .sidebar-link i {
+    font-size: 0.875rem !important;
+  }
+  
+  /* Main content area */
+  main {
+    margin-left: 0 !important;
+  }
+  
+  /* Header compact */
+  header {
+    padding: 0.75rem 1rem !important;
+  }
+  
+  header .input {
+    padding: 10px 12px 10px 36px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  header .fa-search {
+    left: 12px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  /* Page content - reduced padding */
+  #pageContent {
+    padding: 1rem !important;
+  }
+  
+  /* Hero sections - more compact */
+  .mb-16 {
+    margin-bottom: 2rem !important;
+  }
+  
+  .mb-12 {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .mb-8 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .mb-6 {
+    margin-bottom: 0.75rem !important;
+  }
+  
+  /* Typography - scaled down */
+  .display {
+    font-size: 2rem !important;
+    line-height: 1.1 !important;
+  }
+  
+  h1.display {
+    font-size: 2.5rem !important;
+  }
+  
+  .text-5xl {
+    font-size: 2rem !important;
+  }
+  
+  .text-4xl {
+    font-size: 1.75rem !important;
+  }
+  
+  .text-3xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .text-lg {
+    font-size: 1rem !important;
+  }
+  
+  /* Stat cards - more compact */
+  .card-glass {
+    padding: 1rem !important;
+    border-radius: 16px !important;
+  }
+  
+  .stat-card {
+    padding: 1rem !important;
+  }
+  
+  .stat-card .w-12 {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+  }
+  
+  .stat-card .text-5xl {
+    font-size: 1.75rem !important;
+  }
+  
+  .stat-card .text-sm {
+    font-size: 0.75rem !important;
+  }
+  
+  /* Grid layouts - stack on mobile */
+  .grid-cols-4,
+  .grid-cols-3,
+  .grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+  
+  .md\:grid-cols-2,
+  .md\:grid-cols-3,
+  .md\:grid-cols-4,
+  .lg\:grid-cols-2,
+  .lg\:grid-cols-3,
+  .lg\:grid-cols-4 {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+  
+  /* Tables - compact and scrollable */
+  table {
+    font-size: 0.875rem !important;
+  }
+  
+  th, td {
+    padding: 12px 16px !important;
+  }
+  
+  th {
+    font-size: 0.7rem !important;
+    letter-spacing: 0.03em !important;
+  }
+  
+  .avatar {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* Buttons - compact */
+  .btn-primary,
+  .btn-ghost,
+  .btn-danger {
+    padding: 10px 20px !important;
+    font-size: 0.875rem !important;
+    border-radius: 999px !important;
+  }
+  
+  .btn-primary.text-xs,
+  .btn-ghost.text-xs {
+    padding: 8px 16px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* Badges - smaller */
+  .badge {
+    padding: 4px 10px !important;
+    font-size: 0.7rem !important;
+  }
+  
+  /* Inputs - compact */
+  .input {
+    padding: 10px 14px !important;
+    font-size: 0.875rem !important;
+    border-radius: 10px !important;
+  }
+  
+  /* Toast notifications - full width on mobile */
+  .toast {
+    min-width: 280px !important;
+    max-width: calc(100vw - 2rem) !important;
+    padding: 12px 16px !important;
+  }
+  
+  /* Glow orbs - smaller on mobile */
+  .glow-orb {
+    width: 200px !important;
+    height: 200px !important;
+    filter: blur(40px) !important;
+    opacity: 0.2 !important;
+  }
+  
+  /* Charts - full width */
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Toggle switches - compact */
+  .toggle {
+    width: 44px !important;
+    height: 22px !important;
+  }
+  
+  .toggle-slider:before {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  
+  input:checked + .toggle-slider:before {
+    transform: translateX(22px) !important;
+  }
+  
+  /* Sidebar user section - compact */
+  .sidebar .p-4 {
+    padding: 0.75rem !important;
+  }
+  
+  .sidebar .avatar {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  
+  /* Reduce spacing in lists */
+  .space-y-4 > * + * {
+    margin-top: 0.75rem !important;
+  }
+  
+  .space-y-3 > * + * {
+    margin-top: 0.5rem !important;
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  /* Card hover effects - subtle on mobile */
+  .card-glass:hover {
+    transform: translateY(-2px) !important;
+  }
+  
+  /* Table actions - stack on mobile */
+  .flex.gap-2.justify-end {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  
+  .flex.gap-2.justify-end button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  
+  /* Reduce padding in flex containers */
+  .p-6 {
+    padding: 1rem !important;
+  }
+  
+  .p-8 {
+    padding: 1.25rem !important;
+  }
+  
+  .px-8 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .py-4 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+  
+  /* Text opacity adjustments for better contrast */
+  .opacity-60 {
+    opacity: 0.7 !important;
+  }
+  
+  .opacity-70 {
+    opacity: 0.8 !important;
+  }
+  
+  .opacity-80 {
+    opacity: 0.9 !important;
+  }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid-cols-4,
+  .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .md\:grid-cols-3,
+  .md\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .display {
+    font-size: 2.5rem !important;
+  }
+  
+  h1.display {
+    font-size: 3rem !important;
+  }
+  
+  .card-glass {
+    padding: 1.25rem !important;
+  }
+  
+  .stat-card .text-5xl {
+    font-size: 2rem !important;
+  }
+}
+
+/* Small Mobile Devices (iPhone SE, etc.) */
+@media (max-width: 375px) {
+  .display {
+    font-size: 1.75rem !important;
+  }
+  
+  h1.display {
+    font-size: 2rem !important;
+  }
+  
+  .text-4xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .text-3xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .stat-card .text-5xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .btn-primary,
+  .btn-ghost {
+    padding: 8px 16px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .card-glass {
+    padding: 0.875rem !important;
+  }
+  
+  th, td {
+    padding: 10px 12px !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .sidebar {
+    width: 240px !important;
+  }
+  
+  .sidebar-link {
+    padding: 8px 12px !important;
+  }
+  
+  #pageContent {
+    padding: 0.75rem !important;
+  }
+  
+  .mb-16 {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .display {
+    font-size: 1.75rem !important;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  .btn-primary,
+  .btn-ghost,
+  .btn-danger {
+    min-height: 44px !important;
+  }
+  
+  .sidebar-link {
+    min-height: 44px !important;
+  }
+  
+  /* Remove hover effects on touch devices */
+  .card-glass:hover {
+    transform: none !important;
+  }
+  
+  .btn-primary:hover,
+  .btn-ghost:hover {
+    transform: none !important;
+  }
+  
+  /* Active states for touch feedback */
+  .btn-primary:active,
+  .btn-ghost:active,
+  .sidebar-link:active {
+    transform: scale(0.98) !important;
+    opacity: 0.8 !important;
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .stars {
+    background-size: 150px 150px !important;
+  }
+  
+  .glow-orb {
+    filter: blur(60px) !important;
+  }
+}
+
+/* Safe Area Insets (Notch devices) */
+@supports (padding: max(0px)) {
+  .sidebar {
+    padding-left: max(0px, env(safe-area-inset-left)) !important;
+    padding-bottom: max(0px, env(safe-area-inset-bottom)) !important;
+  }
+  
+  main {
+    padding-right: max(0px, env(safe-area-inset-right)) !important;
+  }
+  
+  header {
+    padding-top: max(0.75rem, env(safe-area-inset-top)) !important;
+  }
+  
+  #toastContainer {
+    bottom: max(1.5rem, env(safe-area-inset-bottom)) !important;
+    right: max(1.5rem, env(safe-area-inset-right)) !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .sidebar,
+  header,
+  .glow-orb,
+  .stars,
+  .toast {
+    display: none !important;
+  }
+  
+  main {
+    margin-left: 0 !important;
+  }
+  
+  .card-glass {
+    border: 1px solid #000 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+  
+  * {
+    color: #000 !important;
+    background: #fff !important;
+  }
+}
+
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .fade-in {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  .stars {
+    animation: none !important;
+  }
+}
+
+/* Dark Mode System Preference (if needed) */
+@media (prefers-color-scheme: dark) {
+  /* Already dark, no changes needed */
+}
+
+/* Light Mode System Preference */
+@media (prefers-color-scheme: light) {
+  /* Keep dark theme as default for SpaceX aesthetic */
+}
+
+/* Ultra-wide screens */
+@media (min-width: 2560px) {
+  #pageContent {
+    max-width: 2000px !important;
+    margin: 0 auto !important;
+  }
+  
+  .display {
+    font-size: 5rem !important;
+  }
+  
+  .grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 2rem !important;
+  }
+}
+
+/* 4K Displays */
+@media (min-width: 3840px) {
+  body {
+    font-size: 18px !important;
+  }
+  
+  .display {
+    font-size: 6rem !important;
+  }
+  
+  .card-glass {
+    padding: 2.5rem !important;
+    border-radius: 24px !important;
+  }
+}
+
+/* =========================================
+   MOBILE-FIRST RESPONSIVE OVERRIDES
+   Append this to the bottom of your <style> block
+   ========================================= */
+
+/* Base Mobile Styles - Compact Desktop Feel */
+@media (max-width: 767px) {
+  /* Reduce overall spacing */
+  body {
+    font-size: 14px;
+  }
+  
+  /* Sidebar adjustments */
+  .sidebar {
+    width: 280px !important;
+  }
+  
+  .sidebar .p-6 {
+    padding: 1rem !important;
+  }
+  
+  .sidebar-link {
+    padding: 10px 12px !important;
+    font-size: 0.875rem !important;
+    gap: 10px !important;
+  }
+  
+  .sidebar-link i {
+    font-size: 0.875rem !important;
+  }
+  
+  /* Main content area */
+  main {
+    margin-left: 0 !important;
+  }
+  
+  /* Header compact */
+  header {
+    padding: 0.75rem 1rem !important;
+  }
+  
+  header .input {
+    padding: 10px 12px 10px 36px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  header .fa-search {
+    left: 12px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  /* Page content - reduced padding */
+  #pageContent {
+    padding: 1rem !important;
+  }
+  
+  /* Hero sections - more compact */
+  .mb-16 {
+    margin-bottom: 2rem !important;
+  }
+  
+  .mb-12 {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .mb-8 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .mb-6 {
+    margin-bottom: 0.75rem !important;
+  }
+  
+  /* Typography - scaled down */
+  .display {
+    font-size: 2rem !important;
+    line-height: 1.1 !important;
+  }
+  
+  h1.display {
+    font-size: 2.5rem !important;
+  }
+  
+  .text-5xl {
+    font-size: 2rem !important;
+  }
+  
+  .text-4xl {
+    font-size: 1.75rem !important;
+  }
+  
+  .text-3xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .text-lg {
+    font-size: 1rem !important;
+  }
+  
+  /* Stat cards - more compact */
+  .card-glass {
+    padding: 1rem !important;
+    border-radius: 16px !important;
+  }
+  
+  .stat-card {
+    padding: 1rem !important;
+  }
+  
+  .stat-card .w-12 {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+  }
+  
+  .stat-card .text-5xl {
+    font-size: 1.75rem !important;
+  }
+  
+  .stat-card .text-sm {
+    font-size: 0.75rem !important;
+  }
+  
+  /* Grid layouts - stack on mobile */
+  .grid-cols-4,
+  .grid-cols-3,
+  .grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+  
+  .md\:grid-cols-2,
+  .md\:grid-cols-3,
+  .md\:grid-cols-4,
+  .lg\:grid-cols-2,
+  .lg\:grid-cols-3,
+  .lg\:grid-cols-4 {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+  
+  /* Tables - compact and scrollable */
+  table {
+    font-size: 0.875rem !important;
+  }
+  
+  th, td {
+    padding: 12px 16px !important;
+  }
+  
+  th {
+    font-size: 0.7rem !important;
+    letter-spacing: 0.03em !important;
+  }
+  
+  .avatar {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* Buttons - compact */
+  .btn-primary,
+  .btn-ghost,
+  .btn-danger {
+    padding: 10px 20px !important;
+    font-size: 0.875rem !important;
+    border-radius: 999px !important;
+  }
+  
+  .btn-primary.text-xs,
+  .btn-ghost.text-xs {
+    padding: 8px 16px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* Badges - smaller */
+  .badge {
+    padding: 4px 10px !important;
+    font-size: 0.7rem !important;
+  }
+  
+  /* Inputs - compact */
+  .input {
+    padding: 10px 14px !important;
+    font-size: 0.875rem !important;
+    border-radius: 10px !important;
+  }
+  
+  /* Toast notifications - full width on mobile */
+  .toast {
+    min-width: 280px !important;
+    max-width: calc(100vw - 2rem) !important;
+    padding: 12px 16px !important;
+  }
+  
+  /* Glow orbs - smaller on mobile */
+  .glow-orb {
+    width: 200px !important;
+    height: 200px !important;
+    filter: blur(40px) !important;
+    opacity: 0.2 !important;
+  }
+  
+  /* Charts - full width */
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Toggle switches - compact */
+  .toggle {
+    width: 44px !important;
+    height: 22px !important;
+  }
+  
+  .toggle-slider:before {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  
+  input:checked + .toggle-slider:before {
+    transform: translateX(22px) !important;
+  }
+  
+  /* Sidebar user section - compact */
+  .sidebar .p-4 {
+    padding: 0.75rem !important;
+  }
+  
+  .sidebar .avatar {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  
+  /* Reduce spacing in lists */
+  .space-y-4 > * + * {
+    margin-top: 0.75rem !important;
+  }
+  
+  .space-y-3 > * + * {
+    margin-top: 0.5rem !important;
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  /* Card hover effects - subtle on mobile */
+  .card-glass:hover {
+    transform: translateY(-2px) !important;
+  }
+  
+  /* Table actions - stack on mobile */
+  .flex.gap-2.justify-end {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  
+  .flex.gap-2.justify-end button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  
+  /* Reduce padding in flex containers */
+  .p-6 {
+    padding: 1rem !important;
+  }
+  
+  .p-8 {
+    padding: 1.25rem !important;
+  }
+  
+  .px-8 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .py-4 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+  
+  /* Text opacity adjustments for better contrast */
+  .opacity-60 {
+    opacity: 0.7 !important;
+  }
+  
+  .opacity-70 {
+    opacity: 0.8 !important;
+  }
+  
+  .opacity-80 {
+    opacity: 0.9 !important;
+  }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid-cols-4,
+  .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .md\:grid-cols-3,
+  .md\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .display {
+    font-size: 2.5rem !important;
+  }
+  
+  h1.display {
+    font-size: 3rem !important;
+  }
+  
+  .card-glass {
+    padding: 1.25rem !important;
+  }
+  
+  .stat-card .text-5xl {
+    font-size: 2rem !important;
+  }
+}
+
+/* Small Mobile Devices (iPhone SE, etc.) */
+@media (max-width: 375px) {
+  .display {
+    font-size: 1.75rem !important;
+  }
+  
+  h1.display {
+    font-size: 2rem !important;
+  }
+  
+  .text-4xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .text-3xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .stat-card .text-5xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .btn-primary,
+  .btn-ghost {
+    padding: 8px 16px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .card-glass {
+    padding: 0.875rem !important;
+  }
+  
+  th, td {
+    padding: 10px 12px !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .sidebar {
+    width: 240px !important;
+  }
+  
+  .sidebar-link {
+    padding: 8px 12px !important;
+  }
+  
+  #pageContent {
+    padding: 0.75rem !important;
+  }
+  
+  .mb-16 {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .display {
+    font-size: 1.75rem !important;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  .btn-primary,
+  .btn-ghost,
+  .btn-danger {
+    min-height: 44px !important;
+  }
+  
+  .sidebar-link {
+    min-height: 44px !important;
+  }
+  
+  /* Remove hover effects on touch devices */
+  .card-glass:hover {
+    transform: none !important;
+  }
+  
+  .btn-primary:hover,
+  .btn-ghost:hover {
+    transform: none !important;
+  }
+  
+  /* Active states for touch feedback */
+  .btn-primary:active,
+  .btn-ghost:active,
+  .sidebar-link:active {
+    transform: scale(0.98) !important;
+    opacity: 0.8 !important;
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .stars {
+    background-size: 150px 150px !important;
+  }
+  
+  .glow-orb {
+    filter: blur(60px) !important;
+  }
+}
+
+/* Safe Area Insets (Notch devices) */
+@supports (padding: max(0px)) {
+  .sidebar {
+    padding-left: max(0px, env(safe-area-inset-left)) !important;
+    padding-bottom: max(0px, env(safe-area-inset-bottom)) !important;
+  }
+  
+  main {
+    padding-right: max(0px, env(safe-area-inset-right)) !important;
+  }
+  
+  header {
+    padding-top: max(0.75rem, env(safe-area-inset-top)) !important;
+  }
+  
+  #toastContainer {
+    bottom: max(1.5rem, env(safe-area-inset-bottom)) !important;
+    right: max(1.5rem, env(safe-area-inset-right)) !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .sidebar,
+  header,
+  .glow-orb,
+  .stars,
+  .toast {
+    display: none !important;
+  }
+  
+  main {
+    margin-left: 0 !important;
+  }
+  
+  .card-glass {
+    border: 1px solid #000 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+  
+  * {
+    color: #000 !important;
+    background: #fff !important;
+  }
+}
+
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .fade-in {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  .stars {
+    animation: none !important;
+  }
+}
+
+/* Dark Mode System Preference (if needed) */
+@media (prefers-color-scheme: dark) {
+  /* Already dark, no changes needed */
+}
+
+/* Light Mode System Preference */
+@media (prefers-color-scheme: light) {
+  /* Keep dark theme as default for SpaceX aesthetic */
+}
+
+/* Ultra-wide screens */
+@media (min-width: 2560px) {
+  #pageContent {
+    max-width: 2000px !important;
+    margin: 0 auto !important;
+  }
+  
+  .display {
+    font-size: 5rem !important;
+  }
+  
+  .grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 2rem !important;
+  }
+}
+
+/* 4K Displays */
+@media (min-width: 3840px) {
+  body {
+    font-size: 18px !important;
+  }
+  
+  .display {
+    font-size: 6rem !important;
+  }
+  
+  .card-glass {
+    padding: 2.5rem !important;
+    border-radius: 24px !important;
+  }
+}
+
+/* =========================================
+   FIX HORIZONTAL OVERFLOW - MOBILE OPTIMIZED
+   Append this to the bottom of your <style> block
+   ========================================= */
+
+/* Prevent horizontal overflow */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Mobile Base (Default) */
+@media (max-width: 1023px) {
+  /* Fix container widths */
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* Sidebar - hidden by default, slide in */
+  #sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    width: 280px !important;
+  }
+  
+  #sidebar.open {
+    transform: translateX(0);
+  }
+  
+  /* Main content - full width on mobile */
+  main {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+  
+  /* Reduce padding everywhere */
+  #pageContent {
+    padding: 0.75rem !important;
+    max-width: 100% !important;
+  }
+  
+  header {
+    padding: 0.75rem 1rem !important;
+  }
+  
+  /* Stack grids */
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4,
+  .md\:grid-cols-2,
+  .md\:grid-cols-3,
+  .md\:grid-cols-4,
+  .lg\:grid-cols-2,
+  .lg\:grid-cols-3,
+  .lg\:grid-cols-4 {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+  
+  /* Scale down typography */
+  .display {
+    font-size: 1.75rem !important;
+    line-height: 1.1 !important;
+  }
+  
+  h1.display,
+  .text-5xl,
+  .text-6xl,
+  .text-7xl,
+  .text-8xl {
+    font-size: 2rem !important;
+  }
+  
+  .text-4xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .text-3xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.125rem !important;
+  }
+  
+  .text-lg {
+    font-size: 0.9375rem !important;
+  }
+  
+  /* Compact cards */
+  .card-glass {
+    padding: 1rem !important;
+    border-radius: 16px !important;
+  }
+  
+  /* Compact buttons */
+  .btn-primary,
+  .btn-ghost,
+  .btn-danger {
+    padding: 10px 16px !important;
+    font-size: 0.8125rem !important;
+    white-space: nowrap;
+  }
+  
+  .btn-primary.text-xs,
+  .btn-ghost.text-xs {
+    padding: 6px 12px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* Compact inputs */
+  .input {
+    padding: 10px 12px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  /* Tables - fix horizontal overflow */
+  .overflow-x-auto {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+  
+  table {
+    min-width: 100%;
+    font-size: 0.8125rem !important;
+  }
+  
+  th, td {
+    padding: 10px 12px !important;
+    font-size: 0.75rem !important;
+    white-space: nowrap;
+  }
+  
+  th {
+    font-size: 0.6875rem !important;
+    letter-spacing: 0.03em !important;
+  }
+  
+  /* Avatar smaller */
+  .avatar {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.6875rem !important;
+  }
+  
+  /* Reduce spacing */
+  .mb-16 { margin-bottom: 1.5rem !important; }
+  .mb-12 { margin-bottom: 1.25rem !important; }
+  .mb-8 { margin-bottom: 1rem !important; }
+  .mb-6 { margin-bottom: 0.75rem !important; }
+  .mb-4 { margin-bottom: 0.5rem !important; }
+  
+  .p-6 { padding: 1rem !important; }
+  .p-8 { padding: 1.25rem !important; }
+  .px-8 { padding-left: 1rem !important; padding-right: 1rem !important; }
+  .py-4 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+  
+  /* Smaller glow orbs */
+  .glow-orb {
+    width: 200px !important;
+    height: 200px !important;
+    filter: blur(40px) !important;
+  }
+  
+  /* Toast full width */
+  .toast {
+    min-width: 0 !important;
+    width: calc(100vw - 2rem) !important;
+    max-width: 100% !important;
+    padding: 12px 14px !important;
+    font-size: 0.8125rem !important;
+  }
+  
+  /* Badges smaller */
+  .badge {
+    padding: 3px 8px !important;
+    font-size: 0.6875rem !important;
+  }
+  
+  /* Action buttons in tables - stack vertically */
+  .flex.gap-2.justify-end {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.5rem !important;
+  }
+  
+  .flex.gap-2.justify-end button {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 8px 12px !important;
+  }
+  
+  /* Hide some text on very small screens */
+  .hidden-mobile-text {
+    display: none !important;
+  }
+  
+  /* Compact sidebar */
+  .sidebar-link {
+    padding: 10px 12px !important;
+    font-size: 0.8125rem !important;
+    gap: 10px !important;
+  }
+  
+  .sidebar-link i {
+    font-size: 0.8125rem !important;
+  }
+  
+  /* Reduce header search width */
+  header .input {
+    max-width: 100% !important;
+  }
+  
+  /* Charts responsive */
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Text opacity */
+  .opacity-60 { opacity: 0.7 !important; }
+  .opacity-70 { opacity: 0.8 !important; }
+  .opacity-80 { opacity: 0.9 !important; }
+}
+
+/* Tablet - 2 columns */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .md\:grid-cols-2,
+  .md\:grid-cols-3,
+  .md\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .display {
+    font-size: 2.25rem !important;
+  }
+  
+  h1.display,
+  .text-5xl,
+  .text-6xl,
+  .text-7xl,
+  .text-8xl {
+    font-size: 2.5rem !important;
+  }
+  
+  .card-glass {
+    padding: 1.25rem !important;
+  }
+}
+
+/* Desktop - normal layout */
+@media (min-width: 1024px) {
+  #sidebar {
+    transform: translateX(0);
+  }
+  
+  main {
+    margin-left: 18rem !important;
+  }
+}
+
+/* Small Mobile Devices (iPhone SE, etc.) */
+@media (max-width: 375px) {
+  .display {
+    font-size: 1.5rem !important;
+  }
+  
+  h1.display,
+  .text-5xl,
+  .text-6xl,
+  .text-7xl,
+  .text-8xl {
+    font-size: 1.75rem !important;
+  }
+  
+  .text-4xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .text-3xl {
+    font-size: 1.125rem !important;
+  }
+  
+  table {
+    font-size: 0.75rem !important;
+  }
+  
+  th, td {
+    padding: 8px 10px !important;
+    font-size: 0.6875rem !important;
+  }
+  
+  .btn-primary,
+  .btn-ghost {
+    padding: 8px 14px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .card-glass {
+    padding: 0.875rem !important;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .sidebar {
+    width: 240px !important;
+  }
+  
+  .sidebar-link {
+    padding: 8px 12px !important;
+  }
+  
+  #pageContent {
+    padding: 0.5rem !important;
+  }
+  
+  .mb-16 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .display {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* Touch devices - bigger tap targets */
+@media (hover: none) and (pointer: coarse) {
+  .btn-primary,
+  .btn-ghost,
+  .btn-danger,
+  .sidebar-link {
+    min-height: 44px !important;
+  }
+  
+  .card-glass:hover,
+  .btn-primary:hover,
+  .btn-ghost:hover {
+    transform: none !important;
+  }
+  
+  .btn-primary:active,
+  .btn-ghost:active,
+  .sidebar-link:active {
+    transform: scale(0.98) !important;
+    opacity: 0.8 !important;
+  }
+}
+
+/* Safe Area Insets (Notch devices) */
+@supports (padding: max(0px)) {
+  .sidebar {
+    padding-left: max(0px, env(safe-area-inset-left)) !important;
+    padding-bottom: max(0px, env(safe-area-inset-bottom)) !important;
+  }
+  
+  main {
+    padding-right: max(0px, env(safe-area-inset-right)) !important;
+  }
+  
+  header {
+    padding-top: max(0.75rem, env(safe-area-inset-top)) !important;
+  }
+  
+  #toastContainer {
+    bottom: max(1.5rem, env(safe-area-inset-bottom)) !important;
+    right: max(1.5rem, env(safe-area-inset-right)) !important;
+    left: max(1.5rem, env(safe-area-inset-left)) !important;
+  }
+}
+
+
+
+
+/* Bell Animation */
+@keyframes bellRing {
+  0% { transform: rotate(0); }
+  10% { transform: rotate(15deg); }
+  20% { transform: rotate(-15deg); }
+  30% { transform: rotate(12deg); }
+  40% { transform: rotate(-12deg); }
+  50% { transform: rotate(8deg); }
+  60% { transform: rotate(-8deg); }
+  70% { transform: rotate(4deg); }
+  80% { transform: rotate(-4deg); }
+  90% { transform: rotate(2deg); }
+  100% { transform: rotate(0); }
+}
+
+@keyframes bellPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+}
+
+.bell-ring {
+  animation: bellRing 0.8s ease-in-out;
+}
+
+.bell-pulse {
+  animation: bellPulse 2s infinite;
+}
+
+#activityBell:hover {
+  background: rgba(250, 204, 21, 0.1);
+}
+
+#activityBell:hover .fa-bell {
+  color: #FACC15;
+}
+
+/* Drawer Overlay */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 35;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.drawer-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Sidebar Close Button */
+.sidebar-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.sidebar-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+@media (max-width: 1023px) {
+  .sidebar-close {
+    display: flex;
+  }
+}
+
+
+
+
+</style>
+
+
+
+</head>
+<body class="scroll-smooth">
+
+<div class="stars"></div>
+
+<!-- Drawer Overlay (click outside to close) -->
+<div id="drawerOverlay" class="drawer-overlay" onclick="closeSidebar()"></div>
+
+<!-- Auth Guard -->
+<div id="authGuard" class="fixed inset-0 bg-black z-[9999] flex items-center justify-center">
+  <div class="spinner"></div>
+</div>
+
+<div id="app" class="flex min-h-screen hidden">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar sidebar-glass w-72 fixed h-full z-40 flex flex-col">
+    <!-- Close Button (X) -->
+    <button onclick="closeSidebar()" class="sidebar-close" title="Close menu">
+      <i class="fas fa-times"></i>
+    </button>
+    
+    <div class="p-6 border-b border-white/10">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+          <i class="fas fa-shield-alt text-black"></i>
+        </div>
+        <div>
+          <h1 class="display font-bold text-lg">MoonLat Admin</h1>
+          <p class="text-xs opacity-60">Control Center</p>
+        </div>
+      </div>
+    </div>
+
+    
+<nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+  <!-- Upload Button - Prominent -->
+  <a href="publisher.html" class="sidebar-link active mb-4" style="background: linear-gradient(135deg, rgba(250, 204, 21, 0.2) 0%, rgba(161, 98, 7, 0.2) 100%); border: 1px solid rgba(250, 204, 21, 0.3);">
+    <i class="fas fa-cloud-upload-alt w-5" style="color: #FACC15;"></i>
+    <span style="color: #FACC15; font-weight: 600;">Upload Property</span>
+  </a>
+  
+  <div class="text-xs tracking-[0.3em] opacity-60 mb-2 px-3 mt-2">OVERVIEW</div>
+  <a onclick="navigate('dashboard')" class="sidebar-link" data-page="dashboard">
+    <i class="fas fa-chart-line w-5"></i> Dashboard
+  </a>
+  <a onclick="navigate('analytics')" class="sidebar-link" data-page="analytics">
+    <i class="fas fa-chart-pie w-5"></i> Analytics
+  </a>
+  
+  <div class="text-xs tracking-[0.3em] opacity-60 mb-2 px-3 mt-6">MANAGEMENT</div>
+  <a onclick="navigate('users')" class="sidebar-link" data-page="users">
+    <i class="fas fa-users w-5"></i> Users
+  </a>
+  <a onclick="navigate('agents')" class="sidebar-link" data-page="agents">
+    <i class="fas fa-user-tie w-5"></i> Agents
+  </a>
+  <a onclick="navigate('properties')" class="sidebar-link" data-page="properties">
+    <i class="fas fa-building w-5"></i> Properties
+  </a>
+  <a onclick="navigate('transactions')" class="sidebar-link" data-page="transactions">
+    <i class="fas fa-wallet w-5"></i> Transactions
+  </a>
+  
+  <div class="text-xs tracking-[0.3em] opacity-60 mb-2 px-3 mt-6">SYSTEM</div>
+  <a onclick="navigate('reports')" class="sidebar-link" data-page="reports">
+    <i class="fas fa-file-alt w-5"></i> Reports
+  </a>
+  <a onclick="navigate('settings')" class="sidebar-link" data-page="settings">
+    <i class="fas fa-cog w-5"></i> Settings
+  </a>
+</nav>
+
+    
+    <div class="p-4 border-t border-white/10">
+      <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/5">
+        <div class="avatar" id="adminAvatar">A</div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold truncate" id="adminName">Admin</p>
+          <p class="text-xs opacity-60 truncate">Super Admin</p>
+        </div>
+        <button onclick="handleLogout()" class="opacity-60 hover:opacity-100 transition">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 ml-72">
+    <!-- Header -->
+    <header class="nav-glass sticky top-0 z-30 px-8 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4 flex-1">
+          <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-white/5">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="relative flex-1 max-w-md">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 opacity-40"></i>
+            <input type="text" placeholder="Search users, agents, properties..." class="input pl-11" id="globalSearch">
+          </div>
+        </div>
+<div class="flex items-center gap-4">
+  <button onclick="window.location.href='activity.html'" class="relative p-2 rounded-lg hover:bg-white/5 transition" id="activityBell" title="Activity Center">
+    <i class="fas fa-bell text-lg"></i>
+    <span id="bellBadge" class="absolute -top-0 -right-0 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center hidden">0</span>
+  </button>
+</div>
+
+
+
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div id="pageContent" class="p-8 relative">
+      <div class="glow-orb" style="width:500px;height:500px;background:#FACC15;top:10%;right:-10%;"></div>
+      <div class="flex items-center justify-center" style="min-height: 400px;">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Toast Container -->
+<div id="toastContainer" class="fixed bottom-6 right-6 z-50"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut, updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+  projectId: "moonlat-estate-dashboard",
+  storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+  messagingSenderId: "289878951289",
+  appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let allUsers = [];
+let allAgents = [];
+let allProperties = [];
+let allTransactions = [];
+let currentPage = 'dashboard';
+
+// =================== ERROR HANDLING ===================
+const ErrorHandler = {
+  handle(error, action = 'perform this action') {
+    console.error(`[MoonLat Admin]`, error);
+    const messages = {
+      'permission-denied': 'You do not have permission to perform this action',
+      'unauthorized': 'Authentication required. Please sign in again',
+      'not-found': 'The requested resource was not found',
+      'network-error': 'Network error. Please check your connection',
+      'auth/requires-recent-login': 'Please sign in again to change credentials',
+      'auth/wrong-password': 'Current password is incorrect',
+      'auth/invalid-email': 'Invalid email address format',
+      'auth/email-already-in-use': 'This email is already in use by another account',
+      'auth/weak-password': 'Password should be at least 6 characters',
+      'auth/invalid-credential': 'Invalid credentials'
+    };
+    const errorCode = error.code || '';
+    showToast(messages[errorCode] || `Failed to ${action}: ${error.message || 'Unknown error'}`, 'error');
+  }
+};
+
+// =================== TOAST SYSTEM ===================
+function showToast(message, type = 'info', duration = 4000) {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  const icons = {
+    success: 'fa-check-circle',
+    error: 'fa-exclamation-circle',
+    warning: 'fa-exclamation-triangle',
+    info: 'fa-info-circle'
+  };
+  
+  toast.innerHTML = `
+    <i class="fas ${icons[type]} text-xl"></i>
+    <div class="flex-1">
+      <p class="font-semibold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+      <p class="text-sm opacity-80 mt-0.5">${message}</p>
+    </div>
+    <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+  
+  container.appendChild(toast);
+  
+  if (duration > 0) {
+    setTimeout(() => {
+      toast.classList.add('hiding');
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  }
+}
+
+// =================== AUTH CHECK ===================
+onAuthStateChanged(auth, async (user) => {
+  try {
+    if (!user) {
+      window.location.href = '../sign-in.html';
+      return;
+    }
+    
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    
+    if (!userDoc.exists()) {
+      throw new Error('User profile not found');
+    }
+    
+    const userData = userDoc.data();
+    
+    if (userData.role !== 'admin') {
+      await signOut(auth);
+      showToast('Access denied. Admin privileges required.', 'error');
+      window.location.href = 'dashboard.html';
+      return;
+    }
+    
+    currentUser = { uid: user.uid, ...userData, authEmail: user.email };
+    
+    document.getElementById('adminName').textContent = userData.name || 'Admin';
+    document.getElementById('adminAvatar').textContent = (userData.name || 'A')[0].toUpperCase();
+    
+    document.getElementById('authGuard').style.display = 'none';
+    document.getElementById('app').classList.remove('hidden');
+    
+    subscribeToData();
+    renderPage();
+    
+    showToast('Welcome back, ' + (userData.name || 'Admin'), 'success', 2000);
+    
+  } catch (error) {
+    ErrorHandler.handle(error, 'initialize admin panel');
+    await signOut(auth);
+    window.location.href = '../sign-in.html';
+  }
+});
+
+// =================== DATA SUBSCRIPTION ===================
+let activityCount = 0;
+let lastActivityTime = Date.now();
+
+function subscribeToData() {
+  onSnapshot(collection(db, 'users'), (snap) => {
+    const prevCount = allUsers.length;
+    allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    allAgents = allUsers.filter(u => u.role === 'agent');
+    
+    if (prevCount > 0 && allUsers.length > prevCount) {
+      const newCount = allUsers.length - prevCount;
+      triggerBellRing(newCount, 'user');
+    }
+    
+    renderPage();
+  });
+  
+  onSnapshot(collection(db, 'properties'), (snap) => {
+    const prevCount = allProperties.length;
+    allProperties = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    
+    if (prevCount > 0 && allProperties.length > prevCount) {
+      const newCount = allProperties.length - prevCount;
+      triggerBellRing(newCount, 'property');
+    }
+    
+    renderPage();
+  });
+  
+  onSnapshot(collection(db, 'transactions'), (snap) => {
+    const prevCount = allTransactions.length;
+    allTransactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    
+    if (prevCount > 0 && allTransactions.length > prevCount) {
+      const newCount = allTransactions.length - prevCount;
+      triggerBellRing(newCount, 'transaction');
+    }
+    
+    renderPage();
+  });
+}
+
+// =================== BELL NOTIFICATION ===================
+function triggerBellRing(count = 1, type = 'activity') {
+  const bell = document.getElementById('activityBell');
+  const badge = document.getElementById('bellBadge');
+  
+  if (!bell || !badge) return;
+  
+  activityCount += count;
+  badge.textContent = activityCount > 99 ? '99+' : activityCount;
+  badge.classList.remove('hidden');
+  badge.classList.add('bell-pulse');
+  
+  bell.classList.remove('bell-ring');
+  void bell.offsetWidth;
+  bell.classList.add('bell-ring');
+  
+  setTimeout(() => {
+    badge.classList.remove('bell-pulse');
+  }, 6000);
+  
+  const messages = {
+    user: `${count} new user${count > 1 ? 's' : ''} registered`,
+    property: `${count} new propert${count > 1 ? 'ies' : 'y'} listed`,
+    transaction: `${count} new transaction${count > 1 ? 's' : ''}`,
+    activity: `${count} new activit${count > 1 ? 'ies' : 'y'}`
+  };
+  
+  showToast(messages[type] || messages.activity, 'info', 3000);
+}
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+    resetBell();
+  }
+});
+
+function resetBell() {
+  activityCount = 0;
+  const badge = document.getElementById('bellBadge');
+  if (badge) {
+    badge.classList.add('hidden');
+    badge.classList.remove('bell-pulse');
+  }
+}
+
+// =================== NAVIGATION ===================
+function navigate(page) {
+  currentPage = page;
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  document.querySelector(`[data-page="${page}"]`)?.classList.add('active');
+  renderPage();
+  
+  if (window.innerWidth < 1024) {
+    closeSidebar();
+  }
+}
+
+window.navigate = navigate;
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('drawerOverlay');
+  
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('active');
+  
+  if (sidebar.classList.contains('open')) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('drawerOverlay');
+  
+  sidebar.classList.remove('open');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+window.toggleSidebar = toggleSidebar;
+window.closeSidebar = closeSidebar;
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeSidebar();
+  }
+});
+
+// =================== RENDER PAGES ===================
+function renderPage() {
+  const content = document.getElementById('pageContent');
+  
+  switch(currentPage) {
+    case 'dashboard': renderDashboard(content); break;
+    case 'users': renderUsers(content); break;
+    case 'agents': renderAgents(content); break;
+    case 'properties': renderProperties(content); break;
+    case 'transactions': renderTransactions(content); break;
+    case 'analytics': renderAnalytics(content); break;
+    case 'reports': renderReports(content); break;
+    case 'settings': renderSettings(content); break;
+    default: renderDashboard(content);
+  }
+}
+
+// =================== DASHBOARD ===================
+function renderDashboard(c) {
+  const totalUsers = allUsers.filter(u => u.role === 'buyer').length;
+  const totalAgents = allAgents.length;
+  const activeAgents = allAgents.filter(a => a.status !== 'suspended').length;
+  const totalProperties = allProperties.length;
+  const activeProperties = allProperties.filter(p => p.status === 'Active').length;
+  const pendingProperties = allProperties.filter(p => p.status === 'Pending').length;
+  const totalRevenue = allTransactions.filter(t => t.status === 'Paid').reduce((sum, t) => sum + (t.amount || 0), 0);
+  
+  const recentActivity = [
+    ...allUsers.slice(-5).map(u => ({ type: 'user', name: u.name, action: 'registered', time: new Date(u.createdAt || Date.now()).toLocaleDateString() })),
+    ...allProperties.slice(-5).map(p => ({ type: 'property', name: p.title, action: 'listed', time: new Date(p.createdAt || Date.now()).toLocaleDateString() }))
+  ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 10);
+
+  c.innerHTML = `
+    <div class="glow-orb" style="width:500px;height:500px;background:#FACC15;top:10%;right:-10%;"></div>
+    
+    <div class="mb-16 fade-in">
+      <p class="text-xs tracking-[0.3em] opacity-60 mb-4">ADMIN CONTROL CENTER</p>
+      <h1 class="display text-6xl md:text-8xl font-bold leading-[0.9] mb-6">
+        DASHBOARD<br>
+        <span class="opacity-60">OVERVIEW</span>
+      </h1>
+      <p class="text-lg opacity-80 max-w-2xl leading-relaxed">
+        Complete control over your real estate marketplace. Monitor users, manage agents, moderate properties, and track platform performance.
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+      <div class="card-glass stat-card p-6 fade-in">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+            <i class="fas fa-users text-black"></i>
+          </div>
+          <span class="text-sm opacity-60">+12% this month</span>
+        </div>
+        <p class="display text-5xl font-bold stat-num" data-count="${totalUsers}">0</p>
+        <p class="text-sm opacity-70 mt-2">Total Users</p>
+      </div>
+      
+      <div class="card-glass stat-card p-6 fade-in">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+            <i class="fas fa-user-tie text-white"></i>
+          </div>
+          <span class="text-sm opacity-60">${activeAgents} active</span>
+        </div>
+        <p class="display text-5xl font-bold stat-num" data-count="${totalAgents}">0</p>
+        <p class="text-sm opacity-70 mt-2">Total Agents</p>
+      </div>
+      
+      <div class="card-glass stat-card p-6 fade-in">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+            <i class="fas fa-building text-white"></i>
+          </div>
+          <span class="text-sm opacity-60">${pendingProperties} pending</span>
+        </div>
+        <p class="display text-5xl font-bold stat-num" data-count="${totalProperties}">0</p>
+        <p class="text-sm opacity-70 mt-2">Total Properties</p>
+      </div>
+      
+      <div class="card-glass stat-card p-6 fade-in">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+            <i class="fas fa-wallet text-white"></i>
+          </div>
+          <span class="text-sm opacity-60">Platform revenue</span>
+        </div>
+        <p class="display text-5xl font-bold stat-num">₦${(totalRevenue / 1000000).toFixed(1)}M</p>
+        <p class="text-sm opacity-70 mt-2">Total Revenue</p>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16">
+      <div class="card-glass p-6 fade-in">
+        <h3 class="display text-2xl font-bold mb-6">Platform Statistics</h3>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between py-4 border-b border-white/10">
+            <span class="opacity-70">Active Properties</span>
+            <span class="display font-semibold text-green-400">${activeProperties}</span>
+          </div>
+          <div class="flex items-center justify-between py-4 border-b border-white/10">
+            <span class="opacity-70">Pending Approval</span>
+            <span class="display font-semibold text-yellow-400">${pendingProperties}</span>
+          </div>
+          <div class="flex items-center justify-between py-4 border-b border-white/10">
+            <span class="opacity-70">Suspended Accounts</span>
+            <span class="display font-semibold text-red-400">${allUsers.filter(u => u.status === 'suspended').length}</span>
+          </div>
+          <div class="flex items-center justify-between py-4">
+            <span class="opacity-70">Total Transactions</span>
+            <span class="display font-semibold text-yellow-400">${allTransactions.length}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-glass p-6 fade-in">
+        <h3 class="display text-2xl font-bold mb-6">Recent Activity</h3>
+        <div class="space-y-3">
+          ${recentActivity.length === 0 ? '<p class="opacity-60 text-center py-8">No recent activity</p>' : 
+            recentActivity.map(a => `
+              <div class="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: ${a.type === 'user' ? 'rgba(250, 204, 21, 0.1)' : 'rgba(59, 130, 246, 0.1)'};">
+                  <i class="fas ${a.type === 'user' ? 'fa-user' : 'fa-building'} text-sm" style="color: ${a.type === 'user' ? '#FACC15' : '#3b82f6'};"></i>
+                </div>
+                <div class="flex-1">
+                  <p class="font-semibold text-sm">${a.name || 'Unknown'}</p>
+                  <p class="text-xs opacity-60">${a.action}</p>
+                </div>
+                <span class="text-xs opacity-60">${a.time}</span>
+              </div>
+            `).join('')
+          }
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-glass p-6 fade-in">
+      <h3 class="display text-2xl font-bold mb-6">Quick Actions</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <button onclick="navigate('users')" class="btn-ghost w-full justify-center">
+          <i class="fas fa-users"></i> Manage Users
+        </button>
+        <button onclick="navigate('agents')" class="btn-ghost w-full justify-center">
+          <i class="fas fa-user-tie"></i> Verify Agents
+        </button>
+        <button onclick="navigate('properties')" class="btn-ghost w-full justify-center">
+          <i class="fas fa-building"></i> Moderate Properties
+        </button>
+      </div>
+    </div>
+  `;
+  
+  setTimeout(() => {
+    document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+    
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const target = parseInt(el.dataset.count);
+      let current = 0;
+      const increment = target / 60;
+      const update = () => {
+        current += increment;
+        if (current < target) {
+          el.textContent = Math.ceil(current);
+          requestAnimationFrame(update);
+        } else {
+          el.textContent = target;
+        }
+      };
+      update();
+    });
+  }, 100);
+}
+
+// =================== USERS ===================
+function renderUsers(c) {
+  const filtered = allUsers.filter(u => u.role === 'buyer');
+  
+  c.innerHTML = `
+    <div class="mb-12 fade-in">
+      <p class="text-xs tracking-[0.3em] opacity-60 mb-4">MANAGEMENT</p>
+      <h1 class="display text-5xl md:text-7xl font-bold mb-4">USER MANAGEMENT</h1>
+      <p class="text-lg opacity-80">Manage all registered buyers and their accounts</p>
+    </div>
+    
+    <div class="card-glass overflow-hidden fade-in">
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Email</th>
+              <th>Joined</th>
+              <th>Status</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtered.length === 0 ? `
+              <tr>
+                <td colspan="5" class="text-center py-12 opacity-60">
+                  <i class="fas fa-users text-4xl mb-3 opacity-30"></i>
+                  <p>No users found</p>
+                </td>
+              </tr>
+            ` : filtered.map(u => `
+              <tr class="cursor-pointer" onclick="window.location.href='user-detail.html?id=${u.id}'">
+                <td>
+                  <div class="flex items-center gap-3">
+                    <div class="avatar">${(u.name || 'U')[0].toUpperCase()}</div>
+                    <div>
+                      <p class="font-semibold">${u.name || 'Unnamed User'}</p>
+                      <p class="text-xs opacity-60">ID: ${u.id.slice(0, 8)}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="opacity-80">${u.email || '-'}</td>
+                <td class="opacity-80">${new Date(u.createdAt || Date.now()).toLocaleDateString()}</td>
+                <td>
+                  <span class="badge ${u.status === 'suspended' ? 'badge-suspended' : 'badge-active'}">
+                    ${u.status === 'suspended' ? 'Suspended' : 'Active'}
+                  </span>
+                </td>
+                <td class="text-right">
+                  <button onclick="event.stopPropagation(); toggleUserStatus('${u.id}', '${u.status}')" class="btn-ghost text-sm">
+                    ${u.status === 'suspended' ? '<i class="fas fa-check"></i> Activate' : '<i class="fas fa-ban"></i> Suspend'}
+                  </button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  
+  setTimeout(() => document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible')), 100);
+}
+
+// =================== AGENTS ===================
+function renderAgents(c) {
+  c.innerHTML = `
+    <div class="mb-12 fade-in">
+      <p class="text-xs tracking-[0.3em] opacity-60 mb-4">MANAGEMENT</p>
+      <h1 class="display text-5xl md:text-7xl font-bold mb-4">AGENT MANAGEMENT</h1>
+      <p class="text-lg opacity-80">Verify and manage real estate agents</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="card-glass p-6 fade-in">
+        <p class="text-sm opacity-70 mb-2">Total Agents</p>
+        <p class="display text-4xl font-bold">${allAgents.length}</p>
+      </div>
+      <div class="card-glass p-6 fade-in">
+        <p class="text-sm opacity-70 mb-2">Verified</p>
+        <p class="display text-4xl font-bold text-green-400">${allAgents.filter(a => a.verified).length}</p>
+      </div>
+      <div class="card-glass p-6 fade-in">
+        <p class="text-sm opacity-70 mb-2">Pending Verification</p>
+        <p class="display text-4xl font-bold text-yellow-400">${allAgents.filter(a => !a.verified).length}</p>
+      </div>
+    </div>
+    
+    <div class="card-glass overflow-hidden fade-in">
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Agent</th>
+              <th>Agency</th>
+              <th>License</th>
+              <th>Properties</th>
+              <th>Status</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${allAgents.length === 0 ? `
+              <tr>
+                <td colspan="6" class="text-center py-12 opacity-60">
+                  <i class="fas fa-user-tie text-4xl mb-3 opacity-30"></i>
+                  <p>No agents found</p>
+                </td>
+              </tr>
+            ` : allAgents.map(a => {
+              const agentProps = allProperties.filter(p => p.ownerId === a.id).length;
+              return `
+              <tr class="cursor-pointer" onclick="window.location.href='./agent-detail.html?id=${a.id}'">
+                <td>
+                  <div class="flex items-center gap-3">
+                    <div class="avatar">${(a.name || 'A')[0].toUpperCase()}</div>
+                    <div>
+                      <p class="font-semibold">${a.name || 'Unnamed Agent'}</p>
+                      <p class="text-xs opacity-60">${a.email || '-'}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="opacity-80">${a.agency || '-'}</td>
+                <td class="opacity-80">${a.license || 'Not provided'}</td>
+                <td class="font-semibold">${agentProps}</td>
+                <td>
+                  <div class="flex gap-2">
+                    <span class="badge ${a.verified ? 'badge-verified' : 'badge-pending'}">
+                      ${a.verified ? 'Verified' : 'Unverified'}
+                    </span>
+                    <span class="badge ${a.status === 'suspended' ? 'badge-suspended' : 'badge-active'}">
+                      ${a.status === 'suspended' ? 'Suspended' : 'Active'}
+                    </span>
+                  </div>
+                </td>
+                <td class="text-right">
+                  <div class="flex gap-2 justify-end">
+                    ${!a.verified ? `<button onclick="event.stopPropagation(); verifyAgent('${a.id}')" class="btn-primary text-xs"><i class="fas fa-check"></i> Verify</button>` : ''}
+                    <button onclick="event.stopPropagation(); toggleAgentStatus('${a.id}', '${a.status}')" class="btn-ghost text-xs">
+                      ${a.status === 'suspended' ? 'Activate' : 'Suspend'}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `}).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  
+  setTimeout(() => document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible')), 100);
+}
+
+// =================== PROPERTIES ===================
+function renderProperties(c) {
+  c.innerHTML = `
+    <div class="mb-12 fade-in">
+      <p class="text-xs tracking-[0.3em] opacity-60 mb-4">MANAGEMENT</p>
+      <h1 class="display text-5xl md:text-7xl font-bold mb-4">PROPERTY MANAGEMENT</h1>
+      <p class="text-lg opacity-80">Moderate all property listings</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="card-glass p-6 fade-in">
+        <p class="text-sm opacity-70 mb-2">Total Properties</p>
+        <p class="display text-4xl font-bold">${allProperties.length}</p>
+      </div>
+      <div class="card-glass p-6 fade-in">
+        <p class="text-sm opacity-70 mb-2">Active</p>
+        <p class="display text-4xl font-bold text-green-400">${allProperties.filter(p => p.status === 'Active').length}</p>
+      </div>
+      <div class="card-glass p-6 fade-in">
+        <p class="text-sm opacity-70 mb-2">Pending</p>
+        <p class="display text-4xl font-bold text-yellow-400">${allProperties.filter(p => p.status === 'Pending').length}</p>
+      </div>
+      <div class="card-glass p-6 fade-in">
+        <p class="text-sm opacity-70 mb-2">Suspended</p>
+        <p class="display text-4xl font-bold text-red-400">${allProperties.filter(p => p.status === 'suspended').length}</p>
+      </div>
+    </div>
+    
+    <div class="card-glass overflow-hidden fade-in">
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Agent</th>
+              <th>Price</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${allProperties.length === 0 ? `
+              <tr>
+                <td colspan="6" class="text-center py-12 opacity-60">
+                  <i class="fas fa-building text-4xl mb-3 opacity-30"></i>
+                  <p>No properties found</p>
+                </td>
+              </tr>
+            ` : allProperties.map(p => {
+              const agent = allAgents.find(a => a.id === p.ownerId);
+              return `
+              <tr class="cursor-pointer" onclick="window.location.href='property-detail.html?id=${p.id}'">
+                <td>
+                  <div class="flex items-center gap-3">
+                    <img src="${p.image || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-lg object-cover" onerror="this.src='https://via.placeholder.com/40'">
+                    <div>
+                      <p class="font-semibold">${p.title || 'Untitled'}</p>
+                      <p class="text-xs opacity-60">${p.location || '-'}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="opacity-80">${agent?.name || 'Unknown'}</td>
+                <td class="font-semibold">₦${(p.price || 0).toLocaleString()}</td>
+                <td class="opacity-80">${p.type || '-'}</td>
+                <td>
+                  <span class="badge ${p.status === 'Active' ? 'badge-active' : p.status === 'Pending' ? 'badge-pending' : 'badge-suspended'}">
+                    ${p.status || 'Active'}
+                  </span>
+                </td>
+                <td class="text-right">
+                  <div class="flex gap-2 justify-end">
+                    ${p.status === 'Pending' ? `<button onclick="event.stopPropagation(); approveProperty('${p.id}')" class="btn-primary text-xs"><i class="fas fa-check"></i> Approve</button>` : ''}
+                    <button onclick="event.stopPropagation(); suspendProperty('${p.id}')" class="btn-ghost text-xs text-red-400">
+                      <i class="fas fa-ban"></i>
+                    </button>
+                    <button onclick="event.stopPropagation(); deleteProperty('${p.id}')" class="btn-ghost text-xs">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `}).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  
+  setTimeout(() => document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible')), 100);
+}
+
+// =================== TRANSACTIONS ===================
+function renderTransactions(c) {
+  const totalRevenue = allTransactions.filter(t => t.status === 'Paid').reduce((sum, t) => sum + (t.amount || 0), 0);
+  const pendingRevenue = allTransactions.filter(t => t.status === 'Processing').reduce((sum, t) => sum + (t.amount || 0), 0);
+  
+  c.innerHTML = `
+    <div class="mb-12 fade-in">
+      <p class="text-xs tracking-[0.3em] opacity-60 mb-4">MANAGEMENT</p>
+      <h1 class="display text-5xl md:text-7xl font-bold mb-4">TRANSACTIONS</h1>
+      <p class="text-lg opacity-80">Monitor all platform transactions</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="card-glass p-6 fade-in">
+        <p class="text-sm opacity-70 mb-2">Total Revenue</p>
+        <p class="display text-4xl font-bold text-green-400">₦${(totalRevenue / 1000000).toFixed(2)}M</p>
+      </div>
+      <div class="card-glass p-6 fade-in">
+        <p class="text-sm opacity-70 mb-2">Pending Revenue</p>
+        <p class="display text-4xl font-bold text-yellow-400">₦${(pendingRevenue / 1000000).toFixed(2)}M</p>
+      </div>
+      <div class="card-glass p-6 fade-in">
+        <p class="text-sm opacity-70 mb-2">Total Transactions</p>
+        <p class="display text-4xl font-bold">${allTransactions.length}</p>
+      </div>
+    </div>
+    
+    <div class="card-glass overflow-hidden fade-in">
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Transaction ID</th>
+              <th>Property</th>
+              <th>Amount</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${allTransactions.length === 0 ? `
+              <tr>
+                <td colspan="6" class="text-center py-12 opacity-60">
+                  <i class="fas fa-wallet text-4xl mb-3 opacity-30"></i>
+                  <p>No transactions found</p>
+                </td>
+              </tr>
+            ` : allTransactions.map(t => `
+              <tr>
+                <td class="font-mono text-sm">${t.id?.slice(0, 8) || 'N/A'}</td>
+                <td>${t.property || 'N/A'}</td>
+                <td class="font-semibold">₦${(t.amount || 0).toLocaleString()}</td>
+                <td class="opacity-80">${t.type || 'Commission'}</td>
+                <td>
+                  <span class="badge ${t.status === 'Paid' ? 'badge-active' : 'badge-pending'}">
+                    ${t.status || 'Processing'}
+                  </span>
+                </td>
+                <td class="opacity-80">${new Date(t.createdAt?.toDate ? t.createdAt.toDate() : Date.now()).toLocaleDateString()}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  
+  setTimeout(() => document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible')), 100);
+}
+
+// =================== ANALYTICS ===================
+function renderAnalytics(c) {
+  c.innerHTML = `
+    <div class="mb-12 fade-in">
+      <p class="text-xs tracking-[0.3em] opacity-60 mb-4">OVERVIEW</p>
+      <h1 class="display text-5xl md:text-7xl font-bold mb-4">ANALYTICS</h1>
+      <p class="text-lg opacity-80">Deep insights into platform performance</p>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div class="card-glass p-6 fade-in">
+        <h3 class="display text-2xl font-bold mb-6">User Growth</h3>
+        <div style="position: relative; height: 300px;">
+          <canvas id="userChart"></canvas>
+        </div>
+      </div>
+      <div class="card-glass p-6 fade-in">
+        <h3 class="display text-2xl font-bold mb-6">Property Types</h3>
+        <div style="position: relative; height: 300px;">
+          <canvas id="propertyChart"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-glass p-6 fade-in">
+      <h3 class="display text-2xl font-bold mb-6">Platform Health</h3>
+      <div class="space-y-6">
+        <div>
+          <div class="flex justify-between text-sm mb-2">
+            <span class="opacity-70">Server Uptime</span>
+            <span class="font-semibold text-green-400">99.9%</span>
+          </div>
+          <div class="h-2 rounded-full overflow-hidden bg-white/10">
+            <div class="h-full rounded-full bg-green-500" style="width: 99.9%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-2">
+            <span class="opacity-70">Storage Used</span>
+            <span class="font-semibold text-blue-400">67%</span>
+          </div>
+          <div class="h-2 rounded-full overflow-hidden bg-white/10">
+            <div class="h-full rounded-full bg-blue-500" style="width: 67%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-2">
+            <span class="opacity-70">API Response</span>
+            <span class="font-semibold text-green-400">120ms</span>
+          </div>
+          <div class="h-2 rounded-full overflow-hidden bg-white/10">
+            <div class="h-full rounded-full bg-green-500" style="width: 85%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  setTimeout(() => {
+    const userGrowthData = calculateUserGrowth();
+    
+    const userChartCtx = document.getElementById('userChart');
+    if (userChartCtx) {
+      new Chart(userChartCtx, {
+        type: 'line',
+        data: {
+          labels: userGrowthData.labels,
+          datasets: [{
+            label: 'Total Users',
+            data: userGrowthData.data,
+            borderColor: '#FACC15',
+            backgroundColor: 'rgba(250, 204, 21, 0.1)',
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#FACC15',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { 
+            legend: { labels: { color: '#fff', font: { size: 14 } } },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#FACC15',
+              bodyColor: '#fff',
+              borderColor: 'rgba(250, 204, 21, 0.3)',
+              borderWidth: 1
+            }
+          },
+          scales: {
+            y: { 
+              beginAtZero: true,
+              ticks: { color: 'rgba(255,255,255,0.6)', callback: function(value) { return Math.round(value); } }, 
+              grid: { color: 'rgba(255,255,255,0.1)' } 
+            },
+            x: { ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+          }
+        }
+      });
+    }
+    
+    const types = ['Apartment', 'House', 'Villa', 'Office', 'Land'];
+    const counts = types.map(t => allProperties.filter(p => p.type === t).length);
+    
+    const filteredTypes = [];
+    const filteredCounts = [];
+    types.forEach((type, index) => {
+      if (counts[index] > 0) {
+        filteredTypes.push(type);
+        filteredCounts.push(counts[index]);
+      }
+    });
+    
+    const propertyChartCtx = document.getElementById('propertyChart');
+    if (propertyChartCtx && filteredCounts.length > 0) {
+      new Chart(propertyChartCtx, {
+        type: 'doughnut',
+        data: {
+          labels: filteredTypes,
+          datasets: [{
+            data: filteredCounts,
+            backgroundColor: ['#FACC15', '#A16207', '#FEF08A', '#854d0e', '#fde047'],
+            borderColor: 'rgba(0, 0, 0, 0.5)',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { 
+            legend: { position: 'bottom', labels: { color: '#fff', padding: 15, font: { size: 12 } } },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#FACC15',
+              bodyColor: '#fff',
+              borderColor: 'rgba(250, 204, 21, 0.3)',
+              borderWidth: 1
+            }
+          }
+        }
+      });
+    } else if (propertyChartCtx) {
+      propertyChartCtx.parentElement.innerHTML = `
+        <div class="flex items-center justify-center h-full">
+          <div class="text-center opacity-60">
+            <i class="fas fa-building text-4xl mb-2"></i>
+            <p>No properties yet</p>
+          </div>
+        </div>
+      `;
+    }
+    
+    document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+  }, 100);
+}
+
+function calculateUserGrowth() {
+  const now = new Date();
+  const months = [];
+  const counts = [];
+  
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push(date.toLocaleDateString('en', { month: 'short' }));
+    
+    const usersThisMonth = allUsers.filter(u => {
+      const userDate = u.createdAt?.toDate ? u.createdAt.toDate() : new Date(u.createdAt || Date.now());
+      return userDate <= date;
+    }).length;
+    
+    counts.push(usersThisMonth);
+  }
+  
+  return { labels: months, data: counts };
+}
+
+// =================== REPORTS ===================
+function renderReports(c) {
+  c.innerHTML = `
+    <div class="mb-12 fade-in">
+      <p class="text-xs tracking-[0.3em] opacity-60 mb-4">SYSTEM</p>
+      <h1 class="display text-5xl md:text-7xl font-bold mb-4">REPORTS</h1>
+      <p class="text-lg opacity-80">Generate and download platform reports</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      ${['users', 'agents', 'financial', 'properties', 'analytics', 'audit'].map(type => `
+        <div class="card-glass p-6 fade-in cursor-pointer hover:scale-105 transition" onclick="generateReport('${type}')">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center mb-4">
+            <i class="fas fa-${type === 'users' ? 'users' : type === 'agents' ? 'user-tie' : type === 'financial' ? 'chart-line' : type === 'properties' ? 'building' : type === 'analytics' ? 'chart-pie' : 'shield-alt'} text-black"></i>
+          </div>
+          <h3 class="display text-xl font-bold mb-2">${type.charAt(0).toUpperCase() + type.slice(1)} Report</h3>
+          <p class="text-sm opacity-70 mb-4">Complete ${type} data with metrics</p>
+          <button class="btn-primary w-full justify-center">
+            <i class="fas fa-download"></i> Generate PDF
+          </button>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  
+  setTimeout(() => document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible')), 100);
+}
+
+// =================== SETTINGS (WITH CREDENTIAL MANAGEMENT) ===================
+function renderSettings(c) {
+  const currentEmail = currentUser.authEmail || currentUser.email || 'Not available';
+  const currentName = currentUser.name || 'Admin';
+  
+  c.innerHTML = `
+    <div class="mb-12 fade-in">
+      <p class="text-xs tracking-[0.3em] opacity-60 mb-4">SYSTEM</p>
+      <h1 class="display text-5xl md:text-7xl font-bold mb-4">SETTINGS</h1>
+      <p class="text-lg opacity-80">Configure platform settings and your admin account</p>
+    </div>
+    
+    <!-- Login Credentials Section -->
+    <div class="card-glass p-6 mb-6 fade-in">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center">
+          <i class="fas fa-key text-white"></i>
+        </div>
+        <div>
+          <h3 class="display text-2xl font-bold">Login Credentials</h3>
+          <p class="text-sm opacity-60">Update your email and password for secure access</p>
+        </div>
+      </div>
+      
+      <!-- Current Credentials Display -->
+      <div class="p-4 rounded-lg bg-white/5 mb-6">
+        <p class="text-xs opacity-60 mb-1">Current Login Email</p>
+        <p class="font-semibold text-lg flex items-center gap-2">
+          <i class="fas fa-envelope opacity-60"></i>
+          ${currentEmail}
+        </p>
+        <p class="text-xs opacity-60 mt-3 mb-1">Account Name</p>
+        <p class="font-semibold flex items-center gap-2">
+          <i class="fas fa-user opacity-60"></i>
+          ${currentName}
+        </p>
+      </div>
+      
+      <!-- Change Email Form -->
+      <div class="mb-8">
+        <h4 class="font-bold text-lg mb-4 flex items-center gap-2">
+          <i class="fas fa-envelope" style="color: var(--primary)"></i>
+          Change Email Address
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm opacity-70 mb-2">Current Password <span style="color: var(--primary)">*</span></label>
+            <input type="password" id="emailCurrentPassword" class="input" placeholder="Enter your current password">
+          </div>
+          <div>
+            <label class="block text-sm opacity-70 mb-2">New Email Address <span style="color: var(--primary)">*</span></label>
+            <input type="email" id="newEmail" class="input" placeholder="newemail@example.com">
+          </div>
+        </div>
+        <button onclick="changeEmail()" id="changeEmailBtn" class="btn-primary mt-4">
+          <i class="fas fa-envelope"></i> Update Email
+        </button>
+      </div>
+      
+      <div class="h-px bg-white/10 my-6"></div>
+      
+      <!-- Change Password Form -->
+      <div>
+        <h4 class="font-bold text-lg mb-4 flex items-center gap-2">
+          <i class="fas fa-lock" style="color: var(--primary)"></i>
+          Change Password
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm opacity-70 mb-2">Current Password <span style="color: var(--primary)">*</span></label>
+            <input type="password" id="passwordCurrentPassword" class="input" placeholder="Enter current password">
+          </div>
+          <div>
+            <label class="block text-sm opacity-70 mb-2">New Password <span style="color: var(--primary)">*</span></label>
+            <input type="password" id="newPassword" class="input" placeholder="Min 6 characters">
+          </div>
+          <div>
+            <label class="block text-sm opacity-70 mb-2">Confirm New Password <span style="color: var(--primary)">*</span></label>
+            <input type="password" id="confirmNewPassword" class="input" placeholder="Re-enter new password">
+          </div>
+        </div>
+        <button onclick="changePassword()" id="changePasswordBtn" class="btn-primary mt-4">
+          <i class="fas fa-lock"></i> Update Password
+        </button>
+      </div>
+      
+      <!-- Security Notice -->
+      <div class="mt-6 p-4 rounded-lg border border-yellow-500/30 bg-yellow-500/5">
+        <div class="flex items-start gap-3">
+          <i class="fas fa-exclamation-triangle text-yellow-400 mt-1"></i>
+          <div class="text-sm">
+            <p class="font-semibold mb-1">Important Security Notice</p>
+            <p class="opacity-70">After updating your credentials, you will be automatically signed out and redirected to the sign-in page. Use your new credentials to log back in. The old credentials will no longer work.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Platform Configuration -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="card-glass p-6 fade-in">
+        <h3 class="display text-2xl font-bold mb-6">Platform Configuration</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm opacity-70 mb-2">Platform Name</label>
+            <input type="text" value="MoonLat Estate" class="input">
+          </div>
+          <div>
+            <label class="block text-sm opacity-70 mb-2">Commission Rate (%)</label>
+            <input type="number" value="2.5" step="0.1" class="input">
+          </div>
+          <div>
+            <label class="block text-sm opacity-70 mb-2">Max Properties per Agent</label>
+            <input type="number" value="50" class="input">
+          </div>
+          <div class="flex items-center justify-between p-4 rounded-lg bg-white/5">
+            <div>
+              <p class="font-semibold">Auto-approve Properties</p>
+              <p class="text-sm opacity-60">Automatically approve new listings</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <button class="btn-primary mt-6 w-full justify-center">
+          <i class="fas fa-save"></i> Save Settings
+        </button>
+      </div>
+      
+      <div class="card-glass p-6 fade-in">
+        <h3 class="display text-2xl font-bold mb-6">Security & Moderation</h3>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between p-4 rounded-lg bg-white/5">
+            <div>
+              <p class="font-semibold">Email Verification Required</p>
+              <p class="text-sm opacity-60">Require email verification for new users</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="flex items-center justify-between p-4 rounded-lg bg-white/5">
+            <div>
+              <p class="font-semibold">Agent Verification Required</p>
+              <p class="text-sm opacity-60">Manual verification for new agents</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="flex items-center justify-between p-4 rounded-lg bg-white/5">
+            <div>
+              <p class="font-semibold">Two-Factor Authentication</p>
+              <p class="text-sm opacity-60">Require 2FA for admin accounts</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div>
+            <label class="block text-sm opacity-70 mb-2">Suspension Auto-Review (days)</label>
+            <input type="number" value="30" class="input">
+          </div>
+        </div>
+        <button class="btn-primary mt-6 w-full justify-center">
+          <i class="fas fa-save"></i> Save Security Settings
+        </button>
+      </div>
+    </div>
+  `;
+  
+  setTimeout(() => document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible')), 100);
+}
+
+// =================== CREDENTIAL CHANGE FUNCTIONS ===================
+
+// Helper: Reauthenticate user with current password
+async function reauthenticateUser(currentPassword) {
+  const user = auth.currentUser;
+  if (!user || !user.email) {
+    throw new Error('No authenticated user found');
+  }
+  
+  const credential = EmailAuthProvider.credential(user.email, currentPassword);
+  await reauthenticateWithCredential(user, credential);
+  return user;
+}
+
+window.changeEmail = async function() {
+  const currentPassword = document.getElementById('emailCurrentPassword').value;
+  const newEmail = document.getElementById('newEmail').value.trim();
+  const btn = document.getElementById('changeEmailBtn');
+  
+  // Validation
+  if (!currentPassword) {
+    showToast('Please enter your current password', 'error');
+    return;
+  }
+  
+  if (!newEmail) {
+    showToast('Please enter a new email address', 'error');
+    return;
+  }
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(newEmail)) {
+    showToast('Please enter a valid email address', 'error');
+    return;
+  }
+  
+  if (newEmail === currentUser.authEmail) {
+    showToast('New email is the same as current email', 'warning');
+    return;
+  }
+  
+  // Confirmation
+  if (!confirm(`Are you sure you want to change your email to ${newEmail}?\n\nYou will be signed out and must use the new email to log in.`)) {
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Updating...';
+  
+  try {
+    // Step 1: Reauthenticate with current password
+    const user = await reauthenticateUser(currentPassword);
+    
+    // Step 2: Update email in Firebase Auth
+    await updateEmail(user, newEmail);
+    
+    // Step 3: Update email in Firestore
+    await updateDoc(doc(db, 'users', user.uid), {
+      email: newEmail,
+      emailChangedAt: serverTimestamp(),
+      emailChangedBy: user.uid,
+      updatedAt: serverTimestamp()
+    });
+    
+    showToast('Email updated successfully! Signing out...', 'success', 3000);
+    
+    // Step 4: Sign out and redirect to sign-in
+    setTimeout(async () => {
+      await signOut(auth);
+      window.location.href = '../sign-in.html';
+    }, 2000);
+    
+  } catch (error) {
+    ErrorHandler.handle(error, 'update email');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-envelope"></i> Update Email';
+  }
+};
+
+window.changePassword = async function() {
+  const currentPassword = document.getElementById('passwordCurrentPassword').value;
+  const newPassword = document.getElementById('newPassword').value;
+  const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+  const btn = document.getElementById('changePasswordBtn');
+  
+  // Validation
+  if (!currentPassword) {
+    showToast('Please enter your current password', 'error');
+    return;
+  }
+  
+  if (!newPassword) {
+    showToast('Please enter a new password', 'error');
+    return;
+  }
+  
+  if (newPassword.length < 6) {
+    showToast('New password must be at least 6 characters', 'error');
+    return;
+  }
+  
+  if (newPassword !== confirmNewPassword) {
+    showToast('New passwords do not match', 'error');
+    return;
+  }
+  
+  if (newPassword === currentPassword) {
+    showToast('New password must be different from current password', 'warning');
+    return;
+  }
+  
+  // Confirmation
+  if (!confirm('Are you sure you want to change your password?\n\nYou will be signed out and must use the new password to log in.')) {
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Updating...';
+  
+  try {
+    // Step 1: Reauthenticate with current password
+    const user = await reauthenticateUser(currentPassword);
+    
+    // Step 2: Update password in Firebase Auth
+    await updatePassword(user, newPassword);
+    
+    // Step 3: Update Firestore record
+    await updateDoc(doc(db, 'users', user.uid), {
+      passwordChangedAt: serverTimestamp(),
+      passwordChangedBy: user.uid,
+      updatedAt: serverTimestamp()
+    });
+    
+    showToast('Password updated successfully! Signing out...', 'success', 3000);
+    
+    // Step 4: Sign out and redirect to sign-in
+    setTimeout(async () => {
+      await signOut(auth);
+      window.location.href = '../sign-in.html';
+    }, 2000);
+    
+  } catch (error) {
+    ErrorHandler.handle(error, 'update password');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-lock"></i> Update Password';
+  }
+};
+
+// =================== ACTION FUNCTIONS ===================
+window.toggleUserStatus = async function(userId, currentStatus) {
+  try {
+    await updateDoc(doc(db, 'users', userId), {
+      status: currentStatus === 'suspended' ? 'active' : 'suspended',
+      updatedAt: serverTimestamp()
+    });
+    showToast(`User ${currentStatus === 'suspended' ? 'activated' : 'suspended'} successfully`, 'success');
+  } catch (error) {
+    ErrorHandler.handle(error, 'update user status');
+  }
+};
+
+window.toggleAgentStatus = async function(agentId, currentStatus) {
+  try {
+    await updateDoc(doc(db, 'users', agentId), {
+      status: currentStatus === 'suspended' ? 'active' : 'suspended',
+      updatedAt: serverTimestamp()
+    });
+    showToast(`Agent ${currentStatus === 'suspended' ? 'activated' : 'suspended'} successfully`, 'success');
+  } catch (error) {
+    ErrorHandler.handle(error, 'update agent status');
+  }
+};
+
+window.verifyAgent = async function(agentId) {
+  try {
+    await updateDoc(doc(db, 'users', agentId), {
+      verified: true,
+      verifiedAt: serverTimestamp(),
+      verifiedBy: currentUser.uid
+    });
+    showToast('Agent verified successfully', 'success');
+  } catch (error) {
+    ErrorHandler.handle(error, 'verify agent');
+  }
+};
+
+window.approveProperty = async function(propertyId) {
+  try {
+    await updateDoc(doc(db, 'properties', propertyId), {
+      status: 'Active',
+      approvedAt: serverTimestamp(),
+      approvedBy: currentUser.uid
+    });
+    showToast('Property approved successfully', 'success');
+  } catch (error) {
+    ErrorHandler.handle(error, 'approve property');
+  }
+};
+
+window.suspendProperty = async function(propertyId) {
+  if (!confirm('Are you sure you want to suspend this property?')) return;
+  
+  try {
+    await updateDoc(doc(db, 'properties', propertyId), {
+      status: 'suspended',
+      suspendedAt: serverTimestamp(),
+      suspendedBy: currentUser.uid
+    });
+    showToast('Property suspended successfully', 'success');
+  } catch (error) {
+    ErrorHandler.handle(error, 'suspend property');
+  }
+};
+
+window.deleteProperty = async function(propertyId) {
+  if (!confirm('Are you sure you want to delete this property? This action cannot be undone.')) return;
+  
+  try {
+    await deleteDoc(doc(db, 'properties', propertyId));
+    showToast('Property deleted successfully', 'success');
+  } catch (error) {
+    ErrorHandler.handle(error, 'delete property');
+  }
+};
+
+window.generateReport = function(type) {
+  showToast(`Generating ${type} report...`, 'info');
+  setTimeout(() => {
+    showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} report downloaded successfully`, 'success');
+  }, 2000);
+};
+
+window.handleLogout = async function() {
+  if (!confirm('Are you sure you want to sign out?')) return;
+  
+  try {
+    await signOut(auth);
+    window.location.href = '../sign-in.html';
+  } catch (error) {
+    ErrorHandler.handle(error, 'sign out');
+  }
+};
+</script>
+
+
+</body>
+</html>
