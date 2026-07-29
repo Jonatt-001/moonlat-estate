@@ -11,8 +11,46 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5.0.3/index.min.css">
 <link rel="stylesheet" href="dashboard.css">
 <style>
-
+  /* Force sidebar scroll behavior */
+  #sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  #sidebarNav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0; /* Critical for flex scrolling */
+  }
+  
+  /* Custom scrollbar for webkit */
+  #sidebarNav::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  #sidebarNav::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  #sidebarNav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+  }
+  
+  #sidebarNav::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Firefox scrollbar */
+  #sidebarNav {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+  }
 </style>
+
 </head>
 <body class="min-h-screen">
 <!-- Auth Guard -->
@@ -48,55 +86,54 @@ onAuthStateChanged(auth, (user) => {
   <!-- Mobile Sidebar Backdrop -->
   <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
-  <!-- Premium Sidebar -->
-  <aside id="sidebar" class="sidebar sidebar-mobile lg:translate-x-0 w-[280px] text-white flex-shrink-0 lg:flex flex-col fixed h-full z-50 lg:z-30">
-    <!-- Logo Section -->
-    <div class="p-6 border-b border-white/[0.06] relative">
-      <div class="flex items-center gap-3.5 group">
-        <div class="relative">
-<div class="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-500 via-indigo-500 to-slate-700 flex items-center justify-center shadow-lg shadow-violet-500/20 group-hover:shadow-violet-500/40 transition-all duration-500 group-hover:scale-105">
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M3 21h18M5 21V7l8-4 8 4v14M13 21v-8a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v8"/>
-  </svg>
-</div>
+<!-- Premium Sidebar -->
+<aside id="sidebar" class="sidebar sidebar-mobile lg:translate-x-0 w-[280px] text-white flex-shrink-0 lg:flex flex-col fixed h-full z-50 lg:z-30 overflow-hidden">
+  <!-- Logo Section - Fixed -->
+  <div class="p-6 border-b border-white/[0.06] relative flex-shrink-0">
+    <div class="flex items-center gap-3.5 group">
+      <div class="relative">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-500 via-indigo-500 to-slate-700 flex items-center justify-center shadow-lg shadow-violet-500/20 group-hover:shadow-violet-500/40 transition-all duration-500 group-hover:scale-105">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18M5 21V7l8-4 8 4v14M13 21v-8a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v8"/>
+          </svg>
+        </div>
+        <div class="absolute -inset-1 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-500 -z-10"></div>
+      </div>
+      <div class="flex-1 min-w-0">
+        <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">MoonLat</h1>
+        <p class="text-[10px] text-slate-500 font-semibold tracking-[0.15em] uppercase">Premium Real Estate</p>
+      </div>
+    </div>
+    <button class="lg:hidden absolute top-4 right-4 text-white/50 hover:text-white hover:bg-white/5 p-2 rounded-lg transition" onclick="toggleSidebar()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
 
+  <!-- Navigation - Scrollable -->
+  <nav id="sidebarNav" class="flex-1 px-3 py-5 space-y-0.5 overflow-y-auto overflow-x-hidden">
+    <!-- Dynamic nav items based on role -->
+  </nav>
 
-          <div class="absolute -inset-1 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-500 -z-10"></div>
+  <!-- User Profile Section - Fixed -->
+  <div class="p-3 border-t border-white/[0.06] relative flex-shrink-0">
+    <div class="group relative bg-gradient-to-br from-white/[0.03] to-transparent rounded-xl p-3 border border-white/[0.05] hover:border-white/[0.1] transition-all duration-300 cursor-pointer">
+      <div class="flex items-center gap-3">
+        <div class="relative flex-shrink-0">
+          <div class="avatar w-10 h-10 text-xs" id="sidebarAvatar" style="background: linear-gradient(135deg, #8b5cf6, #6366f1);">U</div>
+          <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-[#09090b] rounded-full"></div>
         </div>
         <div class="flex-1 min-w-0">
-          <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">MoonLat</h1>
-          <p class="text-[10px] text-slate-500 font-semibold tracking-[0.15em] uppercase">Premium Real Estate</p>
+          <p class="text-sm font-semibold truncate text-white" id="sidebarUserName">User</p>
+          <p class="text-[11px] text-slate-500 truncate font-medium" id="sidebarUserRole">Agent</p>
         </div>
-      </div>
-      <button class="lg:hidden absolute top-4 right-4 text-white/50 hover:text-white hover:bg-white/5 p-2 rounded-lg transition" onclick="toggleSidebar()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-
-    <!-- Navigation -->
-    <nav id="sidebarNav" class="flex-1 px-3 py-5 space-y-0.5 overflow-y-auto">
-      <!-- Dynamic nav items based on role -->
-    </nav>
-
-    <!-- User Profile Section -->
-    <div class="p-3 border-t border-white/[0.06] relative">
-      <div class="group relative bg-gradient-to-br from-white/[0.03] to-transparent rounded-xl p-3 border border-white/[0.05] hover:border-white/[0.1] transition-all duration-300 cursor-pointer">
-        <div class="flex items-center gap-3">
-          <div class="relative flex-shrink-0">
-            <div class="avatar w-10 h-10 text-xs" id="sidebarAvatar" style="background: linear-gradient(135deg, #8b5cf6, #6366f1);">U</div>
-            <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-[#09090b] rounded-full"></div>
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-semibold truncate text-white" id="sidebarUserName">User</p>
-            <p class="text-[11px] text-slate-500 truncate font-medium" id="sidebarUserRole">Agent</p>
-          </div>
-          <button onclick="handleLogout()" class="text-slate-500 hover:text-rose-400 transition p-1.5 hover:bg-white/5 rounded-lg" title="Sign out">
-            <i class="fas fa-sign-out-alt text-xs"></i>
-          </button>
-        </div>
+        <button onclick="handleLogout()" class="text-slate-500 hover:text-rose-400 transition p-1.5 hover:bg-white/5 rounded-lg" title="Sign out">
+          <i class="fas fa-sign-out-alt text-xs"></i>
+        </button>
       </div>
     </div>
-  </aside>
+  </div>
+</aside>
+
 
 
 
@@ -219,11 +256,23 @@ onAuthStateChanged(auth, (user) => {
             <label class="chip"><input type="checkbox" value="Laundry" class="amenity-cb hidden"> Laundry</label>
           </div>
         </div>
-        <div>
-          <label class="input-label">Cover Image URL</label>
-          <input type="url" id="propImage" class="input" placeholder="https://example.com/image.jpg">
-          <p class="text-xs text-gray-500 mt-1">Paste a direct link to an image, or leave blank for default</p>
-        </div>
+<div>
+  <label class="input-label">Property Images <span class="text-xs text-gray-500">(Max 5)</span></label>
+  <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-blue-500 transition cursor-pointer" onclick="document.getElementById('propFileInput').click()">
+    <div class="text-center">
+      <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+      <p class="text-sm text-gray-600 font-medium">Click to upload images</p>
+      <p class="text-xs text-gray-500 mt-1">or drag and drop (max 5 images)</p>
+    </div>
+  </div>
+  <input type="file" id="propFileInput" multiple accept="image/*" class="hidden" onchange="handlePropertyFiles(event)">
+  
+  <!-- Preview -->
+  <div id="propImagePreview" class="grid grid-cols-3 gap-2 mt-3"></div>
+  <input type="hidden" id="propCoverImage">
+  <p class="text-xs text-gray-500 mt-2">First image will be used as cover. Images uploaded to MoonLat Media Lab.</p>
+</div>
+
         <div class="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
           <input type="checkbox" id="propFeatured" class="w-4 h-4 text-amber-600 rounded">
           <label for="propFeatured" class="text-sm font-medium text-amber-900 flex items-center gap-2">
@@ -610,46 +659,53 @@ function setupUI() {
   
   // Setup navigation based on role
   const nav = document.getElementById('sidebarNav');
-  if (role === 'agent') {
-    nav.innerHTML = `
-      <div class="sidebar-section-label mt-2">Overview</div>
-      <a onclick="navigate('dashboard')" class="sidebar-link active flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="dashboard">
-        <i class="fas fa-th-large w-5 text-center text-slate-500"></i> <span>Dashboard</span>
-      </a>
-      <a onclick="navigate('properties')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="properties">
-        <i class="fas fa-building w-5 text-center text-slate-500"></i> <span>Properties</span>
-      </a>
+  // In setupUI(), find the agent nav section and add this line:
+if (role === 'agent') {
+  nav.innerHTML = `
+    <div class="sidebar-section-label mt-2">Overview</div>
+    <a onclick="navigate('dashboard')" class="sidebar-link active flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="dashboard">
+      <i class="fas fa-th-large w-5 text-center text-slate-500"></i> <span>Dashboard</span>
+    </a>
+    <a onclick="navigate('properties')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="properties">
+      <i class="fas fa-building w-5 text-center text-slate-500"></i> <span>Properties</span>
+    </a>
 
-      <div class="sidebar-section-label mt-5">Pipeline</div>
-      <a onclick="navigate('leads')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="leads">
-        <i class="fas fa-user-plus w-5 text-center text-slate-500"></i> <span>Leads & Inquiries</span>
-      </a>
-      <a onclick="navigate('clients')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="clients">
-        <i class="fas fa-users w-5 text-center text-slate-500"></i> <span>Clients</span>
-      </a>
-      <a onclick="navigate('appointments')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="appointments">
-        <i class="fas fa-calendar-alt w-5 text-center text-slate-500"></i> <span>Appointments</span>
-      </a>
-      <a onclick="navigate('deals')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="deals">
-        <i class="fas fa-handshake w-5 text-center text-slate-500"></i> <span>Deal Tracker</span>
-      </a>
+    <div class="sidebar-section-label mt-5">Pipeline</div>
+    <a onclick="navigate('leads')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="leads">
+      <i class="fas fa-user-plus w-5 text-center text-slate-500"></i> <span>Leads & Inquiries</span>
+    </a>
+    <a onclick="navigate('clients')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="clients">
+      <i class="fas fa-users w-5 text-center text-slate-500"></i> <span>Clients</span>
+    </a>
+    <a href="appointments.html" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="appointments">
+      <i class="fas fa-calendar-alt w-5 text-center text-slate-500"></i> <span>Appointments</span>
+    </a>
+    <a onclick="navigate('deals')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="deals">
+      <i class="fas fa-handshake w-5 text-center text-slate-500"></i> <span>Deal Tracker</span>
+    </a>
 
-      <div class="sidebar-section-label mt-5">Finance</div>
-      <a onclick="navigate('earnings')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="earnings">
-        <i class="fas fa-dollar-sign w-5 text-center text-slate-500"></i> <span>Earnings</span>
-      </a>
-      <a onclick="navigate('analytics')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="analytics">
-        <i class="fas fa-chart-line w-5 text-center text-slate-500"></i> <span>Analytics</span>
-      </a>
+    <div class="sidebar-section-label mt-5">Media</div>
+    <a href="media.html" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="media">
+      <i class="fas fa-images w-5 text-center text-slate-500"></i> <span>Media Library</span>
+    </a>
 
-      <div class="sidebar-section-label mt-5">System</div>
-      <a onclick="navigate('notifications')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm relative" data-page="notifications">
-        <i class="fas fa-bell w-5 text-center text-slate-500"></i> <span>Notifications</span>
-      </a>
-      <a onclick="navigate('settings')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="settings">
-        <i class="fas fa-cog w-5 text-center text-slate-500"></i> <span>Settings</span>
-      </a>
-    `;
+    <div class="sidebar-section-label mt-5">Finance</div>
+    <a onclick="navigate('earnings')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="earnings">
+      <i class="fas fa-dollar-sign w-5 text-center text-slate-500"></i> <span>Earnings</span>
+    </a>
+    <a onclick="navigate('analytics')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="analytics">
+      <i class="fas fa-chart-line w-5 text-center text-slate-500"></i> <span>Analytics</span>
+    </a>
+
+    <div class="sidebar-section-label mt-5">System</div>
+    <a onclick="navigate('notifications')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm relative" data-page="notifications">
+      <i class="fas fa-bell w-5 text-center text-slate-500"></i> <span>Notifications</span>
+    </a>
+    <a onclick="navigate('settings')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="settings">
+      <i class="fas fa-cog w-5 text-center text-slate-500"></i> <span>Settings</span>
+    </a>
+  `;
+
   } else {
     // Buyer view - simplified
     nav.innerHTML = `
@@ -804,7 +860,8 @@ function renderAgentDashboard(c) {
       <div class="card p-6">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-bold text-lg">Upcoming Appointments</h3>
-          <a onclick="navigate('appointments')" class="text-sm text-blue-600 cursor-pointer hover:underline font-medium">View All →</a>
+          <a href="appointments.html" class="text-sm text-blue-600 cursor-pointer hover:underline font-medium">View All →</a>
+
         </div>
         <div class="space-y-2">
           ${state.appointments.slice(0, 4).map(a => `
@@ -2068,6 +2125,157 @@ AuthService.init();
 window.UI = UI;
 window.FirestoreService = FirestoreService;
 </script>
+
+
+<!-- Cloudinary Upload Script -->
+<script>
+const CLOUDINARY_CLOUD_NAME = 'p8dftOhs';
+let propertyFiles = [];
+
+// Find this part in your script and replace it:
+window.handlePropertyFiles = async function(event) {
+  const files = Array.from(event.target.files);
+  if (files.length + propertyFiles.length > 5) {
+    alert('You can only upload up to 5 images per property');
+    return;
+  }
+
+  const previewContainer = document.getElementById('propImagePreview');
+  
+  for (let file of files) {
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert(`${file.name} is not an image file`);
+      continue;
+    }
+    
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert(`${file.name} is too large. Max size is 10MB`);
+      continue;
+    }
+
+    const tempId = 'temp-' + Date.now() + '-' + Math.random();
+    
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const div = document.createElement('div');
+      div.id = tempId;
+      div.className = 'relative aspect-square rounded-lg overflow-hidden border border-gray-200';
+      div.innerHTML = `
+        <img src="${e.target.result}" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+          <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+        </div>
+      `;
+      previewContainer.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'moonlat_preset');
+      formData.append('folder', 'moonlat_properties');
+      formData.append('tags', 'moonlat_property');
+
+      const result = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `https://api.cloudinary.com/v1_1/p8dftOhs/image/upload`, true);
+        
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            try {
+              const response = JSON.parse(xhr.responseText);
+              resolve(response);
+            } catch (e) {
+              reject(new Error('Invalid response'));
+            }
+          } else {
+            reject(new Error(`HTTP ${xhr.status}: ${xhr.responseText}`));
+          }
+        };
+        
+        xhr.onerror = function() {
+          reject(new Error('Network error - check your internet connection'));
+        };
+        
+        xhr.upload.onprogress = function(e) {
+          if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            console.log(`Upload progress: ${percent}%`);
+          }
+        };
+        
+        xhr.send(formData);
+      });
+
+      propertyFiles.push(result.secure_url);
+      
+      const tempDiv = document.getElementById(tempId);
+      if (tempDiv) {
+        tempDiv.innerHTML = `
+          <img src="${result.secure_url}" class="w-full h-full object-cover">
+          <button onclick="removePropertyImage('${result.secure_url}', this)" class="absolute top-1 right-1 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700">
+            <i class="fas fa-times text-xs"></i>
+          </button>
+          ${propertyFiles.length === 1 ? '<span class="absolute bottom-1 left-1 px-1.5 py-0.5 bg-blue-600 text-white text-[10px] rounded">Cover</span>' : ''}
+        `;
+      }
+
+      if (propertyFiles.length === 1) {
+        document.getElementById('propCoverImage').value = result.secure_url;
+      }
+
+    } catch (err) {
+      console.error('Upload error:', err);
+      alert(`Failed to upload ${file.name}:\n\n${err.message}\n\nPlease check:\n1. Cloudinary preset is saved\n2. Preset allows unsigned uploads\n3. Your internet connection`);
+      
+      const tempDiv = document.getElementById(tempId);
+      if (tempDiv) tempDiv.remove();
+    }
+  }
+  
+  event.target.value = '';
+};
+
+
+window.removePropertyImage = function(url, btn) {
+  propertyFiles = propertyFiles.filter(u => u !== url);
+  btn.parentElement.remove();
+  
+  // Update cover if first image was removed
+  if (propertyFiles.length > 0) {
+    document.getElementById('propCoverImage').value = propertyFiles[0];
+    // Re-render to update cover badge
+    const previews = document.getElementById('propImagePreview').children;
+    Array.from(previews).forEach((div, idx) => {
+      if (idx === 0 && !div.querySelector('.absolute.bottom-1')) {
+        div.insertAdjacentHTML('beforeend', '<span class="absolute bottom-1 left-1 px-1.5 py-0.5 bg-blue-600 text-white text-[10px] rounded">Cover</span>');
+      }
+    });
+  } else {
+    document.getElementById('propCoverImage').value = '';
+  }
+};
+
+// Update saveProperty function to use uploaded images
+const originalSaveProperty = window.saveProperty;
+window.saveProperty = async function() {
+  // ... existing validation code ...
+  
+  const data = {
+    // ... existing fields ...
+    image: document.getElementById('propCoverImage').value || document.getElementById('propImage').value || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800',
+    images: propertyFiles, // Add all uploaded images
+    // ... rest of fields ...
+  };
+  
+  // ... rest of save logic ...
+};
+</script>
+
 </body>
 </html>
 
