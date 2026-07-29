@@ -2184,12 +2184,13 @@ onAuthStateChanged(auth, async (user) => {
     
     const userData = userDoc.data();
     
-    if (userData.role !== 'admin') {
-      await signOut(auth);
-      showToast('Access denied. Admin privileges required.', 'error');
-      window.location.href = 'dashboard.html';
-      return;
-    }
+if (userData.role !== 'admin') {
+  await signOut(auth);
+  showToast('Access denied. Admin privileges required.', 'error');
+  window.location.href = '../sign-in.html';  // ✅ CORRECT - goes to /dashboard/sign-in.html
+  return;
+}
+
     
     currentUser = { uid: user.uid, ...userData, authEmail: user.email };
     
