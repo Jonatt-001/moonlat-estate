@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2030,7 +2031,15 @@ html, body {
   <a onclick="navigate('settings')" class="sidebar-link" data-page="settings">
     <i class="fas fa-cog w-5"></i> Settings
   </a>
+
+<!-- USE THIS INSTEAD -->
+<a href="subscription.html" class="sidebar-link">
+  <i class="fas fa-envelope-open-text w-5"></i> Subscriptions
+</a>
+
+
 </nav>
+
 
     
     <div class="p-4 border-t border-white/10">
@@ -2494,6 +2503,7 @@ function renderDashboard(c) {
         <button onclick="navigate('properties')" class="btn-ghost w-full justify-center">
           <i class="fas fa-building"></i> Moderate Properties
         </button>
+
       </div>
     </div>
   `;
