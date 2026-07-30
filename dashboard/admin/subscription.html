@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Subscriptions | MoonLat Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+  * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  
+  body {
+    background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 100%);
+    color: #fff;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .stars {
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.6), transparent),
+      radial-gradient(2px 2px at 90px 40px, rgba(250,204,21,0.4), transparent);
+    background-size: 200px 200px;
+    opacity: 0.5;
+    z-index: 0;
+    animation: twinkle 8s infinite;
+  }
+  
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+  }
+  
+  /* Mobile-first header */
+  .header {
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem;
+  }
+  
+  .back-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .back-btn:active {
+    background: rgba(255,255,255,0.2);
+    transform: scale(0.95);
+  }
+  
+  .page-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    flex: 1;
+    margin: 0 1rem;
+  }
+  
+  /* Cards */
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .stat-card {
+    background: linear-gradient(135deg, rgba(250,204,21,0.1) 0%, rgba(161,98,7,0.1) 100%);
+    border: 1px solid rgba(250,204,21,0.2);
+    border-radius: 16px;
+    padding: 1.25rem;
+  }
+  
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #FACC15;
+  }
+  
+  .stat-label {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 0.25rem;
+  }
+  
+  /* Buttons */
+  .btn {
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .btn-primary {
+    background: #FACC15;
+    color: #000;
+  }
+  
+  .btn-primary:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  .btn-ghost {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  
+  .btn-danger {
+    background: rgba(239,68,68,0.15);
+    color: #ef4444;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .btn-danger:active {
+    background: rgba(239,68,68,0.25);
+  }
+  
+  /* Input */
+  .input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1rem;
+    -webkit-appearance: none;
+  }
+  
+  .input:focus {
+    outline: none;
+    border-color: #FACC15;
+    background: rgba(255,255,255,0.08);
+  }
+  
+  .input::placeholder {
+    color: rgba(255,255,255,0.4);
+  }
+  
+  /* Search box */
+  .search-box {
+    position: relative;
+  }
+  
+  .search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255,255,255,0.4);
+  }
+  
+  .search-box input {
+    padding-left: 3rem;
+  }
+  
+  /* Table - Mobile optimized */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+  }
+  
+  th {
+    text-align: left;
+    padding: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.6);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    white-space: nowrap;
+  }
+  
+  td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.9375rem;
+  }
+  
+  tr:active {
+    background: rgba(255,255,255,0.05);
+  }
+  
+  /* Badge */
+  .badge {
+    padding: 0.375rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+  }
+  
+  .badge-active {
+    background: rgba(34,197,94,0.15);
+    color: #22c55e;
+    border: 1px solid rgba(34,197,94,0.3);
+  }
+  
+  /* Avatar */
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #FACC15, #A16207);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #000;
+    flex-shrink: 0;
+  }
+  
+  /* Spinner */
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: #FACC15;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Toast */
+  .toast {
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    animation: slideUp 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  
+  .toast.success { border-left: 4px solid #22c55e; }
+  .toast.error { border-left: 4px solid #ef4444; }
+  .toast.warning { border-left: 4px solid #f59e0b; }
+  
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  /* Fade in */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.5s ease forwards;
+  }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+  
+  .empty-state i {
+    font-size: 3rem;
+    opacity: 0.3;
+    margin-bottom: 1rem;
+  }
+  
+  /* Responsive */
+  @media (min-width: 640px) {
+    .page-title {
+      font-size: 1.5rem;
+    }
+    
+    .stat-value {
+      font-size: 2.5rem;
+    }
+    
+    .btn {
+      width: auto;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .header {
+      padding: 1.25rem 2rem;
+    }
+    
+    .page-content {
+      padding: 2rem;
+    }
+  }
+  
+  /* Glow effect */
+  .glow {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(250,204,21,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .glow.top-right {
+    top: -150px;
+    right: -150px;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+<div class="glow top-right"></div>
+
+<!-- Header -->
+<header class="header">
+  <div class="flex items-center">
+    <button onclick="goBack()" class="back-btn">
+      <i class="fas fa-arrow-left text-lg"></i>
+    </button>
+    <h1 class="page-title">Newsletter Subscriptions</h1>
+    <button onclick="exportSubscriptions()" class="back-btn" style="margin-left: auto;">
+      <i class="fas fa-download text-lg"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Page Content -->
+<div class="page-content" style="padding: 1rem; position: relative; z-index: 1;">
+  
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-2 gap-3 mb-4">
+    <div class="stat-card fade-in" style="animation-delay: 0.1s">
+      <div class="stat-value" id="totalSubscribers">0</div>
+      <div class="stat-label">Total Subscribers</div>
+    </div>
+    <div class="stat-card fade-in" style="animation-delay: 0.2s">
+      <div class="stat-value" id="thisMonth">0</div>
+      <div class="stat-label">This Month</div>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-2 gap-3 mb-4">
+    <div class="card fade-in" style="animation-delay: 0.3s">
+      <div style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;" id="homepageSubs">0</div>
+      <div style="font-size: 0.875rem; color: rgba(255,255,255,0.6); margin-top: 0.25rem;">Homepage</div>
+    </div>
+    <div class="card fade-in" style="animation-delay: 0.4s">
+      <div style="font-size: 1.5rem; font-weight: 700; color: #a855f7;" id="propertyPageSubs">0</div>
+      <div style="font-size: 0.875rem; color: rgba(255,255,255,0.6); margin-top: 0.25rem;">Property Pages</div>
+    </div>
+  </div>
+  
+  <!-- Search & Filter -->
+  <div class="card fade-in" style="animation-delay: 0.5s">
+    <div class="search-box mb-3">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Search by email..." class="input" onkeyup="filterSubscribers()">
+    </div>
+    <select id="sourceFilter" class="input mb-3" onchange="filterSubscribers()">
+      <option value="">All Sources</option>
+      <option value="homepage">Homepage</option>
+      <option value="properties_page">Property Pages</option>
+      <option value="property_details_page">Property Details</option>
+    </select>
+    <button onclick="clearFilters()" class="btn btn-ghost">
+      <i class="fas fa-times"></i> Clear Filters
+    </button>
+  </div>
+  
+  <!-- Table -->
+  <div class="card fade-in" style="animation-delay: 0.6s">
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Subscriber</th>
+            <th>Source</th>
+            <th>Date</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="subscribersTable">
+          <tr>
+            <td colspan="4" style="text-align: center; padding: 3rem;">
+              <div class="spinner" style="margin: 0 auto 1rem;"></div>
+              <div style="color: rgba(255,255,255,0.6);">Loading...</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <!-- Empty State -->
+  <div id="emptyState" class="card empty-state" style="display: none;">
+    <i class="fas fa-inbox"></i>
+    <h3 style="margin-bottom: 0.5rem;">No Subscribers</h3>
+    <p style="color: rgba(255,255,255,0.6); margin-bottom: 1.5rem;">No results match your filters.</p>
+    <button onclick="clearFilters()" class="btn btn-primary">
+      <i class="fas fa-filter"></i> Clear Filters
+    </button>
+  </div>
+  
+  <div style="height: 2rem;"></div>
+</div>
+
+<!-- Toast Container -->
+<div id="toastContainer" style="position: fixed; bottom: 1rem; right: 1rem; left: 1rem; z-index: 100; pointer-events: none;"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, query, orderBy, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+  projectId: "moonlat-estate-dashboard",
+  storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+  messagingSenderId: "289878951289",
+  appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let allSubscribers = [];
+let filteredSubscribers = [];
+
+// Auth Check
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = '../sign-in.html';
+    return;
+  }
+  
+  try {
+    const userDocRef = doc(db, 'users', user.uid);
+    const userDocSnap = await getDoc(userDocRef);
+    
+    if (!userDocSnap.exists() || userDocSnap.data().role !== 'admin') {
+      await signOut(auth);
+      showToast('Access denied. Admin only.', 'error');
+      window.location.href = '../sign-in.html';
+      return;
+    }
+    
+    await loadSubscribers();
+  } catch (error) {
+    console.error('Auth error:', error);
+    await signOut(auth);
+    window.location.href = '../sign-in.html';
+  }
+});
+
+// Load Subscribers
+async function loadSubscribers() {
+  try {
+    // Fetch without orderBy to avoid missing composite index errors
+    const snapshot = await getDocs(collection(db, 'newsletter'));
+    
+    allSubscribers = snapshot.docs.map(d => ({ 
+      id: d.id, 
+      ...d.data() 
+    }));
+    
+    // Sort client-side by date (newest first)
+    allSubscribers.sort((a, b) => {
+      const dateA = a.subscribedAt?.toDate ? a.subscribedAt.toDate() : new Date(a.subscribedAt || 0);
+      const dateB = b.subscribedAt?.toDate ? b.subscribedAt.toDate() : new Date(b.subscribedAt || 0);
+      return dateB - dateA; // Descending order
+    });
+    
+    filteredSubscribers = [...allSubscribers];
+    updateStats();
+    renderTable();
+    
+    if (allSubscribers.length === 0) {
+      showToast('No subscribers found yet', 'info');
+    }
+    
+  } catch (error) {
+    console.error('=== FIRESTORE ERROR DETAILS ===');
+    console.error('Code:', error.code);
+    console.error('Message:', error.message);
+    console.error('Full Error:', error);
+    
+    let errorMsg = 'Failed to load subscribers';
+    if (error.code === 'permission-denied') {
+      errorMsg = 'Access denied. Firestore rules are blocking the read.';
+    } else if (error.code === 'unavailable' || error.code === 'network-error') {
+      errorMsg = 'Database unavailable. Please check your internet connection.';
+    } else if (error.message) {
+      errorMsg = error.message;
+    }
+    
+    showToast(errorMsg, 'error');
+  }
+}
+
+// Update Stats
+function updateStats() {
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  
+  const monthCount = allSubscribers.filter(s => {
+    const date = s.subscribedAt?.toDate ? s.subscribedAt.toDate() : new Date(s.subscribedAt);
+    return date >= monthStart;
+  }).length;
+  
+  const homepage = allSubscribers.filter(s => s.source === 'homepage').length;
+  const propertyPages = allSubscribers.filter(s => s.source?.includes('property')).length;
+  
+  animateValue('totalSubscribers', allSubscribers.length);
+  animateValue('thisMonth', monthCount);
+  animateValue('homepageSubs', homepage);
+  animateValue('propertyPageSubs', propertyPages);
+}
+
+function animateValue(id, value) {
+  const el = document.getElementById(id);
+  el.textContent = value.toLocaleString();
+}
+
+// Render Table
+function renderTable() {
+  const tbody = document.getElementById('subscribersTable');
+  const emptyState = document.getElementById('emptyState');
+  
+  if (filteredSubscribers.length === 0) {
+    tbody.innerHTML = '';
+    emptyState.style.display = 'block';
+    return;
+  }
+  
+  emptyState.style.display = 'none';
+  
+  tbody.innerHTML = filteredSubscribers.map(sub => {
+    const date = sub.subscribedAt?.toDate ? sub.subscribedAt.toDate() : new Date(sub.subscribedAt);
+    const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    
+    const sources = {
+      'homepage': 'Homepage',
+      'properties_page': 'Property Pages',
+      'property_details_page': 'Property Details'
+    };
+    
+    return `
+      <tr>
+        <td>
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div class="avatar">${(sub.email || 'U')[0].toUpperCase()}</div>
+            <div style="overflow: hidden;">
+              <div style="font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${sub.email || 'No email'}</div>
+              <div style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">${sub.id?.slice(0, 8) || ''}</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge badge-active">${sources[sub.source] || sub.source || 'Unknown'}</span></td>
+        <td style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">${dateStr}</td>
+        <td style="text-align: right;">
+          <button onclick="deleteSubscriber('${sub.id}', '${sub.email}')" class="btn btn-danger">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// Filter
+window.filterSubscribers = function() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const source = document.getElementById('sourceFilter').value;
+  
+  filteredSubscribers = allSubscribers.filter(sub => {
+    const matchSearch = !search || sub.email?.toLowerCase().includes(search);
+    const matchSource = !source || sub.source === source;
+    return matchSearch && matchSource;
+  });
+  
+  renderTable();
+};
+
+// Clear Filters
+window.clearFilters = function() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('sourceFilter').value = '';
+  filteredSubscribers = [...allSubscribers];
+  renderTable();
+};
+
+// Delete
+window.deleteSubscriber = async function(id, email) {
+  if (!confirm(`Delete ${email}?`)) return;
+  
+  try {
+    await deleteDoc(doc(db, 'newsletter', id));
+    allSubscribers = allSubscribers.filter(s => s.id !== id);
+    filteredSubscribers = filteredSubscribers.filter(s => s.id !== id);
+    updateStats();
+    renderTable();
+    showToast('Subscriber deleted', 'success');
+  } catch (error) {
+    showToast('Delete failed', 'error');
+  }
+};
+
+// Export
+window.exportSubscriptions = function() {
+  if (allSubscribers.length === 0) {
+    showToast('No subscribers to export', 'warning');
+    return;
+  }
+  
+  const csv = [
+    ['Email', 'Source', 'Date', 'Status'],
+    ...allSubscribers.map(s => [
+      s.email || '',
+      s.source || 'Unknown',
+      (s.subscribedAt?.toDate ? s.subscribedAt.toDate() : new Date(s.subscribedAt)).toLocaleString(),
+      'Active'
+    ])
+  ].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+  
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `subscribers-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  
+  showToast('Exported successfully', 'success');
+};
+
+// Go Back
+window.goBack = function() {
+  window.history.back();
+};
+
+// Toast
+function showToast(msg, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.style.pointerEvents = 'auto';
+  
+  const icons = { success: 'fa-check', error: 'fa-exclamation', warning: 'fa-exclamation-triangle', info: 'fa-info' };
+  
+  toast.innerHTML = `
+    <i class="fas ${icons[type]}"></i>
+    <div style="flex: 1; font-weight: 500;">${msg}</div>
+    <button onclick="this.parentElement.remove()" style="background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer;"><i class="fas fa-times"></i></button>
+  `;
+  
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(100%)';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+</script>
+
+</body>
+</html>
