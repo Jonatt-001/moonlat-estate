@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,8 +45,13 @@
 
 <link rel="stylesheet" href="home.css">
 <link rel="stylesheet" href="credit.css">
+<link rel="stylesheet" href="newsletter.css">
 
 <style>
+
+
+
+
 
 </style>
 </head>
@@ -466,10 +472,98 @@
     </div>
 </div>
 
+
+<!-- NEWSLETTER MODAL -->
+<div class="modal-overlay" id="newsletterModal">
+    <div class="modal-container">
+        <button class="modal-close" onclick="closeNewsletterModal()">✕</button>
+        
+        <!-- Loading State -->
+        <div class="modal-loading-content" id="modalLoading" style="display: none;">
+            <div class="loading-icon">
+                <div class="loading-spinner"></div>
+            </div>
+            <h2>Subscribing...</h2>
+            <p>Please wait while we process your subscription</p>
+            
+            <div class="progress-timeline">
+                <div class="progress-step" id="step1">
+                    <div class="progress-step-icon">1</div>
+                    <div class="progress-step-text">Validating email address</div>
+                </div>
+                <div class="progress-step" id="step2">
+                    <div class="progress-step-icon">2</div>
+                    <div class="progress-step-text">Checking existing subscriptions</div>
+                </div>
+                <div class="progress-step" id="step3">
+                    <div class="progress-step-icon">3</div>
+                    <div class="progress-step-text">Adding to newsletter database</div>
+                </div>
+                <div class="progress-step" id="step4">
+                    <div class="progress-step-icon">4</div>
+                    <div class="progress-step-text">Confirming subscription</div>
+                </div>
+            </div>
+        </div>
+        
+<!-- Success State -->
+<div class="modal-success-content" id="modalSuccess" style="display: none;">
+    <div class="success-header">
+        <!-- Decorative layers -->
+        <div class="grid-pattern"></div>
+        <div class="noise-overlay"></div>
+        <div class="blob-1"></div>
+        <div class="blob-2"></div>
+        <div class="shimmer"></div>
+        <div class="confetti-container" id="confettiContainer"></div>
+        
+        <div class="success-icon"></div>
+        <h2>Congratulations!</h2>
+        <p>You're now subscribed</p>
+    </div>
+    <div class="success-body">
+        <div class="success-stats">
+            <div class="stat-stars">★★★★★</div>
+            <div class="stat-number">90,000+</div>
+            <div class="stat-label">Happy Subscribers</div>
+        </div>
+        <p class="success-message">
+            Welcome to the MoonLat community! You'll now receive exclusive listings, market insights, and verified property updates directly to your inbox.
+        </p>
+        <button class="btn-continue" onclick="closeNewsletterModal()">Continue</button>
+    </div>
+</div>
+
+        
+        <!-- Error State -->
+        <div class="modal-error-content" id="modalError" style="display: none;">
+            <div class="error-icon">✕</div>
+            <h2>Subscription Failed</h2>
+            <p>We couldn't complete your subscription at this time.</p>
+            <div class="error-details" id="errorDetails">
+                An unexpected error occurred. Please try again.
+            </div>
+            <button class="btn-retry" onclick="retrySubscription()">Try Again</button>
+        </div>
+        
+        <!-- Already Subscribed State -->
+        <div class="modal-already-content" id="modalAlready" style="display: none;">
+            <div class="already-icon">📧</div>
+            <h2>Already Subscribed!</h2>
+            <p>This email address is already registered to receive our newsletter.</p>
+            <div class="error-details" style="background: #fef3c7; color: #92400e;">
+                You're already part of our community! Check your inbox for our latest updates.
+            </div>
+            <button class="btn-ok" onclick="closeNewsletterModal()">OK, Got it</button>
+        </div>
+    </div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-import { getFirestore, collection, query, where, orderBy, limit, onSnapshot, doc, getDoc, updateDoc, arrayUnion, arrayRemove, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { getFirestore, collection, query, where, orderBy, limit, onSnapshot, doc, getDoc, getDocs, updateDoc, arrayUnion, arrayRemove, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
@@ -903,33 +997,228 @@ document.querySelectorAll('#featuredIndicator button').forEach((dot, index) => {
     });
 });
 
-// =================== NEWSLETTER ===================
-document.getElementById('newsletterForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('newsletterEmail').value.trim();
-    const btn = document.getElementById('newsletterBtn');
+// =================== PRODUCTION-READY NEWSLETTER SETUP ===================
+let lastEmail = '';
+let isSubmitting = false; // Anti-spam flag
+
+window.closeNewsletterModal = function() {
+    const modal = document.getElementById('newsletterModal');
+    if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+    }
+};
+
+function showNewsletterModal(state, errorMessage = '') {
+    const modal = document.getElementById('newsletterModal');
+    if (!modal) return;
     
-    if (!email) return;
+    const loading = document.getElementById('modalLoading');
+    const success = document.getElementById('modalSuccess');
+    const error = document.getElementById('modalError');
+    const already = document.getElementById('modalAlready');
+
+    if (loading) loading.style.display = 'none';
+    if (success) success.style.display = 'none';
+    if (error) error.style.display = 'none';
+    if (already) already.style.display = 'none';
     
-    btn.disabled = true;
-    btn.textContent = 'Subscribing...';
+    if (state === 'loading' && loading) {
+        loading.style.display = 'block';
+        resetProgress();
+    } else if (state === 'success' && success) {
+        success.style.display = 'block';
+        setTimeout(createConfetti, 100);
+    } else if (state === 'error' && error) {
+        error.style.display = 'block';
+        const errorDetails = document.getElementById('errorDetails');
+        if (errorDetails) errorDetails.textContent = errorMessage || 'An unexpected error occurred.';
+    } else if (state === 'already' && already) {
+        already.style.display = 'block';
+    }
     
-    try {
-        await addDoc(collection(db, 'newsletter'), {
-            email: email,
-            subscribedAt: serverTimestamp(),
-            source: 'homepage'
-        });
-        showToast('success', 'Subscribed!', 'You\'ll receive our latest listings and updates');
-        document.getElementById('newsletterForm').reset();
-    } catch (err) {
-        console.error('Newsletter error:', err);
-        showToast('error', 'Error', 'Failed to subscribe. Please try again.');
-    } finally {
-        btn.disabled = false;
-        btn.textContent = 'Subscribe';
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+}
+
+window.retrySubscription = function() {
+    window.closeNewsletterModal();
+    setTimeout(() => {
+        const emailInput = document.getElementById('newsletterEmail');
+        if (lastEmail && emailInput) {
+            emailInput.value = lastEmail;
+            emailInput.focus();
+        }
+        document.getElementById('newsletterForm').dispatchEvent(new Event('submit'));
+    }, 300);
+};
+
+async function updateProgress(step) {
+    for (let i = 1; i < step; i++) {
+        const stepEl = document.getElementById(`step${i}`);
+        if (stepEl) {
+            stepEl.classList.remove('active');
+            stepEl.classList.add('completed');
+            const icon = stepEl.querySelector('.progress-step-icon');
+            if (icon) icon.textContent = '✓';
+        }
+    }
+    const currentStep = document.getElementById(`step${step}`);
+    if (currentStep) currentStep.classList.add('active');
+    await new Promise(resolve => setTimeout(resolve, 400));
+}
+
+function resetProgress() {
+    for (let i = 1; i <= 4; i++) {
+        const stepEl = document.getElementById(`step${i}`);
+        if (stepEl) {
+            stepEl.classList.remove('active', 'completed');
+            const icon = stepEl.querySelector('.progress-step-icon');
+            if (icon) icon.textContent = i;
+        }
+    }
+}
+
+function createConfetti() {
+    const container = document.getElementById('confettiContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#fa709a'];
+    for (let i = 0; i < 20; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 1.5 + 's';
+        confetti.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+        if (Math.random() < 0.33) confetti.style.borderRadius = '50%';
+        else if (Math.random() < 0.66) { confetti.style.width = '5px'; confetti.style.height = '12px'; }
+        container.appendChild(confetti);
+    }
+}
+
+// Close modal on outside click or Escape
+document.addEventListener('click', function(e) {
+    if (e.target.id === 'newsletterModal') window.closeNewsletterModal();
+});
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const modal = document.getElementById('newsletterModal');
+        if (modal && modal.classList.contains('show')) window.closeNewsletterModal();
     }
 });
+
+// =================== FORM SUBMIT HANDLER ===================
+const newsletterForm = document.getElementById('newsletterForm');
+if (newsletterForm) {
+    newsletterForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Prevent rapid-fire submissions
+        if (isSubmitting) return;
+        
+        const emailInput = document.getElementById('newsletterEmail');
+        let email = emailInput.value.trim().toLowerCase();
+        const btn = document.getElementById('newsletterBtn');
+        
+        // 1. STRICT HTML5 Email Validation
+        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
+        
+        if (!email || !emailRegex.test(email)) {
+            showToast('error', 'Invalid Email', 'Please enter a valid email address (e.g., name@example.com).');
+            emailInput.focus();
+            return;
+        }
+
+        // 2. SMART TYPO DETECTION (Production-grade UX)
+        const parts = email.split('@');
+        const commonTypos = {
+            'gmai.com': 'gmail.com',
+            'gmal.com': 'gmail.com',
+            'gmial.com': 'gmail.com',
+            'gnail.com': 'gmail.com',
+            'yaho.com': 'yahoo.com',
+            'yahooo.com': 'yahoo.com',
+            'hotmal.com': 'hotmail.com',
+            'hotmial.com': 'hotmail.com',
+            'outlok.com': 'outlook.com'
+        };
+
+        if (commonTypos[parts[1]]) {
+            const correctEmail = `${parts[0]}@${commonTypos[parts[1]]}`;
+            showToast('info', 'Check your email', `Did you mean ${correctEmail}? We auto-corrected it for you.`);
+            emailInput.value = correctEmail;
+            email = correctEmail; // Update the variable
+            emailInput.focus();
+            return; // Let them review and click subscribe again
+        }
+        
+        // 3. Begin Submission
+        isSubmitting = true;
+        lastEmail = email;
+        btn.disabled = true;
+        btn.textContent = 'Verifying...';
+        
+        showNewsletterModal('loading');
+        
+        try {
+            await updateProgress(1);
+            await updateProgress(2);
+            
+            // Check for existing subscription
+            const existingQuery = query(
+                collection(db, 'newsletter'),
+                where('email', '==', email)
+            );
+            const existingSnapshot = await getDocs(existingQuery);
+            
+            if (!existingSnapshot.empty) {
+                showNewsletterModal('already');
+                isSubmitting = false;
+                btn.disabled = false;
+                btn.textContent = 'Subscribe';
+                return;
+            }
+            
+            await updateProgress(3);
+            
+            // Add to database
+            await addDoc(collection(db, 'newsletter'), {
+                email: email,
+                subscribedAt: serverTimestamp(),
+                source: 'properties_page'
+            });
+            
+            await updateProgress(4);
+            showNewsletterModal('success');
+            emailInput.value = '';
+            
+        } catch (err) {
+            console.error('Newsletter error:', err);
+            
+            // 4. PRODUCTION-READY ERROR MAPPING
+            let errorMsg = 'Failed to subscribe. Please check your internet connection and try again.';
+            
+            if (err.code === 'permission-denied') {
+                errorMsg = 'Subscription failed due to security rules. Please contact support.';
+            } else if (err.code === 'unavailable' || err.code === 'network-error') {
+                errorMsg = 'Network error. Please check your connection and try again.';
+            } else if (err.message) {
+                errorMsg = err.message;
+            }
+            
+            showNewsletterModal('error', errorMsg);
+        } finally {
+            isSubmitting = false;
+            btn.disabled = false;
+            btn.textContent = 'Subscribe';
+        }
+    });
+}
+
 
 // =================== TOAST ===================
 function showToast(type, title, message) {
