@@ -49,37 +49,75 @@
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
   }
+  
+  /* Mobile sidebar fixes */
+  #sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  @media (max-width: 1023px) {
+    #sidebar {
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+    }
+    
+    #sidebarNav {
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE 10+ */
+    }
+    
+    #sidebarNav::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
+    }
+  }
+
+  /* Smooth transitions */
+  #sidebar {
+    transition: transform 0.3s ease-in-out;
+  }
+
+/* Premium Buyer Dashboard Styles */
+.animate-fade {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Smooth hover effects */
+.group:hover .group-hover\\:scale-110 {
+  transform: scale(1.1);
+}
+
+/* Glass morphism effect */
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+/* Premium shadows */
+.shadow-violet-500\/30 {
+  --tw-shadow-color: rgb(139 92 246 / 0.3);
+}
+
+.shadow-emerald-500\/30 {
+  --tw-shadow-color: rgb(16 185 129 / 0.3);
+}
+
+.shadow-amber-500\/30 {
+  --tw-shadow-color: rgb(245 158 11 / 0.3);
+}
+
+.shadow-rose-500\/30 {
+  --tw-shadow-color: rgb(244 63 94 / 0.3);
+}
+
 </style>
 
-</head>
-<body class="min-h-screen">
-<!-- Auth Guard -->
-<div id="authGuard" class="fixed inset-0 bg-white z-[9999] flex items-center justify-center">
-  <div class="spinner" style="width: 32px; height: 32px; border-width: 3px; border-color: #e2e8f0; border-top-color: #3b82f6;"></div>
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-
-const app = initializeApp({
-  apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
-  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
-  projectId: "moonlat-estate-dashboard",
-  storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
-  messagingSenderId: "289878951289",
-  appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
-});
-
-const auth = getAuth(app);
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.href = 'sign-in.html';
-  } else {
-    document.getElementById('authGuard').style.display = 'none';
-  }
-});
-</script>
 
 
 <div id="app" class="flex min-h-screen hidden">
@@ -87,7 +125,7 @@ onAuthStateChanged(auth, (user) => {
   <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
 <!-- Premium Sidebar -->
-<aside id="sidebar" class="sidebar sidebar-mobile lg:translate-x-0 w-[280px] text-white flex-shrink-0 lg:flex flex-col fixed h-full z-50 lg:z-30 overflow-hidden">
+<aside id="sidebar" class="fixed inset-y-0 left-0 w-[280px] bg-[#09090b] text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50 lg:z-30">
   <!-- Logo Section - Fixed -->
   <div class="p-6 border-b border-white/[0.06] relative flex-shrink-0">
     <div class="flex items-center gap-3.5 group">
@@ -114,6 +152,35 @@ onAuthStateChanged(auth, (user) => {
     <!-- Dynamic nav items based on role -->
   </nav>
 
+  <!-- Quick Stats Section - Fills empty space -->
+  <div class="px-3 py-4 border-t border-white/[0.06] flex-shrink-0">
+    <div class="bg-gradient-to-br from-white/[0.03] to-transparent rounded-xl p-4 border border-white/[0.05]">
+      <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold mb-3">Quick Stats</p>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="text-center p-2 rounded-lg bg-white/[0.03]">
+          <p class="text-lg font-bold text-white" id="sidebarStat1">0</p>
+          <p class="text-[10px] text-slate-500">Properties</p>
+        </div>
+        <div class="text-center p-2 rounded-lg bg-white/[0.03]">
+          <p class="text-lg font-bold text-white" id="sidebarStat2">0</p>
+          <p class="text-[10px] text-slate-500">Viewings</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help & Support Section -->
+  <div class="px-3 py-2 flex-shrink-0">
+    <a href="mailto:support@moonlat.com" class="flex items-center gap-3 px-3.5 py-2.5 text-sm text-slate-400 hover:text-white hover:bg-white/[0.05] rounded-lg transition mb-1">
+      <i class="fas fa-question-circle w-5 text-center"></i> <span>Help & Support</span>
+    </a>
+    <div class="flex items-center gap-3 px-3.5 py-2 text-xs text-slate-600">
+      <i class="fas fa-code-branch"></i> <span>v2.4.0</span>
+      <span class="mx-1">•</span>
+      <span>Build 2026</span>
+    </div>
+  </div>
+
   <!-- User Profile Section - Fixed -->
   <div class="p-3 border-t border-white/[0.06] relative flex-shrink-0">
     <div class="group relative bg-gradient-to-br from-white/[0.03] to-transparent rounded-xl p-3 border border-white/[0.05] hover:border-white/[0.1] transition-all duration-300 cursor-pointer">
@@ -133,6 +200,7 @@ onAuthStateChanged(auth, (user) => {
     </div>
   </div>
 </aside>
+
 
 
 
@@ -417,9 +485,18 @@ const AuthService = {
 const FirestoreService = {
   subscribeToData() {
     const uid = state.user.uid;
+    const role = state.userProfile?.role || 'buyer';
     
-    // Subscribe to user's properties
-    const propsQuery = query(collection(db, 'properties'), where('ownerId', '==', uid));
+    // Subscribe to properties - ALL for buyers, only owned for agents
+    let propsQuery;
+    if (role === 'buyer') {
+      // Buyers see ALL active properties on platform
+      propsQuery = query(collection(db, 'properties'), where('status', '==', 'Active'));
+    } else {
+      // Agents see only their own properties
+      propsQuery = query(collection(db, 'properties'), where('ownerId', '==', uid));
+    }
+    
     const unsubProps = onSnapshot(propsQuery, (snap) => {
       state.properties = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       if (state.initialized) renderPage();
@@ -429,6 +506,7 @@ const FirestoreService = {
       }
     });
     state.unsubscribers.push(unsubProps);
+
 
     // Subscribe to user's leads
     const leadsQuery = query(collection(db, 'leads'), where('ownerId', '==', uid));
@@ -663,60 +741,56 @@ function setupUI() {
   
   document.getElementById('sidebarUserName').textContent = name;
   document.getElementById('headerUserName').textContent = name;
-
-
-
   document.getElementById('headerUserEmail').textContent = email;
   document.getElementById('sidebarUserRole').textContent = role === 'agent' ? 'Agent' : 'Buyer';
   
   // Setup navigation based on role
   const nav = document.getElementById('sidebarNav');
-  // In setupUI(), find the agent nav section and add this line:
-if (role === 'agent') {
-  nav.innerHTML = `
-    <div class="sidebar-section-label mt-2">Overview</div>
-    <a onclick="navigate('dashboard')" class="sidebar-link active flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="dashboard">
-      <i class="fas fa-th-large w-5 text-center text-slate-500"></i> <span>Dashboard</span>
-    </a>
-    <a onclick="navigate('properties')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="properties">
-      <i class="fas fa-building w-5 text-center text-slate-500"></i> <span>Properties</span>
-    </a>
+  if (role === 'agent') {
+    nav.innerHTML = `
+      <div class="sidebar-section-label mt-2">Overview</div>
+      <a onclick="navigate('dashboard')" class="sidebar-link active flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="dashboard">
+        <i class="fas fa-th-large w-5 text-center text-slate-500"></i> <span>Dashboard</span>
+      </a>
+      <a onclick="navigate('properties')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="properties">
+        <i class="fas fa-building w-5 text-center text-slate-500"></i> <span>Properties</span>
+      </a>
 
-    <div class="sidebar-section-label mt-5">Pipeline</div>
-    <a onclick="navigate('leads')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="leads">
-      <i class="fas fa-user-plus w-5 text-center text-slate-500"></i> <span>Leads & Inquiries</span>
-    </a>
-    <a onclick="navigate('clients')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="clients">
-      <i class="fas fa-users w-5 text-center text-slate-500"></i> <span>Clients</span>
-    </a>
-    <a href="appointments.html" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="appointments">
-      <i class="fas fa-calendar-alt w-5 text-center text-slate-500"></i> <span>Appointments</span>
-    </a>
-    <a onclick="navigate('deals')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="deals">
-      <i class="fas fa-handshake w-5 text-center text-slate-500"></i> <span>Deal Tracker</span>
-    </a>
+      <div class="sidebar-section-label mt-5">Pipeline</div>
+      <a onclick="navigate('leads')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="leads">
+        <i class="fas fa-user-plus w-5 text-center text-slate-500"></i> <span>Leads & Inquiries</span>
+      </a>
+      <a onclick="navigate('clients')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="clients">
+        <i class="fas fa-users w-5 text-center text-slate-500"></i> <span>Clients</span>
+      </a>
+      <a href="appointments.html" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="appointments">
+        <i class="fas fa-calendar-alt w-5 text-center text-slate-500"></i> <span>Appointments</span>
+      </a>
+      <a onclick="navigate('deals')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="deals">
+        <i class="fas fa-handshake w-5 text-center text-slate-500"></i> <span>Deal Tracker</span>
+      </a>
 
-    <div class="sidebar-section-label mt-5">Media</div>
-    <a href="media.html" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="media">
-      <i class="fas fa-images w-5 text-center text-slate-500"></i> <span>Media Library</span>
-    </a>
+      <div class="sidebar-section-label mt-5">Media</div>
+      <a href="media.html" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="media">
+        <i class="fas fa-images w-5 text-center text-slate-500"></i> <span>Media Library</span>
+      </a>
 
-    <div class="sidebar-section-label mt-5">Finance</div>
-    <a onclick="navigate('earnings')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="earnings">
-      <i class="fas fa-dollar-sign w-5 text-center text-slate-500"></i> <span>Earnings</span>
-    </a>
-    <a onclick="navigate('analytics')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="analytics">
-      <i class="fas fa-chart-line w-5 text-center text-slate-500"></i> <span>Analytics</span>
-    </a>
+      <div class="sidebar-section-label mt-5">Finance</div>
+      <a onclick="navigate('earnings')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="earnings">
+        <i class="fas fa-dollar-sign w-5 text-center text-slate-500"></i> <span>Earnings</span>
+      </a>
+      <a onclick="navigate('analytics')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="analytics">
+        <i class="fas fa-chart-line w-5 text-center text-slate-500"></i> <span>Analytics</span>
+      </a>
 
-    <div class="sidebar-section-label mt-5">System</div>
-    <a onclick="navigate('notifications')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm relative" data-page="notifications">
-      <i class="fas fa-bell w-5 text-center text-slate-500"></i> <span>Notifications</span>
-    </a>
-<a href="settings.html" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="settings">
-  <i class="fas fa-cog w-5 text-center text-slate-500"></i> <span>Settings</span>
-</a>
-  `;
+      <div class="sidebar-section-label mt-5">System</div>
+      <a onclick="navigate('notifications')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm relative" data-page="notifications">
+        <i class="fas fa-bell w-5 text-center text-slate-500"></i> <span>Notifications</span>
+      </a>
+      <a href="settings.html" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="settings">
+        <i class="fas fa-cog w-5 text-center text-slate-500"></i> <span>Settings</span>
+      </a>
+    `;
 
   } else {
     // Buyer view - simplified
@@ -736,17 +810,33 @@ if (role === 'agent') {
       <a onclick="navigate('notifications')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm relative" data-page="notifications">
         <i class="fas fa-bell w-5 text-center text-slate-500"></i> <span>Notifications</span>
       </a>
-<a href="settings.html" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="settings">
-  <i class="fas fa-cog w-5 text-center text-slate-500"></i> <span>Settings</span>
-</a>
-
+      <a href="settings.html" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="settings">
+        <i class="fas fa-cog w-5 text-center text-slate-500"></i> <span>Settings</span>
+      </a>
     `;
   }
 
+  // Update quick stats
+  updateSidebarStats();
 
   // Show app
   document.getElementById('app').classList.remove('hidden');
 }
+
+function updateSidebarStats() {
+  const role = state.userProfile?.role || 'buyer';
+  const stat1 = document.getElementById('sidebarStat1');
+  const stat2 = document.getElementById('sidebarStat2');
+  
+  if (role === 'agent') {
+    stat1.textContent = state.properties.length;
+    stat2.textContent = state.appointments.filter(a => a.status === 'Confirmed').length;
+  } else {
+    stat1.textContent = state.properties.filter(p => p.saved).length;
+    stat2.textContent = state.appointments.filter(a => a.status === 'Confirmed').length;
+  }
+}
+
 
 // =================== NAVIGATION ===================
 window.navigate = function(page) {
@@ -921,72 +1011,215 @@ function renderAgentDashboard(c) {
 function renderBuyerDashboard(c) {
   const savedProperties = state.properties.filter(p => p.saved);
   const upcomingViewings = state.appointments.filter(a => a.status === 'Confirmed');
+  const recentProperties = state.properties.slice(0, 6); // Show 6 latest
+  const featuredProperties = state.properties.filter(p => p.featured).slice(0, 2);
 
   c.innerHTML = `
-    <div class="mb-6">
-      <p class="text-sm text-gray-500 mb-1">Welcome back,</p>
-      <h2 class="text-3xl font-bold">${escapeHtml(state.userProfile?.name || 'User')} 👋</h2>
-      <p class="text-gray-500 text-sm mt-1">Find your dream property today.</p>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-      ${statCard('Saved Properties', savedProperties.length, 'fa-heart', 'red')}
-      ${statCard('Upcoming Viewings', upcomingViewings.length, 'fa-calendar', 'blue')}
-      ${statCard('Notifications', state.notifications.filter(n => !n.read).length, 'fa-bell', 'amber')}
-    </div>
-
-    <div class="card p-6 mb-6">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="font-bold text-lg">Quick Actions</h3>
+    <!-- Hero Section -->
+    <div class="relative mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-violet-600 via-indigo-600 to-slate-800 p-8 text-white shadow-2xl">
+      <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.08"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+      <div class="relative z-10">
+        <p class="text-sm font-medium text-white/80 mb-2">Welcome back,</p>
+        <h2 class="text-4xl font-bold mb-3">${escapeHtml(state.userProfile?.name || 'User')} 👋</h2>
+        <p class="text-lg text-white/90 max-w-2xl">Discover exceptional properties and find your perfect space. ${state.properties.length} premium listings await you.</p>
+        
+        <!-- Quick Search -->
+        <div class="mt-6 flex flex-col sm:flex-row gap-3 max-w-2xl">
+          <div class="relative flex-1">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="text" placeholder="Search by location or property type..." 
+                   class="w-full pl-12 pr-4 py-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
+                   onkeypress="if(event.key==='Enter'){navigate('properties');document.getElementById('globalSearch').value=this.value}">
+          </div>
+          <button onclick="navigate('properties')" class="px-6 py-3.5 bg-white text-indigo-600 font-semibold rounded-xl hover:bg-white/90 transition shadow-lg whitespace-nowrap">
+            Search
+          </button>
+        </div>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <button onclick="navigate('properties')" class="p-6 border-2 border-dashed border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50/50 transition text-left">
-          <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center mb-3">
-            <i class="fas fa-search text-xl"></i>
+    </div>
+
+    <!-- Stats Grid - Always 2 columns on mobile -->
+    <div class="grid grid-cols-2 gap-4 mb-8">
+      <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-white/20 transition"></div>
+        <div class="relative z-10">
+          <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3">
+            <i class="fas fa-building text-xl"></i>
           </div>
-          <h4 class="font-semibold mb-1">Browse Properties</h4>
-          <p class="text-sm text-gray-500">Explore available listings</p>
-        </button>
-        <button onclick="navigate('appointments')" class="p-6 border-2 border-dashed border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50/50 transition text-left">
-          <div class="w-12 h-12 rounded-lg bg-green-100 text-green-600 flex items-center justify-center mb-3">
-            <i class="fas fa-calendar-plus text-xl"></i>
+          <p class="text-3xl font-bold mb-1">${state.properties.length}</p>
+          <p class="text-sm text-white/80">Available Properties</p>
+        </div>
+      </div>
+      
+      <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-white/20 transition"></div>
+        <div class="relative z-10">
+          <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3">
+            <i class="fas fa-calendar-check text-xl"></i>
           </div>
-          <h4 class="font-semibold mb-1">Schedule Viewing</h4>
-          <p class="text-sm text-gray-500">Book a property visit</p>
-        </button>
-        <button onclick="navigate('notifications')" class="p-6 border-2 border-dashed border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50/50 transition text-left">
-          <div class="w-12 h-12 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center mb-3">
+          <p class="text-3xl font-bold mb-1">${upcomingViewings.length}</p>
+          <p class="text-sm text-white/80">Scheduled Viewings</p>
+        </div>
+      </div>
+      
+      <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-white/20 transition"></div>
+        <div class="relative z-10">
+          <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3">
             <i class="fas fa-bell text-xl"></i>
           </div>
-          <h4 class="font-semibold mb-1">View Notifications</h4>
-          <p class="text-sm text-gray-500">Check latest updates</p>
+          <p class="text-3xl font-bold mb-1">${state.notifications.filter(n => !n.read).length}</p>
+          <p class="text-sm text-white/80">Notifications</p>
+        </div>
+      </div>
+      
+      <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-white/20 transition"></div>
+        <div class="relative z-10">
+          <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3">
+            <i class="fas fa-heart text-xl"></i>
+          </div>
+          <p class="text-3xl font-bold mb-1">${savedProperties.length}</p>
+          <p class="text-sm text-white/80">Saved Properties</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions - Premium Cards -->
+    <div class="mb-8">
+      <h3 class="text-xl font-bold text-gray-900 mb-4">Quick Actions</h3>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <button onclick="navigate('properties')" class="group relative overflow-hidden rounded-2xl bg-white p-6 border-2 border-gray-100 hover:border-violet-500 transition-all duration-300 hover:shadow-xl text-left">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-violet-500/30">
+            <i class="fas fa-search text-white text-xl"></i>
+          </div>
+          <h4 class="font-bold text-gray-900 mb-1">Browse Properties</h4>
+          <p class="text-sm text-gray-500">Explore all listings</p>
+        </button>
+        
+        <button onclick="navigate('appointments')" class="group relative overflow-hidden rounded-2xl bg-white p-6 border-2 border-gray-100 hover:border-emerald-500 transition-all duration-300 hover:shadow-xl text-left">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-emerald-500/30">
+            <i class="fas fa-calendar-plus text-white text-xl"></i>
+          </div>
+          <h4 class="font-bold text-gray-900 mb-1">Schedule Viewing</h4>
+          <p class="text-sm text-gray-500">Book a visit</p>
+        </button>
+        
+        <button onclick="navigate('notifications')" class="group relative overflow-hidden rounded-2xl bg-white p-6 border-2 border-gray-100 hover:border-amber-500 transition-all duration-300 hover:shadow-xl text-left">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-amber-500/30">
+            <i class="fas fa-bell text-white text-xl"></i>
+          </div>
+          <h4 class="font-bold text-gray-900 mb-1">Notifications</h4>
+          <p class="text-sm text-gray-500">Check updates</p>
+        </button>
+        
+        <button onclick="navigate('settings')" class="group relative overflow-hidden rounded-2xl bg-white p-6 border-2 border-gray-100 hover:border-rose-500 transition-all duration-300 hover:shadow-xl text-left">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-rose-500/30">
+            <i class="fas fa-cog text-white text-xl"></i>
+          </div>
+          <h4 class="font-bold text-gray-900 mb-1">Settings</h4>
+          <p class="text-sm text-gray-500">Manage account</p>
         </button>
       </div>
     </div>
 
-    <div class="card p-6">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="font-bold text-lg">Upcoming Viewings</h3>
-        <a onclick="navigate('appointments')" class="text-sm text-blue-600 cursor-pointer hover:underline font-medium">View All →</a>
+    <!-- Featured Properties -->
+    ${featuredProperties.length > 0 ? `
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-bold text-gray-900">Featured Properties</h3>
+          <button onclick="navigate('properties')" class="text-violet-600 font-semibold hover:text-violet-700 transition">View All →</button>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          ${featuredProperties.map(p => `
+            <div onclick="openBuyerPropertyDetail('${p.id}')" class="group relative overflow-hidden rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+              <div class="aspect-[4/3]">
+                <img src="${escapeHtml(p.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800')}" 
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                     alt="${escapeHtml(p.title)}">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+              </div>
+              <div class="absolute bottom-0 left-0 right-0 p-4">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="px-2 py-1 bg-amber-500 text-white text-xs font-bold rounded-lg">FEATURED</span>
+                  <span class="px-2 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-medium rounded-lg">${escapeHtml(p.type)}</span>
+                </div>
+                <p class="text-white font-bold text-lg mb-1">${formatMoney(p.price)}</p>
+                <p class="text-white/80 text-sm truncate">${escapeHtml(p.location)}</p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
       </div>
-      <div class="space-y-2">
-        ${upcomingViewings.slice(0, 5).map(a => `
-          <div class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition">
-            <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex flex-col items-center justify-center flex-shrink-0 text-white shadow-sm">
-              <span class="text-[10px] font-semibold uppercase">${new Date(a.date).toLocaleString('en', {month:'short'})}</span>
-              <span class="text-sm font-bold leading-none">${a.date.split('-')[2]}</span>
+    ` : ''}
+
+    <!-- New Listings - Grid Layout (Never Stacked) -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-bold text-gray-900">New Listings</h3>
+        <button onclick="navigate('properties')" class="text-violet-600 font-semibold hover:text-violet-700 transition">View All →</button>
+      </div>
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+        ${recentProperties.map(p => `
+          <div onclick="openBuyerPropertyDetail('${p.id}')" class="group relative bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-100">
+            <div class="relative aspect-[4/3] overflow-hidden">
+              <img src="${escapeHtml(p.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800')}" 
+                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                   alt="${escapeHtml(p.title)}">
+              <div class="absolute top-3 right-3">
+                <span class="px-2.5 py-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-bold rounded-lg shadow-lg">${escapeHtml(p.status)}</span>
+              </div>
+              ${p.featured ? '<div class="absolute top-3 left-3"><span class="px-2.5 py-1 bg-amber-500 text-white text-xs font-bold rounded-lg shadow-lg"><i class="fas fa-star mr-1"></i>Featured</span></div>' : ''}
+            </div>
+            <div class="p-4">
+              <p class="text-violet-600 font-bold text-lg mb-1">${formatMoney(p.price)}</p>
+              <p class="font-semibold text-gray-900 mb-2 truncate">${escapeHtml(p.title)}</p>
+              <p class="text-gray-500 text-sm mb-3 truncate"><i class="fas fa-map-marker-alt mr-1.5 text-violet-500"></i> ${escapeHtml(p.location)}</p>
+              <div class="flex items-center gap-3 pt-3 border-t border-gray-100">
+                <span class="text-xs text-gray-600"><i class="fas fa-bed mr-1.5 text-violet-500"></i> ${p.beds} Beds</span>
+                <span class="text-xs text-gray-600"><i class="fas fa-bath mr-1.5 text-violet-500"></i> ${p.baths} Baths</span>
+                <span class="text-xs text-gray-600"><i class="fas fa-ruler mr-1.5 text-violet-500"></i> ${p.area} ft²</span>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Upcoming Viewings -->
+    <div class="bg-gradient-to-br from-slate-50 to-gray-100 rounded-3xl p-6 border border-gray-200">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="text-xl font-bold text-gray-900">Upcoming Viewings</h3>
+          <p class="text-sm text-gray-500 mt-1">Your scheduled property visits</p>
+        </div>
+        <button onclick="navigate('appointments')" class="text-violet-600 font-semibold hover:text-violet-700 transition">View All →</button>
+      </div>
+      <div class="space-y-3">
+        ${upcomingViewings.slice(0, 4).map(a => `
+          <div class="group flex items-center gap-4 p-4 bg-white rounded-xl border border-gray-200 hover:border-violet-300 hover:shadow-lg transition-all duration-300 cursor-pointer" onclick="openBuyerPropertyDetail('${a.propertyId}')">
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex flex-col items-center justify-center flex-shrink-0 text-white shadow-lg shadow-violet-500/30 group-hover:scale-110 transition-transform">
+              <span class="text-[10px] font-bold uppercase">${new Date(a.date).toLocaleString('en', {month:'short'})}</span>
+              <span class="text-lg font-bold leading-none">${new Date(a.date).getDate()}</span>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-semibold truncate">${escapeHtml(a.property)}</p>
-              <p class="text-xs text-gray-500">${a.time}</p>
+              <p class="font-bold text-gray-900 truncate">${escapeHtml(a.property)}</p>
+              <p class="text-sm text-gray-500"><i class="far fa-clock mr-1.5"></i> ${a.time}</p>
             </div>
-            <span class="badge ${statusBadge(a.status)}">${a.status}</span>
+            <span class="px-3 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-lg">${a.status}</span>
           </div>
-        `).join('') || emptyStateMini('No upcoming viewings')}
+        `).join('') || `<div class="text-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
+          <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3">
+            <i class="fas fa-calendar text-gray-400 text-2xl"></i>
+          </div>
+          <p class="text-gray-500 font-medium">No upcoming viewings</p>
+          <button onclick="navigate('properties')" class="mt-3 text-violet-600 font-semibold hover:text-violet-700">Browse Properties →</button>
+        </div>`}
       </div>
     </div>
   `;
 }
+
 
 function statCard(label, value, icon, color) {
   const colors = {
@@ -1743,11 +1976,17 @@ function renderBuyerProperties(c) {
 }
 
 function buyerPropertyCard(p) {
+  // Get agent info if available
+  const agentName = p.agentName || 'Agent';
+  const agentPhone = p.agentPhone || '';
+  const agentEmail = p.agentEmail || '';
+  
   return `
-    <div class="property-card card overflow-hidden group">
+    <div class="property-card card overflow-hidden group cursor-pointer" onclick="openBuyerPropertyDetail('${p.id}')">
       <div class="relative overflow-hidden aspect-[4/3] bg-gray-100">
         <img src="${escapeHtml(p.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800')}" class="property-image w-full h-full object-cover" alt="${escapeHtml(p.title)}" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800'">
         <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+        ${p.featured ? '<span class="absolute top-3 left-3 badge badge-featured shadow-sm"><i class="fas fa-star text-[10px]"></i> Featured</span>' : ''}
         <span class="absolute top-3 right-3 badge ${statusBadge(p.status)} shadow-sm">${p.status}</span>
         <div class="absolute bottom-3 left-3 right-3">
           <p class="text-2xl font-bold text-white drop-shadow-lg">${formatMoney(p.price)}</p>
@@ -1761,11 +2000,138 @@ function buyerPropertyCard(p) {
           <span class="flex items-center gap-1.5"><i class="fas fa-bath text-gray-400"></i> ${p.baths}</span>
           <span class="flex items-center gap-1.5"><i class="fas fa-ruler-combined text-gray-400"></i> ${p.area} ft²</span>
         </div>
-        <button class="btn btn-primary w-full"><i class="fas fa-calendar"></i> Schedule Viewing</button>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+              ${getInitials(agentName)}
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-semibold truncate">${escapeHtml(agentName)}</p>
+              <p class="text-[10px] text-gray-500">Listing Agent</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="event.stopPropagation(); contactAgent('${p.id}', '${escapeHtml(agentName)}', '${escapeHtml(agentPhone)}', '${escapeHtml(agentEmail)}')" class="flex-1 btn btn-ghost text-sm border border-gray-300">
+            <i class="fas fa-phone"></i> <span class="hidden sm:inline">Contact</span>
+          </button>
+          <button onclick="event.stopPropagation(); scheduleViewing('${p.id}')" class="flex-1 btn btn-primary text-sm">
+            <i class="fas fa-calendar"></i> <span class="hidden sm:inline">Viewing</span>
+          </button>
+        </div>
       </div>
     </div>
   `;
 }
+
+// Open property detail modal for buyers
+window.openBuyerPropertyDetail = function(id) {
+  const p = state.properties.find(x => x.id === id);
+  if (!p) return;
+  
+  const agentName = p.agentName || 'Agent';
+  const agentPhone = p.agentPhone || '';
+  const agentEmail = p.agentEmail || '';
+  
+  const content = document.getElementById('workspaceContent');
+  content.innerHTML = `
+    <div class="sticky top-0 bg-white/95 backdrop-blur-md border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between z-10">
+      <div class="flex items-center gap-3 min-w-0 flex-1">
+        <button onclick="closeWorkspace()" class="btn-icon btn-ghost flex-shrink-0"><i class="fas fa-arrow-left"></i></button>
+        <div class="min-w-0">
+          <h2 class="text-xl font-bold truncate">${escapeHtml(p.title)}</h2>
+          <p class="text-sm text-gray-500 truncate"><i class="fas fa-map-marker-alt mr-1"></i> ${escapeHtml(p.location)}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-4 sm:p-6 lg:p-8 max-w-[1400px] mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div class="lg:col-span-2">
+          <div class="card overflow-hidden">
+            <img src="${escapeHtml(p.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800')}" class="w-full h-80 object-cover" alt="${escapeHtml(p.title)}" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800'">
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div class="card p-5">
+            <p class="text-sm text-gray-500 mb-1">Price</p>
+            <p class="text-3xl font-bold gradient-text">${formatMoney(p.price)}</p>
+          </div>
+          <div class="card p-5">
+            <p class="text-sm text-gray-500 mb-3">Property Details</p>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+              <div><span class="text-gray-500 text-xs">Type</span><p class="font-semibold">${p.type}</p></div>
+              <div><span class="text-gray-500 text-xs">Area</span><p class="font-semibold">${p.area} ft²</p></div>
+              <div><span class="text-gray-500 text-xs">Beds</span><p class="font-semibold">${p.beds}</p></div>
+              <div><span class="text-gray-500 text-xs">Baths</span><p class="font-semibold">${p.baths}</p></div>
+            </div>
+          </div>
+          <div class="card p-5">
+            <p class="text-sm text-gray-500 mb-3">Contact Agent</p>
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-white font-bold">
+                ${getInitials(agentName)}
+              </div>
+              <div>
+                <p class="font-semibold">${escapeHtml(agentName)}</p>
+                <p class="text-xs text-gray-500">Listing Agent</p>
+              </div>
+            </div>
+            <div class="space-y-2">
+              ${agentPhone ? `<a href="tel:${agentPhone}" class="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600"><i class="fas fa-phone"></i> ${escapeHtml(agentPhone)}</a>` : ''}
+              ${agentEmail ? `<a href="mailto:${agentEmail}" class="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600"><i class="fas fa-envelope"></i> ${escapeHtml(agentEmail)}</a>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-6 mb-6">
+        <h4 class="font-bold mb-3">Description</h4>
+        <p class="text-sm text-gray-600 leading-relaxed">${escapeHtml(p.description) || `This stunning ${p.type.toLowerCase()} offers ${p.beds} bedrooms and ${p.baths} bathrooms across ${p.area} square feet.`}</p>
+      </div>
+
+      <div class="flex gap-3">
+        <button onclick="contactAgent('${p.id}', '${escapeHtml(agentName)}', '${escapeHtml(agentPhone)}', '${escapeHtml(agentEmail)}')" class="flex-1 btn btn-ghost border border-gray-300">
+          <i class="fas fa-phone"></i> Contact Agent
+        </button>
+        <button onclick="scheduleViewing('${p.id}')" class="flex-1 btn btn-primary">
+          <i class="fas fa-calendar"></i> Schedule Viewing
+        </button>
+      </div>
+    </div>
+  `;
+  UI.showModal('workspaceModal');
+};
+
+// Contact agent function
+window.contactAgent = function(propertyId, agentName, agentPhone, agentEmail) {
+  const actions = [];
+  if (agentPhone) actions.push(`<button onclick="window.location.href='tel:${agentPhone}'; closeModal('contactModal')" class="w-full btn btn-primary mb-2"><i class="fas fa-phone"></i> Call ${escapeHtml(agentName)}</button>`);
+  if (agentEmail) actions.push(`<button onclick="window.location.href='mailto:${agentEmail}?subject=Inquiry about Property'; closeModal('contactModal')" class="w-full btn btn-ghost border mb-2"><i class="fas fa-envelope"></i> Email Agent</button>`);
+  actions.push(`<button onclick="closeModal('contactModal')" class="w-full btn btn-ghost">Cancel</button>`);
+  
+  document.getElementById('confirmTitle').textContent = `Contact ${escapeHtml(agentName)}`;
+  document.getElementById('confirmMessage').textContent = 'Choose how you want to reach the agent:';
+  document.getElementById('confirmIcon').innerHTML = '<i class="fas fa-user-tie text-xl"></i>';
+  document.getElementById('confirmIcon').className = 'w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0';
+  
+  const modal = document.getElementById('confirmModal');
+  const actionContainer = modal.querySelector('.p-4.bg-gray-50');
+  actionContainer.innerHTML = `<div class="p-4 bg-gray-50 flex flex-col gap-2 border-t">${actions.join('')}</div>`;
+  
+  modal.classList.remove('hidden');
+};
+
+// Schedule viewing function
+window.scheduleViewing = function(propertyId) {
+  const p = state.properties.find(x => x.id === propertyId);
+  if (!p) return;
+  
+  // Redirect to appointments page with property pre-selected
+  window.location.href = `appointments.html?property=${propertyId}&title=${encodeURIComponent(p.title)}`;
+};
+
+
 
 function renderBuyerAppointments(c) {
   const myAppointments = state.appointments;
