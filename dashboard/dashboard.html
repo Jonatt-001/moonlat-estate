@@ -640,7 +640,6 @@ function updateNotifBadge() {
   if (dot) dot.classList.toggle('hidden', unread === 0);
 }
 
-// =================== SETUP UI ===================
 function setupUI() {
   if (!state.userProfile) return;
   
@@ -649,11 +648,24 @@ function setupUI() {
   const email = state.userProfile.email || '';
   const initials = getInitials(name);
   
-  // Update avatars
-  document.getElementById('sidebarAvatar').textContent = initials;
-  document.getElementById('headerAvatar').textContent = initials;
+  // 🔥 ADD THIS PHOTO LOGIC HERE
+  const photo = state.userProfile.photoURL || state.userProfile.profileImage || '';
+  if (photo) {
+    document.getElementById('sidebarAvatar').innerHTML = `<img src="${escapeHtml(photo)}" class="w-full h-full rounded-full object-cover">`;
+    document.getElementById('sidebarAvatar').style.background = 'transparent';
+    document.getElementById('headerAvatar').innerHTML = `<img src="${escapeHtml(photo)}" class="w-full h-full rounded-full object-cover">`;
+    document.getElementById('headerAvatar').style.background = 'transparent';
+  } else {
+    document.getElementById('sidebarAvatar').textContent = initials;
+    document.getElementById('headerAvatar').textContent = initials;
+  }
+  // 🔥 END PHOTO LOGIC
+  
   document.getElementById('sidebarUserName').textContent = name;
   document.getElementById('headerUserName').textContent = name;
+
+
+
   document.getElementById('headerUserEmail').textContent = email;
   document.getElementById('sidebarUserRole').textContent = role === 'agent' ? 'Agent' : 'Buyer';
   
@@ -701,9 +713,9 @@ if (role === 'agent') {
     <a onclick="navigate('notifications')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm relative" data-page="notifications">
       <i class="fas fa-bell w-5 text-center text-slate-500"></i> <span>Notifications</span>
     </a>
-    <a onclick="navigate('settings')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="settings">
-      <i class="fas fa-cog w-5 text-center text-slate-500"></i> <span>Settings</span>
-    </a>
+<a href="settings.html" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="settings">
+  <i class="fas fa-cog w-5 text-center text-slate-500"></i> <span>Settings</span>
+</a>
   `;
 
   } else {
@@ -724,9 +736,10 @@ if (role === 'agent') {
       <a onclick="navigate('notifications')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm relative" data-page="notifications">
         <i class="fas fa-bell w-5 text-center text-slate-500"></i> <span>Notifications</span>
       </a>
-      <a onclick="navigate('settings')" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="settings">
-        <i class="fas fa-cog w-5 text-center text-slate-500"></i> <span>Settings</span>
-      </a>
+<a href="settings.html" class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 cursor-pointer text-sm" data-page="settings">
+  <i class="fas fa-cog w-5 text-center text-slate-500"></i> <span>Settings</span>
+</a>
+
     `;
   }
 
@@ -787,8 +800,7 @@ function renderPage() {
       deals: renderDeals,
       earnings: renderEarnings,
       analytics: renderAnalytics,
-      notifications: renderNotifications,
-      settings: renderSettings
+      notifications: renderNotifications
     };
     (pages[state.currentPage] || renderAgentDashboard)(content);
   } else {
@@ -796,8 +808,7 @@ function renderPage() {
       dashboard: renderBuyerDashboard,
       properties: renderBuyerProperties,
       appointments: renderBuyerAppointments,
-      notifications: renderNotifications,
-      settings: renderSettings
+      notifications: renderNotifications
     };
     (pages[state.currentPage] || renderBuyerDashboard)(content);
   }
@@ -822,7 +833,10 @@ function renderAgentDashboard(c) {
         <p class="text-gray-500 text-sm mt-1">Here's what's happening with your business today.</p>
       </div>
       <div class="flex gap-2">
-        <button onclick="openPropertyModal()" class="btn btn-primary"><i class="fas fa-plus"></i> New Property</button>
+<a href="upload-property.html" class="btn btn-primary">
+  <i class="fas fa-plus"></i> Upload Property
+</a>
+
       </div>
     </div>
 
@@ -1085,7 +1099,10 @@ function renderProperties(c) {
         <h2 class="text-3xl font-bold">Properties</h2>
         <p class="text-gray-500 text-sm mt-1">${filtered.length} of ${state.properties.length} listings</p>
       </div>
-      <button onclick="openPropertyModal()" class="btn btn-primary"><i class="fas fa-plus"></i> Add Property</button>
+<a href="upload-property.html" class="btn btn-primary">
+  <i class="fas fa-plus"></i> Upload Property
+</a>
+
     </div>
 
     <div class="card p-4 mb-6">
@@ -1677,64 +1694,7 @@ function renderNotifications(c) {
   `;
 }
 
-// =================== SETTINGS ===================
-function renderSettings(c) {
-  const p = state.userProfile || {};
-  c.innerHTML = `
-    <div class="mb-6">
-      <h2 class="text-3xl font-bold">Settings</h2>
-      <p class="text-gray-500 text-sm mt-1">Manage your account and preferences</p>
-    </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="card p-6">
-        <div class="text-center">
-          <div class="avatar w-24 h-24 text-3xl mx-auto mb-4">${getInitials(p.name)}</div>
-          <h3 class="font-bold text-lg">${escapeHtml(p.name)}</h3>
-          <p class="text-sm text-gray-500">${p.role === 'agent' ? 'Agent' : 'Buyer'}</p>
-          <p class="text-xs text-gray-400 mt-1">Member since ${p.memberSince || 'Recently'}</p>
-        </div>
-        <div class="mt-6 pt-6 border-t space-y-3">
-          ${settingRow('Role', p.role === 'agent' ? 'Agent' : 'Buyer')}
-          ${settingRow('Email', p.email || '')}
-        </div>
-      </div>
-
-      <div class="lg:col-span-2 space-y-6">
-        <div class="card p-6">
-          <h3 class="font-bold text-lg mb-4">Personal Information</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label class="input-label">Name</label><input type="text" id="setName" value="${escapeHtml(p.name)}" class="input"></div>
-            <div><label class="input-label">Email</label><input type="email" id="setEmail" value="${escapeHtml(p.email)}" class="input" disabled></div>
-            <div><label class="input-label">Phone</label><input type="tel" id="setPhone" value="${escapeHtml(p.phone)}" class="input"></div>
-            <div class="md:col-span-2"><label class="input-label">Bio</label><textarea id="setBio" rows="3" class="textarea">${escapeHtml(p.bio)}</textarea></div>
-          </div>
-        </div>
-
-        ${p.role === 'agent' ? `
-        <div class="card p-6">
-          <h3 class="font-bold text-lg mb-4">Business Information</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label class="input-label">Agency</label><input type="text" id="setAgency" value="${escapeHtml(p.agency)}" class="input"></div>
-            <div><label class="input-label">License #</label><input type="text" id="setLicense" value="${escapeHtml(p.license)}" class="input"></div>
-            <div><label class="input-label">Service Area</label><input type="text" id="setArea" value="${escapeHtml(p.serviceArea)}" class="input"></div>
-            <div><label class="input-label">Commission Rate</label><input type="text" id="setRate" value="${escapeHtml(p.commissionRate)}" class="input"></div>
-          </div>
-        </div>
-        ` : ''}
-
-        <div class="flex justify-end gap-3">
-          <button onclick="navigate('dashboard')" class="btn btn-ghost">Cancel</button>
-          <button onclick="saveSettings()" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function settingRow(label, value) {
-  return `<div class="flex justify-between text-sm"><span class="text-gray-500">${label}</span><span class="font-semibold">${escapeHtml(value)}</span></div>`;
-}
 
 // =================== BUYER VIEWS ===================
 function renderBuyerProperties(c) {
@@ -1858,29 +1818,10 @@ window.openPropertyModal = function() {
 };
 
 window.editProperty = function(id) {
-  const p = state.properties.find(x => x.id === id);
-  if (!p) return;
-  state.editingPropertyId = id;
-  document.getElementById('modalTitle').textContent = 'Edit Property';
-  document.getElementById('modalSubtitle').textContent = 'Update the property details';
-  document.getElementById('propTitle').value = p.title || '';
-  document.getElementById('propType').value = p.type || '';
-  document.getElementById('propStatus').value = p.status || 'Active';
-  document.getElementById('propPrice').value = p.price || '';
-  document.getElementById('propLocation').value = p.location || '';
-  document.getElementById('propBeds').value = p.beds || '';
-  document.getElementById('propBaths').value = p.baths || '';
-  document.getElementById('propArea').value = p.area || '';
-  document.getElementById('propDesc').value = p.description || '';
-  document.getElementById('propImage').value = p.image || '';
-  document.getElementById('propFeatured').checked = p.featured || false;
-  document.querySelectorAll('.amenity-cb').forEach(cb => {
-    cb.checked = (p.amenities || []).includes(cb.value);
-    cb.closest('.chip')?.classList.toggle('active', cb.checked);
-  });
-  document.getElementById('savePropertyBtn').innerHTML = '<i class="fas fa-save"></i> Update Property';
-  UI.showModal('propertyModal');
+  // Redirect to upload-property.html with property ID
+  window.location.href = `upload-property.html?edit=${id}`;
 };
+
 
 window.saveProperty = async function() {
   const title = document.getElementById('propTitle').value.trim();
@@ -2047,32 +1988,6 @@ window.markAllRead = async function() {
   }
 };
 
-window.saveSettings = async function() {
-  const data = {
-    name: document.getElementById('setName').value.trim(),
-    phone: document.getElementById('setPhone').value,
-    bio: document.getElementById('setBio').value
-  };
-  
-  if (state.userProfile?.role === 'agent') {
-    data.agency = document.getElementById('setAgency')?.value || '';
-    data.license = document.getElementById('setLicense')?.value || '';
-    data.serviceArea = document.getElementById('setArea')?.value || '';
-    data.commissionRate = document.getElementById('setRate')?.value || '';
-  }
-  
-  try {
-    await updateDoc(doc(db, 'users', state.user.uid), {
-      ...data,
-      updatedAt: serverTimestamp()
-    });
-    state.userProfile = { ...state.userProfile, ...data };
-    setupUI();
-    UI.toast('Settings saved successfully', 'success');
-  } catch (err) {
-    UI.toast('Failed to save settings', 'error');
-  }
-};
 
 // =================== CHIP TOGGLE ===================
 document.addEventListener('click', (e) => {
