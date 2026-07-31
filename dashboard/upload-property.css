@@ -1,0 +1,229 @@
+  .amenity-tag {
+    transition: all 0.2s;
+    cursor: pointer;
+    user-select: none;
+  }
+  .amenity-tag:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .amenity-tag.active {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border-color: transparent;
+  }
+  .upload-zone {
+    transition: all 0.3s;
+  }
+  .upload-zone:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.05);
+  }
+  .upload-zone.dragover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+    transform: scale(1.02);
+  }
+  .image-preview {
+    animation: fadeIn 0.3s;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .loading-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .error-shake {
+    animation: shake 0.5s;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
+
+
+/* REPLACE your current header CSS with this: */
+
+/* Header Container */
+header {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Header Inner Container */
+header .max-w-7xl > div {
+  min-height: 5.5rem; /* 88px - enough for 2 lines + padding */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+/* Left Side (Back button + Title) */
+header .flex.items-center.gap-4 {
+  display: flex;
+  align-items: flex-start; /* Align to top for multi-line */
+  gap: 1rem;
+  flex: 1;
+}
+
+/* Title Section */
+header .flex.items-center.gap-4 > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+header h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.3;
+  margin: 0;
+}
+
+header p.text-sm {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.4;
+  margin-top: 0.125rem;
+}
+
+/* Right Side (Buttons) */
+header .flex.items-center.gap-3 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Button Styles */
+header button {
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap;
+}
+
+header button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+header button:active {
+  transform: translateY(0);
+}
+
+/* Save Draft Button */
+header button.px-4.py-2.text-gray-700 {
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Publish Button */
+#submitBtn {
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  border: none;
+  font-weight: 600;
+}
+
+#submitBtn:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  header .max-w-7xl > div {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    min-height: auto;
+    padding: 1rem 0;
+  }
+  
+  header .flex.items-center.gap-4 {
+    width: 100%;
+  }
+  
+  header .flex.items-center.gap-3 {
+    width: 100%;
+    justify-content: stretch;
+  }
+  
+  header .flex.items-center.gap-3 button {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  header h1 {
+    font-size: 1.125rem;
+  }
+  
+  header p.text-sm {
+    font-size: 0.8125rem;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  header .max-w-7xl > div {
+    padding: 0.875rem 0;
+  }
+  
+  header h1 {
+    font-size: 1rem;
+  }
+  
+  header p.text-sm {
+    font-size: 0.75rem;
+  }
+  
+  #submitBtn {
+    min-width: auto;
+    font-size: 0.875rem;
+    padding: 0.625rem 1rem;
+  }
+  
+  header button.px-4.py-2.text-gray-700 {
+    min-width: auto;
+    font-size: 0.875rem;
+    padding: 0.625rem 1rem;
+  }
+}
+
+/* Map Styles */
+#propertyMap {
+  z-index: 1;
+}
+
+.leaflet-container {
+  font-family: 'Inter', sans-serif;
+  border-radius: 0.75rem;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.75rem;
+}
+
+.leaflet-popup-content {
+  margin: 12px;
+  font-size: 14px;
+}
