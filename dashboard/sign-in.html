@@ -237,18 +237,15 @@
         <div class="flex-1 h-px bg-gray-200"></div>
       </div>
 
-      <div class="flex gap-3 mb-8">
-        <button onclick="handleGoogleLogin()" id="googleBtn" class="social-btn">
+      <div class="mb-8">
+        <button onclick="handleGoogleLogin()" id="googleBtn" class="social-btn" style="width: 100%;">
           <svg width="18" height="18" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          Google
-        </button>
-        <button class="social-btn" disabled title="Coming soon">
-          <i class="fab fa-apple text-xl"></i> Apple
+          Continue with Google
         </button>
       </div>
 
@@ -262,8 +259,23 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
@@ -277,22 +289,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const googleProvider = new GoogleAuthProvider();
 
-// =================== AUTO-LOGIN: Set persistent auth by default ===================
-// This ensures users stay logged in even after closing the browser
+// Google Provider
+const googleProvider = new GoogleAuthProvider();
+googleProvider.addScope('email');
+googleProvider.addScope('profile');
+
+// =================== AUTO-LOGIN ===================
 setPersistence(auth, browserLocalPersistence).catch((err) => {
   console.warn('Could not set persistence:', err);
 });
 
-// =================== AUTO-LOGIN: Redirect if already logged in ===================
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     try {
       const userDoc = await getDoc(doc(db, 'users', user.uid));
       const userData = userDoc.exists() ? userDoc.data() : {};
-      
-      // Route based on role
       if (userData.role === 'admin') {
         window.location.href = 'admin/index.html';
       } else {
@@ -300,7 +312,6 @@ onAuthStateChanged(auth, async (user) => {
       }
     } catch (err) {
       console.warn('Error checking user role:', err);
-      // If error checking role, default to dashboard
       window.location.href = 'dashboard.html';
     }
   }
@@ -308,8 +319,7 @@ onAuthStateChanged(auth, async (user) => {
 
 // =================== VALIDATION ===================
 function validateEmail(email) {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(email);
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 function validateForm() {
@@ -317,7 +327,6 @@ function validateForm() {
   const password = document.getElementById('loginPassword').value;
   let isValid = true;
 
-  // Validate email
   const emailInput = document.getElementById('loginEmail');
   const emailError = document.getElementById('emailError');
   if (!email) {
@@ -335,7 +344,6 @@ function validateForm() {
     emailError.classList.remove('show');
   }
 
-  // Validate password
   const passwordInput = document.getElementById('loginPassword');
   const passwordError = document.getElementById('passwordError');
   if (!password) {
@@ -356,7 +364,6 @@ function validateForm() {
   return isValid;
 }
 
-// Clear errors on input
 document.getElementById('loginEmail').addEventListener('input', function() {
   this.classList.remove('error');
   document.getElementById('emailError').classList.remove('show');
@@ -379,9 +386,7 @@ function showAlert(type, title, message) {
   const alert = document.createElement('div');
   alert.className = `alert alert-${type}`;
   alert.innerHTML = `
-    <div class="alert-icon">
-      <i class="fas ${iconMap[type]}"></i>
-    </div>
+    <div class="alert-icon"><i class="fas ${iconMap[type]}"></i></div>
     <div class="alert-content">
       <div class="alert-title">${title}</div>
       ${message ? `<div class="alert-message">${message}</div>` : ''}
@@ -394,14 +399,9 @@ function showAlert(type, title, message) {
   box.innerHTML = '';
   box.appendChild(alert);
   
-  // Auto-dismiss success alerts
   if (type === 'success') {
-    setTimeout(() => {
-      if (alert.parentElement) alert.remove();
-    }, 3000);
+    setTimeout(() => { if (alert.parentElement) alert.remove(); }, 3000);
   }
-  
-  // Shake the form on error
   if (type === 'error') {
     const form = document.getElementById('loginForm');
     form.classList.add('shake');
@@ -415,71 +415,71 @@ function clearAlerts() {
 
 function getErrorMessage(code) {
   const errors = {
-    'auth/invalid-email': {
-      title: 'Invalid Email',
-      message: 'Please enter a valid email address.'
+    'auth/invalid-email': { title: 'Invalid Email', message: 'Please enter a valid email address.' },
+    'auth/user-disabled': { title: 'Account Disabled', message: 'This account has been disabled.' },
+    'auth/user-not-found': { title: 'Account Not Found', message: 'No account exists with this email.' },
+    'auth/wrong-password': { title: 'Incorrect Password', message: 'The password you entered is incorrect.' },
+    'auth/invalid-credential': { title: 'Invalid Credentials', message: 'The email or password is incorrect.' },
+    'auth/too-many-requests': { title: 'Too Many Attempts', message: 'Please try again later.' },
+    'auth/network-request-failed': { title: 'Network Error', message: 'Check your internet connection.' },
+    'auth/popup-closed-by-user': { title: 'Sign In Cancelled', message: 'You closed the sign-in window.' },
+    'auth/account-exists-with-different-credential': {
+      title: 'Account Already Exists',
+      message: 'An account with this email already exists using a different sign-in method.'
     },
-    'auth/user-disabled': {
-      title: 'Account Disabled',
-      message: 'This account has been disabled. Please contact support.'
-    },
-    'auth/user-not-found': {
-      title: 'Account Not Found',
-      message: 'No account exists with this email. Please sign up first.'
-    },
-    'auth/wrong-password': {
-      title: 'Incorrect Password',
-      message: 'The password you entered is incorrect. Please try again.'
-    },
-    'auth/invalid-credential': {
-      title: 'Invalid Credentials',
-      message: 'The email or password you entered is incorrect. Please try again.'
-    },
-    'auth/too-many-requests': {
-      title: 'Too Many Attempts',
-      message: 'Too many failed login attempts. Please try again later or reset your password.'
-    },
-    'auth/network-request-failed': {
-      title: 'Network Error',
-      message: 'Unable to connect. Please check your internet connection and try again.'
-    },
-    'auth/popup-closed-by-user': {
-      title: 'Sign In Cancelled',
-      message: 'You closed the sign-in window. Please try again.'
+    'auth/cancelled-popup-request': { title: 'Cancelled', message: 'The popup request was cancelled.' },
+    'auth/popup-blocked': { title: 'Popup Blocked', message: 'Please allow popups for this site.' },
+    'auth/unauthorized-domain': {
+      title: 'Domain Not Authorized',
+      message: 'This domain is not authorized for OAuth. Add it in Firebase Console → Authentication → Settings → Authorized domains.'
     }
   };
-  
-  return errors[code] || {
-    title: 'Sign In Failed',
-    message: 'An unexpected error occurred. Please try again.'
-  };
+  return errors[code] || { title: 'Sign In Failed', message: 'An unexpected error occurred.' };
 }
 
-// =================== ROLE-BASED REDIRECT HELPER ===================
+// =================== HELPERS ===================
 function getRedirectUrl(role) {
-  switch(role) {
-    case 'admin':
-      return 'admin/index.html';
-    case 'agent':
-      return 'dashboard.html';
-    case 'buyer':
-    case 'user':
-    default:
-      return 'dashboard.html';
-  }
+  if (role === 'admin') return 'admin/index.html';
+  return 'dashboard.html';
 }
 
 function getRoleLabel(role) {
-  switch(role) {
-    case 'admin': return 'Admin';
-    case 'agent': return 'Agent';
-    case 'buyer':
-    case 'user':
-    default: return 'User';
-  }
+  if (role === 'admin') return 'Admin';
+  if (role === 'agent') return 'Agent';
+  return 'User';
 }
 
-// =================== LOGIN HANDLERS ===================
+async function handleGoogleLoginResult(result) {
+  const user = result.user;
+  const userDoc = await getDoc(doc(db, 'users', user.uid));
+  let redirectUrl = 'dashboard.html';
+
+  if (!userDoc.exists()) {
+    const fullName = user.displayName || user.email?.split('@')[0] || 'User';
+    await setDoc(doc(db, 'users', user.uid), {
+      name: fullName,
+      email: user.email || '',
+      role: 'buyer',
+      avatar: fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
+      photoURL: user.photoURL || '',
+      provider: 'Google',
+      createdAt: Date.now(),
+      memberSince: new Date().toLocaleDateString('en', { month: 'short', year: 'numeric' }),
+      phone: '',
+      bio: '',
+      updatedAt: serverTimestamp()
+    });
+    showAlert('success', 'Account Created!', 'Welcome to MoonLat via Google.');
+  } else {
+    const userRole = userDoc.data().role || 'buyer';
+    showAlert('success', 'Welcome Back!', `Signed in as ${getRoleLabel(userRole)} via Google`);
+    redirectUrl = getRedirectUrl(userRole);
+  }
+
+  setTimeout(() => { window.location.href = redirectUrl; }, 1000);
+}
+
+// =================== TOGGLE PASSWORD ===================
 window.togglePassword = (id, icon) => {
   const input = document.getElementById(id);
   input.type = input.type === 'password' ? 'text' : 'password';
@@ -487,71 +487,47 @@ window.togglePassword = (id, icon) => {
   icon.classList.toggle('fa-eye-slash');
 };
 
+// =================== EMAIL LOGIN ===================
 window.handleLogin = async (e) => {
   e.preventDefault();
   clearAlerts();
-  
-  // Validate form first
-  if (!validateForm()) {
-    return;
-  }
-  
+  if (!validateForm()) return;
+
   const email = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
   const btn = document.getElementById('loginBtn');
-  
-  // Persistence is already set to LOCAL (always remember user)
-  // No need to toggle based on "Remember me" checkbox
-  
+
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Signing in...';
-  
+
   try {
     const result = await signInWithEmailAndPassword(auth, email, password);
-    
-    // Verify user exists in Firestore
     const userDoc = await getDoc(doc(db, 'users', result.user.uid));
-    
+
     if (!userDoc.exists()) {
-      // User authenticated but no profile - create a basic profile
       const fullName = result.user.displayName || email.split('@')[0];
       await setDoc(doc(db, 'users', result.user.uid), {
-        name: fullName,
-        email: email,
-        role: 'buyer', // Default role for existing users without profile
+        name: fullName, email, role: 'buyer',
         avatar: fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
         createdAt: Date.now(),
         memberSince: new Date().toLocaleDateString('en', { month: 'short', year: 'numeric' }),
-        phone: '',
-        bio: '',
-        updatedAt: serverTimestamp()
+        phone: '', bio: '', updatedAt: serverTimestamp()
       });
-      
-      showAlert('warning', 'Profile Created', 'Your profile was created with default settings. You can update it in Settings.');
-      
-      // Redirect after short delay (new users always go to dashboard)
-      setTimeout(() => {
-        window.location.href = 'dashboard.html';
-      }, 1500);
+      showAlert('warning', 'Profile Created', 'Your profile was created with default settings.');
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
       return;
     }
-    
-    // Success - redirect based on role
+
     const userRole = userDoc.data().role || 'buyer';
     showAlert('success', 'Welcome Back!', `Signed in as ${getRoleLabel(userRole)}`);
-    
-    setTimeout(() => {
-      window.location.href = getRedirectUrl(userRole);
-    }, 800);
-    
+    setTimeout(() => { window.location.href = getRedirectUrl(userRole); }, 800);
+
   } catch (err) {
     const errorInfo = getErrorMessage(err.code);
     showAlert('error', errorInfo.title, errorInfo.message);
-    
     btn.disabled = false;
     btn.innerHTML = '<span>Sign In</span><i class="fas fa-arrow-right"></i>';
-    
-    // Highlight the problematic field
+
     if (err.code === 'auth/invalid-email') {
       document.getElementById('loginEmail').classList.add('error');
       document.getElementById('emailError').querySelector('span').textContent = 'Invalid email format';
@@ -568,52 +544,19 @@ window.handleLogin = async (e) => {
   }
 };
 
+// =================== GOOGLE LOGIN ===================
 window.handleGoogleLogin = async () => {
   clearAlerts();
   const btn = document.getElementById('googleBtn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner" style="border-color: rgba(0,0,0,0.1); border-top-color: #0f172a;"></span> Connecting...';
-  
+
   try {
     const result = await signInWithPopup(auth, googleProvider);
-    const user = result.user;
-    
-    // Check if user profile exists
-    const userDoc = await getDoc(doc(db, 'users', user.uid));
-    
-    let redirectUrl = 'dashboard.html';
-    
-    if (!userDoc.exists()) {
-      // New Google user - create profile
-      const fullName = user.displayName || 'User';
-      await setDoc(doc(db, 'users', user.uid), {
-        name: fullName,
-        email: user.email,
-        role: 'buyer', // Default for Google sign-in
-        avatar: fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
-        photoURL: user.photoURL || '',
-        createdAt: Date.now(),
-        memberSince: new Date().toLocaleDateString('en', { month: 'short', year: 'numeric' }),
-        phone: '',
-        bio: '',
-        updatedAt: serverTimestamp()
-      });
-      
-      showAlert('success', 'Account Created!', 'Welcome to MoonLat. Redirecting to your dashboard...');
-    } else {
-      const userRole = userDoc.data().role || 'buyer';
-      showAlert('success', 'Welcome Back!', `Signed in as ${getRoleLabel(userRole)}`);
-      redirectUrl = getRedirectUrl(userRole);
-    }
-    
-    setTimeout(() => {
-      window.location.href = redirectUrl;
-    }, 1000);
-    
+    await handleGoogleLoginResult(result);
   } catch (err) {
     const errorInfo = getErrorMessage(err.code);
     showAlert('error', errorInfo.title, errorInfo.message);
-    
     btn.disabled = false;
     btn.innerHTML = `
       <svg width="18" height="18" viewBox="0 0 24 24">
@@ -621,48 +564,41 @@ window.handleGoogleLogin = async () => {
         <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-      </svg>
-      Google
-    `;
+      </svg> Continue with Google`;
   }
 };
 
+// =================== FORGOT PASSWORD ===================
 window.handleForgotPassword = async (e) => {
   e.preventDefault();
   clearAlerts();
-  
   const email = document.getElementById('loginEmail').value.trim();
-  
+
   if (!email) {
-    showAlert('warning', 'Email Required', 'Please enter your email address first, then click "Forgot password?"');
+    showAlert('warning', 'Email Required', 'Please enter your email address first.');
     document.getElementById('loginEmail').focus();
     document.getElementById('loginEmail').classList.add('error');
     return;
   }
-  
   if (!validateEmail(email)) {
     showAlert('error', 'Invalid Email', 'Please enter a valid email address.');
     document.getElementById('loginEmail').classList.add('error');
     return;
   }
-  
+
   try {
     await sendPasswordResetEmail(auth, email);
-    showAlert('success', 'Reset Link Sent', `Check your inbox at ${email} for password reset instructions.`);
+    showAlert('success', 'Reset Link Sent', `Check your inbox at ${email}.`);
   } catch (err) {
     const errorInfo = getErrorMessage(err.code);
     showAlert('error', errorInfo.title, errorInfo.message);
   }
 };
 
-// Enter key support
 document.getElementById('loginPassword').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    document.getElementById('loginForm').requestSubmit();
-  }
+  if (e.key === 'Enter') document.getElementById('loginForm').requestSubmit();
 });
 </script>
 
 </body>
 </html>
-
