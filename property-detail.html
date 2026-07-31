@@ -21,9 +21,9 @@
 
 <link rel="stylesheet" href="details-page.css">
 
-<style>
+<!-- Leaflet CSS for Maps -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
-</style>
 </head>
 
 <body>
@@ -344,6 +344,8 @@ let savedPropertyIds = [];
 let allProperties = [];
 let currentImageIndex = 0;
 let propertyImages = [];
+let agentData = null; // Add this to store agent data
+
 
 const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop';
 
@@ -402,6 +404,19 @@ async function loadProperty() {
 
         currentProperty = { id: propertyDoc.id, ...propertyDoc.data() };
         
+        // Fetch agent data if agentId exists
+        const agentId = currentProperty.agentId || currentProperty.ownerId;
+        if (agentId) {
+            try {
+                const agentDoc = await getDoc(doc(db, 'users', agentId));
+                if (agentDoc.exists()) {
+                    agentData = agentDoc.data();
+                }
+            } catch (err) {
+                console.error('Error fetching agent data:', err);
+            }
+        }
+        
         // Load similar properties
         loadSimilarProperties();
         
@@ -416,6 +431,7 @@ async function loadProperty() {
         showError('Error Loading Property', 'Something went wrong. Please try again.', true);
     }
 }
+
 
 async function loadSimilarProperties() {
     try {
@@ -504,9 +520,10 @@ function renderPropertyDetail() {
         .filter(prop => prop.id !== p.id && (prop.type === p.type || prop.location === p.location))
         .slice(0, 3);
     
-    // Agent info
-    const agentName = p.agentName || p.ownerName || 'Verified Agent';
-    const agentType = p.agentType || (p.type === 'Shortlet' ? 'Shortlet Provider' : 'Property Agent');
+    // Agent info - UPDATED
+    const agentName = agentData?.displayName || p.agentName || p.ownerName || 'Verified Agent';
+    const agentPhoto = agentData?.photoURL || agentData?.profileImage || p.agentPhoto || null;
+    const agentType = 'Verified Agent'; // Changed to always show "Verified Agent"
     
     const html = `
     <!-- DETAIL HEADER -->
@@ -688,30 +705,30 @@ function renderPropertyDetail() {
                                 <span>${escapeHtml(p.address || 'Exact location shared upon request')}</span>
                             </div>
                         </div>
-                        <div class="map-placeholder">
-                            <svg viewBox="0 0 24 24" fill="none">
-                                <path d="M12 21s7-5 7-11a7 7 0 1 0-14 0c0 6 7 11 7 11z" stroke="currentColor" stroke-width="2"/>
-                                <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/>
-                            </svg>
-                            <span>Map view coming soon</span>
-                        </div>
+                       <div id="propertyMap" class="property-map" style="height: 300px; border-radius: 0.75rem; margin-top: 1rem;"></div>
+
                     </div>
                 </div>
 
                 <!-- RIGHT: Sidebar -->
                 <aside class="detail-sidebar">
-                    <!-- Agent Card -->
+                    <!-- Agent Card - UPDATED -->
                     <div class="agent-card">
                         <div class="agent-header">
-                            <div class="agent-avatar">${getInitials(agentName)}</div>
+                            <div class="agent-avatar" style="background: none; padding: 0; overflow: hidden;">
+                                ${agentPhoto ? 
+                                    `<img src="${escapeHtml(agentPhoto)}" alt="${escapeHtml(agentName)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="this.parentElement.innerHTML='${getInitials(agentName)}'">` : 
+                                    getInitials(agentName)
+                                }
+                            </div>
                             <div class="agent-info">
                                 <div class="agent-name">
                                     ${escapeHtml(agentName)}
                                     <span class="agent-verified">
-                                        <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        <svg viewBox="0 0 24 24" fill="none" style="width: 18px; height: 18px; color: #10b981;"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                     </span>
                                 </div>
-                                <div class="agent-type">${escapeHtml(agentType)}</div>
+                                <div class="agent-type" style="color: #6b7280; font-size: 0.875rem; font-weight: 500;">Verified Agent</div>
                             </div>
                         </div>
                         <button class="agent-contact-btn" onclick="openContactModal()">
@@ -796,7 +813,13 @@ function renderPropertyDetail() {
     
     // Check if description needs read more
     checkDescription();
+
+    // Initialize map after rendering
+    setTimeout(() => {
+        initPropertyMap();
+    }, 100);
 }
+
 
 function renderPropertyCard(p) {
     const badge = getBadge(p);
@@ -1404,8 +1427,130 @@ if (document.readyState === 'loading') {
 }
 
 
+// =================== PROPERTY MAP INITIALIZATION ===================
+async function initPropertyMap() {
+    const p = currentProperty;
+    const mapContainer = document.getElementById('propertyMap');
+    
+    if (!mapContainer || !p) return;
+    
+    // Clear any existing content
+    mapContainer.innerHTML = '<div class="loading-spinner" style="margin:2rem auto;text-align:center;"><div class="spinner"></div><p style="color:#6b7280;margin-top:0.5rem;">Loading map...</p></div>';
+    
+    let lat = p.latitude;
+    let lng = p.longitude;
+    
+    // If no coordinates, try to geocode the address
+    if (!lat || !lng) {
+        const address = p.address || p.location || '';
+        if (address) {
+            try {
+                const coords = await geocodeAddress(address);
+                if (coords) {
+                    lat = coords.lat;
+                    lng = coords.lng;
+                }
+            } catch (err) {
+                console.error('Geocoding error:', err);
+            }
+        }
+    }
+    
+    // If we have coordinates (either from DB or geocoding), show map
+    if (lat && lng) {
+        try {
+            // Small delay to ensure container is rendered
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // Initialize map centered on property location
+            const map = L.map('propertyMap').setView([lat, lng], 15);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+            
+            // Add marker at property location
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup(`<b>${escapeHtml(p.title)}</b><br>${escapeHtml(p.location || p.address || '')}`)
+                .openPopup();
+            
+            // Fix map size after initialization
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 200);
+            
+        } catch (err) {
+            console.error('Map initialization error:', err);
+            showMapPlaceholder('Map could not be loaded');
+        }
+    } else {
+        // No coordinates available - show placeholder with location info
+        showMapPlaceholder('Exact coordinates not available - Location: ' + (p.location || 'Nigeria'));
+    }
+}
+
+// Geocode address using Nominatim (OpenStreetMap)
+async function geocodeAddress(address) {
+    try {
+        // Add "Nigeria" if not present for better results
+        const query = address.includes('Nigeria') ? address : `${address}, Nigeria`;
+        
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`,
+            {
+                headers: {
+                    'User-Agent': 'MoonLat/1.0 (Real Estate Platform)'
+                }
+            }
+        );
+        
+        if (!response.ok) throw new Error('Geocoding failed');
+        
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+            return {
+                lat: parseFloat(data[0].lat),
+                lng: parseFloat(data[0].lon)
+            };
+        }
+        
+        return null;
+    } catch (err) {
+        console.error('Geocoding error:', err);
+        return null;
+    }
+}
+
+function showMapPlaceholder(message) {
+    const mapContainer = document.getElementById('propertyMap');
+    if (!mapContainer) return;
+    
+    mapContainer.innerHTML = `
+        <div class="map-placeholder" style="text-align: center; padding: 2rem; background: linear-gradient(135deg, #f8f9fc 0%, #eef2f7 100%); border-radius: 0.75rem; border: 2px dashed #d1d5db;">
+            <svg viewBox="0 0 24 24" fill="none" style="width: 48px; height: 48px; margin: 0 auto 1rem; color: #9ca3af;">
+                <path d="M12 21s7-5 7-11a7 7 0 1 0-14 0c0 6 7 11 7 11z" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <p style="color: #6b7280; font-size: 0.9rem; margin: 0;">${escapeHtml(message)}</p>
+            <p style="color: #9ca3af; font-size: 0.8rem; margin: 0.5rem 0 0;">Contact agent for exact location</p>
+        </div>
+    `;
+}
+
+
+// Call initPropertyMap after renderPropertyDetail completes
+// We need to modify the renderPropertyDetail function to call this
+
+
 </script>
+<!-- Leaflet JS for Maps -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 </body>
 </html>
+
+
 
