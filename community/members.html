@@ -1,0 +1,4101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F172A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Members — Moonlat Community</title>
+
+<style>
+*,*::before,*::after{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+:root{
+  --navy:#0F172A;
+  --navy-2:#151E31;
+  --navy-3:#1E293B;
+  --gold:#D4AF37;
+  --gold-light:#F4E8C1;
+  --terracotta:#E07A5F;
+  --terracotta-light:#F5EBE0;
+
+  --bg:#F5F7FA;
+  --surface:#FFFFFF;
+  --surface-2:#F8FAFC;
+
+  --text:#172033;
+  --text-2:#64748B;
+  --text-3:#94A3B8;
+
+  --border:#E2E8F0;
+
+  --success:#10B981;
+  --danger:#EF4444;
+  --blue:#3B82F6;
+  --purple:#8B5CF6;
+
+  --shadow:0 12px 40px rgba(15,23,42,.07);
+
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+
+html{
+  scroll-behavior:smooth;
+  background:var(--bg);
+}
+
+body{
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font);
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:88px;
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+img{
+  display:block;
+  max-width:100%;
+}
+
+svg{
+  display:block;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* ============================================================
+   TOP BAR
+============================================================ */
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:100;
+  height:68px;
+  background:rgba(15,23,42,.97);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+.topbar-inner{
+  width:min(1180px,100%);
+  height:100%;
+  margin:auto;
+  padding:0 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.top-button{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:rgba(255,255,255,.07);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.2s ease;
+}
+
+.top-button:active{
+  transform:scale(.95);
+}
+
+.top-button svg{
+  width:21px;
+  height:21px;
+}
+
+.page-title{
+  text-align:center;
+}
+
+.page-title strong{
+  display:block;
+  color:#fff;
+  font-size:17px;
+  font-weight:800;
+  letter-spacing:-.2px;
+}
+
+.page-title span{
+  display:block;
+  margin-top:2px;
+  color:rgba(255,255,255,.45);
+  font-size:10px;
+}
+
+/* ============================================================
+   PAGE
+============================================================ */
+
+.page{
+  width:min(1120px,100%);
+  margin:auto;
+  padding:16px 14px 35px;
+}
+
+/* ============================================================
+   DISCOVERY HERO
+============================================================ */
+
+.discovery{
+  position:relative;
+  overflow:hidden;
+  border-radius:23px;
+  background:
+    radial-gradient(
+      circle at 86% 15%,
+      rgba(212,175,55,.2),
+      transparent 33%
+    ),
+    radial-gradient(
+      circle at 12% 110%,
+      rgba(224,122,95,.16),
+      transparent 38%
+    ),
+    linear-gradient(
+      135deg,
+      var(--navy),
+      var(--navy-3)
+    );
+  padding:25px 18px 22px;
+  color:#fff;
+  box-shadow:0 15px 45px rgba(15,23,42,.14);
+}
+
+.discovery::after{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  right:-80px;
+  bottom:-120px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:50%;
+  box-shadow:
+    0 0 0 35px rgba(255,255,255,.02),
+    0 0 0 70px rgba(255,255,255,.015);
+  pointer-events:none;
+}
+
+.discovery-content{
+  position:relative;
+  z-index:1;
+}
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:var(--gold);
+  font-size:9px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:8px;
+}
+
+.eyebrow-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 0 4px rgba(212,175,55,.12);
+}
+
+.discovery h1{
+  font-size:27px;
+  line-height:1.15;
+  letter-spacing:-.8px;
+  font-weight:850;
+}
+
+.discovery-copy{
+  margin-top:8px;
+  max-width:620px;
+  color:rgba(255,255,255,.62);
+  font-size:12px;
+  line-height:1.6;
+}
+
+/* ============================================================
+   SEARCH
+============================================================ */
+
+.search-wrap{
+  margin-top:18px;
+  position:relative;
+  max-width:720px;
+}
+
+.search-icon{
+  position:absolute;
+  left:14px;
+  top:50%;
+  transform:translateY(-50%);
+  width:18px;
+  height:18px;
+  color:rgba(255,255,255,.5);
+  pointer-events:none;
+}
+
+.member-search{
+  width:100%;
+  height:49px;
+  padding:0 76px 0 43px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  outline:none;
+  background:rgba(255,255,255,.09);
+  color:#fff;
+  font-size:12px;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  transition:.2s ease;
+}
+
+.member-search::placeholder{
+  color:rgba(255,255,255,.42);
+}
+
+.member-search:focus{
+  border-color:rgba(212,175,55,.7);
+  background:rgba(255,255,255,.12);
+  box-shadow:0 0 0 4px rgba(212,175,55,.08);
+}
+
+.clear-search{
+  position:absolute;
+  right:9px;
+  top:50%;
+  transform:translateY(-50%);
+  width:33px;
+  height:33px;
+  border-radius:9px;
+  background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.clear-search.show{
+  display:flex;
+}
+
+.clear-search svg{
+  width:15px;
+  height:15px;
+}
+
+/* ============================================================
+   LIVE STATS
+============================================================ */
+
+.discovery-stats{
+  display:flex;
+  gap:25px;
+  margin-top:17px;
+}
+
+.discovery-stat{
+  display:flex;
+  flex-direction:column;
+}
+
+.discovery-stat strong{
+  color:#fff;
+  font-size:18px;
+  font-weight:800;
+}
+
+.discovery-stat span{
+  color:rgba(255,255,255,.43);
+  font-size:9px;
+  margin-top:1px;
+}
+
+/* ============================================================
+   FILTER BAR
+============================================================ */
+
+.filter-section{
+  margin-top:13px;
+}
+
+.filter-bar{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding:2px;
+}
+
+.filter-bar::-webkit-scrollbar{
+  display:none;
+}
+
+.filter{
+  min-height:37px;
+  padding:0 13px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text-2);
+  white-space:nowrap;
+  font-size:10px;
+  font-weight:750;
+  transition:.2s ease;
+}
+
+.filter.active{
+  background:var(--navy);
+  border-color:var(--navy);
+  color:#fff;
+}
+
+.filter:hover{
+  border-color:var(--navy);
+}
+
+.filter-separator{
+  width:1px;
+  height:23px;
+  background:var(--border);
+  flex-shrink:0;
+  margin:0 3px;
+}
+
+.sort-button{
+  min-height:37px;
+  padding:0 11px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text-2);
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:10px;
+  font-weight:750;
+  flex-shrink:0;
+}
+
+.sort-button svg{
+  width:14px;
+  height:14px;
+}
+
+/* ============================================================
+   RESULTS HEADER
+============================================================ */
+
+.results-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:17px 2px 11px;
+}
+
+.results-title{
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:-.2px;
+}
+
+.results-meta{
+  color:var(--text-3);
+  font-size:10px;
+}
+
+.results-actions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.view-button{
+  width:33px;
+  height:33px;
+  border-radius:9px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--text-3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.view-button.active{
+  color:var(--navy);
+  border-color:var(--navy);
+  background:#fff;
+}
+
+.view-button svg{
+  width:15px;
+  height:15px;
+}
+
+/* ============================================================
+   MEMBER GRID
+============================================================ */
+
+.members-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+
+@media(min-width:540px){
+  .members-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(min-width:880px){
+  .members-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+@media(min-width:1120px){
+  .members-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+}
+
+/* ============================================================
+   MEMBER CARD
+============================================================ */
+
+.member-card{
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease,
+    border-color .22s ease;
+}
+
+.member-card:hover{
+  transform:translateY(-3px);
+  border-color:#D5DDE8;
+  box-shadow:var(--shadow);
+}
+
+.member-card-main{
+  display:block;
+}
+
+.member-cover{
+  height:83px;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(212,175,55,.18),
+      transparent 40%
+    ),
+    linear-gradient(
+      135deg,
+      var(--navy),
+      var(--navy-3)
+    );
+}
+
+.member-cover-image{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.member-cover::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    transparent,
+    rgba(15,23,42,.25)
+  );
+}
+
+.member-avatar-wrap{
+  position:absolute;
+  z-index:2;
+  left:15px;
+  top:47px;
+}
+
+.member-avatar{
+  width:68px;
+  height:68px;
+  border-radius:18px;
+  background:var(--navy-3);
+  border:4px solid #fff;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:17px;
+  font-weight:800;
+  box-shadow:0 6px 18px rgba(15,23,42,.15);
+}
+
+.member-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.member-status{
+  position:absolute;
+  right:-1px;
+  bottom:0;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:#CBD5E1;
+  border:3px solid #fff;
+}
+
+.member-status.online{
+  background:var(--success);
+}
+
+.member-content{
+  padding:42px 14px 13px;
+}
+
+.member-topline{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.member-name-area{
+  min-width:0;
+}
+
+.member-name{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+}
+
+.member-name strong{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:13px;
+  font-weight:800;
+}
+
+.verified{
+  width:15px;
+  height:15px;
+  flex-shrink:0;
+  border-radius:50%;
+  background:var(--blue);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.verified svg{
+  width:9px;
+  height:9px;
+}
+
+.member-username{
+  margin-top:2px;
+  color:var(--text-3);
+  font-size:9px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.role-badge{
+  flex-shrink:0;
+  padding:4px 7px;
+  border-radius:6px;
+  background:var(--gold-light);
+  color:#856512;
+  font-size:8px;
+  line-height:1;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.25px;
+}
+
+.role-badge.client{
+  background:#EEF2F7;
+  color:#64748B;
+}
+
+.role-badge.agent{
+  background:var(--gold-light);
+  color:#856512;
+}
+
+.role-badge.investor{
+  background:#EDE9FE;
+  color:#6D28D9;
+}
+
+.role-badge.broker{
+  background:#DBEAFE;
+  color:#1D4ED8;
+}
+
+.member-bio{
+  color:var(--text-2);
+  font-size:10px;
+  line-height:1.55;
+  margin-top:10px;
+  min-height:31px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.member-location{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin-top:9px;
+  color:var(--text-3);
+  font-size:9px;
+  min-width:0;
+}
+
+.member-location svg{
+  width:12px;
+  height:12px;
+  flex-shrink:0;
+}
+
+.member-location span{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.member-footer{
+  margin-top:12px;
+  padding-top:11px;
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.member-action{
+  height:34px;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  font-size:9px;
+  font-weight:800;
+  transition:.18s ease;
+}
+
+.member-action svg{
+  width:13px;
+  height:13px;
+}
+
+.follow-button{
+  flex:1;
+  background:var(--navy);
+  color:#fff;
+}
+
+.follow-button.following{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  color:var(--text);
+}
+
+.message-button{
+  width:35px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text-2);
+}
+
+.member-action:active{
+  transform:scale(.96);
+}
+
+.member-menu{
+  position:absolute;
+  top:95px;
+  right:12px;
+  width:31px;
+  height:31px;
+  border-radius:9px;
+  background:rgba(255,255,255,.92);
+  color:var(--text-2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:5;
+  border:1px solid rgba(226,232,240,.8);
+  backdrop-filter:blur(8px);
+}
+
+.member-menu svg{
+  width:15px;
+  height:15px;
+}
+
+/* ============================================================
+   LIST VIEW
+============================================================ */
+
+.members-grid.list-view{
+  grid-template-columns:1fr;
+}
+
+.members-grid.list-view .member-card{
+  display:flex;
+  min-height:120px;
+}
+
+.members-grid.list-view .member-cover{
+  width:105px;
+  height:auto;
+  flex-shrink:0;
+}
+
+.members-grid.list-view .member-cover-image{
+  position:absolute;
+  inset:0;
+}
+
+.members-grid.list-view .member-avatar-wrap{
+  left:20px;
+  top:27px;
+}
+
+.members-grid.list-view .member-content{
+  flex:1;
+  padding:14px 14px 13px 25px;
+  min-width:0;
+}
+
+.members-grid.list-view .member-bio{
+  min-height:auto;
+}
+
+.members-grid.list-view .member-location{
+  margin-top:6px;
+}
+
+.members-grid.list-view .member-footer{
+  margin-top:8px;
+  padding-top:8px;
+}
+
+/* ============================================================
+   SKELETON
+============================================================ */
+
+.skeleton{
+  background:
+    linear-gradient(
+      90deg,
+      #EDF1F6 25%,
+      #F8FAFC 37%,
+      #EDF1F6 63%
+    );
+  background-size:400% 100%;
+  animation:shimmer 1.35s infinite;
+}
+
+.member-skeleton{
+  height:280px;
+  border-radius:18px;
+}
+
+@keyframes shimmer{
+  0%{
+    background-position:100% 0;
+  }
+
+  100%{
+    background-position:-100% 0;
+  }
+}
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.empty{
+  min-height:310px;
+  background:var(--surface);
+  border:1px dashed var(--border);
+  border-radius:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:35px 22px;
+  grid-column:1/-1;
+}
+
+.empty-icon{
+  width:60px;
+  height:60px;
+  border-radius:19px;
+  background:var(--navy);
+  color:var(--gold);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:13px;
+}
+
+.empty-icon svg{
+  width:27px;
+  height:27px;
+}
+
+.empty-title{
+  font-size:16px;
+  font-weight:850;
+}
+
+.empty-copy{
+  max-width:340px;
+  margin-top:6px;
+  color:var(--text-2);
+  font-size:11px;
+  line-height:1.6;
+}
+
+.empty-button{
+  margin-top:15px;
+  min-height:38px;
+  padding:0 14px;
+  border-radius:10px;
+  background:var(--navy);
+  color:#fff;
+  font-size:10px;
+  font-weight:800;
+}
+
+/* ============================================================
+   LOAD MORE
+============================================================ */
+
+.load-more-wrap{
+  display:flex;
+  justify-content:center;
+  margin-top:16px;
+}
+
+.load-more{
+  min-height:39px;
+  padding:0 17px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  border-radius:10px;
+  font-size:10px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.load-more svg{
+  width:14px;
+  height:14px;
+}
+
+.load-more:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+/* ============================================================
+   DRAWER / MEMBER QUICK VIEW
+============================================================ */
+
+.drawer-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:500;
+  display:none;
+  background:rgba(2,6,23,.62);
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
+}
+
+.drawer-backdrop.open{
+  display:block;
+}
+
+.member-drawer{
+  position:absolute;
+  top:0;
+  right:0;
+  width:min(440px,94%);
+  height:100%;
+  background:var(--surface);
+  overflow-y:auto;
+  box-shadow:-20px 0 60px rgba(0,0,0,.18);
+  transform:translateX(100%);
+  transition:transform .25s ease;
+}
+
+.drawer-backdrop.open .member-drawer{
+  transform:translateX(0);
+}
+
+.drawer-header{
+  position:sticky;
+  top:0;
+  z-index:3;
+  height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 14px;
+  background:rgba(255,255,255,.95);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(12px);
+}
+
+.drawer-title{
+  font-size:13px;
+  font-weight:800;
+}
+
+.drawer-close{
+  width:35px;
+  height:35px;
+  border-radius:10px;
+  background:var(--surface-2);
+  color:var(--text-2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.drawer-close svg{
+  width:16px;
+  height:16px;
+}
+
+.drawer-body{
+  padding:18px;
+}
+
+.quick-cover{
+  height:125px;
+  border-radius:16px;
+  background:
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(212,175,55,.18),
+      transparent 40%
+    ),
+    linear-gradient(
+      135deg,
+      var(--navy),
+      var(--navy-3)
+    );
+  overflow:hidden;
+}
+
+.quick-cover img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.quick-identity{
+  margin-top:-34px;
+  position:relative;
+  padding:0 14px;
+}
+
+.quick-avatar{
+  width:78px;
+  height:78px;
+  border-radius:20px;
+  overflow:hidden;
+  background:var(--navy-3);
+  border:4px solid #fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:20px;
+  font-weight:800;
+  box-shadow:0 8px 20px rgba(15,23,42,.16);
+}
+
+.quick-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.quick-name{
+  margin-top:12px;
+  font-size:21px;
+  font-weight:850;
+  letter-spacing:-.5px;
+}
+
+.quick-username{
+  margin-top:2px;
+  color:var(--text-3);
+  font-size:10px;
+}
+
+.quick-bio{
+  margin-top:12px;
+  color:var(--text-2);
+  font-size:11px;
+  line-height:1.65;
+}
+
+.quick-meta{
+  margin-top:16px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.quick-meta-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--text-2);
+  font-size:10px;
+}
+
+.quick-meta-item svg{
+  width:15px;
+  height:15px;
+  color:var(--text-3);
+}
+
+.quick-actions{
+  display:flex;
+  gap:8px;
+  margin-top:18px;
+}
+
+.quick-action{
+  flex:1;
+  min-height:40px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font-size:10px;
+  font-weight:800;
+}
+
+.quick-action.primary{
+  background:var(--navy);
+  color:#fff;
+}
+
+.quick-action.secondary{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  color:var(--text);
+}
+
+.quick-action svg{
+  width:14px;
+  height:14px;
+}
+
+/* ============================================================
+   TOAST
+============================================================ */
+
+.toast-stack{
+  position:fixed;
+  left:14px;
+  right:14px;
+  bottom:91px;
+  z-index:900;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  pointer-events:none;
+}
+
+.toast{
+  width:max-content;
+  max-width:100%;
+  min-height:42px;
+  padding:10px 13px;
+  border-radius:12px;
+  background:var(--navy);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  box-shadow:0 15px 40px rgba(15,23,42,.25);
+  font-size:10px;
+  font-weight:700;
+  animation:toastIn .22s ease;
+}
+
+.toast.success{
+  border-left:3px solid var(--success);
+}
+
+.toast.error{
+  border-left:3px solid var(--danger);
+}
+
+.toast.info{
+  border-left:3px solid var(--gold);
+}
+
+.toast svg{
+  width:16px;
+  height:16px;
+  flex-shrink:0;
+}
+
+@keyframes toastIn{
+  from{
+    opacity:0;
+    transform:translateY(8px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* ============================================================
+   BOTTOM NAV
+============================================================ */
+
+.mobile-nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:200;
+  height:77px;
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(15,23,42,.97);
+  border-top:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+.mobile-nav-inner{
+  height:100%;
+  max-width:620px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+}
+
+.mobile-item{
+  position:relative;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  color:rgba(255,255,255,.45);
+  font-size:9px;
+  font-weight:650;
+}
+
+.mobile-item.active{
+  color:var(--gold);
+}
+
+.mobile-item svg{
+  width:21px;
+  height:21px;
+}
+
+.mobile-badge{
+  position:absolute;
+  top:12px;
+  margin-left:19px;
+  min-width:15px;
+  height:15px;
+  padding:0 4px;
+  border-radius:20px;
+  background:var(--terracotta);
+  border:2px solid var(--navy);
+  color:#fff;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  font-size:8px;
+  font-weight:800;
+}
+
+.mobile-badge.show{
+  display:flex;
+}
+
+/* ============================================================
+   DESKTOP
+============================================================ */
+
+@media(min-width:760px){
+
+  body{
+    padding-bottom:0;
+  }
+
+  .mobile-nav{
+    display:none;
+  }
+
+  .page{
+    padding-top:26px;
+  }
+
+  .discovery{
+    padding:32px 30px 28px;
+  }
+
+  .discovery h1{
+    font-size:34px;
+  }
+
+  .member-drawer{
+    width:430px;
+  }
+
+  .toast-stack{
+    left:auto;
+    right:22px;
+    bottom:22px;
+    align-items:flex-end;
+  }
+}
+
+@media(max-width:430px){
+
+  .results-actions{
+    display:none;
+  }
+
+  .discovery-stats{
+    gap:19px;
+  }
+
+  .discovery-stat strong{
+    font-size:16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     TOP BAR
+============================================================ -->
+
+<header class="topbar">
+
+  <div class="topbar-inner">
+
+    <button
+      class="top-button"
+      id="backButton"
+      aria-label="Go back"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+        <path d="M19 12H5"/>
+        <path d="M12 19l-7-7 7-7"/>
+      </svg>
+    </button>
+
+    <div class="page-title">
+      <strong>Members</strong>
+      <span>Moonlat Community</span>
+    </div>
+
+    <button
+      class="top-button"
+      id="alertsButton"
+      aria-label="Open alerts"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 01-3.46 0"/>
+      </svg>
+    </button>
+
+  </div>
+
+</header>
+
+<main class="page">
+
+  <!-- ========================================================
+       DISCOVERY
+  ========================================================= -->
+
+  <section class="discovery">
+
+    <div class="discovery-content">
+
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        Moonlat Network
+      </div>
+
+      <h1>
+        Find your people.
+      </h1>
+
+      <p class="discovery-copy">
+        Discover agents, clients, investors and other members across the Moonlat real estate network.
+      </p>
+
+      <div class="search-wrap">
+
+        <svg
+          class="search-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+        >
+          <circle cx="11" cy="11" r="7"/>
+          <path d="M20 20l-4-4"/>
+        </svg>
+
+        <input
+          class="member-search"
+          id="memberSearch"
+          type="search"
+          autocomplete="off"
+          enterkeyhint="search"
+          placeholder="Search by name, username or location..."
+          aria-label="Search members"
+        >
+
+        <button
+          class="clear-search"
+          id="clearSearch"
+          aria-label="Clear search"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M6 6l12 12"/>
+            <path d="M18 6L6 18"/>
+          </svg>
+        </button>
+
+      </div>
+
+      <div class="discovery-stats">
+
+        <div class="discovery-stat">
+          <strong id="memberCount">—</strong>
+          <span>Members</span>
+        </div>
+
+        <div class="discovery-stat">
+          <strong id="agentCount">—</strong>
+          <span>Agents</span>
+        </div>
+
+        <div class="discovery-stat">
+          <strong id="investorCount">—</strong>
+          <span>Investors</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ========================================================
+       FILTERS
+  ========================================================= -->
+
+  <section class="filter-section">
+
+    <div class="filter-bar">
+
+      <button
+        class="filter active"
+        data-role="all"
+      >
+        All members
+      </button>
+
+      <button
+        class="filter"
+        data-role="agent"
+      >
+        Agents
+      </button>
+
+      <button
+        class="filter"
+        data-role="client"
+      >
+        Clients
+      </button>
+
+      <button
+        class="filter"
+        data-role="investor"
+      >
+        Investors
+      </button>
+
+      <button
+        class="filter"
+        data-role="broker"
+      >
+        Brokers
+      </button>
+
+      <span class="filter-separator"></span>
+
+      <button
+        class="sort-button"
+        id="sortButton"
+        type="button"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M8 6h13"/>
+          <path d="M8 12h9"/>
+          <path d="M8 18h5"/>
+          <path d="M3 6h.01"/>
+          <path d="M3 12h.01"/>
+          <path d="M3 18h.01"/>
+        </svg>
+        <span id="sortLabel">Recent</span>
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- ========================================================
+       RESULTS
+  ========================================================= -->
+
+  <section>
+
+    <div class="results-header">
+
+      <div>
+        <div class="results-title">
+          Community members
+        </div>
+
+        <div
+          class="results-meta"
+          id="resultsMeta"
+        >
+          Loading members...
+        </div>
+      </div>
+
+      <div class="results-actions">
+
+        <button
+          class="view-button active"
+          id="gridView"
+          aria-label="Grid view"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+          </svg>
+        </button>
+
+        <button
+          class="view-button"
+          id="listView"
+          aria-label="List view"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M8 6h13"/>
+            <path d="M8 12h13"/>
+            <path d="M8 18h13"/>
+            <path d="M3 6h.01"/>
+            <path d="M3 12h.01"/>
+            <path d="M3 18h.01"/>
+          </svg>
+        </button>
+
+      </div>
+
+    </div>
+
+    <div
+      class="members-grid"
+      id="membersGrid"
+    >
+
+      <div class="skeleton member-skeleton"></div>
+      <div class="skeleton member-skeleton"></div>
+      <div class="skeleton member-skeleton"></div>
+      <div class="skeleton member-skeleton"></div>
+
+    </div>
+
+    <div
+      class="load-more-wrap hidden"
+      id="loadMoreWrap"
+    >
+      <button
+        class="load-more"
+        id="loadMoreButton"
+      >
+        Load more members
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 5v14"/>
+          <path d="M6 13l6 6 6-6"/>
+        </svg>
+
+      </button>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ============================================================
+     MEMBER DRAWER
+============================================================ -->
+
+<div
+  class="drawer-backdrop"
+  id="memberDrawerBackdrop"
+>
+
+  <aside
+    class="member-drawer"
+    id="memberDrawer"
+    aria-label="Member details"
+  >
+
+    <div class="drawer-header">
+
+      <div class="drawer-title">
+        Member
+      </div>
+
+      <button
+        class="drawer-close"
+        id="drawerClose"
+        aria-label="Close member details"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M6 6l12 12"/>
+          <path d="M18 6L6 18"/>
+        </svg>
+      </button>
+
+    </div>
+
+    <div
+      class="drawer-body"
+      id="drawerBody"
+    ></div>
+
+  </aside>
+
+</div>
+
+<!-- ============================================================
+     TOAST
+============================================================ -->
+
+<div
+  class="toast-stack"
+  id="toastStack"
+></div>
+
+<!-- ============================================================
+     MOBILE NAV
+============================================================ -->
+
+<nav class="mobile-nav">
+
+  <div class="mobile-nav-inner">
+
+    <a
+      href="index.html"
+      class="mobile-item"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 10.5L12 3l9 7.5"/>
+        <path d="M5 9.5V21h14V9.5"/>
+        <path d="M9 21v-7h6v7"/>
+      </svg>
+      <span>Home</span>
+    </a>
+
+    <a
+      href="explore.html"
+      class="mobile-item"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="M20 20l-4-4"/>
+      </svg>
+      <span>Explore</span>
+    </a>
+
+    <a
+      href="index.html#compose"
+      class="mobile-item"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M12 5v14"/>
+        <path d="M5 12h14"/>
+      </svg>
+      <span>Create</span>
+    </a>
+
+    <a
+      href="alert.html"
+      class="mobile-item"
+    >
+      <span
+        class="mobile-badge"
+        id="alertBadge"
+      >
+        0
+      </span>
+
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 01-3.46 0"/>
+      </svg>
+
+      <span>Alerts</span>
+    </a>
+
+    <a
+      href="profile.html"
+      class="mobile-item"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 21a8 8 0 0116 0"/>
+      </svg>
+      <span>Profile</span>
+    </a>
+
+  </div>
+
+</nav>
+
+<script type="module">
+
+/* ============================================================
+   MOONLAT MEMBERS
+   ------------------------------------------------------------
+   Real data sources:
+
+   users/{uid}
+   users/{uid}/following/{targetUid}
+   users/{uid}/followers/{followerUid}
+
+   Optional fields:
+
+   displayName
+   username
+   photoURL
+   coverURL
+   role
+   bio
+   location
+   verified
+   followersCount
+   followingCount
+   lastActiveAt
+   createdAt
+============================================================ */
+
+import {
+  initializeApp,
+  getApps,
+  getApp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
+  startAfter,
+  endAt,
+  startAt,
+  getCountFromServer,
+  setDoc,
+  deleteDoc,
+  serverTimestamp,
+  increment,
+  writeBatch
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+/* ============================================================
+   CONFIGURATION
+============================================================ */
+
+const PAGE_SIZE = 24;
+
+const ROLE_LABELS = {
+  all:"All members",
+  agent:"Agents",
+  client:"Clients",
+  investor:"Investors",
+  broker:"Brokers"
+};
+
+/* ============================================================
+   STATE
+============================================================ */
+
+let app = null;
+let auth = null;
+let db = null;
+
+let currentUser = null;
+
+let members = [];
+let filteredMembers = [];
+
+let currentRole = "all";
+let currentSort = "recent";
+
+let lastDocument = null;
+let hasMore = false;
+
+let loadingMembers = false;
+
+let searchTimer = null;
+
+let followingIds = new Set();
+
+let activeDrawerMember = null;
+
+/* ============================================================
+   DOM
+============================================================ */
+
+const memberSearch =
+  document.getElementById("memberSearch");
+
+const clearSearch =
+  document.getElementById("clearSearch");
+
+const membersGrid =
+  document.getElementById("membersGrid");
+
+const resultsMeta =
+  document.getElementById("resultsMeta");
+
+const loadMoreWrap =
+  document.getElementById("loadMoreWrap");
+
+const loadMoreButton =
+  document.getElementById("loadMoreButton");
+
+const memberCount =
+  document.getElementById("memberCount");
+
+const agentCount =
+  document.getElementById("agentCount");
+
+const investorCount =
+  document.getElementById("investorCount");
+
+const drawerBackdrop =
+  document.getElementById("memberDrawerBackdrop");
+
+const drawerBody =
+  document.getElementById("drawerBody");
+
+/* ============================================================
+   FIREBASE INITIALIZATION
+============================================================ */
+
+async function initializeFirebase(){
+
+  try{
+
+    const configModule =
+      await import("./firebase-config.js");
+
+    const firebaseConfig =
+      configModule.firebaseConfig ||
+      configModule.default;
+
+    if(!firebaseConfig){
+      throw new Error(
+        "Firebase configuration was not found."
+      );
+    }
+
+    app =
+      getApps().length
+        ? getApp()
+        : initializeApp(firebaseConfig);
+
+    auth =
+      getAuth(app);
+
+    db =
+      getFirestore(app);
+
+    initializeAuth();
+
+  }catch(error){
+
+    console.error(
+      "Firebase initialization failed:",
+      error
+    );
+
+    showFatalError(
+      "Moonlat could not connect to the member directory."
+    );
+  }
+}
+
+/* ============================================================
+   AUTH
+============================================================ */
+
+function initializeAuth(){
+
+  onAuthStateChanged(
+    auth,
+    async user => {
+
+      if(!user){
+
+        window.location.href =
+          "sign-in.html";
+
+        return;
+      }
+
+      currentUser =
+        user;
+
+      await Promise.all([
+        loadFollowing(),
+        loadDirectoryStats()
+      ]);
+
+      await loadMembers(true);
+    }
+  );
+}
+
+/* ============================================================
+   DIRECTORY STATS
+============================================================ */
+
+async function loadDirectoryStats(){
+
+  try{
+
+    const usersRef =
+      collection(
+        db,
+        "users"
+      );
+
+    const totalQuery =
+      query(
+        usersRef,
+        limit(1)
+      );
+
+    const totalSnapshot =
+      await getCountFromServer(
+        totalQuery
+      );
+
+    memberCount.textContent =
+      formatCount(
+        totalSnapshot.data().count
+      );
+
+  }catch(error){
+
+    console.warn(
+      "Total member count unavailable:",
+      error
+    );
+
+    memberCount.textContent =
+      "—";
+  }
+
+  try{
+
+    const agentQuery =
+      query(
+        collection(db,"users"),
+        where("role","==","agent")
+      );
+
+    const snapshot =
+      await getCountFromServer(
+        agentQuery
+      );
+
+    agentCount.textContent =
+      formatCount(
+        snapshot.data().count
+      );
+
+  }catch(error){
+
+    console.warn(
+      "Agent count unavailable:",
+      error
+    );
+
+    agentCount.textContent =
+      "—";
+  }
+
+  try{
+
+    const investorQuery =
+      query(
+        collection(db,"users"),
+        where("role","==","investor")
+      );
+
+    const snapshot =
+      await getCountFromServer(
+        investorQuery
+      );
+
+    investorCount.textContent =
+      formatCount(
+        snapshot.data().count
+      );
+
+  }catch(error){
+
+    console.warn(
+      "Investor count unavailable:",
+      error
+    );
+
+    investorCount.textContent =
+      "—";
+  }
+}
+
+/* ============================================================
+   FOLLOWING
+============================================================ */
+
+async function loadFollowing(){
+
+  if(!currentUser){
+    return;
+  }
+
+  try{
+
+    const followingRef =
+      collection(
+        db,
+        "users",
+        currentUser.uid,
+        "following"
+      );
+
+    const snapshot =
+      await getDocs(
+        followingRef
+      );
+
+    followingIds =
+      new Set(
+        snapshot.docs.map(
+          item => item.id
+        )
+      );
+
+  }catch(error){
+
+    console.warn(
+      "Following list could not be loaded:",
+      error
+    );
+
+    followingIds =
+      new Set();
+  }
+}
+
+/* ============================================================
+   LOAD MEMBERS
+============================================================ */
+
+async function loadMembers(reset = false){
+
+  if(
+    loadingMembers ||
+    (
+      !reset &&
+      !hasMore
+    )
+  ){
+    return;
+  }
+
+  loadingMembers = true;
+
+  if(reset){
+
+    lastDocument = null;
+    hasMore = true;
+    members = [];
+
+    renderLoading();
+  }
+
+  try{
+
+    const usersRef =
+      collection(
+        db,
+        "users"
+      );
+
+    const constraints = [];
+
+    /*
+      Role filtering is done server-side.
+      This keeps the returned result set small.
+    */
+
+    if(currentRole !== "all"){
+
+      constraints.push(
+        where(
+          "role",
+          "==",
+          currentRole
+        )
+      );
+    }
+
+    /*
+      Recent sorting uses createdAt.
+      A fallback query below handles projects
+      that do not yet have this field/index.
+    */
+
+    if(currentSort === "recent"){
+
+      constraints.push(
+        orderBy(
+          "createdAt",
+          "desc"
+        )
+      );
+
+    }else{
+
+      constraints.push(
+        orderBy(
+          "displayName",
+          "asc"
+        )
+      );
+    }
+
+    constraints.push(
+      limit(PAGE_SIZE)
+    );
+
+    if(lastDocument){
+
+      constraints.push(
+        startAfter(
+          lastDocument
+        )
+      );
+    }
+
+    const membersQuery =
+      query(
+        usersRef,
+        ...constraints
+      );
+
+    const snapshot =
+      await getDocs(
+        membersQuery
+      );
+
+    if(snapshot.empty){
+
+      if(reset){
+
+        members = [];
+      }
+
+      hasMore = false;
+
+    }else{
+
+      const newMembers =
+        snapshot.docs
+          .map(item => ({
+            id:item.id,
+            ...item.data()
+          }))
+          .filter(
+            member =>
+              member.id !==
+              currentUser.uid
+          );
+
+      members =
+        reset
+          ? newMembers
+          : [
+              ...members,
+              ...newMembers
+            ];
+
+      lastDocument =
+        snapshot.docs[
+          snapshot.docs.length - 1
+        ];
+
+      hasMore =
+        snapshot.docs.length ===
+        PAGE_SIZE;
+    }
+
+    applyLocalSearch();
+    renderMembers();
+
+  }catch(error){
+
+    console.error(
+      "Member query failed:",
+      error
+    );
+
+    if(
+      String(error.message || "")
+        .toLowerCase()
+        .includes("index")
+    ){
+
+      showToast(
+        "Firestore needs an index for this member query.",
+        "error"
+      );
+
+    }else{
+
+      showToast(
+        "Members could not be loaded. Please try again.",
+        "error"
+      );
+    }
+
+    if(reset){
+
+      members = [];
+      renderEmpty(
+        "Unable to load members",
+        "The member directory could not be reached right now."
+      );
+    }
+
+  }finally{
+
+    loadingMembers = false;
+
+    loadMoreButton.disabled =
+      false;
+
+    updateLoadMore();
+  }
+}
+
+/* ============================================================
+   SEARCH
+============================================================ */
+
+memberSearch.addEventListener(
+  "input",
+  () => {
+
+    const value =
+      memberSearch.value.trim();
+
+    clearSearch.classList.toggle(
+      "show",
+      Boolean(value)
+    );
+
+    clearTimeout(
+      searchTimer
+    );
+
+    searchTimer =
+      setTimeout(
+        () => {
+
+          /*
+            Search is intentionally performed
+            against already loaded real members.
+
+            For very large directories, replace this
+            with a dedicated search index such as
+            Algolia, Typesense or an equivalent
+            backend search service.
+          */
+
+          applyLocalSearch();
+          renderMembers();
+
+        },
+        160
+      );
+  }
+);
+
+clearSearch.addEventListener(
+  "click",
+  () => {
+
+    memberSearch.value =
+      "";
+
+    clearSearch.classList.remove(
+      "show"
+    );
+
+    applyLocalSearch();
+    renderMembers();
+
+    memberSearch.focus();
+  }
+);
+
+/* ============================================================
+   FILTERS
+============================================================ */
+
+document
+  .querySelectorAll(".filter")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      async () => {
+
+        const role =
+          button.dataset.role;
+
+        if(
+          role === currentRole
+        ){
+          return;
+        }
+
+        document
+          .querySelectorAll(".filter")
+          .forEach(item =>
+            item.classList.remove(
+              "active"
+            )
+          );
+
+        button.classList.add(
+          "active"
+        );
+
+        currentRole =
+          role;
+
+        await loadMembers(true);
+      }
+    );
+  });
+
+/* ============================================================
+   SORT
+============================================================ */
+
+document
+  .getElementById("sortButton")
+  .addEventListener(
+    "click",
+    async () => {
+
+      currentSort =
+        currentSort === "recent"
+          ? "name"
+          : "recent";
+
+      document
+        .getElementById("sortLabel")
+        .textContent =
+          currentSort === "recent"
+            ? "Recent"
+            : "A-Z";
+
+      await loadMembers(true);
+    }
+  );
+
+/* ============================================================
+   LOCAL SEARCH
+============================================================ */
+
+function applyLocalSearch(){
+
+  const term =
+    memberSearch.value
+      .trim()
+      .toLowerCase();
+
+  if(!term){
+
+    filteredMembers =
+      [...members];
+
+    return;
+  }
+
+  filteredMembers =
+    members.filter(
+      member => {
+
+        const searchable = [
+          member.displayName,
+          member.username,
+          member.location,
+          member.role,
+          member.bio
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        return searchable.includes(
+          term
+        );
+      }
+    );
+}
+
+/* ============================================================
+   RENDER MEMBERS
+============================================================ */
+
+function renderMembers(){
+
+  if(!filteredMembers.length){
+
+    if(
+      memberSearch.value.trim()
+    ){
+
+      renderEmpty(
+        "No members found",
+        `No members match "${memberSearch.value.trim()}". Try another name, username or location.`,
+        true
+      );
+
+    }else{
+
+      renderEmpty(
+        "No members available",
+        "There are currently no other members available in the directory."
+      );
+    }
+
+    updateLoadMore();
+
+    return;
+  }
+
+  membersGrid.innerHTML =
+    filteredMembers
+      .map(
+        renderMemberCard
+      )
+      .join("");
+
+  bindMemberActions();
+
+  resultsMeta.textContent =
+    `${filteredMembers.length} member${
+      filteredMembers.length === 1
+        ? ""
+        : "s"
+    } shown`;
+
+  updateLoadMore();
+}
+
+/* ============================================================
+   MEMBER CARD
+============================================================ */
+
+function renderMemberCard(member){
+
+  const id =
+    member.id;
+
+  const name =
+    member.displayName ||
+    "Moonlat member";
+
+  const username =
+    member.username
+      ? `@${String(member.username).replace(/^@/,"")}`
+      : "";
+
+  const role =
+    normalizeRole(
+      member.role
+    );
+
+  const roleValue =
+    normalizeRoleValue(
+      member.role
+    );
+
+  const photo =
+    member.photoURL ||
+    "";
+
+  const cover =
+    member.coverURL ||
+    "";
+
+  const bio =
+    member.bio ||
+    "";
+
+  const location =
+    member.location ||
+    "";
+
+  const verified =
+    member.verified === true;
+
+  const isFollowing =
+    followingIds.has(
+      id
+    );
+
+  const online =
+    isRecentlyActive(
+      member.lastActiveAt
+    );
+
+  return `
+
+    <article
+      class="member-card"
+      data-member-id="${escapeAttribute(id)}"
+    >
+
+      <button
+        class="member-menu"
+        data-action="details"
+        aria-label="View member details"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="5" cy="12" r="1"/>
+          <circle cx="12" cy="12" r="1"/>
+          <circle cx="19" cy="12" r="1"/>
+        </svg>
+      </button>
+
+      <a
+        class="member-card-main"
+        href="profile.html?id=${encodeURIComponent(id)}"
+      >
+
+        <div class="member-cover">
+
+          ${
+            cover
+              ? `
+                <img
+                  class="member-cover-image"
+                  src="${escapeAttribute(cover)}"
+                  alt=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                >
+              `
+              : ""
+          }
+
+        </div>
+
+        <div class="member-avatar-wrap">
+
+          <div class="member-avatar">
+
+            ${
+              photo
+                ? `
+                  <img
+                    src="${escapeAttribute(photo)}"
+                    alt=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
+                  >
+                `
+                : escapeHTML(
+                    getInitials(name)
+                  )
+            }
+
+          </div>
+
+          <span
+            class="member-status ${
+              online ? "online" : ""
+            }"
+            title="${
+              online
+                ? "Active recently"
+                : "Activity status unavailable"
+            }"
+          ></span>
+
+        </div>
+
+        <div class="member-content">
+
+          <div class="member-topline">
+
+            <div class="member-name-area">
+
+              <div class="member-name">
+
+                <strong>
+                  ${escapeHTML(name)}
+                </strong>
+
+                ${
+                  verified
+                    ? `
+                      <span
+                        class="verified"
+                        title="Verified"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                          <path d="M5 12l4 4L19 6"/>
+                        </svg>
+                      </span>
+                    `
+                    : ""
+                }
+
+              </div>
+
+              ${
+                username
+                  ? `
+                    <div class="member-username">
+                      ${escapeHTML(username)}
+                    </div>
+                  `
+                  : ""
+              }
+
+            </div>
+
+            ${
+              role
+                ? `
+                  <span class="role-badge ${escapeAttribute(roleValue)}">
+                    ${escapeHTML(role)}
+                  </span>
+                `
+                : ""
+            }
+
+          </div>
+
+          ${
+            bio
+              ? `
+                <div class="member-bio">
+                  ${escapeHTML(bio)}
+                </div>
+              `
+              : `
+                <div class="member-bio">
+                  Moonlat community member.
+                </div>
+              `
+          }
+
+          ${
+            location
+              ? `
+                <div class="member-location">
+
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+
+                  <span>
+                    ${escapeHTML(
+                      formatLocation(location)
+                    )}
+                  </span>
+
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+
+      </a>
+
+      <div class="member-content" style="padding-top:0">
+
+        <div class="member-footer">
+
+          <button
+            class="member-action follow-button ${
+              isFollowing
+                ? "following"
+                : ""
+            }"
+            data-action="follow"
+            data-member-id="${escapeAttribute(id)}"
+          >
+
+            ${
+              isFollowing
+                ? `
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 6L9 17l-5-5"/>
+                  </svg>
+                  Following
+                `
+                : `
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M12 5v14"/>
+                    <path d="M5 12h14"/>
+                  </svg>
+                  Follow
+                `
+            }
+
+          </button>
+
+          <button
+            class="member-action message-button"
+            data-action="message"
+            data-member-id="${escapeAttribute(id)}"
+            aria-label="Message ${escapeAttribute(name)}"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+  `;
+}
+
+/* ============================================================
+   MEMBER ACTIONS
+============================================================ */
+
+function bindMemberActions(){
+
+  membersGrid
+    .querySelectorAll(
+      "[data-action]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        async event => {
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          const action =
+            button.dataset.action;
+
+          const memberId =
+            button.dataset.memberId ||
+            button.closest(
+              ".member-card"
+            )?.dataset.memberId;
+
+          if(!memberId){
+            return;
+          }
+
+          if(action === "follow"){
+
+            await toggleFollow(
+              memberId,
+              button
+            );
+
+          }else if(action === "message"){
+
+            openMessages(
+              memberId
+            );
+
+          }else if(action === "details"){
+
+            openMemberDrawer(
+              memberId
+            );
+          }
+        }
+      );
+    });
+}
+
+/* ============================================================
+   FOLLOW / UNFOLLOW
+============================================================ */
+
+async function toggleFollow(
+  targetUid,
+  button
+){
+
+  if(
+    !currentUser ||
+    targetUid === currentUser.uid
+  ){
+    return;
+  }
+
+  const currentlyFollowing =
+    followingIds.has(
+      targetUid
+    );
+
+  button.disabled =
+    true;
+
+  try{
+
+    const myFollowingRef =
+      doc(
+        db,
+        "users",
+        currentUser.uid,
+        "following",
+        targetUid
+      );
+
+    const targetFollowerRef =
+      doc(
+        db,
+        "users",
+        targetUid,
+        "followers",
+        currentUser.uid
+      );
+
+    if(currentlyFollowing){
+
+      /*
+        Remove both sides of the relationship.
+      */
+
+      const batch =
+        writeBatch(db);
+
+      batch.delete(
+        myFollowingRef
+      );
+
+      batch.delete(
+        targetFollowerRef
+      );
+
+      batch.set(
+        doc(
+          db,
+          "users",
+          currentUser.uid
+        ),
+        {
+          followingCount:
+            increment(-1)
+        },
+        {
+          merge:true
+        }
+      );
+
+      batch.set(
+        doc(
+          db,
+          "users",
+          targetUid
+        ),
+        {
+          followersCount:
+            increment(-1)
+        },
+        {
+          merge:true
+        }
+      );
+
+      await batch.commit();
+
+      followingIds.delete(
+        targetUid
+      );
+
+      updateFollowButton(
+        button,
+        false
+      );
+
+      showToast(
+        "You unfollowed this member.",
+        "success"
+      );
+
+    }else{
+
+      /*
+        Create both sides of the relationship.
+      */
+
+      const batch =
+        writeBatch(db);
+
+      batch.set(
+        myFollowingRef,
+        {
+          uid:targetUid,
+          createdAt:
+            serverTimestamp()
+        }
+      );
+
+      batch.set(
+        targetFollowerRef,
+        {
+          uid:currentUser.uid,
+          createdAt:
+            serverTimestamp()
+        }
+      );
+
+      batch.set(
+        doc(
+          db,
+          "users",
+          currentUser.uid
+        ),
+        {
+          followingCount:
+            increment(1)
+        },
+        {
+          merge:true
+        }
+      );
+
+      batch.set(
+        doc(
+          db,
+          "users",
+          targetUid
+        ),
+        {
+          followersCount:
+            increment(1)
+        },
+        {
+          merge:true
+        }
+      );
+
+      await batch.commit();
+
+      followingIds.add(
+        targetUid
+      );
+
+      updateFollowButton(
+        button,
+        true
+      );
+
+      showToast(
+        "Following member.",
+        "success"
+      );
+    }
+
+  }catch(error){
+
+    console.error(
+      "Follow operation failed:",
+      error
+    );
+
+    showToast(
+      "Could not update your network connection.",
+      "error"
+    );
+
+  }finally{
+
+    button.disabled =
+      false;
+  }
+}
+
+function updateFollowButton(
+  button,
+  following
+){
+
+  button.classList.toggle(
+    "following",
+    following
+  );
+
+  button.innerHTML =
+    following
+      ? `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+        Following
+      `
+      : `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 5v14"/>
+          <path d="M5 12h14"/>
+        </svg>
+        Follow
+      `;
+}
+
+/* ============================================================
+   MEMBER DRAWER
+============================================================ */
+
+function openMemberDrawer(
+  memberId
+){
+
+  const member =
+    members.find(
+      item =>
+        item.id === memberId
+    );
+
+  if(!member){
+    return;
+  }
+
+  activeDrawerMember =
+    member;
+
+  const name =
+    member.displayName ||
+    "Moonlat member";
+
+  const username =
+    member.username
+      ? `@${String(member.username).replace(/^@/,"")}`
+      : "";
+
+  const photo =
+    member.photoURL ||
+    "";
+
+  const cover =
+    member.coverURL ||
+    "";
+
+  const bio =
+    member.bio ||
+    "";
+
+  const role =
+    normalizeRole(
+      member.role
+    );
+
+  const location =
+    member.location ||
+    "";
+
+  const verified =
+    member.verified === true;
+
+  const following =
+    followingIds.has(
+      member.id
+    );
+
+  drawerBody.innerHTML = `
+
+    <div class="quick-cover">
+
+      ${
+        cover
+          ? `
+            <img
+              src="${escapeAttribute(cover)}"
+              alt=""
+              referrerpolicy="no-referrer"
+            >
+          `
+          : ""
+      }
+
+    </div>
+
+    <div class="quick-identity">
+
+      <div class="quick-avatar">
+
+        ${
+          photo
+            ? `
+              <img
+                src="${escapeAttribute(photo)}"
+                alt=""
+                referrerpolicy="no-referrer"
+              >
+            `
+            : escapeHTML(
+                getInitials(name)
+              )
+        }
+
+      </div>
+
+      <h2 class="quick-name">
+
+        ${escapeHTML(name)}
+
+        ${
+          verified
+            ? `
+              <span
+                class="verified"
+                style="display:inline-flex;vertical-align:middle;margin-left:4px"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="M5 12l4 4L19 6"/>
+                </svg>
+              </span>
+            `
+            : ""
+        }
+
+      </h2>
+
+      ${
+        username
+          ? `
+            <div class="quick-username">
+              ${escapeHTML(username)}
+            </div>
+          `
+          : ""
+      }
+
+      ${
+        role
+          ? `
+            <span
+              class="role-badge ${escapeAttribute(normalizeRoleValue(member.role))}"
+              style="display:inline-flex;margin-top:9px"
+            >
+              ${escapeHTML(role)}
+            </span>
+          `
+          : ""
+      }
+
+      ${
+        bio
+          ? `
+            <p class="quick-bio">
+              ${escapeHTML(bio)}
+            </p>
+          `
+          : ""
+      }
+
+      <div class="quick-meta">
+
+        ${
+          location
+            ? `
+              <div class="quick-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                ${escapeHTML(
+                  formatLocation(location)
+                )}
+              </div>
+            `
+            : ""
+        }
+
+        <div class="quick-meta-item">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M3 21a6 6 0 0112 0"/>
+            <path d="M19 8v6"/>
+            <path d="M16 11h6"/>
+          </svg>
+
+          ${formatCount(
+            Number(
+              member.followersCount || 0
+            )
+          )}
+          followers
+
+        </div>
+
+        <div class="quick-meta-item">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 3a9 9 0 100 18 9 9 0 000-18z"/>
+            <path d="M3 12h18"/>
+          </svg>
+
+          ${
+            isRecentlyActive(
+              member.lastActiveAt
+            )
+              ? "Active recently"
+              : "Activity status unavailable"
+          }
+
+        </div>
+
+      </div>
+
+      <div class="quick-actions">
+
+        <button
+          class="quick-action primary"
+          id="drawerFollow"
+        >
+
+          ${
+            following
+              ? "Following"
+              : "Follow"
+          }
+
+        </button>
+
+        <button
+          class="quick-action secondary"
+          id="drawerMessage"
+        >
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+          </svg>
+
+          Message
+
+        </button>
+
+        <a
+          class="quick-action secondary"
+          href="profile.html?id=${encodeURIComponent(member.id)}"
+        >
+          View profile
+        </a>
+
+      </div>
+
+    </div>
+  `;
+
+  drawerBackdrop.classList.add(
+    "open"
+  );
+
+  document.body.style.overflow =
+    "hidden";
+
+  document
+    .getElementById("drawerFollow")
+    ?.addEventListener(
+      "click",
+      async () => {
+
+        const button =
+          document.getElementById(
+            "drawerFollow"
+          );
+
+        const isFollowing =
+          followingIds.has(
+            member.id
+          );
+
+        button.disabled =
+          true;
+
+        try{
+
+          await toggleFollow(
+            member.id,
+            createCompatibleFollowButton(
+              button
+            )
+          );
+
+          button.textContent =
+            followingIds.has(
+              member.id
+            )
+              ? "Following"
+              : "Follow";
+
+        }catch(error){
+
+          console.error(error);
+
+        }finally{
+
+          button.disabled =
+            false;
+        }
+      }
+    );
+
+  document
+    .getElementById("drawerMessage")
+    ?.addEventListener(
+      "click",
+      () => {
+
+        openMessages(
+          member.id
+        );
+      }
+    );
+}
+
+function createCompatibleFollowButton(
+  button
+){
+
+  /*
+    toggleFollow expects a button
+    whose state can be updated.
+  */
+
+  return {
+    get classList(){
+      return {
+        toggle(){}
+      };
+    },
+    set disabled(value){
+      button.disabled =
+        value;
+    },
+    get disabled(){
+      return button.disabled;
+    },
+    set innerHTML(value){
+      button.innerHTML =
+        value;
+    }
+  };
+}
+
+function closeMemberDrawer(){
+
+  drawerBackdrop.classList.remove(
+    "open"
+  );
+
+  document.body.style.overflow =
+    "";
+
+  activeDrawerMember =
+    null;
+}
+
+document
+  .getElementById("drawerClose")
+  .addEventListener(
+    "click",
+    closeMemberDrawer
+  );
+
+drawerBackdrop.addEventListener(
+  "click",
+  event => {
+
+    if(
+      event.target ===
+      drawerBackdrop
+    ){
+      closeMemberDrawer();
+    }
+  }
+);
+
+/* ============================================================
+   MESSAGE ROUTING
+============================================================ */
+
+function openMessages(
+  memberId
+){
+
+  if(!memberId){
+    return;
+  }
+
+  /*
+    This keeps the member ID in the URL so the
+    messaging page can open the correct conversation.
+  */
+
+  window.location.href =
+    `messages.html?user=${encodeURIComponent(memberId)}`;
+}
+
+/* ============================================================
+   VIEW MODE
+============================================================ */
+
+const gridView =
+  document.getElementById(
+    "gridView"
+  );
+
+const listView =
+  document.getElementById(
+    "listView"
+  );
+
+gridView.addEventListener(
+  "click",
+  () => {
+
+    membersGrid.classList.remove(
+      "list-view"
+    );
+
+    gridView.classList.add(
+      "active"
+    );
+
+    listView.classList.remove(
+      "active"
+    );
+  }
+);
+
+listView.addEventListener(
+  "click",
+  () => {
+
+    membersGrid.classList.add(
+      "list-view"
+    );
+
+    listView.classList.add(
+      "active"
+    );
+
+    gridView.classList.remove(
+      "active"
+    );
+  }
+);
+
+/* ============================================================
+   LOAD MORE
+============================================================ */
+
+loadMoreButton.addEventListener(
+  "click",
+  async () => {
+
+    loadMoreButton.disabled =
+      true;
+
+    await loadMembers(false);
+  }
+);
+
+function updateLoadMore(){
+
+  if(
+    hasMore &&
+    filteredMembers.length
+  ){
+
+    loadMoreWrap.classList.remove(
+      "hidden"
+    );
+
+  }else{
+
+    loadMoreWrap.classList.add(
+      "hidden"
+    );
+  }
+}
+
+/* ============================================================
+   LOADING
+============================================================ */
+
+function renderLoading(){
+
+  membersGrid.innerHTML = `
+    <div class="skeleton member-skeleton"></div>
+    <div class="skeleton member-skeleton"></div>
+    <div class="skeleton member-skeleton"></div>
+    <div class="skeleton member-skeleton"></div>
+    <div class="skeleton member-skeleton"></div>
+    <div class="skeleton member-skeleton"></div>
+  `;
+
+  resultsMeta.textContent =
+    "Loading members...";
+
+  loadMoreWrap.classList.add(
+    "hidden"
+  );
+}
+
+/* ============================================================
+   EMPTY
+============================================================ */
+
+function renderEmpty(
+  title,
+  copy,
+  allowReset = false
+){
+
+  membersGrid.innerHTML = `
+
+    <div class="empty">
+
+      <div class="empty-icon">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+
+          ${
+            allowReset
+              ? `
+                <circle cx="11" cy="11" r="7"/>
+                <path d="M20 20l-4-4"/>
+              `
+              : `
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 8v5"/>
+                <path d="M12 16h.01"/>
+              `
+          }
+
+        </svg>
+
+      </div>
+
+      <div class="empty-title">
+        ${escapeHTML(title)}
+      </div>
+
+      <div class="empty-copy">
+        ${escapeHTML(copy)}
+      </div>
+
+      ${
+        allowReset
+          ? `
+            <button
+              class="empty-button"
+              id="resetSearchButton"
+            >
+              Clear search
+            </button>
+          `
+          : ""
+      }
+
+    </div>
+  `;
+
+  resultsMeta.textContent =
+    "No matching members";
+
+  if(allowReset){
+
+    document
+      .getElementById(
+        "resetSearchButton"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+
+          memberSearch.value =
+            "";
+
+          clearSearch.classList.remove(
+            "show"
+          );
+
+          applyLocalSearch();
+          renderMembers();
+        }
+      );
+  }
+
+  loadMoreWrap.classList.add(
+    "hidden"
+  );
+}
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+
+document
+  .getElementById("backButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      if(
+        window.history.length > 1
+      ){
+
+        window.history.back();
+
+      }else{
+
+        window.location.href =
+          "index.html";
+      }
+    }
+  );
+
+document
+  .getElementById("alertsButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "alert.html";
+    }
+  );
+
+/* ============================================================
+   UTILITY FUNCTIONS
+============================================================ */
+
+function normalizeRole(
+  role
+){
+
+  if(!role){
+    return "";
+  }
+
+  return String(role)
+    .replace(/[_-]/g," ")
+    .replace(/\b\w/g,char =>
+      char.toUpperCase()
+    );
+}
+
+function normalizeRoleValue(
+  role
+){
+
+  if(!role){
+    return "";
+  }
+
+  return String(role)
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g,"_");
+}
+
+function getInitials(
+  name
+){
+
+  const parts =
+    String(name || "U")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+
+  return parts
+    .slice(0,2)
+    .map(
+      part =>
+        part.charAt(0)
+          .toUpperCase()
+    )
+    .join("") ||
+    "U";
+}
+
+function getDate(
+  value
+){
+
+  if(
+    value &&
+    typeof value.toDate ===
+      "function"
+  ){
+
+    return value.toDate();
+  }
+
+  if(
+    value &&
+    typeof value.seconds ===
+      "number"
+  ){
+
+    return new Date(
+      value.seconds * 1000
+    );
+  }
+
+  if(
+    value instanceof Date
+  ){
+
+    return value;
+  }
+
+  const date =
+    new Date(value);
+
+  if(
+    Number.isNaN(
+      date.getTime()
+    )
+  ){
+
+    return null;
+  }
+
+  return date;
+}
+
+function isRecentlyActive(
+  value
+){
+
+  if(!value){
+    return false;
+  }
+
+  const date =
+    getDate(value);
+
+  if(!date){
+    return false;
+  }
+
+  const difference =
+    Date.now() -
+    date.getTime();
+
+  return (
+    difference >= 0 &&
+    difference <=
+      15 * 60 * 1000
+  );
+}
+
+function formatLocation(
+  location
+){
+
+  if(
+    typeof location ===
+      "string"
+  ){
+
+    return location;
+  }
+
+  if(
+    location &&
+    typeof location ===
+      "object"
+  ){
+
+    return [
+      location.address,
+      location.city,
+      location.state,
+      location.country
+    ]
+      .filter(Boolean)
+      .join(", ");
+  }
+
+  return "";
+}
+
+function formatCount(
+  value
+){
+
+  const number =
+    Number(value || 0);
+
+  if(
+    number >= 1000000
+  ){
+
+    return (
+      (number / 1000000)
+        .toFixed(
+          number >= 10000000
+            ? 0
+            : 1
+        )
+        .replace(
+          ".0",
+          ""
+        ) +
+      "M"
+    );
+  }
+
+  if(
+    number >= 1000
+  ){
+
+    return (
+      (number / 1000)
+        .toFixed(
+          number >= 10000
+            ? 0
+            : 1
+        )
+        .replace(
+          ".0",
+          ""
+        ) +
+      "K"
+    );
+  }
+
+  return String(
+    number
+  );
+}
+
+/* ============================================================
+   SECURITY
+============================================================ */
+
+function escapeHTML(
+  value
+){
+
+  return String(
+    value ?? ""
+  )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+}
+
+function escapeAttribute(
+  value
+){
+
+  return escapeHTML(
+    value
+  )
+    .replaceAll(
+      "`",
+      "&#096;"
+    );
+}
+
+/* ============================================================
+   TOAST
+============================================================ */
+
+function showToast(
+  message,
+  type = "success"
+){
+
+  const toast =
+    document.createElement(
+      "div"
+    );
+
+  toast.className =
+    `toast ${type}`;
+
+  const icon =
+    type === "success"
+      ? `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+      `
+      : type === "info"
+        ? `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 10v6"/>
+            <path d="M12 7h.01"/>
+          </svg>
+        `
+        : `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 8v5"/>
+            <path d="M12 16h.01"/>
+          </svg>
+        `;
+
+  toast.innerHTML = `
+    ${icon}
+    <span>
+      ${escapeHTML(message)}
+    </span>
+  `;
+
+  document
+    .getElementById(
+      "toastStack"
+    )
+    .appendChild(
+      toast
+    );
+
+  setTimeout(
+    () => {
+
+      toast.style.opacity =
+        "0";
+
+      toast.style.transform =
+        "translateY(8px)";
+
+      toast.style.transition =
+        ".2s ease";
+
+      setTimeout(
+        () => toast.remove(),
+        220
+      );
+
+    },
+    3000
+  );
+}
+
+/* ============================================================
+   FATAL ERROR
+============================================================ */
+
+function showFatalError(
+  message
+){
+
+  membersGrid.innerHTML = `
+    <div class="empty">
+
+      <div class="empty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 8v5"/>
+          <path d="M12 16h.01"/>
+        </svg>
+      </div>
+
+      <div class="empty-title">
+        Member directory unavailable
+      </div>
+
+      <div class="empty-copy">
+        ${escapeHTML(message)}
+      </div>
+
+      <button
+        class="empty-button"
+        onclick="location.reload()"
+      >
+        Try again
+      </button>
+
+    </div>
+  `;
+
+  resultsMeta.textContent =
+    "Connection error";
+}
+
+/* ============================================================
+   START
+============================================================ */
+
+initializeFirebase();
+
+</script>
+
+</body>
+</html>

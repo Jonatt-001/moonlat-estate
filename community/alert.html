@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F172A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Alerts — Moonlat Community</title>
+
+<style>
+*,*::before,*::after{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+:root{
+  --navy:#0F172A;
+  --navy-2:#151E31;
+  --navy-3:#1E293B;
+  --gold:#D4AF37;
+  --gold-soft:#F4E8C1;
+  --terracotta:#E07A5F;
+  --terracotta-soft:#F5EBE0;
+  --bg:#F6F7F9;
+  --surface:#FFFFFF;
+  --surface-2:#F8FAFC;
+  --text:#172033;
+  --text-2:#64748B;
+  --text-3:#94A3B8;
+  --border:#E2E8F0;
+  --success:#10B981;
+  --danger:#EF4444;
+  --blue:#3B82F6;
+  --purple:#8B5CF6;
+  --shadow:0 8px 30px rgba(15,23,42,.06);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+
+html{
+  scroll-behavior:smooth;
+  background:var(--bg);
+}
+
+body{
+  min-height:100vh;
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:90px;
+}
+
+button,
+input{
+  font:inherit;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+svg{
+  display:block;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:100;
+  height:68px;
+  background:rgba(15,23,42,.96);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+.topbar-inner{
+  width:min(1180px,100%);
+  height:100%;
+  margin:auto;
+  padding:0 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.back-button{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  background:rgba(255,255,255,.07);
+  transition:.2s ease;
+}
+
+.back-button:active{
+  transform:scale(.95);
+}
+
+.back-button svg{
+  width:21px;
+  height:21px;
+}
+
+.page-heading{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  line-height:1.1;
+}
+
+.page-heading strong{
+  color:#fff;
+  font-size:18px;
+  font-weight:750;
+  letter-spacing:-.3px;
+}
+
+.page-heading span{
+  margin-top:4px;
+  color:rgba(255,255,255,.52);
+  font-size:11px;
+  font-weight:500;
+}
+
+.top-action{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:rgba(255,255,255,.85);
+  background:rgba(255,255,255,.07);
+  transition:.2s ease;
+}
+
+.top-action:active{
+  transform:scale(.95);
+}
+
+.top-action svg{
+  width:20px;
+  height:20px;
+}
+
+/* =========================
+   PAGE
+========================= */
+
+.page{
+  width:min(900px,100%);
+  margin:auto;
+  padding:22px 16px 40px;
+}
+
+/* =========================
+   SUMMARY
+========================= */
+
+.summary{
+  background:
+    radial-gradient(circle at 90% 10%,rgba(212,175,55,.13),transparent 34%),
+    linear-gradient(145deg,var(--navy),var(--navy-2));
+  border-radius:22px;
+  padding:22px;
+  color:#fff;
+  box-shadow:0 12px 35px rgba(15,23,42,.14);
+  margin-bottom:18px;
+  position:relative;
+  overflow:hidden;
+}
+
+.summary::after{
+  content:"";
+  position:absolute;
+  width:180px;
+  height:180px;
+  right:-80px;
+  bottom:-100px;
+  border-radius:50%;
+  border:1px solid rgba(212,175,55,.15);
+}
+
+.summary-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.summary-title{
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:-.6px;
+}
+
+.summary-description{
+  color:rgba(255,255,255,.63);
+  font-size:13px;
+  margin-top:5px;
+}
+
+.unread-counter{
+  min-width:48px;
+  height:48px;
+  padding:0 12px;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(212,175,55,.14);
+  border:1px solid rgba(212,175,55,.26);
+  color:var(--gold);
+  font-size:17px;
+  font-weight:800;
+}
+
+.summary-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-top:20px;
+  padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:rgba(255,255,255,.62);
+  font-size:12px;
+}
+
+.status-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--success);
+  box-shadow:0 0 0 4px rgba(16,185,129,.12);
+}
+
+.mark-all{
+  color:var(--gold);
+  font-size:12px;
+  font-weight:700;
+  padding:7px 0;
+}
+
+.mark-all:disabled{
+  opacity:.35;
+  cursor:not-allowed;
+}
+
+/* =========================
+   FILTER BAR
+========================= */
+
+.filters{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:8px;
+  display:flex;
+  gap:5px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  box-shadow:0 2px 8px rgba(15,23,42,.03);
+  margin-bottom:15px;
+}
+
+.filters::-webkit-scrollbar{
+  display:none;
+}
+
+.filter{
+  flex:0 0 auto;
+  padding:9px 13px;
+  border-radius:10px;
+  background:transparent;
+  color:var(--text-2);
+  font-size:12px;
+  font-weight:650;
+  transition:.2s ease;
+  white-space:nowrap;
+}
+
+.filter.active{
+  background:var(--navy);
+  color:#fff;
+}
+
+.filter .filter-count{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:18px;
+  height:18px;
+  padding:0 5px;
+  margin-left:4px;
+  border-radius:20px;
+  background:rgba(255,255,255,.15);
+  font-size:10px;
+}
+
+/* =========================
+   ALERT LIST
+========================= */
+
+.alert-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.alert-item{
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:15px;
+  display:flex;
+  gap:12px;
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease,
+    background .2s ease;
+}
+
+.alert-item.unread{
+  background:#FFFEF8;
+  border-color:#E9DDAA;
+}
+
+.alert-item.unread::before{
+  content:"";
+  position:absolute;
+  top:18px;
+  left:0;
+  width:3px;
+  height:30px;
+  border-radius:0 4px 4px 0;
+  background:var(--gold);
+}
+
+.alert-item:active{
+  transform:scale(.992);
+}
+
+.alert-icon{
+  width:43px;
+  height:43px;
+  border-radius:14px;
+  flex:0 0 43px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface-2);
+  color:var(--text-2);
+}
+
+.alert-icon svg{
+  width:20px;
+  height:20px;
+}
+
+.alert-icon.like{
+  color:#E05252;
+  background:#FFF1F1;
+}
+
+.alert-icon.comment{
+  color:var(--blue);
+  background:#EFF6FF;
+}
+
+.alert-icon.follow{
+  color:var(--purple);
+  background:#F5F3FF;
+}
+
+.alert-icon.property{
+  color:#B88B14;
+  background:#FFF9E7;
+}
+
+.alert-icon.message{
+  color:#0891B2;
+  background:#ECFEFF;
+}
+
+.alert-icon.system{
+  color:var(--text-2);
+  background:#F1F5F9;
+}
+
+.alert-icon.location{
+  color:var(--success);
+  background:#ECFDF5;
+}
+
+.alert-content{
+  min-width:0;
+  flex:1;
+}
+
+.alert-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.alert-text{
+  font-size:14px;
+  line-height:1.5;
+  color:var(--text);
+}
+
+.alert-text strong{
+  font-weight:750;
+}
+
+.alert-time{
+  flex:0 0 auto;
+  color:var(--text-3);
+  font-size:10px;
+  white-space:nowrap;
+  padding-top:2px;
+}
+
+.alert-preview{
+  color:var(--text-2);
+  font-size:12px;
+  line-height:1.55;
+  margin-top:4px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.alert-meta{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:9px;
+}
+
+.alert-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 8px;
+  border-radius:7px;
+  background:var(--surface-2);
+  color:var(--text-2);
+  font-size:10px;
+  font-weight:650;
+}
+
+.alert-chip.location{
+  color:#047857;
+  background:#ECFDF5;
+}
+
+.alert-actions{
+  display:flex;
+  gap:7px;
+  margin-top:11px;
+}
+
+.alert-action{
+  min-height:30px;
+  padding:0 10px;
+  border-radius:8px;
+  background:var(--navy);
+  color:#fff;
+  font-size:10px;
+  font-weight:700;
+}
+
+.alert-action.secondary{
+  background:var(--surface-2);
+  color:var(--text-2);
+  border:1px solid var(--border);
+}
+
+/* =========================
+   ACTOR AVATAR
+========================= */
+
+.actor-avatar{
+  width:43px;
+  height:43px;
+  flex:0 0 43px;
+  border-radius:14px;
+  overflow:hidden;
+  background:var(--navy-3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:13px;
+  font-weight:800;
+}
+
+.actor-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* =========================
+   DATE DIVIDER
+========================= */
+
+.date-divider{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:20px 3px 9px;
+  color:var(--text-3);
+  font-size:10px;
+  font-weight:750;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+}
+
+.date-divider::before,
+.date-divider::after{
+  content:"";
+  height:1px;
+  background:var(--border);
+  flex:1;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty{
+  background:var(--surface);
+  border:1px dashed var(--border);
+  border-radius:20px;
+  min-height:290px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:35px 22px;
+}
+
+.empty-icon{
+  width:64px;
+  height:64px;
+  border-radius:20px;
+  background:var(--navy);
+  color:var(--gold);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:16px;
+}
+
+.empty-icon svg{
+  width:29px;
+  height:29px;
+}
+
+.empty-title{
+  font-size:17px;
+  font-weight:750;
+}
+
+.empty-text{
+  max-width:330px;
+  margin-top:6px;
+  color:var(--text-2);
+  font-size:12px;
+  line-height:1.6;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.skeleton{
+  height:92px;
+  border-radius:18px;
+  background:
+    linear-gradient(
+      90deg,
+      #EEF2F7 25%,
+      #F8FAFC 37%,
+      #EEF2F7 63%
+    );
+  background-size:400% 100%;
+  animation:shimmer 1.35s infinite;
+}
+
+@keyframes shimmer{
+  0%{background-position:100% 0}
+  100%{background-position:-100% 0}
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.error-box{
+  display:none;
+  padding:16px;
+  border-radius:16px;
+  background:#FEF2F2;
+  border:1px solid #FECACA;
+  color:#991B1B;
+  font-size:12px;
+  line-height:1.5;
+  margin-bottom:12px;
+}
+
+.error-box.show{
+  display:block;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast-stack{
+  position:fixed;
+  right:15px;
+  bottom:82px;
+  z-index:500;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  pointer-events:none;
+}
+
+.toast{
+  min-width:250px;
+  max-width:calc(100vw - 30px);
+  padding:12px 14px;
+  border-radius:13px;
+  background:var(--navy);
+  color:#fff;
+  box-shadow:0 12px 35px rgba(15,23,42,.22);
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:12px;
+  font-weight:600;
+  animation:toastIn .25s ease;
+}
+
+.toast.success{
+  border-left:3px solid var(--success);
+}
+
+.toast.error{
+  border-left:3px solid var(--danger);
+}
+
+.toast svg{
+  width:17px;
+  height:17px;
+  flex:0 0 17px;
+}
+
+@keyframes toastIn{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.mobile-nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:200;
+  height:76px;
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(15,23,42,.97);
+  border-top:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+.mobile-nav-inner{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr 1fr;
+  align-items:center;
+  max-width:600px;
+  margin:auto;
+}
+
+.mobile-item{
+  position:relative;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  color:rgba(255,255,255,.45);
+  font-size:9px;
+  font-weight:650;
+}
+
+.mobile-item.active{
+  color:var(--gold);
+}
+
+.mobile-item svg{
+  width:21px;
+  height:21px;
+}
+
+.mobile-badge{
+  position:absolute;
+  top:13px;
+  margin-left:20px;
+  min-width:15px;
+  height:15px;
+  padding:0 4px;
+  border-radius:20px;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:var(--terracotta);
+  border:2px solid var(--navy);
+  color:#fff;
+  font-size:8px;
+  font-weight:800;
+}
+
+.mobile-badge.show{
+  display:flex;
+}
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media(min-width:760px){
+
+  body{
+    padding-bottom:0;
+  }
+
+  .mobile-nav{
+    display:none;
+  }
+
+  .page{
+    padding-top:30px;
+  }
+
+  .summary{
+    padding:28px;
+  }
+
+  .alert-item{
+    padding:18px;
+  }
+
+  .alert-item:hover{
+    transform:translateY(-1px);
+    box-shadow:var(--shadow);
+    border-color:#D6DEE9;
+  }
+
+  .toast-stack{
+    bottom:25px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+
+    <button class="back-button" id="backButton" aria-label="Go back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5"/>
+        <path d="M12 19l-7-7 7-7"/>
+      </svg>
+    </button>
+
+    <div class="page-heading">
+      <strong>Alerts</strong>
+      <span>Moonlat Community</span>
+    </div>
+
+    <button class="top-action" id="settingsButton" aria-label="Alert settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.7 1.7 0 00.34 1.88l.06.06-1.9 1.9-.06-.06a1.7 1.7 0 00-1.88-.34 1.7 1.7 0 00-1.02 1.55V20h-2.68v-.09a1.7 1.7 0 00-1.02-1.55 1.7 1.7 0 00-1.88.34l-.06.06-1.9-1.9.06-.06A1.7 1.7 0 007.8 15a1.7 1.7 0 00-1.55-1.02H6v-2.68h.25A1.7 1.7 0 007.8 10a1.7 1.7 0 00-.34-1.88L7.4 8.06l1.9-1.9.06.06a1.7 1.7 0 001.88.34 1.7 1.7 0 001.02-1.55V4h2.68v.09a1.7 1.7 0 001.02 1.55 1.7 1.7 0 001.88-.34l.06-.06 1.9 1.9-.06.06A1.7 1.7 0 0019.4 10c.24.59.81.98 1.45.98H21v2.68h-.15A1.7 1.7 0 0019.4 15z"/>
+      </svg>
+    </button>
+
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="summary">
+
+    <div class="summary-top">
+      <div>
+        <div class="summary-title">Your activity</div>
+        <div class="summary-description">
+          Updates from your Moonlat network.
+        </div>
+      </div>
+
+      <div class="unread-counter" id="unreadCounter">0</div>
+    </div>
+
+    <div class="summary-bottom">
+      <div class="status">
+        <span class="status-dot"></span>
+        <span id="connectionStatus">Connecting...</span>
+      </div>
+
+      <button class="mark-all" id="markAllButton" disabled>
+        Mark all as read
+      </button>
+    </div>
+
+  </section>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <section class="filters" aria-label="Alert filters">
+
+    <button class="filter active" data-filter="all">
+      All
+    </button>
+
+    <button class="filter" data-filter="unread">
+      Unread
+      <span class="filter-count" id="unreadFilterCount">0</span>
+    </button>
+
+    <button class="filter" data-filter="community">
+      Community
+    </button>
+
+    <button class="filter" data-filter="property">
+      Properties
+    </button>
+
+    <button class="filter" data-filter="messages">
+      Messages
+    </button>
+
+    <button class="filter" data-filter="system">
+      System
+    </button>
+
+  </section>
+
+  <section id="loading" class="loading" aria-label="Loading alerts">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </section>
+
+  <section class="alert-list" id="alertList" hidden></section>
+
+  <section class="empty" id="emptyState" hidden>
+
+    <div class="empty-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 01-3.46 0"/>
+      </svg>
+    </div>
+
+    <div class="empty-title" id="emptyTitle">
+      You're all caught up
+    </div>
+
+    <div class="empty-text" id="emptyText">
+      New activity from your community, properties and network will appear here automatically.
+    </div>
+
+  </section>
+
+</main>
+
+<nav class="mobile-nav">
+
+  <div class="mobile-nav-inner">
+
+    <a href="index.html" class="mobile-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 10.5L12 3l9 7.5"/>
+        <path d="M5 9.5V21h14V9.5"/>
+        <path d="M9 21v-7h6v7"/>
+      </svg>
+      <span>Home</span>
+    </a>
+
+    <a href="explore.html" class="mobile-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="M20 20l-4-4"/>
+      </svg>
+      <span>Explore</span>
+    </a>
+
+    <a href="index.html#compose" class="mobile-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M12 5v14"/>
+        <path d="M5 12h14"/>
+      </svg>
+      <span>Create</span>
+    </a>
+
+    <a href="alert.html" class="mobile-item active">
+      <span class="mobile-badge" id="mobileBadge">0</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 01-3.46 0"/>
+      </svg>
+      <span>Alerts</span>
+    </a>
+
+    <a href="profile.html" class="mobile-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 21a8 8 0 0116 0"/>
+      </svg>
+      <span>Profile</span>
+    </a>
+
+  </div>
+
+</nav>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script type="module">
+
+/* ============================================================
+   MOONLAT COMMUNITY ALERT SYSTEM
+   ------------------------------------------------------------
+   Firestore structure:
+
+   users/{uid}/alerts/{alertId}
+
+   Expected alert document:
+
+   {
+     type: "like" | "comment" | "reply" | "follow"
+         | "property" | "message" | "location" | "system",
+
+     category: "community" | "property"
+         | "messages" | "system",
+
+     read: false,
+
+     actorId: "...",
+     actorName: "...",
+     actorPhoto: "...",
+
+     title: "...",
+     message: "...",
+
+     preview: "...",
+
+     targetType: "discussion" | "property"
+         | "profile" | "message" | "system",
+
+     targetId: "...",
+     targetUrl: "...",
+
+     location: {
+       label: "...",
+       latitude: 0,
+       longitude: 0
+     },
+
+     createdAt: serverTimestamp()
+   }
+
+   IMPORTANT:
+   The UI does not generate fake alerts.
+   It only renders authenticated Firestore data.
+============================================================ */
+
+import {
+  initializeApp,
+  getApps,
+  getApp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  doc,
+  updateDoc,
+  writeBatch,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+/* ============================================================
+   FIREBASE INITIALIZATION
+============================================================ */
+
+let app;
+let auth;
+let db;
+
+async function initializeFirebase(){
+
+  try{
+
+    /*
+      Preferred Moonlat integration:
+
+      firebase-config.js should export:
+
+      export const firebaseConfig = {
+        apiKey: "...",
+        authDomain: "...",
+        projectId: "...",
+        storageBucket: "...",
+        messagingSenderId: "...",
+        appId: "..."
+      };
+
+      This page intentionally keeps credentials outside the UI.
+    */
+
+    const configModule = await import("./firebase-config.js");
+
+    const firebaseConfig =
+      configModule.firebaseConfig ||
+      configModule.default;
+
+    if(!firebaseConfig){
+      throw new Error("Moonlat Firebase configuration was not found.");
+    }
+
+    app = getApps().length
+      ? getApp()
+      : initializeApp(firebaseConfig);
+
+    auth = getAuth(app);
+    db = getFirestore(app);
+
+    startAuthentication();
+
+  }catch(error){
+
+    console.error("Firebase initialization failed:", error);
+
+    setConnectionStatus("Connection unavailable");
+
+    showError(
+      "Moonlat could not connect to the notification service. " +
+      "Please refresh the page and try again."
+    );
+
+    hideLoading();
+  }
+}
+
+/* ============================================================
+   STATE
+============================================================ */
+
+let currentUser = null;
+let unsubscribeAlerts = null;
+
+let allAlerts = [];
+let currentFilter = "all";
+
+const MAX_ALERTS = 100;
+
+/* ============================================================
+   DOM
+============================================================ */
+
+const alertList = document.getElementById("alertList");
+const emptyState = document.getElementById("emptyState");
+const loading = document.getElementById("loading");
+const unreadCounter = document.getElementById("unreadCounter");
+const unreadFilterCount = document.getElementById("unreadFilterCount");
+const mobileBadge = document.getElementById("mobileBadge");
+const markAllButton = document.getElementById("markAllButton");
+const connectionStatus = document.getElementById("connectionStatus");
+const errorBox = document.getElementById("errorBox");
+
+/* ============================================================
+   AUTHENTICATION
+============================================================ */
+
+function startAuthentication(){
+
+  onAuthStateChanged(auth, user => {
+
+    if(unsubscribeAlerts){
+      unsubscribeAlerts();
+      unsubscribeAlerts = null;
+    }
+
+    currentUser = user;
+
+    if(!user){
+
+      setConnectionStatus("Sign in required");
+
+      allAlerts = [];
+
+      renderAlerts();
+
+      hideLoading();
+
+      showError(
+        "You need to be signed in to view your Moonlat alerts."
+      );
+
+      return;
+    }
+
+    clearError();
+
+    setConnectionStatus("Live");
+
+    subscribeToAlerts(user.uid);
+  });
+}
+
+/* ============================================================
+   REALTIME ALERT SUBSCRIPTION
+============================================================ */
+
+function subscribeToAlerts(uid){
+
+  try{
+
+    const alertsRef = collection(
+      db,
+      "users",
+      uid,
+      "alerts"
+    );
+
+    const alertsQuery = query(
+      alertsRef,
+      orderBy("createdAt", "desc"),
+      limit(MAX_ALERTS)
+    );
+
+    unsubscribeAlerts = onSnapshot(
+      alertsQuery,
+
+      snapshot => {
+
+        allAlerts = snapshot.docs.map(alertDoc => {
+
+          const data = alertDoc.data();
+
+          return {
+            id: alertDoc.id,
+            ...data
+          };
+
+        });
+
+        hideLoading();
+
+        clearError();
+
+        setConnectionStatus("Live");
+
+        renderAlerts();
+
+      },
+
+      error => {
+
+        console.error(
+          "Realtime alerts listener failed:",
+          error
+        );
+
+        hideLoading();
+
+        setConnectionStatus("Connection error");
+
+        showError(
+          "Alerts could not be synchronized in real time. " +
+          "Please check your connection and refresh."
+        );
+
+      }
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    hideLoading();
+
+    showError(
+      "Unable to initialize your alert stream."
+    );
+  }
+}
+
+/* ============================================================
+   RENDER
+============================================================ */
+
+function renderAlerts(){
+
+  const filtered = getFilteredAlerts();
+
+  updateUnreadCount();
+
+  if(!filtered.length){
+
+    alertList.hidden = true;
+    emptyState.hidden = false;
+
+    updateEmptyState();
+
+    return;
+  }
+
+  emptyState.hidden = true;
+  alertList.hidden = false;
+
+  const groups = groupAlertsByDate(filtered);
+
+  let html = "";
+
+  groups.forEach(group => {
+
+    html += `
+      <div class="date-divider">
+        ${escapeHTML(group.label)}
+      </div>
+    `;
+
+    group.items.forEach(alert => {
+
+      html += renderAlert(alert);
+
+    });
+
+  });
+
+  alertList.innerHTML = html;
+
+  bindAlertActions();
+}
+
+/* ============================================================
+   ALERT FILTERING
+============================================================ */
+
+function getFilteredAlerts(){
+
+  switch(currentFilter){
+
+    case "unread":
+      return allAlerts.filter(alert => alert.read !== true);
+
+    case "community":
+      return allAlerts.filter(alert =>
+        alert.category === "community" ||
+        [
+          "like",
+          "comment",
+          "reply",
+          "follow",
+          "mention"
+        ].includes(alert.type)
+      );
+
+    case "property":
+      return allAlerts.filter(alert =>
+        alert.category === "property" ||
+        alert.type === "property"
+      );
+
+    case "messages":
+      return allAlerts.filter(alert =>
+        alert.category === "messages" ||
+        alert.type === "message"
+      );
+
+    case "system":
+      return allAlerts.filter(alert =>
+        alert.category === "system" ||
+        alert.type === "system"
+      );
+
+    default:
+      return allAlerts;
+  }
+}
+
+/* ============================================================
+   DATE GROUPING
+============================================================ */
+
+function groupAlertsByDate(alerts){
+
+  const groups = new Map();
+
+  alerts.forEach(alert => {
+
+    const date = getAlertDate(alert);
+
+    let label;
+
+    if(isToday(date)){
+      label = "Today";
+    }else if(isYesterday(date)){
+      label = "Yesterday";
+    }else{
+      label = date.toLocaleDateString(
+        undefined,
+        {
+          day:"numeric",
+          month:"long",
+          year:"numeric"
+        }
+      );
+    }
+
+    if(!groups.has(label)){
+      groups.set(label, []);
+    }
+
+    groups.get(label).push(alert);
+  });
+
+  return Array.from(groups.entries())
+    .map(([label,items]) => ({
+      label,
+      items
+    }));
+}
+
+/* ============================================================
+   ALERT RENDERER
+============================================================ */
+
+function renderAlert(alert){
+
+  const type = alert.type || "system";
+
+  const iconType = getIconType(type);
+
+  const actorName =
+    alert.actorName ||
+    "Moonlat";
+
+  const title =
+    alert.title ||
+    getDefaultTitle(type);
+
+  const message =
+    alert.message ||
+    "";
+
+  const preview =
+    alert.preview ||
+    "";
+
+  const time =
+    formatRelativeTime(
+      getAlertDate(alert)
+    );
+
+  const unread =
+    alert.read !== true;
+
+  const actorAvatar =
+    alert.actorPhoto
+      ? `
+        <div class="actor-avatar">
+          <img
+            src="${escapeAttribute(alert.actorPhoto)}"
+            alt=""
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          >
+        </div>
+      `
+      : `
+        <div class="actor-avatar">
+          ${escapeHTML(getInitials(actorName))}
+        </div>
+      `;
+
+  const locationChip =
+    alert.location &&
+    alert.location.label
+      ? `
+        <span class="alert-chip location">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          ${escapeHTML(alert.location.label)}
+        </span>
+      `
+      : "";
+
+  const action =
+    alert.targetUrl
+      ? `
+        <button
+          class="alert-action"
+          data-action="open"
+          data-url="${escapeAttribute(alert.targetUrl)}"
+        >
+          View
+        </button>
+      `
+      : "";
+
+  const readAction =
+    unread
+      ? `
+        <button
+          class="alert-action secondary"
+          data-action="read"
+          data-id="${escapeAttribute(alert.id)}"
+        >
+          Mark read
+        </button>
+      `
+      : "";
+
+  return `
+    <article
+      class="alert-item ${unread ? "unread" : ""}"
+      data-alert-id="${escapeAttribute(alert.id)}"
+    >
+
+      <div class="alert-icon ${iconType}">
+        ${getIconSVG(type)}
+      </div>
+
+      <div class="alert-content">
+
+        <div class="alert-row">
+
+          <div class="alert-text">
+            <strong>${escapeHTML(actorName)}</strong>
+            ${escapeHTML(title)}
+          </div>
+
+          <time class="alert-time">
+            ${escapeHTML(time)}
+          </time>
+
+        </div>
+
+        ${
+          message
+            ? `<div class="alert-preview">${escapeHTML(message)}</div>`
+            : ""
+        }
+
+        ${
+          preview
+            ? `<div class="alert-preview">${escapeHTML(preview)}</div>`
+            : ""
+        }
+
+        ${
+          locationChip
+            ? `<div class="alert-meta">${locationChip}</div>`
+            : ""
+        }
+
+        ${
+          action || readAction
+            ? `
+              <div class="alert-actions">
+                ${action}
+                ${readAction}
+              </div>
+            `
+            : ""
+        }
+
+      </div>
+
+    </article>
+  `;
+}
+
+/* ============================================================
+   ICONS
+============================================================ */
+
+function getIconType(type){
+
+  if(type === "like") return "like";
+  if(type === "comment" || type === "reply" || type === "mention"){
+    return "comment";
+  }
+  if(type === "follow") return "follow";
+  if(type === "property") return "property";
+  if(type === "message") return "message";
+  if(type === "location") return "location";
+
+  return "system";
+}
+
+function getIconSVG(type){
+
+  if(type === "like"){
+    return `
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/>
+      </svg>
+    `;
+  }
+
+  if(
+    type === "comment" ||
+    type === "reply" ||
+    type === "mention"
+  ){
+    return `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+    `;
+  }
+
+  if(type === "follow"){
+    return `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="9" cy="8" r="4"/>
+        <path d="M3 21a6 6 0 0112 0"/>
+        <path d="M19 8v6"/>
+        <path d="M16 11h6"/>
+      </svg>
+    `;
+  }
+
+  if(type === "property"){
+    return `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 21h18"/>
+        <path d="M5 21V8l7-5 7 5v13"/>
+        <path d="M9 21v-6h6v6"/>
+      </svg>
+    `;
+  }
+
+  if(type === "message"){
+    return `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M21 11.5a8.38 8.38 0 01-9 8.5 9.5 9.5 0 01-4-.9L3 21l1.9-4A8.3 8.3 0 013 11.5 8.5 8.5 0 0112 3a8.5 8.5 0 019 8.5z"/>
+      </svg>
+    `;
+  }
+
+  if(type === "location"){
+    return `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+        <circle cx="12" cy="10" r="3"/>
+      </svg>
+    `;
+  }
+
+  return `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 10v6"/>
+      <path d="M12 7h.01"/>
+    </svg>
+  `;
+}
+
+function getDefaultTitle(type){
+
+  switch(type){
+
+    case "like":
+      return " liked your community post";
+
+    case "comment":
+      return " commented on your post";
+
+    case "reply":
+      return " replied to your comment";
+
+    case "mention":
+      return " mentioned you";
+
+    case "follow":
+      return " started following you";
+
+    case "property":
+      return " updated a property activity";
+
+    case "message":
+      return " sent you a message";
+
+    case "location":
+      return " shared a location-based community update";
+
+    default:
+      return " sent you a Moonlat update";
+  }
+}
+
+/* ============================================================
+   ACTION HANDLERS
+============================================================ */
+
+function bindAlertActions(){
+
+  alertList
+    .querySelectorAll("[data-action='read']")
+    .forEach(button => {
+
+      button.addEventListener("click", async event => {
+
+        event.stopPropagation();
+
+        const id =
+          button.dataset.id;
+
+        await markAlertRead(id);
+      });
+    });
+
+  alertList
+    .querySelectorAll("[data-action='open']")
+    .forEach(button => {
+
+      button.addEventListener("click", async event => {
+
+        event.stopPropagation();
+
+        const url =
+          button.dataset.url;
+
+        const article =
+          button.closest(".alert-item");
+
+        const id =
+          article?.dataset.alertId;
+
+        if(id){
+          await markAlertRead(id, false);
+        }
+
+        if(url){
+          window.location.href = url;
+        }
+      });
+    });
+
+  alertList
+    .querySelectorAll(".alert-item")
+    .forEach(item => {
+
+      item.addEventListener("click", async event => {
+
+        if(
+          event.target.closest("button")
+        ){
+          return;
+        }
+
+        const id =
+          item.dataset.alertId;
+
+        const alert =
+          allAlerts.find(
+            item => item.id === id
+          );
+
+        if(!alert){
+          return;
+        }
+
+        if(alert.read !== true){
+          await markAlertRead(id, false);
+        }
+
+        if(alert.targetUrl){
+          window.location.href =
+            alert.targetUrl;
+        }
+      });
+    });
+}
+
+/* ============================================================
+   MARK ONE ALERT READ
+============================================================ */
+
+async function markAlertRead(
+  alertId,
+  notify = true
+){
+
+  if(
+    !currentUser ||
+    !alertId
+  ){
+    return;
+  }
+
+  try{
+
+    const alertRef =
+      doc(
+        db,
+        "users",
+        currentUser.uid,
+        "alerts",
+        alertId
+      );
+
+    await updateDoc(
+      alertRef,
+      {
+        read:true,
+        readAt:new Date()
+      }
+    );
+
+    if(notify){
+      showToast(
+        "Alert marked as read.",
+        "success"
+      );
+    }
+
+  }catch(error){
+
+    console.error(
+      "Failed to mark alert read:",
+      error
+    );
+
+    showToast(
+      "Could not update the alert.",
+      "error"
+    );
+  }
+}
+
+/* ============================================================
+   MARK ALL READ
+============================================================ */
+
+markAllButton.addEventListener(
+  "click",
+  async () => {
+
+    if(
+      !currentUser ||
+      !allAlerts.some(
+        alert => alert.read !== true
+      )
+    ){
+      return;
+    }
+
+    markAllButton.disabled = true;
+
+    try{
+
+      const unread =
+        allAlerts.filter(
+          alert => alert.read !== true
+        );
+
+      const batch =
+        writeBatch(db);
+
+      unread.forEach(alert => {
+
+        const ref =
+          doc(
+            db,
+            "users",
+            currentUser.uid,
+            "alerts",
+            alert.id
+          );
+
+        batch.update(
+          ref,
+          {
+            read:true,
+            readAt:new Date()
+          }
+        );
+      });
+
+      await batch.commit();
+
+      showToast(
+        `${unread.length} alert${unread.length === 1 ? "" : "s"} marked as read.`,
+        "success"
+      );
+
+    }catch(error){
+
+      console.error(
+        "Mark all as read failed:",
+        error
+      );
+
+      showToast(
+        "Could not mark all alerts as read.",
+        "error"
+      );
+
+    }finally{
+
+      updateUnreadCount();
+    }
+  }
+);
+
+/* ============================================================
+   FILTERS
+============================================================ */
+
+document
+  .querySelectorAll(".filter")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(".filter")
+          .forEach(item =>
+            item.classList.remove("active")
+          );
+
+        button.classList.add("active");
+
+        currentFilter =
+          button.dataset.filter;
+
+        renderAlerts();
+      }
+    );
+  });
+
+/* ============================================================
+   UNREAD COUNTER
+============================================================ */
+
+function updateUnreadCount(){
+
+  const unread =
+    allAlerts.filter(
+      alert => alert.read !== true
+    ).length;
+
+  unreadCounter.textContent =
+    formatCount(unread);
+
+  unreadFilterCount.textContent =
+    formatCount(unread);
+
+  if(unread > 0){
+
+    mobileBadge.textContent =
+      unread > 99 ? "99+" : unread;
+
+    mobileBadge.classList.add("show");
+
+  }else{
+
+    mobileBadge.classList.remove("show");
+  }
+
+  markAllButton.disabled =
+    unread === 0;
+}
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+function updateEmptyState(){
+
+  const title =
+    document.getElementById("emptyTitle");
+
+  const text =
+    document.getElementById("emptyText");
+
+  if(currentFilter === "unread"){
+
+    title.textContent =
+      "You're all caught up";
+
+    text.textContent =
+      "There are no unread alerts right now.";
+
+    return;
+  }
+
+  if(currentFilter !== "all"){
+
+    title.textContent =
+      "Nothing here yet";
+
+    text.textContent =
+      "There are no alerts in this category.";
+
+    return;
+  }
+
+  title.textContent =
+    "You're all caught up";
+
+  text.textContent =
+    "New activity from your community, properties and network will appear here automatically.";
+}
+
+/* ============================================================
+   DATE HELPERS
+============================================================ */
+
+function getAlertDate(alert){
+
+  if(
+    alert.createdAt &&
+    typeof alert.createdAt.toDate === "function"
+  ){
+    return alert.createdAt.toDate();
+  }
+
+  if(
+    alert.createdAt &&
+    alert.createdAt.seconds
+  ){
+    return new Date(
+      alert.createdAt.seconds * 1000
+    );
+  }
+
+  if(
+    alert.createdAt instanceof Date
+  ){
+    return alert.createdAt;
+  }
+
+  if(
+    typeof alert.createdAt === "string" ||
+    typeof alert.createdAt === "number"
+  ){
+    const parsed =
+      new Date(alert.createdAt);
+
+    if(!Number.isNaN(parsed.getTime())){
+      return parsed;
+    }
+  }
+
+  return new Date();
+}
+
+function isToday(date){
+
+  const now = new Date();
+
+  return (
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate()
+  );
+}
+
+function isYesterday(date){
+
+  const yesterday =
+    new Date();
+
+  yesterday.setDate(
+    yesterday.getDate() - 1
+  );
+
+  return (
+    date.getFullYear() === yesterday.getFullYear() &&
+    date.getMonth() === yesterday.getMonth() &&
+    date.getDate() === yesterday.getDate()
+  );
+}
+
+function formatRelativeTime(date){
+
+  const seconds =
+    Math.floor(
+      (Date.now() - date.getTime()) / 1000
+    );
+
+  if(seconds < 10){
+    return "now";
+  }
+
+  if(seconds < 60){
+    return `${seconds}s`;
+  }
+
+  const minutes =
+    Math.floor(seconds / 60);
+
+  if(minutes < 60){
+    return `${minutes}m`;
+  }
+
+  const hours =
+    Math.floor(minutes / 60);
+
+  if(hours < 24){
+    return `${hours}h`;
+  }
+
+  const days =
+    Math.floor(hours / 24);
+
+  if(days < 7){
+    return `${days}d`;
+  }
+
+  return date.toLocaleDateString(
+    undefined,
+    {
+      day:"numeric",
+      month:"short"
+    }
+  );
+}
+
+/* ============================================================
+   UI HELPERS
+============================================================ */
+
+function setConnectionStatus(text){
+  connectionStatus.textContent = text;
+}
+
+function hideLoading(){
+  loading.style.display = "none";
+}
+
+function showError(message){
+
+  errorBox.textContent = message;
+
+  errorBox.classList.add("show");
+}
+
+function clearError(){
+
+  errorBox.textContent = "";
+
+  errorBox.classList.remove("show");
+}
+
+function showToast(message,type="success"){
+
+  const toast =
+    document.createElement("div");
+
+  toast.className =
+    `toast ${type}`;
+
+  toast.innerHTML = `
+    ${
+      type === "success"
+        ? `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+        `
+        : `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 8v5"/>
+            <path d="M12 16h.01"/>
+          </svg>
+        `
+    }
+    <span>${escapeHTML(message)}</span>
+  `;
+
+  document
+    .getElementById("toastStack")
+    .appendChild(toast);
+
+  setTimeout(() => {
+
+    toast.style.opacity = "0";
+    toast.style.transform =
+      "translateY(8px)";
+    toast.style.transition =
+      ".2s ease";
+
+    setTimeout(
+      () => toast.remove(),
+      220
+    );
+
+  },3000);
+}
+
+function formatCount(number){
+
+  if(number > 99){
+    return "99+";
+  }
+
+  return String(number);
+}
+
+function getInitials(name){
+
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0,2)
+    .map(part =>
+      part.charAt(0).toUpperCase()
+    )
+    .join("");
+}
+
+/* ============================================================
+   SECURITY / OUTPUT ESCAPING
+============================================================ */
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+
+  return escapeHTML(value)
+    .replaceAll("`","&#096;");
+}
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+
+document
+  .getElementById("backButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      if(
+        window.history.length > 1
+      ){
+        window.history.back();
+      }else{
+        window.location.href =
+          "index.html";
+      }
+    }
+  );
+
+document
+  .getElementById("settingsButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      /*
+        Keep alert preferences separate from
+        the alert stream itself.
+
+        This route can later point to:
+
+        settings.html#notifications
+
+        without coupling the notification
+        renderer to the settings system.
+      */
+
+      window.location.href =
+        "settings.html#notifications";
+    }
+  );
+
+/* ============================================================
+   START
+============================================================ */
+
+initializeFirebase();
+
+</script>
+
+</body>
+</html>

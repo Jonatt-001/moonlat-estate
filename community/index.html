@@ -1,0 +1,5957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<meta name="color-scheme" content="light">
+<meta name="description" content="MoonLat Community - Connect, discover properties, ask questions and share local real estate insights.">
+<title>Community — MoonLat</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="preconnect" href="https://www.gstatic.com">
+<link rel="preconnect" href="https://api.cloudinary.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/index.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+:root {
+  --navy: #0b1020;
+  --navy-2: #11182a;
+  --navy-3: #182238;
+  --gold: #d4af37;
+  --gold-soft: #f8f0d4;
+  --terracotta: #d86f55;
+  --terracotta-dark: #bd5c45;
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #64748b;
+  --soft: #94a3b8;
+  --line: #e5e9f0;
+  --success: #059669;
+  --danger: #dc2626;
+  --blue: #4f46e5;
+  --font: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background:
+    radial-gradient(circle at 0 0, rgba(79, 70, 229, .035), transparent 30rem),
+    var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: rgba(216, 111, 85, .16);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  background: rgba(11, 16, 32, .94);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.header-inner {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+  min-height: 66px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  min-width: 0;
+}
+
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, #d4af37, #a77c19);
+  box-shadow: 0 8px 24px rgba(212,175,55,.16);
+}
+
+.brand-copy {
+  min-width: 0;
+}
+
+.brand-title {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+}
+
+.brand-subtitle {
+  color: rgba(255,255,255,.46);
+  font-size: 9px;
+  margin-top: 3px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  background: rgba(255,255,255,.055);
+  color: rgba(255,255,255,.82);
+  display: grid;
+  place-items: center;
+  transition: .2s ease;
+  position: relative;
+}
+
+.header-btn:hover {
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.header-notification-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  background: #ef4444;
+  border-radius: 50%;
+  border: 2px solid var(--navy);
+}
+
+.header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(212,175,55,.5);
+  background: linear-gradient(135deg, #475569, #1e293b);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  flex: 0 0 auto;
+}
+
+.header-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 85% 15%, rgba(212,175,55,.15), transparent 25rem),
+    radial-gradient(circle at 10% 90%, rgba(216,111,85,.08), transparent 25rem),
+    linear-gradient(135deg, #0b1020 0%, #111a2d 58%, #151d31 100%);
+  color: #fff;
+}
+
+.hero-inner {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+  padding: 28px 18px 30px;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #d4af37;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  margin-bottom: 10px;
+}
+
+.hero-eyebrow span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d4af37;
+  box-shadow: 0 0 0 5px rgba(212,175,55,.08);
+}
+
+.hero-title {
+  margin: 0;
+  font-size: clamp(25px, 6vw, 42px);
+  line-height: 1.05;
+  letter-spacing: -.045em;
+  font-weight: 850;
+}
+
+.hero-title span {
+  color: var(--gold);
+}
+
+.hero-description {
+  max-width: 670px;
+  margin: 11px 0 0;
+  color: rgba(255,255,255,.62);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.hero-tools {
+  margin-top: 22px;
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.hero-search {
+  position: relative;
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.hero-search input {
+  width: 100%;
+  height: 46px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  background: rgba(255,255,255,.075);
+  color: #fff;
+  padding: 0 44px 0 42px;
+  outline: none;
+  transition: .2s ease;
+}
+
+.hero-search input::placeholder {
+  color: rgba(255,255,255,.42);
+}
+
+.hero-search input:focus {
+  border-color: rgba(212,175,55,.65);
+  background: rgba(255,255,255,.1);
+  box-shadow: 0 0 0 4px rgba(212,175,55,.08);
+}
+
+.hero-search i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,.45);
+  pointer-events: none;
+}
+
+.hero-search-clear {
+  position: absolute;
+  right: 8px;
+  top: 5px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: rgba(255,255,255,.5);
+}
+
+.hero-search-clear:hover {
+  color: #fff;
+  background: rgba(255,255,255,.08);
+}
+
+.hero-location-btn {
+  height: 46px;
+  padding: 0 15px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.11);
+  background: rgba(255,255,255,.075);
+  color: rgba(255,255,255,.82);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  transition: .2s ease;
+}
+
+.hero-location-btn:hover {
+  background: rgba(255,255,255,.11);
+  color: #fff;
+}
+
+.hero-location-btn.active {
+  border-color: rgba(16,185,129,.5);
+  color: #6ee7b7;
+}
+
+.hero-metrics {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+.hero-metric {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-metric-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  color: #d4af37;
+  background: rgba(212,175,55,.08);
+  border: 1px solid rgba(212,175,55,.1);
+}
+
+.hero-metric strong {
+  display: block;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.hero-metric span {
+  display: block;
+  color: rgba(255,255,255,.42);
+  font-size: 9px;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+
+/* ============================================================
+   CATEGORY NAV
+   ============================================================ */
+
+.category-bar {
+  position: sticky;
+  top: 66px;
+  z-index: 60;
+  background: rgba(255,255,255,.92);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.category-inner {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+  padding: 10px 18px;
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.category-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.category-btn {
+  flex: 0 0 auto;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
+  transition: .2s ease;
+}
+
+.category-btn:hover {
+  color: var(--text);
+  background: #f7f8fb;
+}
+
+.category-btn.active {
+  color: #fff;
+  background: var(--terracotta);
+  box-shadow: 0 6px 18px rgba(216,111,85,.18);
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+
+.page {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+  padding: 18px;
+}
+
+.community-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+@media (min-width: 1040px) {
+  .community-grid {
+    grid-template-columns: minmax(0, 1fr) 310px;
+    align-items: start;
+  }
+}
+
+.feed-column {
+  min-width: 0;
+}
+
+.sidebar {
+  display: none;
+  gap: 14px;
+  position: sticky;
+  top: 120px;
+}
+
+@media (min-width: 1040px) {
+  .sidebar {
+    display: grid;
+  }
+}
+
+/* ============================================================
+   SURFACES
+   ============================================================ */
+
+.surface {
+  background: rgba(255,255,255,.96);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow:
+    0 1px 2px rgba(15,23,42,.02),
+    0 10px 30px rgba(15,23,42,.035);
+}
+
+/* ============================================================
+   COMPOSER
+   ============================================================ */
+
+.composer {
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.composer-row {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  overflow: hidden;
+  flex: 0 0 auto;
+  background: linear-gradient(135deg, #64748b, #334155);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.composer-trigger {
+  min-width: 0;
+  flex: 1;
+  height: 44px;
+  border: 1px solid var(--line);
+  background: #f8fafc;
+  border-radius: 13px;
+  padding: 0 14px;
+  text-align: left;
+  color: #94a3b8;
+  font-size: 12px;
+  transition: .2s ease;
+}
+
+.composer-trigger:hover {
+  border-color: rgba(216,111,85,.35);
+  background: #fff;
+  color: var(--muted);
+}
+
+.composer-actions {
+  display: flex;
+  gap: 5px;
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid #eef1f5;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.composer-actions::-webkit-scrollbar {
+  display: none;
+}
+
+.composer-action {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 750;
+  transition: .2s ease;
+}
+
+.composer-action:hover {
+  color: var(--terracotta);
+  background: #fff5f1;
+}
+
+/* ============================================================
+   FEED CONTROLS
+   ============================================================ */
+
+.feed-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.feed-tabs {
+  display: flex;
+  gap: 3px;
+  padding: 4px;
+  border-radius: 13px;
+  background: #eef1f6;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.feed-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.feed-tab {
+  flex: 0 0 auto;
+  border-radius: 9px;
+  padding: 7px 11px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.feed-tab.active {
+  color: var(--text);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(15,23,42,.08);
+}
+
+.feed-count {
+  color: #94a3b8;
+  font-size: 10px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   POST CARD
+   ============================================================ */
+
+.post-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  margin-bottom: 13px;
+  overflow: hidden;
+  box-shadow:
+    0 1px 2px rgba(15,23,42,.018),
+    0 8px 24px rgba(15,23,42,.025);
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease;
+}
+
+.post-card:hover {
+  border-color: #dde2ea;
+  box-shadow:
+    0 2px 4px rgba(15,23,42,.025),
+    0 16px 34px rgba(15,23,42,.05);
+}
+
+.post-body {
+  padding: 15px;
+}
+
+.post-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.post-author {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-author-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.post-author-name {
+  color: #111827;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 19px;
+  padding: 0 7px;
+  border-radius: 6px;
+  font-size: 8px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.role-agent {
+  color: #8b6b18;
+  background: #faf3d9;
+}
+
+.role-client {
+  color: #475569;
+  background: #eef2f7;
+}
+
+.post-time {
+  margin-top: 2px;
+  color: #94a3b8;
+  font-size: 9px;
+}
+
+.post-menu {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  color: #94a3b8;
+}
+
+.post-menu:hover {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.post-type {
+  margin-top: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--terracotta);
+  background: #fff5f1;
+  border-radius: 7px;
+  padding: 5px 8px;
+  font-size: 8px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.post-title {
+  margin: 11px 0 6px;
+  color: #111827;
+  font-size: 17px;
+  line-height: 1.35;
+  font-weight: 800;
+  letter-spacing: -.025em;
+}
+
+.post-content {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.post-location {
+  margin-top: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 6px 8px;
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #d1fae5;
+  border-radius: 8px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.post-location span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.post-images {
+  margin: 14px -15px -15px;
+  display: grid;
+  gap: 2px;
+  background: #f1f5f9;
+}
+
+.post-images.single {
+  grid-template-columns: 1fr;
+}
+
+.post-images.two {
+  grid-template-columns: 1fr 1fr;
+}
+
+.post-images.three {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.post-images.multi {
+  grid-template-columns: 1.25fr .75fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.post-image {
+  position: relative;
+  overflow: hidden;
+  background: #e2e8f0;
+  min-height: 150px;
+}
+
+.post-images.single .post-image {
+  max-height: 460px;
+}
+
+.post-images.two .post-image,
+.post-images.three .post-image {
+  aspect-ratio: 1 / 1;
+}
+
+.post-images.multi .post-image:first-child {
+  grid-row: 1 / span 2;
+  min-height: 300px;
+}
+
+.post-images.multi .post-image:not(:first-child) {
+  min-height: 148px;
+}
+
+.post-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .45s ease;
+}
+
+.post-image:hover img {
+  transform: scale(1.025);
+}
+
+.more-images {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(11,16,32,.45);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 850;
+}
+
+.post-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid #eef1f5;
+}
+
+.post-actions-left {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.post-action {
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 9px;
+  border-radius: 9px;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 750;
+  transition: .18s ease;
+}
+
+.post-action:hover {
+  background: #f8fafc;
+  color: #111827;
+}
+
+.post-action.liked {
+  color: var(--terracotta);
+  background: #fff5f1;
+}
+
+.post-action.saved {
+  color: #a77c19;
+  background: #fffaf0;
+}
+
+/* ============================================================
+   PROPERTY SHARE
+   ============================================================ */
+
+.property-share {
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fbfcfe;
+}
+
+.property-share-image {
+  height: 190px;
+  overflow: hidden;
+  background: #e2e8f0;
+}
+
+.property-share-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.property-share-info {
+  padding: 12px;
+}
+
+.property-share-price {
+  font-size: 18px;
+  font-weight: 850;
+  color: #0f172a;
+}
+
+.property-share-title {
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 750;
+  color: #334155;
+}
+
+.property-share-location {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+  color: #64748b;
+  font-size: 10px;
+}
+
+/* ============================================================
+   EMPTY / LOADING
+   ============================================================ */
+
+.feed-state {
+  padding: 48px 20px;
+  text-align: center;
+  border: 1px dashed #dce2ea;
+  border-radius: 18px;
+  background: rgba(255,255,255,.7);
+}
+
+.feed-state-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.feed-state-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #334155;
+}
+
+.feed-state-text {
+  max-width: 360px;
+  margin: 5px auto 0;
+  color: #94a3b8;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  margin: 0 auto 12px;
+  border: 3px solid #e5e7eb;
+  border-top-color: var(--terracotta);
+  border-radius: 50%;
+  animation: spin .75s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   SIDEBAR WIDGETS
+   ============================================================ */
+
+.widget {
+  padding: 15px;
+}
+
+.widget-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.widget-title {
+  color: #111827;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.widget-link {
+  color: var(--terracotta);
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.widget-empty {
+  color: #94a3b8;
+  font-size: 10px;
+  line-height: 1.6;
+  padding: 10px 0;
+}
+
+.nearby-box {
+  border-radius: 13px;
+  padding: 13px;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(16,185,129,.13), transparent 8rem),
+    #f0fdf9;
+  border: 1px solid #d1fae5;
+}
+
+.nearby-box-title {
+  color: #065f46;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.nearby-box-text {
+  color: #047857;
+  font-size: 9px;
+  margin-top: 4px;
+  line-height: 1.55;
+}
+
+.widget-stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.widget-stat {
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 11px;
+}
+
+.widget-stat strong {
+  display: block;
+  color: #111827;
+  font-size: 16px;
+  font-weight: 850;
+}
+
+.widget-stat span {
+  display: block;
+  color: #94a3b8;
+  font-size: 8px;
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+/* ============================================================
+   MOBILE NAV
+   ============================================================ */
+
+.mobile-nav {
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  padding:
+    7px
+    8px
+    calc(7px + env(safe-area-inset-bottom));
+  background: rgba(11,16,32,.96);
+  border-top: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.mobile-nav-inner {
+  width: min(680px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: end;
+}
+
+.mobile-nav-item {
+  min-height: 45px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: rgba(255,255,255,.44);
+  border-radius: 12px;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.mobile-nav-item.active {
+  color: #d4af37;
+}
+
+.mobile-nav-item:hover {
+  color: #fff;
+}
+
+.mobile-nav-fab-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.mobile-nav-fab {
+  width: 50px;
+  height: 50px;
+  margin-top: -24px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #d86f55, #bd5c45);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  border: 4px solid var(--navy);
+  box-shadow: 0 10px 25px rgba(216,111,85,.3);
+  transition: .2s ease;
+}
+
+.mobile-nav-fab:active {
+  transform: scale(.95);
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  background: rgba(7,10,18,.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-panel {
+  width: min(650px, 100%);
+  max-height: min(850px, calc(100dvh - 28px));
+  overflow: auto;
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.5);
+  box-shadow: 0 30px 100px rgba(0,0,0,.3);
+}
+
+.modal-header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 15px;
+  background: rgba(255,255,255,.94);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+}
+
+.modal-title {
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.modal-close:hover {
+  background: #e2e8f0;
+  color: #111827;
+}
+
+.modal-content {
+  padding: 15px;
+}
+
+/* ============================================================
+   COMPOSER MODAL
+   ============================================================ */
+
+.composer-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.composer-author-name {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.composer-author-role {
+  margin-top: 2px;
+  color: #94a3b8;
+  font-size: 9px;
+}
+
+.post-type-selector {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.post-type-option {
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  text-align: left;
+  background: #fafbfc;
+  color: #64748b;
+  transition: .2s ease;
+}
+
+.post-type-option strong {
+  display: block;
+  font-size: 10px;
+  color: #334155;
+}
+
+.post-type-option span {
+  display: block;
+  font-size: 8px;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+.post-type-option.active {
+  border-color: rgba(216,111,85,.4);
+  background: #fff5f1;
+  color: var(--terracotta);
+}
+
+.post-type-option.active strong {
+  color: var(--terracotta-dark);
+}
+
+.field {
+  margin-bottom: 11px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  color: #475569;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #111827;
+  outline: none;
+  transition: .2s ease;
+}
+
+.field input {
+  height: 43px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+.field textarea {
+  min-height: 130px;
+  resize: vertical;
+  padding: 11px 12px;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.field select {
+  height: 43px;
+  padding: 0 12px;
+  font-size: 11px;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: rgba(216,111,85,.5);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(216,111,85,.07);
+}
+
+.location-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fafbfc;
+}
+
+.location-info {
+  min-width: 0;
+}
+
+.location-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #334155;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.location-status {
+  margin-top: 3px;
+  color: #94a3b8;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.toggle {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  flex: 0 0 auto;
+}
+
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: #cbd5e1;
+  transition: .2s ease;
+}
+
+.toggle-thumb {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: 3px;
+  left: 3px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(15,23,42,.2);
+  transition: .2s ease;
+}
+
+.toggle input:checked + .toggle-track {
+  background: #10b981;
+}
+
+.toggle input:checked + .toggle-track .toggle-thumb {
+  transform: translateX(18px);
+}
+
+.upload-box {
+  position: relative;
+  border: 1px dashed #cbd5e1;
+  border-radius: 13px;
+  padding: 14px;
+  background: #f8fafc;
+  text-align: center;
+  transition: .2s ease;
+}
+
+.upload-box:hover {
+  border-color: #d86f55;
+  background: #fffaf8;
+}
+
+.upload-box-icon {
+  width: 38px;
+  height: 38px;
+  margin: 0 auto 7px;
+  border-radius: 11px;
+  background: #fff0eb;
+  color: #d86f55;
+  display: grid;
+  place-items: center;
+}
+
+.upload-box-title {
+  color: #334155;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.upload-box-subtitle {
+  margin-top: 3px;
+  color: #94a3b8;
+  font-size: 8px;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.preview-item {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #e2e8f0;
+}
+
+.preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-remove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: rgba(0,0,0,.58);
+  color: #fff;
+  display: grid;
+  place-items: center;
+}
+
+.property-selector {
+  display: none;
+}
+
+.property-selector.show {
+  display: block;
+}
+
+.modal-footer {
+  position: sticky;
+  bottom: 0;
+  padding: 12px 15px;
+  background: rgba(255,255,255,.96);
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  backdrop-filter: blur(12px);
+}
+
+.btn {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 11px;
+  font-size: 10px;
+  font-weight: 800;
+  transition: .2s ease;
+}
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #d86f55, #bd5c45);
+  color: #fff;
+  box-shadow: 0 7px 18px rgba(216,111,85,.18);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(216,111,85,.24);
+}
+
+.btn-primary:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================================
+   COMMENTS MODAL
+   ============================================================ */
+
+.comment-list {
+  display: grid;
+  gap: 11px;
+}
+
+.comment {
+  display: flex;
+  gap: 9px;
+}
+
+.comment-content {
+  min-width: 0;
+  flex: 1;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 9px 10px;
+}
+
+.comment-author {
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.comment-text {
+  margin-top: 3px;
+  color: #64748b;
+  font-size: 10px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.comment-time {
+  margin-top: 4px;
+  color: #94a3b8;
+  font-size: 8px;
+}
+
+.comment-form {
+  display: flex;
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.comment-form input {
+  min-width: 0;
+  flex: 1;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #f8fafc;
+  padding: 0 11px;
+  font-size: 10px;
+  outline: none;
+}
+
+.comment-form input:focus {
+  border-color: rgba(216,111,85,.45);
+  background: #fff;
+}
+
+/* ============================================================
+   IMAGE VIEWER
+   ============================================================ */
+
+.image-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0,0,0,.94);
+}
+
+.image-viewer.open {
+  display: flex;
+}
+
+.image-viewer img {
+  max-width: 100%;
+  max-height: 82dvh;
+  object-fit: contain;
+  border-radius: 14px;
+  box-shadow: 0 25px 80px rgba(0,0,0,.45);
+}
+
+.image-viewer-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.12);
+  color: #fff;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+
+.toast-stack {
+  position: fixed;
+  right: 12px;
+  bottom: calc(74px + env(safe-area-inset-bottom));
+  z-index: 500;
+  width: min(360px, calc(100vw - 24px));
+  display: grid;
+  gap: 7px;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 11px;
+  border-radius: 13px;
+  color: #fff;
+  background: rgba(15,23,42,.94);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 16px 40px rgba(0,0,0,.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: toastIn .25s ease both;
+  pointer-events: auto;
+}
+
+.toast.success {
+  border-left: 3px solid #10b981;
+}
+
+.toast.error {
+  border-left: 3px solid #ef4444;
+}
+
+.toast.info {
+  border-left: 3px solid #60a5fa;
+}
+
+.toast-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  background: rgba(255,255,255,.08);
+}
+
+.toast-message {
+  min-width: 0;
+  flex: 1;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.toast-close {
+  color: rgba(255,255,255,.45);
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================
+   NETWORK STATUS
+   ============================================================ */
+
+.network-banner {
+  position: fixed;
+  left: 50%;
+  bottom: calc(76px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 450;
+  display: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #991b1b;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 750;
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
+}
+
+.network-banner.show {
+  display: block;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (min-width: 700px) {
+  .hero-inner {
+    padding-top: 38px;
+    padding-bottom: 40px;
+  }
+
+  .page {
+    padding-top: 22px;
+  }
+
+  .composer {
+    padding: 17px;
+  }
+
+  .post-body {
+    padding: 17px;
+  }
+
+  .post-images {
+    margin-left: -17px;
+    margin-right: -17px;
+    margin-bottom: -17px;
+  }
+
+  .mobile-nav {
+    display: none;
+  }
+
+  .toast-stack {
+    bottom: 20px;
+  }
+}
+
+@media (max-width: 699px) {
+  body {
+    padding-bottom: calc(69px + env(safe-area-inset-bottom));
+  }
+
+  .header-inner {
+    min-height: 62px;
+  }
+
+  .category-bar {
+    top: 62px;
+  }
+
+  .brand-subtitle {
+    display: none;
+  }
+
+  .header-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+  }
+
+  .header-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .page {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+
+<header class="app-header safe-top">
+  <div class="header-inner">
+
+    <a href="index.html" class="brand" aria-label="Back to MoonLat dashboard">
+      <div class="brand-mark">
+        <i class="fas fa-house-chimney"></i>
+      </div>
+
+      <div class="brand-copy">
+        <div class="brand-title">MoonLat</div>
+        <div class="brand-subtitle">Community Network</div>
+      </div>
+    </a>
+
+    <div class="header-actions">
+
+      <button
+        id="headerSearchButton"
+        class="header-btn"
+        type="button"
+        aria-label="Search community"
+      >
+        <i class="fas fa-search text-xs"></i>
+      </button>
+
+      <button
+        id="notificationButton"
+        class="header-btn"
+        type="button"
+        aria-label="Notifications"
+      >
+        <i class="far fa-bell text-sm"></i>
+        <span id="notificationDot" class="header-notification-dot hidden"></span>
+      </button>
+
+      <a href="profile.html" id="headerAvatar" class="header-avatar" aria-label="Your profile">
+        U
+      </a>
+
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+
+<section class="hero">
+  <div class="hero-inner">
+
+    <div class="hero-eyebrow">
+      <span></span>
+      MoonLat Community
+    </div>
+
+    <h1 class="hero-title">
+      Real people. Real property.<br>
+      <span>Real conversations.</span>
+    </h1>
+
+    <p class="hero-description">
+      Ask questions, share property discoveries, upload local updates and connect with the people shaping your real estate market.
+    </p>
+
+    <div class="hero-tools">
+
+      <div class="hero-search">
+        <i class="fas fa-search text-xs"></i>
+
+        <input
+          id="communitySearch"
+          type="search"
+          autocomplete="off"
+          placeholder="Search the community..."
+          aria-label="Search community"
+        >
+
+        <button
+          id="clearSearch"
+          class="hero-search-clear hidden"
+          type="button"
+          aria-label="Clear search"
+        >
+          <i class="fas fa-xmark text-xs"></i>
+        </button>
+      </div>
+
+      <button id="locationFilterButton" class="hero-location-btn" type="button">
+        <i class="fas fa-location-crosshairs"></i>
+        <span>Nearby</span>
+      </button>
+
+    </div>
+
+    <div class="hero-metrics">
+
+      <div class="hero-metric">
+        <div class="hero-metric-icon">
+          <i class="fas fa-comments text-[10px]"></i>
+        </div>
+        <div>
+          <strong id="communityPostCount">0</strong>
+          <span>Posts</span>
+        </div>
+      </div>
+
+      <div class="hero-metric">
+        <div class="hero-metric-icon">
+          <i class="fas fa-image text-[10px]"></i>
+        </div>
+        <div>
+          <strong id="communityPhotoCount">0</strong>
+          <span>Photos</span>
+        </div>
+      </div>
+
+      <div class="hero-metric">
+        <div class="hero-metric-icon">
+          <i class="fas fa-circle-nodes text-[10px]"></i>
+        </div>
+        <div>
+          <strong id="communityMemberCount">0</strong>
+          <span>Members</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     CATEGORIES
+============================================================ -->
+
+<nav class="category-bar" aria-label="Community categories">
+  <div class="category-inner">
+
+    <button class="category-btn active" data-category="all">
+      All
+    </button>
+
+    <button class="category-btn" data-category="question">
+      Questions
+    </button>
+
+    <button class="category-btn" data-category="discussion">
+      Discussions
+    </button>
+
+    <button class="category-btn" data-category="property">
+      Properties
+    </button>
+
+    <button class="category-btn" data-category="photo">
+      Local Photos
+    </button>
+
+    <button class="category-btn" data-category="market">
+      Market
+    </button>
+
+    <button class="category-btn" data-category="investment">
+      Investment
+    </button>
+
+    <button class="category-btn" data-category="advice">
+      Advice
+    </button>
+
+  </div>
+</nav>
+
+<!-- ============================================================
+     PAGE
+============================================================ -->
+
+<main class="page">
+
+  <div class="community-grid">
+
+    <!-- ========================================================
+         FEED
+    ========================================================= -->
+
+    <section class="feed-column">
+
+      <!-- Composer -->
+      <div class="surface composer">
+
+        <div class="composer-row">
+
+          <div id="composerAvatar" class="user-avatar">
+            U
+          </div>
+
+          <button id="openComposer" class="composer-trigger" type="button">
+            Share something with the community...
+          </button>
+
+        </div>
+
+        <div class="composer-actions">
+
+          <button class="composer-action" data-open-type="property" type="button">
+            <i class="fas fa-building"></i>
+            Property
+          </button>
+
+          <button class="composer-action" data-open-type="question" type="button">
+            <i class="fas fa-circle-question"></i>
+            Question
+          </button>
+
+          <button class="composer-action" data-open-type="photo" type="button">
+            <i class="fas fa-camera"></i>
+            Photo
+          </button>
+
+          <button class="composer-action" data-open-type="discussion" type="button">
+            <i class="fas fa-message"></i>
+            Discussion
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- Feed controls -->
+      <div class="feed-control">
+
+        <div class="feed-tabs">
+
+          <button class="feed-tab active" data-sort="latest" type="button">
+            Latest
+          </button>
+
+          <button class="feed-tab" data-sort="popular" type="button">
+            Popular
+          </button>
+
+          <button class="feed-tab" data-sort="unanswered" type="button">
+            Unanswered
+          </button>
+
+        </div>
+
+        <div id="feedCount" class="feed-count">
+          0 posts
+        </div>
+
+      </div>
+
+      <!-- Feed -->
+      <div id="communityFeed">
+
+        <div class="feed-state">
+          <div class="spinner"></div>
+          <div class="feed-state-title">Loading community</div>
+          <div class="feed-state-text">
+            Connecting to the live MoonLat community feed...
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================
+         SIDEBAR
+    ========================================================= -->
+
+    <aside class="sidebar">
+
+      <div class="surface widget">
+
+        <div class="widget-heading">
+          <div class="widget-title">Community pulse</div>
+        </div>
+
+        <div class="widget-stat-grid">
+
+          <div class="widget-stat">
+            <strong id="sidePosts">0</strong>
+            <span>Posts</span>
+          </div>
+
+          <div class="widget-stat">
+            <strong id="sideQuestions">0</strong>
+            <span>Questions</span>
+          </div>
+
+          <div class="widget-stat">
+            <strong id="sideProperties">0</strong>
+            <span>Properties</span>
+          </div>
+
+          <div class="widget-stat">
+            <strong id="sidePhotos">0</strong>
+            <span>Photos</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="surface widget">
+
+        <div class="widget-heading">
+          <div class="widget-title">Your location</div>
+        </div>
+
+        <div class="nearby-box">
+
+          <div class="nearby-box-title">
+            <i class="fas fa-location-dot mr-1"></i>
+            Local discovery
+          </div>
+
+          <div id="sidebarLocationText" class="nearby-box-text">
+            Your live location is not attached.
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="surface widget">
+
+        <div class="widget-heading">
+          <div class="widget-title">Community workflow</div>
+        </div>
+
+        <div class="widget-empty">
+          <strong class="text-slate-700">Share</strong> something useful.<br>
+          <strong class="text-slate-700">Discover</strong> local activity.<br>
+          <strong class="text-slate-700">Respond</strong> to people.<br>
+          <strong class="text-slate-700">Connect</strong> with your market.
+        </div>
+
+      </div>
+
+    </aside>
+
+  </div>
+
+</main>
+
+<!-- ============================================================
+     MOBILE NAVIGATION
+============================================================ -->
+
+<nav class="mobile-nav safe-bottom">
+
+  <div class="mobile-nav-inner">
+
+    <a href="index.html" class="mobile-nav-item">
+      <i class="fas fa-house text-sm"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <button id="mobileSearch" class="mobile-nav-item" type="button">
+      <i class="fas fa-magnifying-glass text-sm"></i>
+      <span>Search</span>
+    </button>
+
+    <div class="mobile-nav-fab-wrap">
+      <button id="mobileCreate" class="mobile-nav-fab" type="button" aria-label="Create post">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+
+    <button id="mobileNotifications" class="mobile-nav-item" type="button">
+      <i class="far fa-bell text-sm"></i>
+      <span>Alerts</span>
+    </button>
+
+    <a href="profile.html" class="mobile-nav-item">
+      <i class="far fa-user text-sm"></i>
+      <span>Profile</span>
+    </a>
+
+  </div>
+
+</nav>
+
+<!-- ============================================================
+     CREATE POST MODAL
+============================================================ -->
+
+<div id="composerModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="composerModalTitle">
+
+  <div class="modal-panel">
+
+    <div class="modal-header">
+      <div id="composerModalTitle" class="modal-title">
+        Create a community post
+      </div>
+
+      <button id="closeComposer" class="modal-close" type="button" aria-label="Close">
+        <i class="fas fa-xmark"></i>
+      </button>
+    </div>
+
+    <form id="postForm">
+
+      <div class="modal-content">
+
+        <div class="composer-author">
+
+          <div id="modalAuthorAvatar" class="user-avatar">
+            U
+          </div>
+
+          <div>
+            <div id="modalAuthorName" class="composer-author-name">
+              User
+            </div>
+            <div id="modalAuthorRole" class="composer-author-role">
+              Community member
+            </div>
+          </div>
+
+        </div>
+
+        <div class="post-type-selector">
+
+          <button type="button" class="post-type-option active" data-post-type="discussion">
+            <strong>
+              <i class="fas fa-message mr-1"></i>
+              Discussion
+            </strong>
+            <span>Start a conversation.</span>
+          </button>
+
+          <button type="button" class="post-type-option" data-post-type="question">
+            <strong>
+              <i class="fas fa-circle-question mr-1"></i>
+              Question
+            </strong>
+            <span>Ask the community.</span>
+          </button>
+
+          <button type="button" class="post-type-option" data-post-type="property">
+            <strong>
+              <i class="fas fa-building mr-1"></i>
+              Property
+            </strong>
+            <span>Share a real property.</span>
+          </button>
+
+          <button type="button" class="post-type-option" data-post-type="photo">
+            <strong>
+              <i class="fas fa-camera mr-1"></i>
+              Local Photo
+            </strong>
+            <span>Share something you see.</span>
+          </button>
+
+        </div>
+
+        <div id="titleField" class="field">
+          <label for="postTitle">Title</label>
+          <input
+            id="postTitle"
+            type="text"
+            maxlength="180"
+            autocomplete="off"
+            placeholder="Give your post a clear title"
+          >
+        </div>
+
+        <div class="field">
+
+          <label for="postContent">Message</label>
+
+          <textarea
+            id="postContent"
+            maxlength="5000"
+            placeholder="Write something useful to the community..."
+            required
+          ></textarea>
+
+          <div class="flex justify-between mt-1.5">
+            <span class="text-[8px] text-slate-400">
+              Be clear, useful and respectful.
+            </span>
+
+            <span id="characterCount" class="text-[8px] text-slate-400">
+              0 / 5000
+            </span>
+          </div>
+
+        </div>
+
+        <div id="propertyField" class="field property-selector">
+
+          <label for="propertySelect">Attach property</label>
+
+          <select id="propertySelect">
+            <option value="">Choose one of your properties</option>
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>Media</label>
+
+          <div id="uploadBox" class="upload-box">
+
+            <input
+              id="postImages"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              multiple
+              hidden
+            >
+
+            <button id="chooseImages" type="button">
+              <div class="upload-box-icon">
+                <i class="fas fa-cloud-arrow-up text-xs"></i>
+              </div>
+
+              <div class="upload-box-title">
+                Add photos
+              </div>
+
+              <div class="upload-box-subtitle">
+                JPG, PNG, WEBP or GIF · Up to 8 images
+              </div>
+            </button>
+
+          </div>
+
+          <div id="imagePreviewGrid" class="preview-grid hidden"></div>
+
+        </div>
+
+        <div class="field">
+
+          <div class="location-toggle">
+
+            <div class="location-info">
+
+              <div class="location-title">
+                <i class="fas fa-location-crosshairs text-emerald-600"></i>
+                Attach live location
+              </div>
+
+              <div id="locationStatus" class="location-status">
+                Your location will only be requested when you enable this.
+              </div>
+
+            </div>
+
+            <label class="toggle">
+              <input id="attachLocation" type="checkbox">
+              <span class="toggle-track">
+                <span class="toggle-thumb"></span>
+              </span>
+            </label>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button id="cancelComposer" class="btn btn-secondary" type="button">
+          Cancel
+        </button>
+
+        <button id="publishPost" class="btn btn-primary" type="submit">
+          <i class="fas fa-paper-plane mr-1"></i>
+          Publish
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<!-- ============================================================
+     COMMENTS MODAL
+============================================================ -->
+
+<div id="commentsModal" class="modal" role="dialog" aria-modal="true">
+
+  <div class="modal-panel">
+
+    <div class="modal-header">
+
+      <div>
+        <div class="modal-title">Conversation</div>
+        <div id="commentsPostTitle" class="text-[8px] text-slate-400 mt-1 truncate max-w-[280px]"></div>
+      </div>
+
+      <button id="closeComments" class="modal-close" type="button">
+        <i class="fas fa-xmark"></i>
+      </button>
+
+    </div>
+
+    <div class="modal-content">
+
+      <div id="commentList" class="comment-list">
+
+        <div class="feed-state">
+          <div class="spinner"></div>
+          <div class="feed-state-title">Loading conversation</div>
+        </div>
+
+      </div>
+
+      <form id="commentForm" class="comment-form">
+
+        <input
+          id="commentInput"
+          type="text"
+          maxlength="1000"
+          placeholder="Write a reply..."
+          autocomplete="off"
+          required
+        >
+
+        <button class="btn btn-primary" type="submit">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ============================================================
+     IMAGE VIEWER
+============================================================ -->
+
+<div id="imageViewer" class="image-viewer">
+
+  <button id="closeImageViewer" class="image-viewer-close" type="button">
+    <i class="fas fa-xmark"></i>
+  </button>
+
+  <img id="viewerImage" src="" alt="Community image">
+
+</div>
+
+<!-- ============================================================
+     REPORT MODAL
+============================================================ -->
+
+<div id="reportModal" class="modal" role="dialog" aria-modal="true">
+
+  <div class="modal-panel">
+
+    <div class="modal-header">
+
+      <div class="modal-title">
+        Report post
+      </div>
+
+      <button id="closeReport" class="modal-close" type="button">
+        <i class="fas fa-xmark"></i>
+      </button>
+
+    </div>
+
+    <form id="reportForm">
+
+      <div class="modal-content">
+
+        <div class="field">
+
+          <label for="reportReason">
+            Reason
+          </label>
+
+          <select id="reportReason" required>
+
+            <option value="">
+              Select a reason
+            </option>
+
+            <option value="spam">
+              Spam
+            </option>
+
+            <option value="scam">
+              Scam or suspicious activity
+            </option>
+
+            <option value="harassment">
+              Harassment
+            </option>
+
+            <option value="misinformation">
+              Misleading information
+            </option>
+
+            <option value="inappropriate">
+              Inappropriate content
+            </option>
+
+            <option value="other">
+              Other
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label for="reportDetails">
+            Additional details
+          </label>
+
+          <textarea
+            id="reportDetails"
+            maxlength="1000"
+            placeholder="Tell us what is wrong..."
+          ></textarea>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button id="cancelReport" class="btn btn-secondary" type="button">
+          Cancel
+        </button>
+
+        <button class="btn btn-primary" type="submit">
+          Submit report
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<!-- ============================================================
+     TOAST
+============================================================ -->
+
+<div id="toastStack" class="toast-stack"></div>
+
+<div id="networkBanner" class="network-banner">
+  You are offline. Some community actions are unavailable.
+</div>
+
+<script type="module">
+
+/* ============================================================
+   FIREBASE
+============================================================ */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  doc,
+  addDoc,
+  setDoc,
+  getDoc,
+  getDocs,
+  deleteDoc,
+  query,
+  where,
+  orderBy,
+  limit,
+  onSnapshot,
+  serverTimestamp,
+  updateDoc,
+  increment,
+  runTransaction
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+  projectId: "moonlat-estate-dashboard",
+  storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+  messagingSenderId: "289878951289",
+  appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+
+/* ============================================================
+   CLOUDINARY
+============================================================ */
+
+const CLOUDINARY_CLOUD_NAME = "dxdbn6xwy";
+const CLOUDINARY_UPLOAD_PRESET = "geefox_unsigned";
+const CLOUDINARY_UPLOAD_URL =
+  `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+
+/* ============================================================
+   STATE
+============================================================ */
+
+let currentUser = null;
+let currentProfile = null;
+
+let allPosts = [];
+let filteredPosts = [];
+
+let properties = [];
+
+let activeCategory = "all";
+let activeSort = "latest";
+let searchTerm = "";
+let nearbyMode = false;
+
+let selectedPostType = "discussion";
+let selectedImages = [];
+let currentCommentsPostId = null;
+let currentReportPostId = null;
+
+let feedUnsubscribe = null;
+let commentsUnsubscribe = null;
+let notificationUnsubscribe = null;
+
+let userLocation = null;
+
+
+/* ============================================================
+   DOM
+============================================================ */
+
+const $ = (id) => document.getElementById(id);
+
+
+/* ============================================================
+   UTILITIES
+============================================================ */
+
+function escapeHTML(value = "") {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+function getInitials(name = "") {
+
+  const parts = name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+
+  if (!parts.length) return "U";
+
+  return parts
+    .slice(0, 2)
+    .map(part => part.charAt(0))
+    .join("")
+    .toUpperCase();
+}
+
+
+function displayName() {
+
+  return (
+    currentProfile?.displayName ||
+    currentProfile?.name ||
+    currentUser?.displayName ||
+    currentUser?.email?.split("@")[0] ||
+    "User"
+  );
+}
+
+
+function displayRole() {
+
+  const role =
+    currentProfile?.role ||
+    currentUser?.role ||
+    "client";
+
+  return String(role).toLowerCase();
+}
+
+
+function avatarURL(profile = {}) {
+
+  return (
+    profile.photoURL ||
+    profile.photoUrl ||
+    profile.avatar ||
+    profile.profileImage ||
+    profile.image ||
+    ""
+  );
+}
+
+
+function formatRelativeTime(timestamp) {
+
+  if (!timestamp) return "Just now";
+
+  const date =
+    typeof timestamp?.toDate === "function"
+      ? timestamp.toDate()
+      : timestamp instanceof Date
+        ? timestamp
+        : new Date(timestamp);
+
+  if (Number.isNaN(date.getTime())) return "Recently";
+
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+
+  if (seconds < 10) return "Just now";
+  if (seconds < 60) return `${seconds}s ago`;
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+
+  return date.toLocaleDateString(undefined, {
+    day: "numeric",
+    month: "short",
+    year: date.getFullYear() !== new Date().getFullYear()
+      ? "numeric"
+      : undefined
+  });
+}
+
+
+function formatNumber(number = 0) {
+
+  const value = Number(number) || 0;
+
+  if (value >= 1000000) {
+    return `${(value / 1000000).toFixed(value >= 10000000 ? 0 : 1)}M`;
+  }
+
+  if (value >= 1000) {
+    return `${(value / 1000).toFixed(value >= 10000 ? 0 : 1)}k`;
+  }
+
+  return String(value);
+}
+
+
+function getPostTypeLabel(type) {
+
+  const labels = {
+    discussion: "Discussion",
+    question: "Question",
+    property: "Property",
+    photo: "Local Photo",
+    market: "Market",
+    investment: "Investment",
+    advice: "Advice"
+  };
+
+  return labels[type] || "Community";
+}
+
+
+function getPostTypeIcon(type) {
+
+  const icons = {
+    discussion: "fa-message",
+    question: "fa-circle-question",
+    property: "fa-building",
+    photo: "fa-camera",
+    market: "fa-chart-line",
+    investment: "fa-chart-pie",
+    advice: "fa-lightbulb"
+  };
+
+  return icons[type] || "fa-message";
+}
+
+
+function toast(message, type = "success") {
+
+  const stack = $("toastStack");
+
+  const item = document.createElement("div");
+
+  item.className = `toast ${type}`;
+
+  const icon =
+    type === "success"
+      ? "fa-check"
+      : type === "error"
+        ? "fa-exclamation"
+        : "fa-info";
+
+  item.innerHTML = `
+    <div class="toast-icon">
+      <i class="fas ${icon} text-[9px]"></i>
+    </div>
+
+    <div class="toast-message">${escapeHTML(message)}</div>
+
+    <button class="toast-close" type="button" aria-label="Close notification">
+      <i class="fas fa-xmark text-[10px]"></i>
+    </button>
+  `;
+
+  stack.appendChild(item);
+
+  const remove = () => {
+    item.style.opacity = "0";
+    item.style.transform = "translateY(5px)";
+    setTimeout(() => item.remove(), 180);
+  };
+
+  item.querySelector(".toast-close").addEventListener("click", remove);
+
+  setTimeout(remove, 4000);
+}
+
+
+function setButtonLoading(button, loading, label = "Please wait") {
+
+  if (!button) return;
+
+  if (loading) {
+
+    button.dataset.originalLabel = button.innerHTML;
+
+    button.disabled = true;
+
+    button.innerHTML = `
+      <i class="fas fa-spinner fa-spin mr-1"></i>
+      ${escapeHTML(label)}
+    `;
+
+  } else {
+
+    button.disabled = false;
+
+    if (button.dataset.originalLabel) {
+      button.innerHTML = button.dataset.originalLabel;
+      delete button.dataset.originalLabel;
+    }
+  }
+}
+
+
+function isOnline() {
+  return navigator.onLine;
+}
+
+
+/* ============================================================
+   NETWORK
+============================================================ */
+
+function updateNetworkState() {
+
+  $("networkBanner").classList.toggle("show", !navigator.onLine);
+}
+
+window.addEventListener("online", updateNetworkState);
+window.addEventListener("offline", updateNetworkState);
+
+updateNetworkState();
+
+
+/* ============================================================
+   PROFILE
+============================================================ */
+
+async function loadCurrentProfile(user) {
+
+  try {
+
+    const snap = await getDoc(doc(db, "users", user.uid));
+
+    if (snap.exists()) {
+
+      currentProfile = {
+        id: snap.id,
+        ...snap.data()
+      };
+
+    } else {
+
+      currentProfile = {
+        id: user.uid,
+        displayName: user.displayName || user.email?.split("@")[0] || "User",
+        role: "client",
+        photoURL: user.photoURL || ""
+      };
+    }
+
+  } catch (error) {
+
+    console.error("Profile load error:", error);
+
+    currentProfile = {
+      id: user.uid,
+      displayName: user.displayName || user.email?.split("@")[0] || "User",
+      role: "client",
+      photoURL: user.photoURL || ""
+    };
+  }
+
+  updateIdentityUI();
+}
+
+
+function updateIdentityUI() {
+
+  const name = displayName();
+  const role = displayRole();
+  const avatar = avatarURL(currentProfile);
+
+  const avatarTargets = [
+    $("composerAvatar"),
+    $("modalAuthorAvatar")
+  ];
+
+  avatarTargets.forEach(element => {
+
+    if (!element) return;
+
+    if (avatar) {
+
+      element.innerHTML = `
+        <img
+          src="${escapeHTML(avatar)}"
+          alt="${escapeHTML(name)}"
+          loading="lazy"
+        >
+      `;
+
+    } else {
+
+      element.textContent = getInitials(name);
+    }
+  });
+
+
+  const headerAvatar = $("headerAvatar");
+
+  if (headerAvatar) {
+
+    if (avatar) {
+
+      headerAvatar.innerHTML = `
+        <img
+          src="${escapeHTML(avatar)}"
+          alt="${escapeHTML(name)}"
+        >
+      `;
+
+    } else {
+
+      headerAvatar.textContent = getInitials(name);
+    }
+  }
+
+
+  $("modalAuthorName").textContent = name;
+
+  $("modalAuthorRole").textContent =
+    role === "agent"
+      ? "Verified agent"
+      : role === "admin"
+        ? "Administrator"
+        : "Community member";
+}
+
+
+/* ============================================================
+   PROPERTIES
+============================================================ */
+
+async function loadProperties() {
+
+  if (!currentUser) return;
+
+  try {
+
+    const q = query(
+      collection(db, "properties"),
+      where("ownerId", "==", currentUser.uid),
+      limit(100)
+    );
+
+    const snap = await getDocs(q);
+
+    properties = snap.docs.map(docSnap => ({
+      id: docSnap.id,
+      ...docSnap.data()
+    }));
+
+    populatePropertySelector();
+
+  } catch (error) {
+
+    console.error("Property load error:", error);
+
+    properties = [];
+  }
+}
+
+
+function populatePropertySelector() {
+
+  const select = $("propertySelect");
+
+  select.innerHTML = `
+    <option value="">Choose one of your properties</option>
+  `;
+
+  properties.forEach(property => {
+
+    const option = document.createElement("option");
+
+    option.value = property.id;
+
+    option.textContent =
+      property.title ||
+      property.name ||
+      property.address ||
+      "Untitled property";
+
+    select.appendChild(option);
+  });
+}
+
+
+function getSelectedProperty() {
+
+  const id = $("propertySelect").value;
+
+  if (!id) return null;
+
+  return properties.find(property => property.id === id) || null;
+}
+
+
+/* ============================================================
+   CLOUDINARY
+============================================================ */
+
+function validateImage(file) {
+
+  const allowed = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif"
+  ];
+
+  if (!allowed.includes(file.type)) {
+    throw new Error(`${file.name}: unsupported image format.`);
+  }
+
+  const maxSize = 10 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    throw new Error(`${file.name}: image must be 10MB or smaller.`);
+  }
+}
+
+
+async function uploadImage(file, onProgress) {
+
+  validateImage(file);
+
+  const formData = new FormData();
+
+  formData.append("file", file);
+  formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+  formData.append("folder", "moonlat_community");
+
+  return new Promise((resolve, reject) => {
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.open("POST", CLOUDINARY_UPLOAD_URL, true);
+
+    xhr.upload.addEventListener("progress", event => {
+
+      if (!event.lengthComputable || !onProgress) return;
+
+      onProgress(
+        Math.round((event.loaded / event.total) * 100)
+      );
+    });
+
+    xhr.addEventListener("load", () => {
+
+      if (xhr.status >= 200 && xhr.status < 300) {
+
+        try {
+
+          const response = JSON.parse(xhr.responseText);
+
+          resolve(response);
+
+        } catch {
+
+          reject(new Error("Invalid upload response."));
+        }
+
+      } else {
+
+        let message = "Image upload failed.";
+
+        try {
+
+          const response = JSON.parse(xhr.responseText);
+
+          if (response?.error?.message) {
+            message = response.error.message;
+          }
+
+        } catch {}
+
+        reject(new Error(message));
+      }
+    });
+
+    xhr.addEventListener("error", () => {
+      reject(new Error("Network error while uploading image."));
+    });
+
+    xhr.addEventListener("abort", () => {
+      reject(new Error("Image upload was cancelled."));
+    });
+
+    xhr.send(formData);
+  });
+}
+
+
+/* ============================================================
+   IMAGE SELECTION
+============================================================ */
+
+function renderImagePreviews() {
+
+  const grid = $("imagePreviewGrid");
+
+  grid.innerHTML = "";
+
+  if (!selectedImages.length) {
+
+    grid.classList.add("hidden");
+
+    return;
+  }
+
+  grid.classList.remove("hidden");
+
+  selectedImages.forEach((item, index) => {
+
+    const wrapper = document.createElement("div");
+
+    wrapper.className = "preview-item";
+
+    const image = document.createElement("img");
+
+    image.src = item.preview;
+
+    image.alt = item.file.name;
+
+    image.loading = "lazy";
+
+    const remove = document.createElement("button");
+
+    remove.type = "button";
+
+    remove.className = "preview-remove";
+
+    remove.innerHTML = `
+      <i class="fas fa-xmark text-[9px]"></i>
+    `;
+
+    remove.addEventListener("click", () => {
+
+      URL.revokeObjectURL(item.preview);
+
+      selectedImages.splice(index, 1);
+
+      renderImagePreviews();
+    });
+
+    wrapper.appendChild(image);
+    wrapper.appendChild(remove);
+
+    grid.appendChild(wrapper);
+  });
+}
+
+
+function handleImageSelection(files) {
+
+  const incoming = Array.from(files || []);
+
+  if (!incoming.length) return;
+
+  if (selectedImages.length + incoming.length > 8) {
+
+    toast("You can attach up to 8 images per post.", "error");
+
+    return;
+  }
+
+  try {
+
+    incoming.forEach(file => {
+
+      validateImage(file);
+
+      selectedImages.push({
+        file,
+        preview: URL.createObjectURL(file)
+      });
+    });
+
+    renderImagePreviews();
+
+  } catch (error) {
+
+    toast(error.message, "error");
+  }
+}
+
+
+/* ============================================================
+   GEOLOCATION
+============================================================ */
+
+async function reverseGeocode(latitude, longitude) {
+
+  try {
+
+    const url =
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(latitude)}&lon=${encodeURIComponent(longitude)}&zoom=18&addressdetails=1`;
+
+    const response = await fetch(url, {
+      headers: {
+        "Accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Location lookup failed.");
+    }
+
+    const data = await response.json();
+
+    return data.display_name || null;
+
+  } catch (error) {
+
+    console.warn("Reverse geocoding unavailable:", error);
+
+    return null;
+  }
+}
+
+
+async function requestLiveLocation() {
+
+  if (!navigator.geolocation) {
+
+    throw new Error(
+      "Location services are not supported by this browser."
+    );
+  }
+
+  return new Promise((resolve, reject) => {
+
+    navigator.geolocation.getCurrentPosition(
+
+      async position => {
+
+        const latitude = Number(
+          position.coords.latitude.toFixed(6)
+        );
+
+        const longitude = Number(
+          position.coords.longitude.toFixed(6)
+        );
+
+        const accuracy = Math.round(
+          position.coords.accuracy || 0
+        );
+
+        const label =
+          await reverseGeocode(latitude, longitude);
+
+        const location = {
+          latitude,
+          longitude,
+          accuracy,
+          label: label || `${latitude}, ${longitude}`,
+          capturedAt: new Date().toISOString()
+        };
+
+        userLocation = location;
+
+        resolve(location);
+      },
+
+      error => {
+
+        let message = "Unable to determine your location.";
+
+        if (error.code === error.PERMISSION_DENIED) {
+          message = "Location permission was denied.";
+        }
+
+        if (error.code === error.POSITION_UNAVAILABLE) {
+          message = "Your location is currently unavailable.";
+        }
+
+        if (error.code === error.TIMEOUT) {
+          message = "Location request timed out.";
+        }
+
+        reject(new Error(message));
+      },
+
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 60000
+      }
+    );
+  });
+}
+
+
+async function handleLocationToggle() {
+
+  const checked = $("attachLocation").checked;
+
+  if (!checked) {
+
+    userLocation = null;
+
+    $("locationStatus").textContent =
+      "Your location will only be requested when you enable this.";
+
+    return;
+  }
+
+  $("locationStatus").textContent =
+    "Requesting your current location...";
+
+  try {
+
+    const location = await requestLiveLocation();
+
+    $("locationStatus").textContent =
+      `${location.label} · ±${location.accuracy}m`;
+
+  } catch (error) {
+
+    $("attachLocation").checked = false;
+
+    $("locationStatus").textContent =
+      "Location could not be attached.";
+
+    toast(error.message, "error");
+  }
+}
+
+
+/* ============================================================
+   POST MODAL
+============================================================ */
+
+function openComposer(type = "discussion") {
+
+  selectedPostType = type;
+
+  document.querySelectorAll(".post-type-option").forEach(button => {
+
+    button.classList.toggle(
+      "active",
+      button.dataset.postType === type
+    );
+  });
+
+  updateComposerFields();
+
+  $("composerModal").classList.add("open");
+
+  document.body.classList.add("modal-open");
+
+  setTimeout(() => {
+
+    if (type === "question" || type === "discussion") {
+      $("postTitle").focus();
+    } else {
+      $("postContent").focus();
+    }
+
+  }, 80);
+}
+
+
+function closeComposer() {
+
+  $("composerModal").classList.remove("open");
+
+  document.body.classList.remove("modal-open");
+}
+
+
+function resetComposer() {
+
+  $("postForm").reset();
+
+  $("postTitle").value = "";
+  $("postContent").value = "";
+
+  $("characterCount").textContent = "0 / 5000";
+
+  selectedImages.forEach(item => {
+    URL.revokeObjectURL(item.preview);
+  });
+
+  selectedImages = [];
+
+  renderImagePreviews();
+
+  userLocation = null;
+
+  $("locationStatus").textContent =
+    "Your location will only be requested when you enable this.";
+
+  selectedPostType = "discussion";
+
+  document.querySelectorAll(".post-type-option").forEach(button => {
+
+    button.classList.toggle(
+      "active",
+      button.dataset.postType === "discussion"
+    );
+  });
+
+  updateComposerFields();
+}
+
+
+function updateComposerFields() {
+
+  const titleRequired =
+    selectedPostType === "discussion" ||
+    selectedPostType === "question" ||
+    selectedPostType === "property";
+
+  $("titleField").classList.toggle(
+    "hidden",
+    !titleRequired
+  );
+
+  $("postTitle").required = titleRequired;
+
+  $("propertyField").classList.toggle(
+    "show",
+    selectedPostType === "property"
+  );
+
+  if (selectedPostType === "property") {
+
+    if (!properties.length) {
+
+      $("propertyField").querySelector("select").innerHTML = `
+        <option value="">You have no properties available</option>
+      `;
+
+    } else {
+
+      populatePropertySelector();
+    }
+  }
+}
+
+
+/* ============================================================
+   CREATE POST
+============================================================ */
+
+async function createPost(event) {
+
+  event.preventDefault();
+
+  if (!currentUser) {
+
+    toast("Your session is no longer active.", "error");
+
+    return;
+  }
+
+  if (!isOnline()) {
+
+    toast("You are offline. Please reconnect before publishing.", "error");
+
+    return;
+  }
+
+  const content = $("postContent").value.trim();
+  const title = $("postTitle").value.trim();
+
+  if (!content) {
+
+    toast("Write something before publishing.", "error");
+
+    $("postContent").focus();
+
+    return;
+  }
+
+  if (
+    (selectedPostType === "discussion" ||
+      selectedPostType === "question" ||
+      selectedPostType === "property") &&
+    !title
+  ) {
+
+    toast("Add a title to your post.", "error");
+
+    $("postTitle").focus();
+
+    return;
+  }
+
+  const selectedProperty = getSelectedProperty();
+
+  if (
+    selectedPostType === "property" &&
+    !selectedProperty
+  ) {
+
+    toast("Choose one of your properties.", "error");
+
+    return;
+  }
+
+  const publishButton = $("publishPost");
+
+  setButtonLoading(
+    publishButton,
+    true,
+    "Publishing"
+  );
+
+  try {
+
+    let locationData = null;
+
+    if ($("attachLocation").checked) {
+
+      if (!userLocation) {
+
+        locationData = await requestLiveLocation();
+
+      } else {
+
+        locationData = userLocation;
+      }
+    }
+
+    const uploadedImages = [];
+
+    for (let index = 0; index < selectedImages.length; index++) {
+
+      const item = selectedImages[index];
+
+      toast(
+        `Uploading image ${index + 1} of ${selectedImages.length}...`,
+        "info"
+      );
+
+      const result = await uploadImage(
+        item.file,
+        () => {}
+      );
+
+      uploadedImages.push({
+        url: result.secure_url,
+        publicId: result.public_id,
+        width: result.width || null,
+        height: result.height || null,
+        format: result.format || item.file.type,
+        size: item.file.size,
+        filename: item.file.name
+      });
+    }
+
+    const postPayload = {
+
+      type: selectedPostType,
+
+      title:
+        title ||
+        "",
+
+      content,
+
+      authorId: currentUser.uid,
+
+      authorName: displayName(),
+
+      authorRole: displayRole(),
+
+      authorPhotoURL:
+        avatarURL(currentProfile) ||
+        currentUser.photoURL ||
+        "",
+
+      imageCount: uploadedImages.length,
+
+      images: uploadedImages,
+
+      likeCount: 0,
+
+      commentCount: 0,
+
+      shareCount: 0,
+
+      saveCount: 0,
+
+      isQuestion:
+        selectedPostType === "question",
+
+      answered: false,
+
+      location: locationData,
+
+      propertyId:
+        selectedProperty?.id ||
+        null,
+
+      propertySnapshot:
+        selectedProperty
+          ? {
+              title:
+                selectedProperty.title ||
+                selectedProperty.name ||
+                "",
+              price:
+                selectedProperty.price ||
+                selectedProperty.amount ||
+                null,
+              address:
+                selectedProperty.address ||
+                selectedProperty.location ||
+                "",
+              image:
+                selectedProperty.image ||
+                selectedProperty.coverImage ||
+                selectedProperty.imageUrl ||
+                selectedProperty.images?.[0] ||
+                ""
+            }
+          : null,
+
+      createdAt: serverTimestamp(),
+
+      updatedAt: serverTimestamp()
+    };
+
+    const postRef = await addDoc(
+      collection(db, "communityPosts"),
+      postPayload
+    );
+
+    if (locationData) {
+
+      $("sidebarLocationText").textContent =
+        locationData.label;
+    }
+
+    resetComposer();
+
+    closeComposer();
+
+    toast("Your post is now live.");
+
+    document.getElementById("communityFeed")
+      ?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+  } catch (error) {
+
+    console.error("Create post error:", error);
+
+    toast(
+      error?.message ||
+      "We could not publish your post. Please try again.",
+      "error"
+    );
+
+  } finally {
+
+    setButtonLoading(
+      publishButton,
+      false
+    );
+  }
+}
+
+
+/* ============================================================
+   COMMUNITY FEED
+============================================================ */
+
+function normalizeCommunityPost(docSnap) {
+
+  const data = docSnap.data() || {};
+
+  return {
+    id: docSnap.id,
+    ...data,
+    type: data.type || "discussion",
+    title: typeof data.title === "string" ? data.title : "",
+    content: typeof data.content === "string" ? data.content : "",
+    authorId: data.authorId || "",
+    authorName: data.authorName || "Community member",
+    authorRole: data.authorRole || "buyer",
+    likeCount: Number.isFinite(Number(data.likeCount)) ? Number(data.likeCount) : 0,
+    commentCount: Number.isFinite(Number(data.commentCount)) ? Number(data.commentCount) : 0,
+    shareCount: Number.isFinite(Number(data.shareCount)) ? Number(data.shareCount) : 0,
+    saveCount: Number.isFinite(Number(data.saveCount)) ? Number(data.saveCount) : 0,
+    images: Array.isArray(data.images) ? data.images : [],
+    currentUserLiked: Boolean(data.currentUserLiked),
+    currentUserSaved: Boolean(data.currentUserSaved)
+  };
+}
+
+function sortCommunityPosts(posts) {
+
+  return [...posts].sort((a, b) => {
+
+    const aTime = a.createdAt?.toMillis
+      ? a.createdAt.toMillis()
+      : a.createdAt?.seconds
+        ? Number(a.createdAt.seconds) * 1000
+        : 0;
+
+    const bTime = b.createdAt?.toMillis
+      ? b.createdAt.toMillis()
+      : b.createdAt?.seconds
+        ? Number(b.createdAt.seconds) * 1000
+        : 0;
+
+    return bTime - aTime;
+  });
+}
+
+function getFeedErrorMessage(error) {
+
+  const code = String(error?.code || "")
+    .replace(/^firestore\//, "");
+
+  if (code === "permission-denied") {
+    return {
+      title: "Community access is restricted",
+      text: "MoonLat could not read the community feed with the current account. Check the deployed Firestore communityPosts read rule and make sure your session is authenticated.",
+      action: "Check access"
+    };
+  }
+
+  if (code === "failed-precondition") {
+    return {
+      title: "Community feed needs a database index",
+      text: "The live feed query was rejected by Firestore. MoonLat will retry with a client-side ordering fallback so the feed can continue working while the database index is resolved.",
+      action: "Retry"
+    };
+  }
+
+  if (code === "unauthenticated") {
+    return {
+      title: "Your session has expired",
+      text: "Sign in again to reconnect to the MoonLat community.",
+      action: "Sign in"
+    };
+  }
+
+  if (code === "unavailable" || !navigator.onLine) {
+    return {
+      title: "Connection interrupted",
+      text: "MoonLat could not reach the live community feed. Your connection may be temporarily unavailable.",
+      action: "Retry"
+    };
+  }
+
+  return {
+    title: "Community feed unavailable",
+    text: error?.message
+      ? `MoonLat could not load the community feed (${code || "unknown-error"}).`
+      : "MoonLat could not load the live community feed.",
+    action: "Retry"
+  };
+}
+
+function renderFeedError(error) {
+
+  const state = getFeedErrorMessage(error);
+
+  $("communityFeed").innerHTML = `
+    <div class="feed-state">
+      <div class="feed-state-icon">
+        <i class="fas fa-triangle-exclamation"></i>
+      </div>
+
+      <div class="feed-state-title">
+        ${escapeHTML(state.title)}
+      </div>
+
+      <div class="feed-state-text">
+        ${escapeHTML(state.text)}
+      </div>
+
+      <button
+        id="retryFeed"
+        class="btn btn-primary mt-4"
+        type="button"
+      >
+        ${escapeHTML(state.action)}
+      </button>
+    </div>
+  `;
+
+  $("retryFeed")?.addEventListener("click", () => {
+
+    if (state.action === "Sign in") {
+      window.location.href = "../dashboard/sign-in.html";
+      return;
+    }
+
+    subscribeToFeed();
+  });
+}
+
+function attachFeedSnapshot(queryRef, allowFallback = true) {
+
+  feedUnsubscribe = onSnapshot(
+    queryRef,
+    snapshot => {
+
+      allPosts = sortCommunityPosts(
+        snapshot.docs.map(normalizeCommunityPost)
+      );
+
+      updateCommunityMetrics();
+      applyFeedFilters();
+
+    },
+    error => {
+
+      console.error("Feed subscription error:", error);
+
+      const code = String(error?.code || "")
+        .replace(/^firestore\//, "");
+
+      // A missing index must never permanently break the community UI.
+      // Fall back to a simple live collection query and sort locally.
+      if (code === "failed-precondition" && allowFallback) {
+
+        if (feedUnsubscribe) {
+          feedUnsubscribe();
+          feedUnsubscribe = null;
+        }
+
+        const fallbackQuery = query(
+          collection(db, "communityPosts"),
+          limit(100)
+        );
+
+        attachFeedSnapshot(fallbackQuery, false);
+        return;
+      }
+
+      renderFeedError(error);
+    }
+  );
+}
+
+function subscribeToFeed() {
+
+  if (!currentUser) {
+    return;
+  }
+
+  if (feedUnsubscribe) {
+    feedUnsubscribe();
+    feedUnsubscribe = null;
+  }
+
+  const feedQuery = query(
+    collection(db, "communityPosts"),
+    orderBy("createdAt", "desc"),
+    limit(100)
+  );
+
+  attachFeedSnapshot(feedQuery);
+}
+
+
+/* ============================================================
+   FILTERING
+============================================================ */
+
+function applyFeedFilters() {
+
+  let result = [...allPosts];
+
+  if (activeCategory !== "all") {
+
+    result = result.filter(post => {
+
+      if (activeCategory === "market") {
+        return post.type === "market";
+      }
+
+      if (activeCategory === "investment") {
+        return post.type === "investment";
+      }
+
+      if (activeCategory === "advice") {
+        return post.type === "advice";
+      }
+
+      return post.type === activeCategory;
+    });
+  }
+
+
+  if (searchTerm) {
+
+    const search = searchTerm.toLowerCase();
+
+    result = result.filter(post => {
+
+      const haystack = [
+        post.title,
+        post.content,
+        post.authorName,
+        post.authorRole,
+        post.propertySnapshot?.title,
+        post.propertySnapshot?.address,
+        post.location?.label
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return haystack.includes(search);
+    });
+  }
+
+
+  if (nearbyMode && userLocation) {
+
+    result = result.filter(post => {
+
+      if (!post.location) return false;
+
+      const distance = calculateDistanceKm(
+        userLocation.latitude,
+        userLocation.longitude,
+        post.location.latitude,
+        post.location.longitude
+      );
+
+      return distance <= 25;
+    });
+  }
+
+
+  if (activeSort === "popular") {
+
+    result.sort(
+      (a, b) =>
+        (
+          (b.likeCount || 0) +
+          (b.commentCount || 0) * 2 +
+          (b.shareCount || 0) * 2
+        ) -
+        (
+          (a.likeCount || 0) +
+          (a.commentCount || 0) * 2 +
+          (a.shareCount || 0) * 2
+        )
+    );
+
+  } else if (activeSort === "unanswered") {
+
+    result = result.filter(
+      post =>
+        post.type === "question" &&
+        !post.answered
+    );
+  }
+
+  filteredPosts = result;
+
+  renderFeed();
+}
+
+
+/* ============================================================
+   DISTANCE
+============================================================ */
+
+function calculateDistanceKm(
+  lat1,
+  lon1,
+  lat2,
+  lon2
+) {
+
+  const R = 6371;
+
+  const dLat =
+    (lat2 - lat1) *
+    Math.PI /
+    180;
+
+  const dLon =
+    (lon2 - lon1) *
+    Math.PI /
+    180;
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) ** 2;
+
+  return (
+    R *
+    2 *
+    Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1 - a)
+    )
+  );
+}
+
+
+/* ============================================================
+   FEED RENDER
+============================================================ */
+
+function renderFeed() {
+
+  const feed = $("communityFeed");
+
+  $("feedCount").textContent =
+    `${filteredPosts.length} ${filteredPosts.length === 1 ? "post" : "posts"}`;
+
+
+  if (!filteredPosts.length) {
+
+    const nearbyText =
+      nearbyMode
+        ? "No posts with live location were found within 25km of your current location."
+        : searchTerm
+          ? "Try a different search phrase or remove the current filters."
+          : activeCategory === "question"
+            ? "There are no questions here yet. Start the first one."
+            : "This part of the community is quiet right now. Start the conversation.";
+
+    feed.innerHTML = `
+      <div class="feed-state">
+        <div class="feed-state-icon">
+          <i class="fas ${nearbyMode ? "fa-location-dot" : "fa-comments"}"></i>
+        </div>
+
+        <div class="feed-state-title">
+          ${nearbyMode ? "Nothing nearby yet" : "Nothing here yet"}
+        </div>
+
+        <div class="feed-state-text">
+          ${escapeHTML(nearbyText)}
+        </div>
+
+        <button
+          id="emptyCreatePost"
+          class="btn btn-primary mt-4"
+          type="button"
+        >
+          <i class="fas fa-plus mr-1"></i>
+          Start a post
+        </button>
+      </div>
+    `;
+
+    $("emptyCreatePost").addEventListener(
+      "click",
+      () => openComposer("discussion")
+    );
+
+    return;
+  }
+
+
+  feed.innerHTML =
+    filteredPosts
+      .map(renderPost)
+      .join("");
+
+
+  bindPostActions();
+}
+
+
+function renderPost(post) {
+
+  const avatar =
+    post.authorPhotoURL ||
+    "";
+
+  const authorInitials =
+    getInitials(post.authorName || "User");
+
+  const role =
+    String(post.authorRole || "client").toLowerCase();
+
+  const roleClass =
+    role === "agent"
+      ? "role-agent"
+      : "role-client";
+
+  const liked =
+    Boolean(post.currentUserLiked);
+
+  const saved =
+    Boolean(post.currentUserSaved);
+
+
+  const typeLabel =
+    getPostTypeLabel(post.type);
+
+  const typeIcon =
+    getPostTypeIcon(post.type);
+
+
+  let locationHTML = "";
+
+  if (post.location) {
+
+    let locationLabel =
+      post.location.label ||
+      `${post.location.latitude}, ${post.location.longitude}`;
+
+    locationHTML = `
+      <div class="post-location">
+        <i class="fas fa-location-dot text-[9px]"></i>
+        <span>
+          ${escapeHTML(locationLabel)}
+        </span>
+      </div>
+    `;
+  }
+
+
+  let propertyHTML = "";
+
+  if (post.propertyId && post.propertySnapshot) {
+
+    const property = post.propertySnapshot;
+
+    propertyHTML = `
+      <div
+        class="property-share"
+        data-property-id="${escapeHTML(post.propertyId)}"
+      >
+
+        ${
+          property.image
+            ? `
+              <div class="property-share-image">
+                <img
+                  src="${escapeHTML(property.image)}"
+                  alt="${escapeHTML(property.title || "Property")}"
+                  loading="lazy"
+                >
+              </div>
+            `
+            : ""
+        }
+
+        <div class="property-share-info">
+
+          ${
+            property.price
+              ? `
+                <div class="property-share-price">
+                  ${escapeHTML(String(property.price))}
+                </div>
+              `
+              : ""
+          }
+
+          <div class="property-share-title">
+            ${escapeHTML(property.title || "Property")}
+          </div>
+
+          ${
+            property.address
+              ? `
+                <div class="property-share-location">
+                  <i class="fas fa-location-dot"></i>
+                  ${escapeHTML(property.address)}
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+
+      </div>
+    `;
+  }
+
+
+  const images =
+    Array.isArray(post.images)
+      ? post.images.filter(image => image?.url)
+      : [];
+
+
+  let imagesHTML = "";
+
+  if (images.length) {
+
+    let layout =
+      images.length === 1
+        ? "single"
+        : images.length === 2
+          ? "two"
+          : images.length === 3
+            ? "three"
+            : "multi";
+
+    const visibleImages =
+      images.slice(0, 4);
+
+    imagesHTML = `
+      <div class="post-images ${layout}">
+
+        ${visibleImages.map((image, index) => {
+
+          const remaining =
+            images.length - 4;
+
+          return `
+            <button
+              class="post-image"
+              type="button"
+              data-image-url="${escapeHTML(image.url)}"
+              aria-label="Open image"
+            >
+
+              <img
+                src="${escapeHTML(image.url)}"
+                alt="${escapeHTML(image.filename || "Community image")}"
+                loading="lazy"
+              >
+
+              ${
+                index === 3 && remaining > 0
+                  ? `
+                    <div class="more-images">
+                      +${remaining}
+                    </div>
+                  `
+                  : ""
+              }
+
+            </button>
+          `;
+
+        }).join("")}
+
+      </div>
+    `;
+  }
+
+
+  return `
+    <article
+      class="post-card"
+      data-post-id="${escapeHTML(post.id)}"
+    >
+
+      <div class="post-body">
+
+        <div class="post-header">
+
+          <div class="user-avatar">
+
+            ${
+              avatar
+                ? `
+                  <img
+                    src="${escapeHTML(avatar)}"
+                    alt="${escapeHTML(post.authorName || "User")}"
+                    loading="lazy"
+                  >
+                `
+                : escapeHTML(authorInitials)
+            }
+
+          </div>
+
+          <div class="post-author">
+
+            <div class="post-author-line">
+
+              <span class="post-author-name">
+                ${escapeHTML(post.authorName || "Community member")}
+              </span>
+
+              <span class="role-badge ${roleClass}">
+                ${escapeHTML(role)}
+              </span>
+
+            </div>
+
+            <div class="post-time">
+              ${formatRelativeTime(post.createdAt)}
+            </div>
+
+          </div>
+
+          <button
+            class="post-menu"
+            type="button"
+            data-action="menu"
+            aria-label="Post options"
+          >
+            <i class="fas fa-ellipsis"></i>
+          </button>
+
+        </div>
+
+        <div class="post-type">
+          <i class="fas ${typeIcon}"></i>
+          ${escapeHTML(typeLabel)}
+        </div>
+
+        ${
+          post.title
+            ? `
+              <h2 class="post-title">
+                ${escapeHTML(post.title)}
+              </h2>
+            `
+            : ""
+        }
+
+        ${
+          post.content
+            ? `
+              <div class="post-content">
+                ${escapeHTML(post.content)}
+              </div>
+            `
+            : ""
+        }
+
+        ${locationHTML}
+
+        ${propertyHTML}
+
+      </div>
+
+      ${imagesHTML}
+
+      <div class="post-body">
+
+        <div class="post-actions">
+
+          <div class="post-actions-left">
+
+            <button
+              class="post-action ${liked ? "liked" : ""}"
+              type="button"
+              data-action="like"
+              data-post-id="${escapeHTML(post.id)}"
+            >
+              <i class="${liked ? "fas" : "far"} fa-heart"></i>
+              <span>${formatNumber(post.likeCount || 0)}</span>
+            </button>
+
+            <button
+              class="post-action"
+              type="button"
+              data-action="comment"
+              data-post-id="${escapeHTML(post.id)}"
+            >
+              <i class="far fa-comment"></i>
+              <span>${formatNumber(post.commentCount || 0)}</span>
+            </button>
+
+            <button
+              class="post-action"
+              type="button"
+              data-action="share"
+              data-post-id="${escapeHTML(post.id)}"
+            >
+              <i class="fas fa-share"></i>
+              <span>${formatNumber(post.shareCount || 0)}</span>
+            </button>
+
+          </div>
+
+          <button
+            class="post-action ${saved ? "saved" : ""}"
+            type="button"
+            data-action="save"
+            data-post-id="${escapeHTML(post.id)}"
+            aria-label="Save post"
+          >
+            <i class="${saved ? "fas" : "far"} fa-bookmark"></i>
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+  `;
+}
+
+
+/* ============================================================
+   POST ACTIONS
+============================================================ */
+
+function bindPostActions() {
+
+  document
+    .querySelectorAll("[data-action]")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        async event => {
+
+          event.stopPropagation();
+
+          const action =
+            button.dataset.action;
+
+          const postId =
+            button.dataset.postId;
+
+
+          if (action === "like") {
+
+            await toggleLike(postId, button);
+
+          } else if (action === "comment") {
+
+            openComments(postId);
+
+          } else if (action === "share") {
+
+            await sharePost(postId);
+
+          } else if (action === "save") {
+
+            await toggleSave(postId, button);
+
+          } else if (action === "menu") {
+
+            const article =
+              button.closest(".post-card");
+
+            const id =
+              article?.dataset.postId;
+
+            openPostMenu(id);
+          }
+        }
+      );
+    });
+
+
+  document
+    .querySelectorAll("[data-image-url]")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        event => {
+
+          event.stopPropagation();
+
+          openImageViewer(
+            button.dataset.imageUrl
+          );
+        }
+      );
+    });
+
+
+  document
+    .querySelectorAll(".property-share")
+    .forEach(element => {
+
+      element.addEventListener(
+        "click",
+        event => {
+
+          event.stopPropagation();
+
+          const propertyId =
+            element.dataset.propertyId;
+
+          if (propertyId) {
+
+            window.location.href =
+              `property.html?id=${encodeURIComponent(propertyId)}`;
+          }
+        }
+      );
+    });
+}
+
+
+/* ============================================================
+   LIKE
+============================================================ */
+
+async function toggleLike(postId, button) {
+
+  if (!currentUser) return;
+
+  if (!isOnline()) {
+
+    toast("You are offline.", "error");
+
+    return;
+  }
+
+  const reactionRef = doc(
+    db,
+    "communityPosts",
+    postId,
+    "reactions",
+    currentUser.uid
+  );
+
+  try {
+
+    await runTransaction(
+      db,
+      async transaction => {
+
+        const reactionSnap =
+          await transaction.get(reactionRef);
+
+        const postRef =
+          doc(db, "communityPosts", postId);
+
+        const postSnap =
+          await transaction.get(postRef);
+
+        if (!postSnap.exists()) {
+          throw new Error("This post no longer exists.");
+        }
+
+        if (reactionSnap.exists()) {
+
+          transaction.delete(reactionRef);
+
+          transaction.update(
+            postRef,
+            {
+              likeCount: increment(-1),
+              updatedAt: serverTimestamp()
+            }
+          );
+
+        } else {
+
+          transaction.set(
+            reactionRef,
+            {
+              userId: currentUser.uid,
+              createdAt: serverTimestamp()
+            }
+          );
+
+          transaction.update(
+            postRef,
+            {
+              likeCount: increment(1),
+              updatedAt: serverTimestamp()
+            }
+          );
+        }
+      }
+    );
+
+  } catch (error) {
+
+    console.error("Like error:", error);
+
+    toast(
+      error.message || "Could not update reaction.",
+      "error"
+    );
+  }
+}
+
+
+/* ============================================================
+   SAVE
+============================================================ */
+
+async function toggleSave(postId, button) {
+
+  if (!currentUser) return;
+
+  try {
+
+    const ref = doc(
+      db,
+      "users",
+      currentUser.uid,
+      "savedPosts",
+      postId
+    );
+
+    const snap = await getDoc(ref);
+
+    const postRef =
+      doc(db, "communityPosts", postId);
+
+    if (snap.exists()) {
+
+      await deleteDoc(ref);
+
+      await updateDoc(
+        postRef,
+        {
+          saveCount: increment(-1)
+        }
+      );
+
+      toast("Removed from saved posts.", "info");
+
+    } else {
+
+      await setDoc(
+        ref,
+        {
+          postId,
+          savedAt: serverTimestamp()
+        }
+      );
+
+      await updateDoc(
+        postRef,
+        {
+          saveCount: increment(1)
+        }
+      );
+
+      toast("Post saved.");
+
+    }
+
+  } catch (error) {
+
+    console.error("Save error:", error);
+
+    toast(
+      "Could not update saved posts.",
+      "error"
+    );
+  }
+}
+
+
+/* ============================================================
+   SHARE
+============================================================ */
+
+async function sharePost(postId) {
+
+  const url =
+    `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(postId)}`;
+
+  try {
+
+    if (navigator.share) {
+
+      await navigator.share({
+        title: "MoonLat Community",
+        text: "View this community post on MoonLat.",
+        url
+      });
+
+    } else {
+
+      await navigator.clipboard.writeText(url);
+
+      toast("Community link copied.");
+    }
+
+    await updateDoc(
+      doc(db, "communityPosts", postId),
+      {
+        shareCount: increment(1)
+      }
+    );
+
+  } catch (error) {
+
+    if (error?.name === "AbortError") return;
+
+    console.error("Share error:", error);
+
+    try {
+
+      await navigator.clipboard.writeText(url);
+
+      toast("Community link copied.");
+
+    } catch {
+
+      toast(
+        "Could not share this post.",
+        "error"
+      );
+    }
+  }
+}
+
+
+/* ============================================================
+   POST MENU
+============================================================ */
+
+async function openPostMenu(postId) {
+
+  const post =
+    allPosts.find(item => item.id === postId);
+
+  if (!post) return;
+
+  const isOwner =
+    post.authorId === currentUser.uid;
+
+  if (isOwner) {
+
+    const remove =
+      window.confirm(
+        "Delete this community post?"
+      );
+
+    if (!remove) return;
+
+    try {
+
+      await deleteDoc(
+        doc(db, "communityPosts", postId)
+      );
+
+      toast("Post deleted.");
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast(
+        "Could not delete the post.",
+        "error"
+      );
+    }
+
+    return;
+  }
+
+  const report =
+    window.confirm(
+      "Report this post to MoonLat moderation?"
+    );
+
+  if (!report) return;
+
+  currentReportPostId = postId;
+
+  $("reportModal").classList.add("open");
+
+  document.body.classList.add("modal-open");
+}
+
+
+/* ============================================================
+   REPORT
+============================================================ */
+
+async function submitReport(event) {
+
+  event.preventDefault();
+
+  if (!currentReportPostId || !currentUser) return;
+
+  const reason =
+    $("reportReason").value;
+
+  const details =
+    $("reportDetails").value.trim();
+
+  if (!reason) {
+
+    toast("Choose a report reason.", "error");
+
+    return;
+  }
+
+  const button =
+    $("reportForm").querySelector(
+      'button[type="submit"]'
+    );
+
+  setButtonLoading(
+    button,
+    true,
+    "Submitting"
+  );
+
+  try {
+
+    await addDoc(
+      collection(db, "communityReports"),
+      {
+        postId: currentReportPostId,
+        reporterId: currentUser.uid,
+        reason,
+        details,
+        status: "open",
+        createdAt: serverTimestamp()
+      }
+    );
+
+    $("reportForm").reset();
+
+    $("reportModal").classList.remove("open");
+
+    document.body.classList.remove("modal-open");
+
+    toast("Report submitted to moderation.");
+
+  } catch (error) {
+
+    console.error("Report error:", error);
+
+    toast(
+      "Could not submit the report.",
+      "error"
+    );
+
+  } finally {
+
+    setButtonLoading(
+      button,
+      false
+    );
+  }
+}
+
+
+/* ============================================================
+   COMMENTS
+============================================================ */
+
+function openComments(postId) {
+
+  currentCommentsPostId = postId;
+
+  const post =
+    allPosts.find(item => item.id === postId);
+
+  $("commentsPostTitle").textContent =
+    post?.title ||
+    "Community conversation";
+
+  $("commentsModal").classList.add("open");
+
+  document.body.classList.add("modal-open");
+
+  subscribeToComments(postId);
+}
+
+
+function closeComments() {
+
+  if (commentsUnsubscribe) {
+
+    commentsUnsubscribe();
+
+    commentsUnsubscribe = null;
+  }
+
+  currentCommentsPostId = null;
+
+  $("commentsModal").classList.remove("open");
+
+  document.body.classList.remove("modal-open");
+}
+
+
+function subscribeToComments(postId) {
+
+  if (commentsUnsubscribe) {
+
+    commentsUnsubscribe();
+  }
+
+  const q = query(
+    collection(
+      db,
+      "communityPosts",
+      postId,
+      "comments"
+    ),
+    orderBy("createdAt", "asc"),
+    limit(100)
+  );
+
+  commentsUnsubscribe = onSnapshot(
+    q,
+    snapshot => {
+
+      const comments =
+        snapshot.docs.map(docSnap => ({
+          id: docSnap.id,
+          ...docSnap.data()
+        }));
+
+      renderComments(comments);
+    },
+    error => {
+
+      console.error(
+        "Comments error:",
+        error
+      );
+
+      $("commentList").innerHTML = `
+        <div class="feed-state">
+          <div class="feed-state-icon">
+            <i class="fas fa-triangle-exclamation"></i>
+          </div>
+
+          <div class="feed-state-title">
+            Comments unavailable
+          </div>
+
+          <div class="feed-state-text">
+            We could not load this conversation.
+          </div>
+        </div>
+      `;
+    }
+  );
+}
+
+
+function renderComments(comments) {
+
+  if (!comments.length) {
+
+    $("commentList").innerHTML = `
+      <div class="feed-state">
+        <div class="feed-state-icon">
+          <i class="far fa-comment"></i>
+        </div>
+
+        <div class="feed-state-title">
+          No replies yet
+        </div>
+
+        <div class="feed-state-text">
+          Be the first person to add something useful to this conversation.
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  $("commentList").innerHTML =
+    comments.map(comment => {
+
+      const initials =
+        getInitials(
+          comment.authorName || "User"
+        );
+
+      const avatar =
+        comment.authorPhotoURL || "";
+
+      return `
+        <div class="comment">
+
+          <div class="user-avatar !w-8 !h-8 !rounded-[10px] !text-[8px]">
+            ${
+              avatar
+                ? `
+                  <img
+                    src="${escapeHTML(avatar)}"
+                    alt="${escapeHTML(comment.authorName || "User")}"
+                    loading="lazy"
+                  >
+                `
+                : escapeHTML(initials)
+            }
+          </div>
+
+          <div class="comment-content">
+
+            <div class="comment-author">
+              ${escapeHTML(comment.authorName || "Community member")}
+            </div>
+
+            <div class="comment-text">
+              ${escapeHTML(comment.text || "")}
+            </div>
+
+            <div class="comment-time">
+              ${formatRelativeTime(comment.createdAt)}
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+}
+
+
+async function submitComment(event) {
+
+  event.preventDefault();
+
+  if (!currentCommentsPostId || !currentUser) return;
+
+  const input =
+    $("commentInput");
+
+  const text =
+    input.value.trim();
+
+  if (!text) return;
+
+  const button =
+    $("commentForm").querySelector(
+      'button[type="submit"]'
+    );
+
+  setButtonLoading(
+    button,
+    true,
+    "Sending"
+  );
+
+  try {
+
+    const commentRef =
+      collection(
+        db,
+        "communityPosts",
+        currentCommentsPostId,
+        "comments"
+      );
+
+    await addDoc(
+      commentRef,
+      {
+        text,
+        authorId: currentUser.uid,
+        authorName: displayName(),
+        authorPhotoURL:
+          avatarURL(currentProfile) ||
+          currentUser.photoURL ||
+          "",
+        createdAt: serverTimestamp()
+      }
+    );
+
+    await updateDoc(
+      doc(
+        db,
+        "communityPosts",
+        currentCommentsPostId
+      ),
+      {
+        commentCount: increment(1),
+        updatedAt: serverTimestamp()
+      }
+    );
+
+    input.value = "";
+
+    toast("Reply added.");
+
+  } catch (error) {
+
+    console.error("Comment error:", error);
+
+    toast(
+      "Could not add your reply.",
+      "error"
+    );
+
+  } finally {
+
+    setButtonLoading(
+      button,
+      false
+    );
+  }
+}
+
+
+/* ============================================================
+   NOTIFICATIONS
+============================================================ */
+
+function subscribeToNotifications() {
+
+  if (!currentUser) return;
+
+  if (notificationUnsubscribe) {
+    notificationUnsubscribe();
+  }
+
+  try {
+
+    // Keep this query single-field so the community page does not depend
+    // on a composite Firestore index just to render the notification dot.
+    // We filter unread notifications client-side after the authenticated
+    // user's notification documents have been securely returned.
+    const q = query(
+      collection(
+        db,
+        "notifications"
+      ),
+      where(
+        "userId",
+        "==",
+        currentUser.uid
+      ),
+      limit(50)
+    );
+
+    notificationUnsubscribe =
+      onSnapshot(
+        q,
+        snapshot => {
+
+          const hasUnread = snapshot.docs.some(
+            docSnap => docSnap.data()?.read !== true
+          );
+
+          $("notificationDot")
+            .classList.toggle(
+              "hidden",
+              !hasUnread
+            );
+        },
+        error => {
+
+          console.warn(
+            "Notification listener unavailable:",
+            error
+          );
+        }
+      );
+
+  } catch (error) {
+
+    console.warn(
+      "Notification setup error:",
+      error
+    );
+  }
+}
+
+
+/* ============================================================
+   METRICS
+============================================================ */
+
+function updateCommunityMetrics() {
+
+  const posts =
+    allPosts.length;
+
+  const photos =
+    allPosts.filter(
+      post =>
+        Array.isArray(post.images) &&
+        post.images.length
+    ).length;
+
+  const questions =
+    allPosts.filter(
+      post =>
+        post.type === "question"
+    ).length;
+
+  const propertiesCount =
+    allPosts.filter(
+      post =>
+        post.propertyId
+    ).length;
+
+
+  $("communityPostCount").textContent =
+    formatNumber(posts);
+
+  $("communityPhotoCount").textContent =
+    formatNumber(photos);
+
+  $("sidePosts").textContent =
+    formatNumber(posts);
+
+  $("sideQuestions").textContent =
+    formatNumber(questions);
+
+  $("sideProperties").textContent =
+    formatNumber(propertiesCount);
+
+  $("sidePhotos").textContent =
+    formatNumber(photos);
+
+
+  const uniqueMembers =
+    new Set(
+      allPosts
+        .map(post => post.authorId)
+        .filter(Boolean)
+    ).size;
+
+  $("communityMemberCount").textContent =
+    formatNumber(uniqueMembers);
+}
+
+
+/* ============================================================
+   SEARCH
+============================================================ */
+
+function handleSearch(value) {
+
+  searchTerm =
+    value.trim();
+
+  $("clearSearch")
+    .classList.toggle(
+      "hidden",
+      !searchTerm
+    );
+
+  applyFeedFilters();
+}
+
+
+/* ============================================================
+   NEARBY
+============================================================ */
+
+async function toggleNearby() {
+
+  if (nearbyMode) {
+
+    nearbyMode = false;
+
+    $("locationFilterButton")
+      .classList.remove("active");
+
+    $("locationFilterButton")
+      .innerHTML = `
+        <i class="fas fa-location-crosshairs"></i>
+        <span>Nearby</span>
+      `;
+
+    applyFeedFilters();
+
+    return;
+  }
+
+  try {
+
+    toast(
+      "Requesting your location...",
+      "info"
+    );
+
+    const location =
+      await requestLiveLocation();
+
+    userLocation = location;
+
+    nearbyMode = true;
+
+    $("locationFilterButton")
+      .classList.add("active");
+
+    $("locationFilterButton")
+      .innerHTML = `
+        <i class="fas fa-location-dot"></i>
+        <span>Nearby</span>
+      `;
+
+    $("sidebarLocationText").textContent =
+      location.label;
+
+    applyFeedFilters();
+
+    toast(
+      "Nearby community posts enabled."
+    );
+
+  } catch (error) {
+
+    toast(
+      error.message,
+      "error"
+    );
+  }
+}
+
+
+/* ============================================================
+   IMAGE VIEWER
+============================================================ */
+
+function openImageViewer(url) {
+
+  if (!url) return;
+
+  $("viewerImage").src = url;
+
+  $("imageViewer")
+    .classList.add("open");
+
+  document.body.classList.add("modal-open");
+}
+
+
+function closeImageViewer() {
+
+  $("imageViewer")
+    .classList.remove("open");
+
+  $("viewerImage").src = "";
+
+  document.body.classList.remove("modal-open");
+}
+
+
+/* ============================================================
+   DEEP LINK
+============================================================ */
+
+function handleDeepLink() {
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const postId =
+    params.get("post");
+
+  if (!postId) return;
+
+  const openWhenReady = () => {
+
+    const exists =
+      allPosts.some(
+        post => post.id === postId
+      );
+
+    if (!exists) return;
+
+    openComments(postId);
+  };
+
+  setTimeout(
+    openWhenReady,
+    900
+  );
+}
+
+
+/* ============================================================
+   EVENTS
+============================================================ */
+
+$("openComposer")
+  .addEventListener(
+    "click",
+    () => openComposer()
+  );
+
+
+$("mobileCreate")
+  .addEventListener(
+    "click",
+    () => openComposer()
+  );
+
+
+document
+  .querySelectorAll("[data-open-type]")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        openComposer(
+          button.dataset.openType
+        );
+      }
+    );
+  });
+
+
+document
+  .querySelectorAll(".post-type-option")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        selectedPostType =
+          button.dataset.postType;
+
+        document
+          .querySelectorAll(".post-type-option")
+          .forEach(item => {
+
+            item.classList.toggle(
+              "active",
+              item === button
+            );
+          });
+
+        updateComposerFields();
+      }
+    );
+  });
+
+
+$("closeComposer")
+  .addEventListener(
+    "click",
+    closeComposer
+  );
+
+
+$("cancelComposer")
+  .addEventListener(
+    "click",
+    () => {
+
+      resetComposer();
+
+      closeComposer();
+    }
+  );
+
+
+$("postForm")
+  .addEventListener(
+    "submit",
+    createPost
+  );
+
+
+$("postContent")
+  .addEventListener(
+    "input",
+    () => {
+
+      const length =
+        $("postContent").value.length;
+
+      $("characterCount").textContent =
+        `${length} / 5000`;
+    }
+  );
+
+
+$("chooseImages")
+  .addEventListener(
+    "click",
+    () => $("postImages").click()
+  );
+
+
+$("postImages")
+  .addEventListener(
+    "change",
+    event => {
+
+      handleImageSelection(
+        event.target.files
+      );
+
+      event.target.value = "";
+    }
+  );
+
+
+$("attachLocation")
+  .addEventListener(
+    "change",
+    handleLocationToggle
+  );
+
+
+document
+  .querySelectorAll(".category-btn")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(".category-btn")
+          .forEach(item =>
+            item.classList.remove("active")
+          );
+
+        button.classList.add("active");
+
+        activeCategory =
+          button.dataset.category;
+
+        applyFeedFilters();
+      }
+    );
+  });
+
+
+document
+  .querySelectorAll(".feed-tab")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(".feed-tab")
+          .forEach(item =>
+            item.classList.remove("active")
+          );
+
+        button.classList.add("active");
+
+        activeSort =
+          button.dataset.sort;
+
+        applyFeedFilters();
+      }
+    );
+  });
+
+
+$("communitySearch")
+  .addEventListener(
+    "input",
+    event => {
+
+      handleSearch(
+        event.target.value
+      );
+    }
+  );
+
+
+$("clearSearch")
+  .addEventListener(
+    "click",
+    () => {
+
+      $("communitySearch").value = "";
+
+      handleSearch("");
+
+      $("communitySearch").focus();
+    }
+  );
+
+
+$("headerSearchButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      $("communitySearch").focus();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+  );
+
+
+$("mobileSearch")
+  .addEventListener(
+    "click",
+    () => {
+
+      $("communitySearch").focus();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+  );
+
+
+$("locationFilterButton")
+  .addEventListener(
+    "click",
+    toggleNearby
+  );
+
+
+$("closeComments")
+  .addEventListener(
+    "click",
+    closeComments
+  );
+
+
+$("commentForm")
+  .addEventListener(
+    "submit",
+    submitComment
+  );
+
+
+$("closeImageViewer")
+  .addEventListener(
+    "click",
+    closeImageViewer
+  );
+
+
+$("notificationButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "alert.html";
+    }
+  );
+
+
+$("mobileNotifications")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "alert.html";
+    }
+  );
+
+
+$("closeReport")
+  .addEventListener(
+    "click",
+    () => {
+
+      $("reportModal")
+        .classList.remove("open");
+
+      document.body.classList.remove("modal-open");
+    }
+  );
+
+
+$("cancelReport")
+  .addEventListener(
+    "click",
+    () => {
+
+      $("reportModal")
+        .classList.remove("open");
+
+      document.body.classList.remove("modal-open");
+    }
+  );
+
+
+$("reportForm")
+  .addEventListener(
+    "submit",
+    submitReport
+  );
+
+
+$("composerModal")
+  .addEventListener(
+    "click",
+    event => {
+
+      if (event.target === $("composerModal")) {
+
+        resetComposer();
+
+        closeComposer();
+      }
+    }
+  );
+
+
+$("commentsModal")
+  .addEventListener(
+    "click",
+    event => {
+
+      if (event.target === $("commentsModal")) {
+        closeComments();
+      }
+    }
+  );
+
+
+$("reportModal")
+  .addEventListener(
+    "click",
+    event => {
+
+      if (event.target === $("reportModal")) {
+
+        $("reportModal")
+          .classList.remove("open");
+
+        document.body.classList.remove("modal-open");
+      }
+    }
+  );
+
+
+$("imageViewer")
+  .addEventListener(
+    "click",
+    event => {
+
+      if (
+        event.target === $("imageViewer") ||
+        event.target === $("viewerImage")
+      ) {
+
+        closeImageViewer();
+      }
+    }
+  );
+
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (event.key !== "Escape") return;
+
+    if ($("composerModal").classList.contains("open")) {
+
+      resetComposer();
+
+      closeComposer();
+
+      return;
+    }
+
+    if ($("commentsModal").classList.contains("open")) {
+
+      closeComments();
+
+      return;
+    }
+
+    if ($("reportModal").classList.contains("open")) {
+
+      $("reportModal")
+        .classList.remove("open");
+
+      document.body.classList.remove("modal-open");
+
+      return;
+    }
+
+    if ($("imageViewer").classList.contains("open")) {
+
+      closeImageViewer();
+    }
+  }
+);
+
+
+/* ============================================================
+   AUTH INITIALIZATION
+============================================================ */
+
+onAuthStateChanged(
+  auth,
+  async user => {
+
+    if (!user) {
+
+      window.location.href =
+        "../dashboard/sign-in.html";
+
+      return;
+    }
+
+    currentUser = user;
+
+    try {
+
+      await loadCurrentProfile(user);
+
+      await loadProperties();
+
+      subscribeToFeed();
+
+      subscribeToNotifications();
+
+      handleDeepLink();
+
+    } catch (error) {
+
+      console.error(
+        "Community initialization error:",
+        error
+      );
+
+      toast(
+        "Some community features could not be initialized.",
+        "error"
+      );
+    }
+  }
+);
+
+</script>
+
+</body>
+</html>

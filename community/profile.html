@@ -1,0 +1,2245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<meta name="color-scheme" content="light">
+<meta
+    name="description"
+    content="MoonLat Community profile. View your profile, activity and community posts."
+>
+<title>Profile — MoonLat Community</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="preconnect" href="https://www.gstatic.com">
+<link rel="preconnect" href="https://api.cloudinary.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/index.min.css"
+>
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+>
+
+<style>
+:root {
+    --navy: #0b1020;
+    --navy-2: #11182a;
+    --navy-3: #182238;
+
+    --gold: #d4af37;
+    --gold-dark: #a77c19;
+    --gold-soft: #faf3d9;
+
+    --terracotta: #d86f55;
+    --terracotta-dark: #bd5c45;
+    --terracotta-soft: #fff5f1;
+
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #64748b;
+    --soft: #94a3b8;
+    --line: #e5e9f0;
+
+    --success: #059669;
+    --danger: #dc2626;
+    --blue: #4f46e5;
+
+    --font:
+        "Inter",
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "Segoe UI",
+        sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font);
+    background:
+        radial-gradient(
+            circle at 0 0,
+            rgba(79, 70, 229, .035),
+            transparent 30rem
+        ),
+        var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+button {
+    cursor: pointer;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+::selection {
+    background: rgba(216, 111, 85, .16);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.safe-top {
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(11, 16, 32, .94);
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.header-inner {
+    width: min(1400px, 100%);
+    margin: 0 auto;
+    min-height: 66px;
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    color: #fff;
+}
+
+.brand-mark {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    flex: 0 0 auto;
+
+    display: grid;
+    place-items: center;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold),
+            var(--gold-dark)
+        );
+
+    box-shadow:
+        0 8px 24px rgba(212, 175, 55, .16);
+}
+
+.brand-copy {
+    min-width: 0;
+}
+
+.brand-title {
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+}
+
+.brand-subtitle {
+    color: rgba(255, 255, 255, .46);
+    font-size: 9px;
+    margin-top: 3px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-btn {
+    width: 40px;
+    height: 40px;
+
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, .055);
+    color: rgba(255, 255, 255, .82);
+
+    display: grid;
+    place-items: center;
+
+    transition: .2s ease;
+    position: relative;
+}
+
+.header-btn:hover {
+    background: rgba(255, 255, 255, .1);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.header-notification-dot {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+
+    width: 7px;
+    height: 7px;
+
+    background: #ef4444;
+    border-radius: 50%;
+    border: 2px solid var(--navy);
+}
+
+.header-avatar {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 12px;
+    overflow: hidden;
+
+    border: 1px solid rgba(212, 175, 55, .5);
+
+    background:
+        linear-gradient(
+            135deg,
+            #475569,
+            #1e293b
+        );
+
+    color: #fff;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    flex: 0 0 auto;
+}
+
+.header-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* ============================================================
+   PROFILE HERO
+   ============================================================ */
+
+.profile-hero {
+    position: relative;
+    overflow: hidden;
+
+    color: #fff;
+
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(212, 175, 55, .16),
+            transparent 24rem
+        ),
+        radial-gradient(
+            circle at 10% 100%,
+            rgba(216, 111, 85, .09),
+            transparent 24rem
+        ),
+        linear-gradient(
+            135deg,
+            #0b1020 0%,
+            #111a2d 58%,
+            #151d31 100%
+        );
+}
+
+.profile-hero::after {
+    content: "";
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    right: -120px;
+    bottom: -170px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(212, 175, 55, .08);
+    pointer-events: none;
+}
+
+.profile-hero-inner {
+    width: min(1100px, 100%);
+    margin: 0 auto;
+    padding: 28px 18px 34px;
+}
+
+.profile-breadcrumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    color: rgba(255, 255, 255, .48);
+
+    font-size: 9px;
+    font-weight: 750;
+
+    text-transform: uppercase;
+    letter-spacing: .13em;
+
+    margin-bottom: 20px;
+}
+
+.profile-breadcrumb a {
+    transition: .2s ease;
+}
+
+.profile-breadcrumb a:hover {
+    color: #fff;
+}
+
+.profile-main {
+    display: flex;
+    align-items: flex-end;
+    gap: 17px;
+}
+
+.profile-avatar-wrap {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.profile-avatar {
+    width: 92px;
+    height: 92px;
+
+    border-radius: 28px;
+    overflow: hidden;
+
+    border: 3px solid rgba(255, 255, 255, .12);
+
+    background:
+        linear-gradient(
+            135deg,
+            #64748b,
+            #1e293b
+        );
+
+    display: grid;
+    place-items: center;
+
+    color: #fff;
+
+    font-size: 25px;
+    font-weight: 850;
+
+    box-shadow:
+        0 16px 40px rgba(0, 0, 0, .24);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-online {
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+
+    width: 19px;
+    height: 19px;
+
+    border-radius: 50%;
+
+    background: #10b981;
+
+    border: 4px solid #111a2d;
+}
+
+.profile-copy {
+    min-width: 0;
+    padding-bottom: 3px;
+}
+
+.profile-name-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.profile-name {
+    margin: 0;
+
+    color: #fff;
+
+    font-size: clamp(25px, 7vw, 38px);
+    line-height: 1.05;
+
+    font-weight: 850;
+    letter-spacing: -.045em;
+
+    overflow-wrap: anywhere;
+}
+
+.profile-verified {
+    width: 20px;
+    height: 20px;
+
+    border-radius: 50%;
+
+    display: grid;
+    place-items: center;
+
+    color: #fff;
+    background: #3b82f6;
+
+    font-size: 9px;
+}
+
+.profile-role {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    margin-top: 7px;
+
+    color: rgba(255, 255, 255, .58);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: .1em;
+}
+
+.profile-role-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--gold);
+}
+
+.profile-email {
+    margin-top: 5px;
+
+    color: rgba(255, 255, 255, .4);
+
+    font-size: 10px;
+
+    overflow-wrap: anywhere;
+}
+
+.profile-actions {
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    flex: 0 0 auto;
+}
+
+.profile-action {
+    height: 40px;
+
+    padding: 0 14px;
+
+    border-radius: 12px;
+
+    border: 1px solid rgba(255, 255, 255, .1);
+
+    background: rgba(255, 255, 255, .07);
+
+    color: rgba(255, 255, 255, .86);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    transition: .2s ease;
+}
+
+.profile-action:hover {
+    background: rgba(255, 255, 255, .12);
+    color: #fff;
+}
+
+.profile-action.primary {
+    color: #16120a;
+
+    border-color: transparent;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e0c052,
+            #c79d28
+        );
+
+    box-shadow:
+        0 8px 24px rgba(212, 175, 55, .15);
+}
+
+.profile-action.primary:hover {
+    transform: translateY(-1px);
+}
+
+
+/* ============================================================
+   PROFILE STATS
+   ============================================================ */
+
+.profile-stats {
+    margin-top: 26px;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    border-top: 1px solid rgba(255, 255, 255, .08);
+    padding-top: 17px;
+}
+
+.profile-stat {
+    min-width: 0;
+}
+
+.profile-stat + .profile-stat {
+    padding-left: 16px;
+    border-left: 1px solid rgba(255, 255, 255, .08);
+}
+
+.profile-stat strong {
+    display: block;
+
+    color: #fff;
+
+    font-size: 18px;
+    line-height: 1;
+
+    font-weight: 850;
+}
+
+.profile-stat span {
+    display: block;
+
+    margin-top: 5px;
+
+    color: rgba(255, 255, 255, .38);
+
+    font-size: 8px;
+    font-weight: 750;
+
+    text-transform: uppercase;
+    letter-spacing: .1em;
+}
+
+
+/* ============================================================
+   CONTENT
+   ============================================================ */
+
+.page {
+    width: min(1100px, 100%);
+    margin: 0 auto;
+    padding: 18px;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+}
+
+@media (min-width: 900px) {
+    .profile-grid {
+        grid-template-columns: minmax(0, 1fr) 300px;
+        align-items: start;
+    }
+}
+
+.content-column {
+    min-width: 0;
+}
+
+.sidebar {
+    display: grid;
+    gap: 14px;
+    align-content: start;
+
+    position: sticky;
+    top: 84px;
+}
+
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+
+.surface {
+    background: rgba(255, 255, 255, .97);
+
+    border: 1px solid var(--line);
+    border-radius: 18px;
+
+    box-shadow:
+        0 1px 2px rgba(15, 23, 42, .02),
+        0 10px 30px rgba(15, 23, 42, .035);
+}
+
+.card {
+    padding: 16px;
+}
+
+.section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+.section-title {
+    margin: 0;
+
+    font-size: 13px;
+    font-weight: 850;
+
+    color: #172033;
+
+    letter-spacing: -.015em;
+}
+
+.section-kicker {
+    color: #94a3b8;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: .12em;
+}
+
+
+/* ============================================================
+   ABOUT
+   ============================================================ */
+
+.about-text {
+    color: #64748b;
+
+    font-size: 12px;
+    line-height: 1.75;
+
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.about-empty {
+    color: #a1aab8;
+
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.profile-details {
+    margin-top: 16px;
+
+    display: grid;
+    gap: 10px;
+}
+
+.detail {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    min-width: 0;
+}
+
+.detail-icon {
+    width: 32px;
+    height: 32px;
+
+    flex: 0 0 auto;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    color: var(--terracotta);
+    background: var(--terracotta-soft);
+
+    font-size: 10px;
+}
+
+.detail-copy {
+    min-width: 0;
+}
+
+.detail-label {
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: .1em;
+}
+
+.detail-value {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #334155;
+
+    font-size: 10px;
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
+}
+
+.detail-value.link {
+    color: #4f46e5;
+}
+
+
+/* ============================================================
+   POSTS
+   ============================================================ */
+
+.post-card {
+    position: relative;
+
+    background: #fff;
+
+    border: 1px solid var(--line);
+    border-radius: 18px;
+
+    margin-bottom: 12px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 1px 2px rgba(15, 23, 42, .018),
+        0 8px 24px rgba(15, 23, 42, .025);
+}
+
+.post-body {
+    padding: 15px;
+}
+
+.post-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.post-author {
+    flex: 1;
+    min-width: 0;
+}
+
+.post-author-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.post-author-name {
+    color: #111827;
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+
+    height: 19px;
+    padding: 0 7px;
+
+    border-radius: 6px;
+
+    font-size: 8px;
+    font-weight: 850;
+
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.role-agent {
+    color: #8b6b18;
+    background: #faf3d9;
+}
+
+.role-buyer,
+.role-client {
+    color: #475569;
+    background: #eef2f7;
+}
+
+.role-admin {
+    color: #4338ca;
+    background: #eef2ff;
+}
+
+.post-time {
+    margin-top: 2px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+}
+
+.post-type {
+    margin-top: 13px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    color: var(--terracotta);
+    background: var(--terracotta-soft);
+
+    border-radius: 7px;
+
+    padding: 5px 8px;
+
+    font-size: 8px;
+    font-weight: 850;
+
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.post-title {
+    margin: 11px 0 6px;
+
+    color: #111827;
+
+    font-size: 17px;
+    line-height: 1.35;
+
+    font-weight: 800;
+
+    letter-spacing: -.025em;
+}
+
+.post-content {
+    color: #64748b;
+
+    font-size: 12px;
+    line-height: 1.75;
+
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.post-location {
+    margin-top: 11px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    max-width: 100%;
+
+    padding: 6px 8px;
+
+    color: #047857;
+    background: #ecfdf5;
+
+    border: 1px solid #d1fae5;
+    border-radius: 8px;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.post-location span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.post-images {
+    margin: 14px -15px -15px;
+
+    display: grid;
+    gap: 2px;
+
+    background: #f1f5f9;
+}
+
+.post-images.single {
+    grid-template-columns: 1fr;
+}
+
+.post-images.two {
+    grid-template-columns: 1fr 1fr;
+}
+
+.post-images.three {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.post-images.multi {
+    grid-template-columns: 1.25fr .75fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.post-image {
+    position: relative;
+
+    overflow: hidden;
+
+    background: #e2e8f0;
+
+    min-height: 150px;
+}
+
+.post-images.single .post-image {
+    max-height: 460px;
+}
+
+.post-images.two .post-image,
+.post-images.three .post-image {
+    aspect-ratio: 1 / 1;
+}
+
+.post-images.multi .post-image:first-child {
+    grid-row: 1 / span 2;
+    min-height: 300px;
+}
+
+.post-images.multi .post-image:not(:first-child) {
+    min-height: 148px;
+}
+
+.post-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition: transform .45s ease;
+}
+
+.post-image:hover img {
+    transform: scale(1.025);
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+
+    padding-top: 12px;
+    margin-top: 12px;
+
+    border-top: 1px solid #eef1f5;
+}
+
+.post-action {
+    height: 32px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 0 8px;
+
+    border-radius: 9px;
+
+    color: #64748b;
+
+    font-size: 9px;
+    font-weight: 750;
+}
+
+.post-action:hover {
+    background: #f8fafc;
+    color: #111827;
+}
+
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+.sidebar-card {
+    padding: 15px;
+}
+
+.sidebar-title {
+    margin: 0 0 12px;
+
+    font-size: 11px;
+    font-weight: 850;
+
+    color: #172033;
+}
+
+.sidebar-stat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 9px 0;
+
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.sidebar-stat:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.sidebar-stat:first-child {
+    padding-top: 0;
+}
+
+.sidebar-stat span {
+    color: #64748b;
+    font-size: 10px;
+}
+
+.sidebar-stat strong {
+    color: #172033;
+    font-size: 11px;
+    font-weight: 850;
+}
+
+.sync-state {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    color: #64748b;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.sync-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #10b981;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, .08);
+}
+
+.sync-dot.syncing {
+    background: #f59e0b;
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, .08);
+}
+
+.sync-dot.error {
+    background: #ef4444;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, .08);
+}
+
+
+/* ============================================================
+   EMPTY / LOADING
+   ============================================================ */
+
+.feed-state {
+    padding: 48px 20px;
+
+    text-align: center;
+
+    border: 1px dashed #dce2ea;
+    border-radius: 18px;
+
+    background: rgba(255, 255, 255, .7);
+}
+
+.feed-state-icon {
+    width: 48px;
+    height: 48px;
+
+    margin: 0 auto 12px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 15px;
+
+    background: #f1f5f9;
+    color: #94a3b8;
+}
+
+.feed-state-title {
+    font-size: 13px;
+    font-weight: 800;
+
+    color: #334155;
+}
+
+.feed-state-text {
+    max-width: 360px;
+
+    margin: 5px auto 0;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.skeleton {
+    position: relative;
+    overflow: hidden;
+
+    background: #e9edf3;
+}
+
+.skeleton::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    transform: translateX(-100%);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.65),
+            transparent
+        );
+
+    animation: shimmer 1.3s infinite;
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+
+    display: none;
+
+    align-items: flex-end;
+    justify-content: center;
+
+    padding: 12px;
+
+    background: rgba(2, 6, 23, .62);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-backdrop.open {
+    display: flex;
+}
+
+.modal {
+    width: min(560px, 100%);
+
+    max-height:
+        calc(
+            100dvh -
+            env(safe-area-inset-top) -
+            env(safe-area-inset-bottom) -
+            24px
+        );
+
+    overflow-y: auto;
+
+    border-radius: 22px;
+
+    background: #fff;
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, .25);
+
+    animation: modalIn .22s ease;
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 16px 16px 13px;
+
+    background: rgba(255, 255, 255, .94);
+
+    border-bottom: 1px solid var(--line);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.modal-title {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 14px;
+    font-weight: 850;
+}
+
+.modal-close {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 10px;
+
+    color: #64748b;
+
+    display: grid;
+    place-items: center;
+}
+
+.modal-close:hover {
+    background: #f1f5f9;
+    color: #111827;
+}
+
+.modal-body {
+    padding: 16px;
+}
+
+.form-grid {
+    display: grid;
+    gap: 13px;
+}
+
+.field {
+    display: grid;
+    gap: 6px;
+}
+
+.field label {
+    color: #475569;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: .09em;
+}
+
+.field input,
+.field textarea {
+    width: 100%;
+
+    border: 1px solid #dfe5ec;
+    border-radius: 12px;
+
+    background: #f8fafc;
+
+    color: #111827;
+
+    outline: none;
+
+    padding: 11px 12px;
+
+    font-size: 11px;
+
+    transition: .2s ease;
+}
+
+.field input {
+    height: 43px;
+}
+
+.field textarea {
+    min-height: 105px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.field input:focus,
+.field textarea:focus {
+    background: #fff;
+
+    border-color: rgba(216, 111, 85, .55);
+
+    box-shadow:
+        0 0 0 4px rgba(216, 111, 85, .08);
+}
+
+.field-help {
+    color: #94a3b8;
+    font-size: 9px;
+    line-height: 1.5;
+}
+
+.modal-footer {
+    position: sticky;
+    bottom: 0;
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+
+    padding: 13px 16px;
+
+    background: rgba(255, 255, 255, .96);
+
+    border-top: 1px solid var(--line);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.modal-btn {
+    height: 40px;
+
+    padding: 0 14px;
+
+    border-radius: 11px;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.modal-btn.secondary {
+    color: #475569;
+    background: #f1f5f9;
+}
+
+.modal-btn.primary {
+    color: #fff;
+    background: var(--terracotta);
+}
+
+.modal-btn.primary:hover {
+    background: var(--terracotta-dark);
+}
+
+.modal-btn:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   IMAGE UPLOAD
+   ============================================================ */
+
+.avatar-upload {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 11px;
+
+    border: 1px solid #e6eaf0;
+    border-radius: 14px;
+
+    background: #fafbfc;
+}
+
+.avatar-preview {
+    width: 48px;
+    height: 48px;
+
+    flex: 0 0 auto;
+
+    overflow: hidden;
+
+    border-radius: 14px;
+
+    display: grid;
+    place-items: center;
+
+    color: #fff;
+
+    font-size: 12px;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            135deg,
+            #64748b,
+            #334155
+        );
+}
+
+.avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.upload-btn {
+    height: 36px;
+
+    padding: 0 11px;
+
+    border-radius: 9px;
+
+    color: #475569;
+    background: #fff;
+
+    border: 1px solid #e0e5eb;
+
+    font-size: 9px;
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+
+.toast-container {
+    position: fixed;
+
+    left: 14px;
+    right: 14px;
+
+    bottom:
+        calc(
+            14px +
+            env(safe-area-inset-bottom)
+        );
+
+    z-index: 400;
+
+    display: grid;
+    gap: 8px;
+
+    pointer-events: none;
+}
+
+.toast {
+    width: min(420px, 100%);
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 12px 13px;
+
+    border-radius: 13px;
+
+    color: #fff;
+    background: #111827;
+
+    box-shadow:
+        0 14px 34px rgba(15, 23, 42, .2);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    pointer-events: auto;
+
+    animation: toastIn .22s ease;
+}
+
+.toast.success {
+    background: #065f46;
+}
+
+.toast.error {
+    background: #991b1b;
+}
+
+.toast.info {
+    background: #1e3a8a;
+}
+
+.toast i {
+    font-size: 11px;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+    .header-inner {
+        min-height: 62px;
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .brand-mark {
+        width: 36px;
+        height: 36px;
+    }
+
+    .header-btn,
+    .header-avatar {
+        width: 38px;
+        height: 38px;
+    }
+
+    .profile-hero-inner {
+        padding: 22px 14px 26px;
+    }
+
+    .profile-main {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .profile-copy {
+        flex: 1 1 calc(100% - 110px);
+    }
+
+    .profile-actions {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 2px;
+    }
+
+    .profile-action {
+        flex: 1;
+    }
+
+    .profile-stats {
+        margin-top: 21px;
+    }
+
+    .page {
+        padding: 14px;
+    }
+
+    .sidebar {
+        position: static;
+    }
+}
+
+@media (max-width: 430px) {
+
+    .brand-subtitle {
+        display: none;
+    }
+
+    .profile-avatar {
+        width: 82px;
+        height: 82px;
+        border-radius: 24px;
+    }
+
+    .profile-copy {
+        flex-basis: calc(100% - 99px);
+    }
+
+    .profile-name {
+        font-size: 25px;
+    }
+
+    .profile-email {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 701px) {
+
+    .modal-backdrop {
+        align-items: center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+
+<header class="app-header safe-top">
+    <div class="header-inner">
+
+        <a
+            href="index.html"
+            class="brand"
+            aria-label="Back to MoonLat Community"
+        >
+            <div class="brand-mark">
+                <i class="fas fa-house-chimney"></i>
+            </div>
+
+            <div class="brand-copy">
+                <div class="brand-title">MoonLat</div>
+                <div class="brand-subtitle">
+                    Community Network
+                </div>
+            </div>
+        </a>
+
+        <div class="header-actions">
+
+            <a
+                href="index.html"
+                class="header-btn"
+                aria-label="Community"
+                title="Community"
+            >
+                <i class="fas fa-comments text-xs"></i>
+            </a>
+
+            <button
+                id="notificationButton"
+                class="header-btn"
+                type="button"
+                aria-label="Notifications"
+                title="Notifications"
+            >
+                <i class="far fa-bell text-sm"></i>
+                <span
+                    id="notificationDot"
+                    class="header-notification-dot hidden"
+                ></span>
+            </button>
+
+            <a
+                href="profile.html"
+                id="headerAvatar"
+                class="header-avatar"
+                aria-label="Your profile"
+            >
+                U
+            </a>
+
+        </div>
+
+    </div>
+</header>
+
+
+<!-- ============================================================
+     PROFILE HERO
+     ============================================================ -->
+
+<section class="profile-hero">
+
+    <div class="profile-hero-inner">
+
+        <div class="profile-breadcrumb">
+            <a href="index.html">
+                <i class="fas fa-arrow-left"></i>
+                Community
+            </a>
+
+            <i class="fas fa-chevron-right text-[7px]"></i>
+
+            <span>Profile</span>
+        </div>
+
+        <div class="profile-main">
+
+            <div class="profile-avatar-wrap">
+
+                <div
+                    id="profileAvatar"
+                    class="profile-avatar"
+                >
+                    <span id="profileInitials">U</span>
+                </div>
+
+                <span
+                    id="profileOnline"
+                    class="profile-online"
+                ></span>
+
+            </div>
+
+            <div class="profile-copy">
+
+                <div class="profile-name-row">
+
+                    <h1
+                        id="profileName"
+                        class="profile-name"
+                    >
+                        Loading...
+                    </h1>
+
+                    <span
+                        id="verifiedBadge"
+                        class="profile-verified hidden"
+                        title="Verified account"
+                    >
+                        <i class="fas fa-check"></i>
+                    </span>
+
+                </div>
+
+                <div class="profile-role">
+                    <span class="profile-role-dot"></span>
+                    <span id="profileRole">
+                        Community member
+                    </span>
+                </div>
+
+                <div
+                    id="profileEmail"
+                    class="profile-email"
+                >
+                    Loading profile...
+                </div>
+
+            </div>
+
+            <div class="profile-actions">
+
+                <button
+                    id="editProfileButton"
+                    class="profile-action primary"
+                    type="button"
+                >
+                    <i class="fas fa-pen"></i>
+                    Edit profile
+                </button>
+
+                <a
+                    href="index.html"
+                    class="profile-action"
+                >
+                    <i class="fas fa-plus"></i>
+                    Community
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-stats">
+
+            <div class="profile-stat">
+                <strong id="statPosts">0</strong>
+                <span>Posts</span>
+            </div>
+
+            <div class="profile-stat">
+                <strong id="statComments">0</strong>
+                <span>Replies</span>
+            </div>
+
+            <div class="profile-stat">
+                <strong id="statLikes">0</strong>
+                <span>Likes received</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ============================================================
+     CONTENT
+     ============================================================ -->
+
+<main class="page">
+
+    <div class="profile-grid">
+
+        <section class="content-column">
+
+            <!-- ABOUT -->
+
+            <section class="surface card">
+
+                <div class="section-head">
+
+                    <div>
+                        <div class="section-kicker">
+                            Profile
+                        </div>
+
+                        <h2 class="section-title">
+                            About
+                        </h2>
+                    </div>
+
+                    <div
+                        id="profileSyncState"
+                        class="sync-state"
+                    >
+                        <span
+                            id="syncDot"
+                            class="sync-dot syncing"
+                        ></span>
+
+                        <span id="syncText">
+                            Syncing
+                        </span>
+                    </div>
+
+                </div>
+
+                <div
+                    id="aboutText"
+                    class="about-text"
+                >
+                    Loading profile information...
+                </div>
+
+                <div
+                    id="profileDetails"
+                    class="profile-details"
+                ></div>
+
+            </section>
+
+
+            <!-- POSTS -->
+
+            <section
+                class="surface card"
+                style="margin-top:16px;"
+            >
+
+                <div class="section-head">
+
+                    <div>
+                        <div class="section-kicker">
+                            Community
+                        </div>
+
+                        <h2 class="section-title">
+                            Recent activity
+                        </h2>
+                    </div>
+
+                    <span
+                        id="activityCount"
+                        class="section-kicker"
+                    >
+                        0 posts
+                    </span>
+
+                </div>
+
+                <div id="postsContainer">
+
+                    <div class="feed-state">
+
+                        <div class="feed-state-icon">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+
+                        <div class="feed-state-title">
+                            Loading activity
+                        </div>
+
+                        <div class="feed-state-text">
+                            Syncing this profile with the MoonLat community.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <section class="surface sidebar-card">
+
+                <h3 class="sidebar-title">
+                    Community activity
+                </h3>
+
+                <div class="sidebar-stat">
+                    <span>Posts</span>
+                    <strong id="sidePosts">0</strong>
+                </div>
+
+                <div class="sidebar-stat">
+                    <span>Replies</span>
+                    <strong id="sideComments">0</strong>
+                </div>
+
+                <div class="sidebar-stat">
+                    <span>Likes received</span>
+                    <strong id="sideLikes">0</strong>
+                </div>
+
+            </section>
+
+
+            <section class="surface sidebar-card">
+
+                <h3 class="sidebar-title">
+                    Account
+                </h3>
+
+                <div class="sidebar-stat">
+                    <span>Role</span>
+                    <strong id="sideRole">
+                        Member
+                    </strong>
+                </div>
+
+                <div class="sidebar-stat">
+                    <span>Member since</span>
+                    <strong id="sideJoined">
+                        —
+                    </strong>
+                </div>
+
+                <div class="sidebar-stat">
+                    <span>Status</span>
+                    <strong id="sideStatus">
+                        Active
+                    </strong>
+                </div>
+
+            </section>
+
+        </aside>
+
+    </div>
+
+</main>
+
+
+<!-- ============================================================
+     EDIT PROFILE MODAL
+     ============================================================ -->
+
+<div
+    id="editModal"
+    class="modal-backdrop"
+    aria-hidden="true"
+>
+
+    <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="editModalTitle"
+    >
+
+        <div class="modal-head">
+
+            <h2
+                id="editModalTitle"
+                class="modal-title"
+            >
+                Edit profile
+            </h2>
+
+            <button
+                id="closeEditModal"
+                class="modal-close"
+                type="button"
+                aria-label="Close"
+            >
+                <i class="fas fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <form id="profileForm">
+
+            <div class="modal-body">
+
+                <div class="form-grid">
+
+                    <div class="avatar-upload">
+
+                        <div
+                            id="modalAvatarPreview"
+                            class="avatar-preview"
+                        >
+                            U
+                        </div>
+
+                        <div style="min-width:0;flex:1;">
+
+                            <div
+                                style="
+                                    color:#334155;
+                                    font-size:10px;
+                                    font-weight:800;
+                                "
+                            >
+                                Profile photo
+                            </div>
+
+                            <div
+                                style="
+                                    color:#94a3b8;
+                                    font-size:9px;
+                                    margin-top:3px;
+                                "
+                            >
+                                JPG, PNG, WEBP or GIF
+                            </div>
+
+                        </div>
+
+                        <label
+                            for="avatarInput"
+                            class="upload-btn"
+                        >
+                            Change
+                        </label>
+
+                        <input
+                            id="avatarInput"
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp,image/gif"
+                            class="hidden"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="displayNameInput">
+                            Display name
+                        </label>
+
+                        <input
+                            id="displayNameInput"
+                            type="text"
+                            maxlength="80"
+                            autocomplete="name"
+                            placeholder="Your name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="bioInput">
+                            Bio
+                        </label>
+
+                        <textarea
+                            id="bioInput"
+                            maxlength="500"
+                            placeholder="Tell the community a little about yourself..."
+                        ></textarea>
+
+                        <div class="field-help">
+                            Keep it short and useful. Maximum 500 characters.
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="locationInput">
+                            Location
+                        </label>
+
+                        <input
+                            id="locationInput"
+                            type="text"
+                            maxlength="120"
+                            autocomplete="address-level2"
+                            placeholder="e.g. Lagos, Nigeria"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="websiteInput">
+                            Website
+                        </label>
+
+                        <input
+                            id="websiteInput"
+                            type="url"
+                            maxlength="240"
+                            inputmode="url"
+                            autocomplete="url"
+                            placeholder="https://example.com"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    id="cancelEdit"
+                    class="modal-btn secondary"
+                    type="button"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="saveProfileButton"
+                    class="modal-btn primary"
+                    type="submit"
+                >
+                    Save changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     TOAST
+     ============================================================ -->
+
+<div
+    id="toastContainer"
+    class="toast-container"
+    aria-live="polite"
+    aria-atomic="true"
+></div>
+
+
+<!-- ============================================================
+     FIREBASE
+     ============================================================ -->
+
+
+
+</body>
+</html>
