@@ -1,0 +1,34 @@
+MoonLat Dashboard Split - Phase 1
+
+dashboard/
+  agent/
+    index.html
+  buyer/
+    index.html
+
+Both index files are standalone role-specific entry points.
+They share the same Firebase project and Firestore collections, but no longer
+use the old SPA page renderer to switch between agent and buyer views.
+
+Phase 2 target:
+  agent/upload.html
+  agent/manager.html
+  agent/leads.html
+  agent/clients.html
+  agent/appointments.html
+  agent/deals.html
+  agent/earnings.html
+  agent/analytics.html
+  agent/media.html
+  agent/notifications.html
+  agent/settings.html
+
+  buyer/explore-property.html
+  buyer/bookmark.html
+  buyer/appointments.html
+  buyer/notifications.html
+  buyer/settings.html
+
+Authentication routing target:
+  agent signup -> email verification -> agent onboarding -> agent/index.html
+  buyer signup -> email verification -> buyer/index.html

@@ -2,355 +2,3244 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f7f9fd">
+<meta name="color-scheme" content="light">
+<meta name="description" content="Create your MoonLat real estate account and choose whether you want to sell properties or buy and rent.">
 <title>Create Account - MoonLat Real Estate</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/index.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5.0.3/index.min.css">
+
 <style>
-  * { font-family: 'Inter', system-ui, sans-serif; }
-  h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
-  body { background: #f8fafc; }
-  .auth-container { min-height: 100vh; display: flex; }
-  .auth-brand {
-    flex: 1; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    position: relative; overflow: hidden; display: none;
+  :root {
+    --blue: #2454d7;
+    --blue-dark: #173caa;
+    --navy: #0c1222;
+    --text: #101626;
+    --muted: #718096;
+    --soft: #f7f9fd;
+    --border: #dfe4ec;
+    --danger: #dc3d48;
+    --success: #15945f;
   }
-  @media (min-width: 1024px) { .auth-brand { display: flex; } }
-  .auth-brand::before {
-    content: ''; position: absolute; top: -50%; right: -20%;
-    width: 80%; height: 200%;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+
+  * {
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, sans-serif;
   }
-  .brand-content { position: relative; z-index: 1; padding: 3rem; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
-  .auth-form-side { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; background: white; }
-  .auth-card { width: 100%; max-width: 480px; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  .input-wrapper { position: relative; }
-  .input-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.875rem; }
-  .auth-input {
-    width: 100%; padding: 0.875rem 1rem 0.875rem 2.75rem;
-    border: 1.5px solid #e2e8f0; border-radius: 12px;
-    font-size: 0.9375rem; transition: all 0.2s; background: white;
+
+  html {
+    min-height: 100%;
+    scroll-behavior: smooth;
   }
-  .auth-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
-  .btn-primary {
-    width: 100%; padding: 0.875rem;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    color: white; border: none; border-radius: 12px;
-    font-weight: 600; font-size: 0.9375rem; cursor: pointer;
-    transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+    background:
+      radial-gradient(circle at 85% 4%, rgba(48, 100, 224, 0.10), transparent 28%),
+      linear-gradient(180deg, #fbfcff 0%, #f6f8fc 100%);
+    color: var(--text);
   }
-  .btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(15, 23, 42, 0.4); }
-  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-  .role-card {
-    padding: 1.25rem; border: 2px solid #e2e8f0; border-radius: 12px;
-    cursor: pointer; transition: all 0.2s; text-align: center;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  button {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: -0.025em;
+  }
+
+  button,
+  input {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  .page-shell {
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ============================================================
+     DESKTOP BRAND PANEL
+     ============================================================ */
+
+  .brand-panel {
+    display: none;
+    position: relative;
+    width: 42%;
+    min-height: 100vh;
+    overflow: hidden;
+    color: white;
+    background:
+      radial-gradient(circle at 80% 15%, rgba(69, 119, 255, 0.35), transparent 32%),
+      radial-gradient(circle at 15% 80%, rgba(42, 83, 210, 0.20), transparent 35%),
+      linear-gradient(145deg, #071022 0%, #101c38 52%, #0c1429 100%);
+  }
+
+  @media (min-width: 1024px) {
+    .brand-panel {
+      display: block;
+    }
+  }
+
+  .brand-panel::before {
+    content: '';
+    position: absolute;
+    width: 650px;
+    height: 650px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    right: -280px;
+    top: 8%;
+  }
+
+  .brand-panel::after {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    left: -300px;
+    bottom: 5%;
+  }
+
+  .brand-content {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    padding: 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .brand-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .brand-logo-mark {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #3975f5, #1d48c4);
+    box-shadow:
+      0 14px 35px rgba(37, 87, 216, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  }
+
+  .brand-logo-mark i {
+    font-size: 22px;
+  }
+
+  .brand-logo-title {
+    font-size: 25px;
+    line-height: 1;
+    font-weight: 800;
+  }
+
+  .brand-logo-subtitle {
+    margin-top: 6px;
+    color: rgba(202, 217, 255, 0.66);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .brand-copy {
+    max-width: 520px;
+  }
+
+  .brand-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #6d9bff;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .brand-eyebrow::before {
+    content: '';
+    width: 34px;
+    height: 3px;
+    border-radius: 99px;
+    background: #4b83f4;
+  }
+
+  .brand-copy h2 {
+    margin: 0;
+    font-size: clamp(42px, 4vw, 64px);
+    line-height: 1.02;
+    font-weight: 800;
+  }
+
+  .brand-copy h2 span {
+    color: #5d8cff;
+  }
+
+  .brand-copy p {
+    max-width: 490px;
+    margin-top: 24px;
+    color: rgba(226, 233, 250, 0.72);
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  .brand-feature-list {
+    margin-top: 36px;
+    display: grid;
+    gap: 13px;
+  }
+
+  .brand-feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .brand-feature-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #70a0ff;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .brand-testimonial {
+    max-width: 500px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.055);
+    backdrop-filter: blur(18px);
+  }
+
+  .brand-testimonial-stars {
+    color: #f7c95d;
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+
+  .brand-testimonial p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .brand-testimonial small {
+    display: block;
+    margin-top: 12px;
+    color: rgba(186, 205, 245, 0.64);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .brand-footer {
+    color: rgba(185, 198, 228, 0.48);
+    font-size: 11px;
+  }
+
+  /* ============================================================
+     FORM PANEL
+     ============================================================ */
+
+  .form-panel {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 28px 20px 40px;
+  }
+
+  @media (min-width: 640px) {
+    .form-panel {
+      padding: 42px 32px 56px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .form-panel {
+      width: 58%;
+      align-items: center;
+      overflow-y: auto;
+      padding: 56px;
+    }
+  }
+
+  .form-container {
+    width: 100%;
+    max-width: 760px;
+    animation: pageEnter 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes pageEnter {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ============================================================
+     MOBILE / MAIN BRAND
+     ============================================================ */
+
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 42px;
+  }
+
+  .mobile-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 13px;
+  }
+
+  .mobile-brand-mark {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background: linear-gradient(145deg, #3975f5, #1d48c4);
+    box-shadow: 0 12px 30px rgba(37, 87, 216, 0.22);
+  }
+
+  .mobile-brand-mark i {
+    font-size: 21px;
+  }
+
+  .mobile-brand-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 25px;
+    line-height: 1;
+    font-weight: 800;
+  }
+
+  .secure-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #657085;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .secure-badge i {
+    color: #159c61;
+    font-size: 17px;
+  }
+
+  @media (min-width: 1024px) {
+    .mobile-topbar {
+      display: none;
+    }
+  }
+
+  .intro {
+    margin-bottom: 34px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    color: var(--blue);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 38px;
+    height: 4px;
+    border-radius: 99px;
+    background: #3d80eb;
+  }
+
+  .intro h1 {
+    margin: 0;
+    color: #0b1020;
+    font-size: clamp(37px, 6vw, 58px);
+    line-height: 1.04;
+    font-weight: 800;
+  }
+
+  .intro p {
+    max-width: 700px;
+    margin: 18px 0 0;
+    color: #738097;
+    font-size: clamp(16px, 2.3vw, 21px);
+    line-height: 1.7;
+  }
+
+  /* ============================================================
+     ALERTS
+     ============================================================ */
+
+  .alert-stack {
+    margin-bottom: 22px;
+  }
+
+  .alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px 16px;
+    border: 1px solid;
+    border-radius: 15px;
+    animation: alertIn 0.25s ease;
+  }
+
+  @keyframes alertIn {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .alert-icon {
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+  }
+
+  .alert-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .alert-title {
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .alert-message {
+    margin-top: 3px;
+    font-size: 12px;
+    line-height: 1.55;
+    opacity: 0.86;
+  }
+
+  .alert-close {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0.55;
+  }
+
+  .alert-error {
+    color: #b4232d;
+    border-color: #f4c6cb;
+    background: #fff6f7;
+  }
+
+  .alert-error .alert-icon {
+    background: #ffe1e4;
+  }
+
+  .alert-success {
+    color: #087443;
+    border-color: #bfe7d2;
+    background: #f2fcf7;
+  }
+
+  .alert-success .alert-icon {
+    background: #d8f5e5;
+  }
+
+  .alert-warning {
+    color: #9a5b00;
+    border-color: #f3d69d;
+    background: #fffaf0;
+  }
+
+  .alert-warning .alert-icon {
+    background: #ffedc3;
+  }
+
+  /* ============================================================
+     FORM FIELDS
+     ============================================================ */
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  @media (min-width: 640px) {
+    .form-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+  }
+
+  .field {
+    min-width: 0;
+  }
+
+  .field-full {
+    grid-column: 1 / -1;
+  }
+
+  .field-label {
+    display: block;
+    margin-bottom: 9px;
+    color: #2d384c;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .required {
+    color: #d8454f;
+  }
+
+  .input-wrap {
     position: relative;
   }
-  .role-card:hover { border-color: #cbd5e1; background: #f8fafc; }
+
+  .field-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ba6b8;
+    pointer-events: none;
+    font-size: 15px;
+    transition: color 0.2s ease;
+    z-index: 2;
+  }
+
+  .field-input {
+    width: 100%;
+    height: 66px;
+    padding: 0 54px 0 58px;
+    border: 1.5px solid #dce2ea;
+    border-radius: 18px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.96);
+    color: #1a2334;
+    font-size: 16px;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background 0.2s ease,
+      transform 0.2s ease;
+    box-shadow: 0 2px 7px rgba(20, 35, 65, 0.025);
+  }
+
+  .field-input::placeholder {
+    color: #a9b2c0;
+  }
+
+  .field-input:hover {
+    border-color: #cbd3df;
+  }
+
+  .field-input:focus {
+    border-color: #3b76e9;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(59, 118, 233, 0.10);
+  }
+
+  .input-wrap:focus-within .field-icon {
+    color: #2d6de0;
+  }
+
+  .field-input.invalid {
+    border-color: #d64550;
+    box-shadow: 0 0 0 4px rgba(214, 69, 80, 0.08);
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 10px;
+    color: #99a4b5;
+    background: transparent;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+
+  .password-toggle:hover {
+    color: #344156;
+    background: #f3f5f9;
+  }
+
+  .field-error {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    margin-top: 7px;
+    color: #c62d39;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .field-error.show {
+    display: flex;
+  }
+
+  /* ============================================================
+     ROLE SELECTION
+     ============================================================ */
+
+  .role-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 10px;
+  }
+
+  .role-heading .field-label {
+    margin-bottom: 0;
+  }
+
+  .role-hint {
+    color: #a0a9b8;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .role-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  @media (min-width: 640px) {
+    .role-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+  }
+
+  .role-card {
+    position: relative;
+    min-height: 205px;
+    padding: 20px;
+    border: 1.5px solid #dce2ea;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.92);
+    cursor: pointer;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .role-card:hover {
+    transform: translateY(-2px);
+    border-color: #c5cfdd;
+    box-shadow: 0 10px 28px rgba(23, 43, 77, 0.06);
+  }
+
   .role-card.selected {
-    border-color: #3b82f6; background: #eff6ff;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    border-color: #3c77e9;
+    background: #f6f9ff;
+    box-shadow:
+      0 0 0 4px rgba(60, 119, 233, 0.09),
+      0 13px 32px rgba(38, 82, 166, 0.08);
   }
-  .role-card.selected::after {
-    content: '\f058'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
-    position: absolute; top: 8px; right: 8px; color: #3b82f6; font-size: 1.125rem;
+
+  .role-radio {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 27px;
+    height: 27px;
+    border: 2px solid #d5dbe4;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
   }
+
+  .role-radio::after {
+    content: '';
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: transparent;
+    transform: scale(0);
+    transition: transform 0.18s ease;
+  }
+
+  .role-card.selected .role-radio {
+    border-color: #3270df;
+  }
+
+  .role-card.selected .role-radio::after {
+    background: #3270df;
+    transform: scale(1);
+  }
+
   .role-icon {
-    width: 48px; height: 48px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 0.75rem; font-size: 1.25rem;
+    width: 54px;
+    height: 54px;
+    border-radius: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 19px;
   }
-  .alert { padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.8125rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; animation: fadeIn 0.2s; }
-  .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; }
-  .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .role-agent .role-icon {
+    color: #2866dc;
+    background: #e9f1ff;
+  }
+
+  .role-buyer .role-icon {
+    color: #169b76;
+    background: #e6f7f2;
+  }
+
+  .role-card h3 {
+    margin: 0;
+    color: #151d2c;
+    font-size: 17px;
+    font-weight: 800;
+  }
+
+  .role-card p {
+    max-width: 280px;
+    margin: 8px 0 0;
+    color: #7b8596;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .role-error {
+    display: none;
+    margin-top: 8px;
+    color: #c62d39;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .role-error.show {
+    display: block;
+  }
+
+  /* ============================================================
+     PASSWORD STRENGTH
+     ============================================================ */
+
+  .strength-meter {
+    display: none;
+    margin-top: 9px;
+  }
+
+  .strength-meter.show {
+    display: block;
+  }
+
+  .strength-bars {
+    display: flex;
+    gap: 4px;
+  }
+
+  .strength-bar {
+    height: 4px;
+    flex: 1;
+    border-radius: 99px;
+    background: #e4e8ee;
+    transition: background 0.2s ease;
+  }
+
+  .strength-text {
+    margin-top: 5px;
+    color: #8791a1;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  /* ============================================================
+     TERMS
+     ============================================================ */
+
+  .terms-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 17px 18px;
+    border: 1px solid #e1e5eb;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.58);
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .terms-row.invalid {
+    border-color: #e0a4aa;
+    background: #fffafa;
+  }
+
+  .terms-checkbox {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    margin-top: 1px;
+    appearance: none;
+    border: 2px solid #697181;
+    border-radius: 7px;
+    background: white;
+    cursor: pointer;
+  }
+
+  .terms-checkbox:checked {
+    border-color: #2f6ddc;
+    background: #2f6ddc;
+  }
+
+  .terms-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 11px;
+    left: 6px;
+    top: 2px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .terms-label {
+    color: #818b9b;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  .terms-label a {
+    color: #2d66d4;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .terms-label a:hover {
+    text-decoration: underline;
+  }
+
+  /* ============================================================
+     PRIMARY BUTTON
+     ============================================================ */
+
+  .primary-button {
+    width: 100%;
+    height: 66px;
+    margin-top: 18px;
+    border: 0;
+    border-radius: 19px;
+    color: white;
+    background:
+      linear-gradient(135deg, #0d1424 0%, #111827 52%, #0b1020 100%);
+    box-shadow:
+      0 16px 32px rgba(10, 18, 34, 0.17),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .primary-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 20px 38px rgba(10, 18, 34, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .primary-button:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .primary-button:disabled {
+    opacity: 0.62;
+    cursor: not-allowed;
+  }
+
+  .button-arrow {
+    font-size: 15px;
+    transition: transform 0.2s ease;
+  }
+
+  .primary-button:hover:not(:disabled) .button-arrow {
+    transform: translateX(4px);
+  }
+
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.28);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.65s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+
+  .signin-line {
+    margin-top: 28px;
+    text-align: center;
+    color: #7c8798;
+    font-size: 13px;
+  }
+
+  .signin-line a {
+    color: #2d66d4;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .signin-line a:hover {
+    text-decoration: underline;
+  }
+
+  .security-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e6ec;
+    color: #9ca6b5;
+    font-size: 11px;
+  }
+
+  .security-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .security-item i {
+    font-size: 14px;
+    color: #a0a9b7;
+  }
+
+  /* ============================================================
+     VERIFICATION SCREEN
+     ============================================================ */
+
+  .verification-screen {
+    display: none;
+  }
+
+  .verification-screen.active {
+    display: block;
+    animation: pageEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .signup-screen.hidden {
+    display: none;
+  }
+
+  .verification-card {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 38px 0 10px;
+    text-align: center;
+  }
+
+  .verification-icon {
+    width: 92px;
+    height: 92px;
+    margin: 0 auto 28px;
+    border-radius: 29px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2767d9;
+    background: #eaf2ff;
+    box-shadow: 0 16px 38px rgba(39, 103, 217, 0.10);
+  }
+
+  .verification-icon i {
+    font-size: 35px;
+  }
+
+  .verification-card h2 {
+    margin: 0;
+    color: #0c1323;
+    font-size: clamp(30px, 5vw, 43px);
+    line-height: 1.08;
+    font-weight: 800;
+  }
+
+  .verification-card > p {
+    max-width: 570px;
+    margin: 16px auto 0;
+    color: #758095;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .verification-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 12px 16px;
+    border: 1px solid #dbe4f3;
+    border-radius: 14px;
+    color: #2b4d8e;
+    background: #f4f8ff;
+    font-size: 13px;
+    font-weight: 800;
+    word-break: break-word;
+  }
+
+  .verification-actions {
+    display: grid;
+    gap: 11px;
+    max-width: 440px;
+    margin: 28px auto 0;
+  }
+
+  .verify-primary,
+  .verify-secondary {
+    width: 100%;
+    min-height: 56px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+
+  .verify-primary {
+    border: 0;
+    color: white;
+    background: #101827;
+  }
+
+  .verify-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(16, 24, 39, 0.14);
+  }
+
+  .verify-secondary {
+    border: 1px solid #dce2ea;
+    color: #2c3749;
+    background: white;
+  }
+
+  .verify-secondary:hover {
+    border-color: #bcc6d4;
+    background: #fafbfc;
+  }
+
+  .verify-meta {
+    margin-top: 22px;
+    color: #9aa4b3;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .resend-button {
+    border: 0;
+    background: transparent;
+    color: #2e69d8;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .resend-button:disabled {
+    color: #9da7b5;
+    cursor: not-allowed;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+
+  @media (max-width: 639px) {
+    .form-panel {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+
+    .mobile-topbar {
+      margin-bottom: 34px;
+    }
+
+    .intro {
+      margin-bottom: 28px;
+    }
+
+    .intro h1 {
+      font-size: 39px;
+    }
+
+    .intro p {
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .eyebrow {
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .field-input {
+      height: 62px;
+      border-radius: 17px;
+    }
+
+    .role-card {
+      min-height: 185px;
+    }
+
+    .primary-button {
+      height: 62px;
+      border-radius: 17px;
+    }
+
+    .security-footer {
+      gap: 12px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
 </style>
 </head>
+
 <body>
 
-<div class="auth-container">
-  <div class="auth-brand">
+<div class="page-shell">
+
+  <!-- ==========================================================
+       DESKTOP BRAND PANEL
+       ========================================================== -->
+
+  <aside class="brand-panel" aria-hidden="true">
     <div class="brand-content">
-      <div>
-        <div class="flex items-center gap-3 mb-12">
-          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-            <i class="fas fa-moon text-xl text-white"></i>
-          </div>
-          <div>
-            <h1 class="text-2xl font-bold text-white tracking-tight">MoonLat</h1>
-            <p class="text-sm text-blue-200/80">Premium Real Estate Platform</p>
-          </div>
+
+      <div class="brand-logo">
+        <div class="brand-logo-mark">
+          <i class="fas fa-moon"></i>
         </div>
-        <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-          Start closing deals<br><span class="text-blue-400">today</span>
+
+        <div>
+          <div class="brand-logo-title">MoonLat</div>
+          <div class="brand-logo-subtitle">Real Estate Platform</div>
+        </div>
+      </div>
+
+      <div class="brand-copy">
+        <div class="brand-eyebrow">Get started</div>
+
+        <h2>
+          Build your
+          <br>
+          <span>real estate future.</span>
         </h2>
-        <p class="text-lg text-blue-100/80 max-w-md">
-          Join thousands of top-performing agents and buyers finding their dream properties with MoonLat.
+
+        <p>
+          Create one secure MoonLat account and get the workspace,
+          tools and property experience built around the way you
+          want to use the platform.
         </p>
-      </div>
-      <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="flex -space-x-2">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-red-500 border-2 border-white/20"></div>
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 border-2 border-white/20"></div>
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-teal-500 border-2 border-white/20"></div>
+
+        <div class="brand-feature-list">
+          <div class="brand-feature">
+            <div class="brand-feature-icon">
+              <i class="fas fa-shield-halved"></i>
+            </div>
+            <span>Secure account and verified identity flow</span>
           </div>
-          <div class="flex items-center gap-1 text-amber-400 text-sm">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            <span class="text-white/80 ml-1">4.9/5</span>
+
+          <div class="brand-feature">
+            <div class="brand-feature-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <span>Purpose-built workspace for your role</span>
+          </div>
+
+          <div class="brand-feature">
+            <div class="brand-feature-icon">
+              <i class="fas fa-house"></i>
+            </div>
+            <span>Connected property marketplace experience</span>
           </div>
         </div>
-        <p class="text-white/90 text-sm italic">"MoonLat transformed how I manage my listings. I closed 30% more deals in my first month."</p>
-        <p class="text-blue-200 text-xs mt-3 font-semibold">— Sarah M., Top Producer</p>
       </div>
-      <p class="text-sm text-blue-200/60">© 2024 MoonLat. All rights reserved.</p>
+
+      <div>
+        <div class="brand-testimonial">
+          <div class="brand-testimonial-stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+
+          <p>
+            "MoonLat gives agents and buyers a focused place to
+            discover, manage and move property opportunities forward."
+          </p>
+
+          <small>MoonLat Platform</small>
+        </div>
+
+        <div class="brand-footer mt-8">
+          © 2026 MoonLat. All rights reserved.
+        </div>
+      </div>
+
     </div>
-  </div>
+  </aside>
 
-  <div class="auth-form-side">
-    <div class="auth-card">
-      <div class="mb-6">
-        <h2 class="text-3xl font-bold text-gray-900 mb-2">Create account</h2>
-        <p class="text-gray-500">Get started with your free account today.</p>
+  <!-- ==========================================================
+       MAIN FORM PANEL
+       ========================================================== -->
+
+  <main class="form-panel">
+
+    <div class="form-container">
+
+      <!-- MOBILE HEADER -->
+
+      <div class="mobile-topbar">
+
+        <a href="sign-in.html" class="mobile-brand" aria-label="MoonLat">
+          <div class="mobile-brand-mark">
+            <i class="fas fa-moon"></i>
+          </div>
+
+          <div class="mobile-brand-name">
+            MoonLat
+          </div>
+        </a>
+
+        <div class="secure-badge">
+          <i class="fas fa-shield-halved"></i>
+          <span>Secure</span>
+        </div>
+
       </div>
 
-      <div id="alertBox"></div>
+      <!-- ======================================================
+           SIGNUP SCREEN
+           ====================================================== -->
 
-      <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-4">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">First Name</label>
-            <div class="input-wrapper">
-              <i class="fas fa-user input-icon"></i>
-              <input type="text" id="regFirstName" class="auth-input" placeholder="John" required>
-            </div>
+      <section id="signupScreen" class="signup-screen">
+
+        <div class="intro">
+
+          <div class="eyebrow">
+            Get started
           </div>
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Last Name</label>
-            <div class="input-wrapper">
-              <i class="fas fa-user input-icon"></i>
-              <input type="text" id="regLastName" class="auth-input" placeholder="Doe" required>
-            </div>
-          </div>
+
+          <h1>
+            Create your account
+          </h1>
+
+          <p>
+            Create your MoonLat account and choose how you want
+            to use the platform.
+          </p>
+
         </div>
 
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email Address</label>
-          <div class="input-wrapper">
-            <i class="fas fa-envelope input-icon"></i>
-            <input type="email" id="regEmail" class="auth-input" placeholder="you@example.com" required>
-          </div>
-        </div>
+        <div id="alertBox" class="alert-stack" aria-live="polite"></div>
 
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Password</label>
-          <div class="input-wrapper">
-            <i class="fas fa-lock input-icon"></i>
-            <input type="password" id="regPassword" class="auth-input pr-10" placeholder="Min 8 characters" required minlength="8" oninput="checkStrength(this.value)">
-            <i class="fas fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-gray-600" onclick="togglePassword('regPassword', this)"></i>
-          </div>
-          <div id="strengthMeter" class="hidden mt-2">
-            <div class="flex gap-1 mb-1">
-              <div class="h-1.5 flex-1 rounded bg-gray-200 transition-colors" id="str1"></div>
-              <div class="h-1.5 flex-1 rounded bg-gray-200 transition-colors" id="str2"></div>
-              <div class="h-1.5 flex-1 rounded bg-gray-200 transition-colors" id="str3"></div>
-              <div class="h-1.5 flex-1 rounded bg-gray-200 transition-colors" id="str4"></div>
-            </div>
-            <p class="text-xs text-gray-500" id="strText">Password strength</p>
-          </div>
-        </div>
+        <form id="registerForm" novalidate>
 
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">I am a...</label>
-          <div class="grid grid-cols-2 gap-3">
-            <div class="role-card selected" data-role="agent" onclick="selectRole(this)">
-              <div class="role-icon bg-blue-100 text-blue-600">
-                <i class="fas fa-user-tie"></i>
+          <div class="form-grid">
+
+            <!-- FIRST NAME -->
+
+            <div class="field">
+
+              <label class="field-label" for="regFirstName">
+                First name <span class="required">*</span>
+              </label>
+
+              <div class="input-wrap">
+                <i class="fas fa-user field-icon"></i>
+
+                <input
+                  type="text"
+                  id="regFirstName"
+                  class="field-input"
+                  placeholder="John"
+                  autocomplete="given-name"
+                  maxlength="60"
+                  required
+                >
               </div>
-              <p class="text-base font-semibold text-gray-900">Agent</p>
-              <p class="text-xs text-gray-500 mt-1">List properties, manage clients & close deals</p>
-            </div>
-            <div class="role-card" data-role="buyer" onclick="selectRole(this)">
-              <div class="role-icon bg-emerald-100 text-emerald-600">
-                <i class="fas fa-home"></i>
+
+              <div id="firstNameError" class="field-error">
+                <i class="fas fa-circle-exclamation"></i>
+                <span>First name is required.</span>
               </div>
-              <p class="text-base font-semibold text-gray-900">Buyer</p>
-              <p class="text-xs text-gray-500 mt-1">Browse listings & schedule viewings</p>
+
             </div>
+
+            <!-- LAST NAME -->
+
+            <div class="field">
+
+              <label class="field-label" for="regLastName">
+                Last name <span class="required">*</span>
+              </label>
+
+              <div class="input-wrap">
+                <i class="fas fa-user field-icon"></i>
+
+                <input
+                  type="text"
+                  id="regLastName"
+                  class="field-input"
+                  placeholder="Doe"
+                  autocomplete="family-name"
+                  maxlength="60"
+                  required
+                >
+              </div>
+
+              <div id="lastNameError" class="field-error">
+                <i class="fas fa-circle-exclamation"></i>
+                <span>Last name is required.</span>
+              </div>
+
+            </div>
+
+            <!-- EMAIL -->
+
+            <div class="field field-full">
+
+              <label class="field-label" for="regEmail">
+                Email address <span class="required">*</span>
+              </label>
+
+              <div class="input-wrap">
+                <i class="fas fa-envelope field-icon"></i>
+
+                <input
+                  type="email"
+                  id="regEmail"
+                  class="field-input"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                  inputmode="email"
+                  autocapitalize="none"
+                  spellcheck="false"
+                  maxlength="160"
+                  required
+                >
+              </div>
+
+              <div id="emailError" class="field-error">
+                <i class="fas fa-circle-exclamation"></i>
+                <span>Please enter a valid email address.</span>
+              </div>
+
+            </div>
+
+            <!-- PASSWORD -->
+
+            <div class="field field-full">
+
+              <label class="field-label" for="regPassword">
+                Password <span class="required">*</span>
+              </label>
+
+              <div class="input-wrap">
+
+                <i class="fas fa-lock field-icon"></i>
+
+                <input
+                  type="password"
+                  id="regPassword"
+                  class="field-input"
+                  placeholder="At least 8 characters"
+                  autocomplete="new-password"
+                  minlength="8"
+                  maxlength="128"
+                  required
+                >
+
+                <button
+                  type="button"
+                  class="password-toggle"
+                  id="passwordToggle"
+                  aria-label="Show password"
+                >
+                  <i class="fas fa-eye"></i>
+                </button>
+
+              </div>
+
+              <div id="passwordError" class="field-error">
+                <i class="fas fa-circle-exclamation"></i>
+                <span>Password must be at least 8 characters.</span>
+              </div>
+
+              <div id="strengthMeter" class="strength-meter">
+
+                <div class="strength-bars">
+                  <div class="strength-bar" id="str1"></div>
+                  <div class="strength-bar" id="str2"></div>
+                  <div class="strength-bar" id="str3"></div>
+                  <div class="strength-bar" id="str4"></div>
+                </div>
+
+                <div id="strText" class="strength-text">
+                  Password strength
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- ROLE -->
+
+            <div class="field field-full">
+
+              <div class="role-heading">
+
+                <label class="field-label">
+                  I want to... <span class="required">*</span>
+                </label>
+
+                <span class="role-hint">
+                  Choose your account type
+                </span>
+
+              </div>
+
+              <div class="role-grid">
+
+                <!-- AGENT -->
+
+                <button
+                  type="button"
+                  class="role-card role-agent"
+                  data-role="agent"
+                  aria-pressed="false"
+                >
+
+                  <span class="role-radio" aria-hidden="true"></span>
+
+                  <div class="role-icon">
+                    <i class="fas fa-building"></i>
+                  </div>
+
+                  <h3>
+                    Sell properties
+                  </h3>
+
+                  <p>
+                    Create listings, manage properties, receive
+                    leads and grow your real estate business.
+                  </p>
+
+                </button>
+
+                <!-- BUYER -->
+
+                <button
+                  type="button"
+                  class="role-card role-buyer"
+                  data-role="buyer"
+                  aria-pressed="false"
+                >
+
+                  <span class="role-radio" aria-hidden="true"></span>
+
+                  <div class="role-icon">
+                    <i class="fas fa-house"></i>
+                  </div>
+
+                  <h3>
+                    Buy or rent
+                  </h3>
+
+                  <p>
+                    Discover listings, save properties and
+                    schedule property viewings.
+                  </p>
+
+                </button>
+
+              </div>
+
+              <div id="roleError" class="role-error">
+                Please choose how you want to use MoonLat.
+              </div>
+
+            </div>
+
+            <!-- TERMS -->
+
+            <div class="field field-full">
+
+              <div id="termsRow" class="terms-row">
+
+                <input
+                  type="checkbox"
+                  id="agreeTerms"
+                  class="terms-checkbox"
+                >
+
+                <label for="agreeTerms" class="terms-label">
+                  I agree to the
+                  <a href="#" id="termsLink">Terms of Service</a>
+                  and
+                  <a href="#" id="privacyLink">Privacy Policy</a>.
+                </label>
+
+              </div>
+
+            </div>
+
           </div>
+
+          <button
+            type="submit"
+            id="registerBtn"
+            class="primary-button"
+          >
+            <span id="registerButtonText">
+              Create MoonLat account
+            </span>
+
+            <i id="registerButtonArrow" class="fas fa-arrow-right button-arrow"></i>
+          </button>
+
+        </form>
+
+        <p class="signin-line">
+          Already have an account?
+          <a href="sign-in.html">
+            Sign in
+          </a>
+        </p>
+
+        <div class="security-footer">
+
+          <span class="security-item">
+            <i class="fas fa-shield-halved"></i>
+            Secure
+          </span>
+
+          <span class="security-item">
+            <i class="fas fa-lock"></i>
+            Encrypted
+          </span>
+
+          <span class="security-item">
+            <i class="fas fa-circle-check"></i>
+            Trusted platform
+          </span>
+
         </div>
 
-        <div class="flex items-start gap-2 pt-1">
-          <input type="checkbox" id="agreeTerms" class="w-4 h-4 mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" required>
-          <label for="agreeTerms" class="text-xs text-gray-600 leading-relaxed">
-            I agree to the <a href="#" class="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>
-          </label>
+      </section>
+
+      <!-- ======================================================
+           EMAIL VERIFICATION SCREEN
+           ====================================================== -->
+
+      <section id="verificationScreen" class="verification-screen">
+
+        <div class="verification-card">
+
+          <div class="verification-icon">
+            <i class="fas fa-envelope-circle-check"></i>
+          </div>
+
+          <h2>
+            Verify your email
+          </h2>
+
+          <p>
+            Your MoonLat account has been created. Before we open
+            your workspace, verify your email address using the
+            link we sent to:
+          </p>
+
+          <div id="verificationEmail" class="verification-email">
+            <i class="fas fa-envelope"></i>
+            <span>your@email.com</span>
+          </div>
+
+          <div id="verificationAlert" class="alert-stack mt-5" aria-live="polite"></div>
+
+          <div class="verification-actions">
+
+            <button
+              type="button"
+              id="verificationCheckBtn"
+              class="verify-primary"
+            >
+              <i class="fas fa-circle-check mr-2"></i>
+              I've verified my email
+            </button>
+
+            <button
+              type="button"
+              id="resendVerificationBtn"
+              class="verify-secondary"
+            >
+              <i class="fas fa-rotate-right mr-2"></i>
+              Resend verification email
+            </button>
+
+            <button
+              type="button"
+              id="changeAccountBtn"
+              class="verify-secondary"
+            >
+              <i class="fas fa-arrow-left mr-2"></i>
+              Use another account
+            </button>
+
+          </div>
+
+          <div class="verify-meta">
+            Verification emails can occasionally take a few minutes
+            to arrive. Check your spam or junk folder if you don't
+            see it.
+            <br><br>
+            <span id="resendStatus"></span>
+          </div>
+
         </div>
 
-        <button type="submit" id="registerBtn" class="btn-primary mt-6">
-          <span>Create Account</span>
-          <i class="fas fa-arrow-right"></i>
-        </button>
-      </form>
+      </section>
 
-      <p class="text-center text-sm text-gray-600 mt-8">
-        Already have an account? 
-        <a href="sign-in.html" class="font-semibold text-blue-600 hover:underline">Sign in</a>
-      </p>
     </div>
-  </div>
+
+  </main>
+
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+/* ============================================================
+   FIREBASE
+   ============================================================ */
+
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification,
+  onAuthStateChanged,
+  signOut,
+  setPersistence,
+  browserSessionPersistence
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
-  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+  authDomain: "auth.moonlat.top",
   projectId: "moonlat-estate-dashboard",
   storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
   messagingSenderId: "289878951289",
   appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
 };
 
+
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
+
 const db = getFirestore(app);
 
-// Flag to prevent redirect during registration
-let isRegistering = false;
 
-// Redirect if already logged in (but not during registration)
-onAuthStateChanged(auth, (user) => {
-  if (user && !isRegistering) {
-    window.location.href = 'dashboard.html';
-  }
+/*
+ * Registration should remain in the current browser session
+ * until email verification and routing are complete.
+ */
+setPersistence(auth, browserSessionPersistence).catch((error) => {
+  console.warn("Could not configure authentication persistence:", error);
 });
 
-let selectedRole = 'agent';
 
-function showAlert(type, msg) {
-  const box = document.getElementById('alertBox');
-  const icon = type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle';
-  box.innerHTML = `<div class="alert alert-${type}"><i class="fas ${icon}"></i><span>${msg}</span></div>`;
-  setTimeout(() => box.innerHTML = '', 5000);
+/* ============================================================
+   STATE
+   ============================================================ */
+
+let selectedRole = null;
+
+let isRegistering = false;
+
+let verificationUser = null;
+
+let resendCooldown = false;
+
+
+/* ============================================================
+   ELEMENTS
+   ============================================================ */
+
+const registerForm =
+  document.getElementById("registerForm");
+
+const registerBtn =
+  document.getElementById("registerBtn");
+
+const signupScreen =
+  document.getElementById("signupScreen");
+
+const verificationScreen =
+  document.getElementById("verificationScreen");
+
+const verificationEmail =
+  document.getElementById("verificationEmail");
+
+const verificationCheckBtn =
+  document.getElementById("verificationCheckBtn");
+
+const resendVerificationBtn =
+  document.getElementById("resendVerificationBtn");
+
+const changeAccountBtn =
+  document.getElementById("changeAccountBtn");
+
+const verificationAlert =
+  document.getElementById("verificationAlert");
+
+const resendStatus =
+  document.getElementById("resendStatus");
+
+
+/* ============================================================
+   SAFE TEXT
+   ============================================================ */
+
+function escapeHTML(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
-function getErrorMessage(code) {
-  const errors = {
-    'auth/email-already-in-use': 'This email is already registered. Try signing in.',
-    'auth/invalid-email': 'Please enter a valid email address.',
-    'auth/weak-password': 'Password should be at least 8 characters.',
-    'auth/operation-not-allowed': 'Registration is currently disabled.',
-    'auth/network-request-failed': 'Network error. Check your connection.'
+
+/* ============================================================
+   EMAIL VALIDATION
+   ============================================================ */
+
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+}
+
+
+/* ============================================================
+   ALERT SYSTEM
+   ============================================================ */
+
+function showAlert(
+  type,
+  title,
+  message,
+  target = "main"
+) {
+
+  const box =
+    target === "verification"
+      ? verificationAlert
+      : document.getElementById("alertBox");
+
+  const iconMap = {
+    error: "fa-circle-xmark",
+    success: "fa-circle-check",
+    warning: "fa-triangle-exclamation"
   };
-  return errors[code] || 'An error occurred. Please try again.';
+
+  box.innerHTML = `
+    <div class="alert alert-${type}">
+
+      <div class="alert-icon">
+        <i class="fas ${iconMap[type] || iconMap.error}"></i>
+      </div>
+
+      <div class="alert-content">
+
+        <div class="alert-title">
+          ${escapeHTML(title)}
+        </div>
+
+        ${
+          message
+            ? `<div class="alert-message">${escapeHTML(message)}</div>`
+            : ""
+        }
+
+      </div>
+
+      <button
+        type="button"
+        class="alert-close"
+        aria-label="Dismiss notification"
+      >
+        <i class="fas fa-xmark"></i>
+      </button>
+
+    </div>
+  `;
+
+  const closeButton =
+    box.querySelector(".alert-close");
+
+  if (closeButton) {
+    closeButton.addEventListener("click", () => {
+      box.innerHTML = "";
+    });
+  }
 }
 
-window.selectRole = (el) => {
-  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedRole = el.dataset.role;
-};
 
-window.togglePassword = (id, icon) => {
-  const input = document.getElementById(id);
-  input.type = input.type === 'password' ? 'text' : 'password';
-  icon.classList.toggle('fa-eye');
-  icon.classList.toggle('fa-eye-slash');
-};
+function clearAlert(target = "main") {
 
-window.checkStrength = (pwd) => {
-  const meter = document.getElementById('strengthMeter');
-  if (pwd.length === 0) { meter.classList.add('hidden'); return; }
-  meter.classList.remove('hidden');
-  
-  let score = 0;
-  if (pwd.length >= 8) score++;
-  if (/[A-Z]/.test(pwd)) score++;
-  if (/[0-9]/.test(pwd)) score++;
-  if (/[^A-Za-z0-9]/.test(pwd)) score++;
-  
-  const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500'];
-  const texts = ['Weak', 'Fair', 'Good', 'Strong'];
-  
-  for (let i = 1; i <= 4; i++) {
-    document.getElementById('str' + i).className = `h-1.5 flex-1 rounded transition-colors ${i <= score ? colors[score - 1] : 'bg-gray-200'}`;
+  if (target === "verification") {
+    verificationAlert.innerHTML = "";
+  } else {
+    document.getElementById("alertBox").innerHTML = "";
   }
-  document.getElementById('strText').textContent = texts[score - 1] || 'Password strength';
-};
+}
 
-window.handleRegister = async (e) => {
-  e.preventDefault();
-  const firstName = document.getElementById('regFirstName').value.trim();
-  const lastName = document.getElementById('regLastName').value.trim();
-  const email = document.getElementById('regEmail').value.trim();
-  const password = document.getElementById('regPassword').value;
-  const agreed = document.getElementById('agreeTerms').checked;
-  
-  if (!agreed) return showAlert('error', 'Please agree to the Terms of Service');
-  if (password.length < 8) return showAlert('error', 'Password must be at least 8 characters');
-  
-  const btn = document.getElementById('registerBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Creating account...';
-  
-  // Set flag to prevent premature redirect
-  isRegistering = true;
-  
-  try {
-    const result = await createUserWithEmailAndPassword(auth, email, password);
-    const fullName = `${firstName} ${lastName}`.trim();
-    
-    await updateProfile(result.user, { displayName: fullName });
-    
-    // Build user profile based on role
-    const userProfile = {
-      name: fullName,
-      email: email,
-      role: selectedRole,  // THIS IS NOW SAVED CORRECTLY
-      avatar: fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
-      createdAt: Date.now(),
-      memberSince: new Date().toLocaleDateString('en', { month: 'short', year: 'numeric' }),
-      phone: '',
-      bio: '',
-      updatedAt: serverTimestamp()
-    };
-    
-    // Add role-specific fields
-    if (selectedRole === 'agent') {
-      userProfile.agency = '';
-      userProfile.license = '';
-      userProfile.serviceArea = '';
-      userProfile.commissionRate = '3%';
+
+/* ============================================================
+   FIREBASE ERROR MESSAGES
+   ============================================================ */
+
+function getErrorInfo(code) {
+
+  const errors = {
+
+    "auth/email-already-in-use": {
+      title: "Email already registered",
+      message:
+        "An account already exists with this email address. Try signing in instead."
+    },
+
+    "auth/invalid-email": {
+      title: "Invalid email",
+      message:
+        "Please enter a valid email address."
+    },
+
+    "auth/weak-password": {
+      title: "Password is too weak",
+      message:
+        "Choose a stronger password with at least 8 characters."
+    },
+
+    "auth/operation-not-allowed": {
+      title: "Registration unavailable",
+      message:
+        "Email registration is currently unavailable. Please try again later."
+    },
+
+    "auth/network-request-failed": {
+      title: "Connection problem",
+      message:
+        "We couldn't reach MoonLat. Check your internet connection and try again."
+    },
+
+    "auth/too-many-requests": {
+      title: "Too many attempts",
+      message:
+        "For security, please wait a little before trying again."
+    },
+
+    "auth/user-disabled": {
+      title: "Account disabled",
+      message:
+        "This account has been disabled. Please contact MoonLat support."
     }
-    
-    // CRITICAL: Wait for Firestore write to complete BEFORE redirecting
-    await setDoc(doc(db, 'users', result.user.uid), userProfile);
-    
-    showAlert('success', 'Account created! Redirecting...');
-    
-    // Now it's safe to redirect
-    setTimeout(() => {
-      window.location.href = 'dashboard.html';
-    }, 1000);
-    
-  } catch (err) {
-    isRegistering = false;
-    showAlert('error', getErrorMessage(err.code));
-    btn.disabled = false;
-    btn.innerHTML = '<span>Create Account</span><i class="fas fa-arrow-right"></i>';
+  };
+
+  return errors[code] || {
+    title: "Account creation failed",
+    message:
+      "Something unexpected happened. Please try again."
+  };
+}
+
+
+/* ============================================================
+   ROLE SELECTION
+   ============================================================ */
+
+document.querySelectorAll(".role-card").forEach((card) => {
+
+  card.addEventListener("click", () => {
+
+    selectedRole =
+      card.dataset.role || null;
+
+    document.querySelectorAll(".role-card").forEach((item) => {
+
+      const active =
+        item === card;
+
+      item.classList.toggle(
+        "selected",
+        active
+      );
+
+      item.setAttribute(
+        "aria-pressed",
+        active ? "true" : "false"
+      );
+
+    });
+
+    document
+      .getElementById("roleError")
+      .classList.remove("show");
+
+  });
+
+});
+
+
+/* ============================================================
+   PASSWORD TOGGLE
+   ============================================================ */
+
+document
+  .getElementById("passwordToggle")
+  .addEventListener("click", () => {
+
+    const input =
+      document.getElementById("regPassword");
+
+    const icon =
+      document.querySelector(
+        "#passwordToggle i"
+      );
+
+    const visible =
+      input.type === "text";
+
+    input.type =
+      visible ? "password" : "text";
+
+    icon.classList.toggle(
+      "fa-eye",
+      visible
+    );
+
+    icon.classList.toggle(
+      "fa-eye-slash",
+      !visible
+    );
+
+    document
+      .getElementById("passwordToggle")
+      .setAttribute(
+        "aria-label",
+        visible
+          ? "Show password"
+          : "Hide password"
+      );
+
+  });
+
+
+/* ============================================================
+   PASSWORD STRENGTH
+   ============================================================ */
+
+function updatePasswordStrength(password) {
+
+  const meter =
+    document.getElementById("strengthMeter");
+
+  const text =
+    document.getElementById("strText");
+
+  if (!password) {
+    meter.classList.remove("show");
+    return;
   }
-};
+
+  meter.classList.add("show");
+
+  let score = 0;
+
+  if (password.length >= 8) {
+    score++;
+  }
+
+  if (password.length >= 12) {
+    score++;
+  }
+
+  if (/[A-Z]/.test(password)) {
+    score++;
+  }
+
+  if (/[0-9]/.test(password)) {
+    score++;
+  }
+
+  if (/[^A-Za-z0-9]/.test(password)) {
+    score++;
+  }
+
+  score = Math.min(score, 4);
+
+  const states = [
+    {
+      color: "#e2555f",
+      text: "Weak"
+    },
+    {
+      color: "#e88b35",
+      text: "Fair"
+    },
+    {
+      color: "#d3aa32",
+      text: "Good"
+    },
+    {
+      color: "#15945f",
+      text: "Strong"
+    }
+  ];
+
+  document.querySelectorAll(".strength-bar").forEach((bar, index) => {
+
+    if (index < score) {
+      bar.style.background =
+        states[Math.max(0, score - 1)].color;
+    } else {
+      bar.style.background =
+        "#e4e8ee";
+    }
+
+  });
+
+  text.textContent =
+    score > 0
+      ? states[Math.max(0, score - 1)].text
+      : "Password strength";
+
+}
+
+
+/* ============================================================
+   INPUT EVENTS
+   ============================================================ */
+
+document
+  .getElementById("regPassword")
+  .addEventListener("input", (event) => {
+
+    clearFieldError(
+      event.target,
+      "passwordError"
+    );
+
+    updatePasswordStrength(
+      event.target.value
+    );
+
+  });
+
+
+document
+  .getElementById("regEmail")
+  .addEventListener("input", (event) => {
+
+    clearFieldError(
+      event.target,
+      "emailError"
+    );
+
+  });
+
+
+document
+  .getElementById("regFirstName")
+  .addEventListener("input", (event) => {
+
+    clearFieldError(
+      event.target,
+      "firstNameError"
+    );
+
+  });
+
+
+document
+  .getElementById("regLastName")
+  .addEventListener("input", (event) => {
+
+    clearFieldError(
+      event.target,
+      "lastNameError"
+    );
+
+  });
+
+
+document
+  .getElementById("agreeTerms")
+  .addEventListener("change", () => {
+
+    if (
+      document.getElementById("agreeTerms").checked
+    ) {
+      document
+        .getElementById("termsRow")
+        .classList.remove("invalid");
+    }
+
+  });
+
+
+/* ============================================================
+   FIELD ERRORS
+   ============================================================ */
+
+function showFieldError(
+  input,
+  errorId,
+  message
+) {
+
+  input.classList.add("invalid");
+
+  const error =
+    document.getElementById(errorId);
+
+  error.querySelector("span").textContent =
+    message;
+
+  error.classList.add("show");
+
+}
+
+
+function clearFieldError(
+  input,
+  errorId
+) {
+
+  input.classList.remove("invalid");
+
+  document
+    .getElementById(errorId)
+    .classList.remove("show");
+
+}
+
+
+/* ============================================================
+   FORM VALIDATION
+   ============================================================ */
+
+function validateForm() {
+
+  let valid = true;
+
+  const firstName =
+    document.getElementById("regFirstName");
+
+  const lastName =
+    document.getElementById("regLastName");
+
+  const email =
+    document.getElementById("regEmail");
+
+  const password =
+    document.getElementById("regPassword");
+
+  const terms =
+    document.getElementById("agreeTerms");
+
+  if (!firstName.value.trim()) {
+
+    showFieldError(
+      firstName,
+      "firstNameError",
+      "First name is required."
+    );
+
+    valid = false;
+
+  }
+
+  if (!lastName.value.trim()) {
+
+    showFieldError(
+      lastName,
+      "lastNameError",
+      "Last name is required."
+    );
+
+    valid = false;
+
+  }
+
+  if (!email.value.trim()) {
+
+    showFieldError(
+      email,
+      "emailError",
+      "Email address is required."
+    );
+
+    valid = false;
+
+  } else if (
+    !validateEmail(email.value.trim())
+  ) {
+
+    showFieldError(
+      email,
+      "emailError",
+      "Please enter a valid email address."
+    );
+
+    valid = false;
+
+  }
+
+  if (!password.value) {
+
+    showFieldError(
+      password,
+      "passwordError",
+      "Password is required."
+    );
+
+    valid = false;
+
+  } else if (
+    password.value.length < 8
+  ) {
+
+    showFieldError(
+      password,
+      "passwordError",
+      "Password must be at least 8 characters."
+    );
+
+    valid = false;
+
+  }
+
+  if (!selectedRole) {
+
+    document
+      .getElementById("roleError")
+      .classList.add("show");
+
+    valid = false;
+
+  }
+
+  if (!terms.checked) {
+
+    document
+      .getElementById("termsRow")
+      .classList.add("invalid");
+
+    valid = false;
+
+  }
+
+  return valid;
+
+}
+
+
+/* ============================================================
+   ROUTING
+   ============================================================ */
+
+function getDashboardPath(role) {
+
+  if (role === "agent") {
+    return "agent/index.html";
+  }
+
+  if (role === "buyer") {
+    return "buyer/index.html";
+  }
+
+  return "sign-in.html";
+
+}
+
+
+function getAgentOnboardingPath() {
+
+  return "agent-onboarding.html";
+
+}
+
+
+function getRoleProfilePath(role) {
+
+  if (role === "agent") {
+    return getAgentOnboardingPath();
+  }
+
+  return getDashboardPath("buyer");
+
+}
+
+
+/* ============================================================
+   REDIRECT AFTER VERIFICATION
+   ============================================================ */
+
+async function routeVerifiedUser(user) {
+
+  if (!user) {
+    window.location.href = "sign-in.html";
+    return;
+  }
+
+  try {
+
+    const profile = await getUserProfile(user.uid);
+
+    const role =
+      profile?.role || "buyer";
+
+    if (role === "agent") {
+
+      /*
+       * Every newly created agent enters onboarding first.
+       *
+       * The onboarding page is responsible for determining
+       * whether the profile is complete before opening
+       * agent/index.html.
+       */
+      window.location.href =
+        getAgentOnboardingPath();
+
+      return;
+
+    }
+
+    window.location.href =
+      getDashboardPath("buyer");
+
+  } catch (error) {
+
+    console.error(
+      "Could not determine account role:",
+      error
+    );
+
+    /*
+     * Do not silently send an agent to the buyer workspace.
+     * The safest fallback is sign-in.
+     */
+    window.location.href =
+      "sign-in.html";
+
+  }
+
+}
+
+
+/* ============================================================
+   FIRESTORE PROFILE
+   ============================================================ */
+
+async function getUserProfile(uid) {
+
+  const {
+    getDoc
+  } = await import(
+    "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"
+  );
+
+  const snapshot =
+    await getDoc(
+      doc(db, "users", uid)
+    );
+
+  return snapshot.exists()
+    ? snapshot.data()
+    : null;
+
+}
+
+
+/* ============================================================
+   VERIFICATION SCREEN
+   ============================================================ */
+
+function showVerificationScreen(user) {
+
+  verificationUser = user;
+
+  signupScreen.classList.add("hidden");
+
+  verificationScreen.classList.add("active");
+
+  verificationEmail.innerHTML = `
+    <i class="fas fa-envelope"></i>
+    <span>${escapeHTML(user.email || "")}</span>
+  `;
+
+  clearAlert("verification");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+function showSignupScreen() {
+
+  verificationScreen.classList.remove("active");
+
+  signupScreen.classList.remove("hidden");
+
+  verificationUser = null;
+
+  clearAlert("verification");
+
+}
+
+
+/* ============================================================
+   SEND VERIFICATION
+   ============================================================ */
+
+async function sendVerification(user) {
+
+  if (!user) {
+    throw new Error(
+      "No authenticated user is available."
+    );
+  }
+
+  await sendEmailVerification(user);
+
+}
+
+
+/* ============================================================
+   CHECK VERIFICATION
+   ============================================================ */
+
+verificationCheckBtn.addEventListener(
+  "click",
+  async () => {
+
+    if (!verificationUser) {
+      return;
+    }
+
+    clearAlert("verification");
+
+    verificationCheckBtn.disabled = true;
+
+    verificationCheckBtn.innerHTML = `
+      <span
+        class="spinner"
+        style="width:17px;height:17px;"
+      ></span>
+      Checking verification...
+    `;
+
+    try {
+
+      await verificationUser.reload();
+
+      const refreshedUser =
+        auth.currentUser;
+
+      if (
+        refreshedUser &&
+        refreshedUser.emailVerified
+      ) {
+
+        showAlert(
+          "success",
+          "Email verified",
+          "Your account is verified. Opening your MoonLat workspace...",
+          "verification"
+        );
+
+        setTimeout(() => {
+
+          routeVerifiedUser(
+            refreshedUser
+          );
+
+        }, 650);
+
+        return;
+
+      }
+
+      showAlert(
+        "warning",
+        "Email not verified yet",
+        "Open the verification link we sent to your email, then try again.",
+        "verification"
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Verification check failed:",
+        error
+      );
+
+      showAlert(
+        "error",
+        "Verification check failed",
+        "We couldn't confirm your email status. Please try again.",
+        "verification"
+      );
+
+    } finally {
+
+      verificationCheckBtn.disabled = false;
+
+      verificationCheckBtn.innerHTML = `
+        <i class="fas fa-circle-check mr-2"></i>
+        I've verified my email
+      `;
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   RESEND VERIFICATION
+   ============================================================ */
+
+resendVerificationBtn.addEventListener(
+  "click",
+  async () => {
+
+    if (
+      !verificationUser ||
+      resendCooldown
+    ) {
+      return;
+    }
+
+    clearAlert("verification");
+
+    resendCooldown = true;
+
+    resendVerificationBtn.disabled = true;
+
+    resendVerificationBtn.innerHTML = `
+      <i class="fas fa-spinner fa-spin mr-2"></i>
+      Sending...
+    `;
+
+    try {
+
+      await sendVerification(
+        verificationUser
+      );
+
+      showAlert(
+        "success",
+        "Verification email sent",
+        "A new verification link has been sent to your email address.",
+        "verification"
+      );
+
+      let seconds = 30;
+
+      resendStatus.textContent =
+        `You can request another email in ${seconds}s.`;
+
+      const interval =
+        setInterval(() => {
+
+          seconds--;
+
+          if (seconds <= 0) {
+
+            clearInterval(interval);
+
+            resendCooldown = false;
+
+            resendVerificationBtn.disabled = false;
+
+            resendVerificationBtn.innerHTML = `
+              <i class="fas fa-rotate-right mr-2"></i>
+              Resend verification email
+            `;
+
+            resendStatus.textContent = "";
+
+            return;
+
+          }
+
+          resendStatus.textContent =
+            `You can request another email in ${seconds}s.`;
+
+        }, 1000);
+
+    } catch (error) {
+
+      console.error(
+        "Could not resend verification email:",
+        error
+      );
+
+      const info =
+        getErrorInfo(error.code);
+
+      showAlert(
+        "error",
+        info.title,
+        info.message,
+        "verification"
+      );
+
+      resendCooldown = false;
+
+      resendVerificationBtn.disabled = false;
+
+      resendVerificationBtn.innerHTML = `
+        <i class="fas fa-rotate-right mr-2"></i>
+        Resend verification email
+      `;
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   CHANGE ACCOUNT
+   ============================================================ */
+
+changeAccountBtn.addEventListener(
+  "click",
+  async () => {
+
+    changeAccountBtn.disabled = true;
+
+    try {
+
+      await signOut(auth);
+
+      showSignupScreen();
+
+    } catch (error) {
+
+      console.error(
+        "Could not sign out:",
+        error
+      );
+
+      showAlert(
+        "error",
+        "Could not change account",
+        "Please reload the page and try again.",
+        "verification"
+      );
+
+    } finally {
+
+      changeAccountBtn.disabled = false;
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   REGISTRATION
+   ============================================================ */
+
+registerForm.addEventListener(
+  "submit",
+  async (event) => {
+
+    event.preventDefault();
+
+    clearAlert();
+
+    if (!validateForm()) {
+
+      const firstInvalid =
+        document.querySelector(
+          ".field-input.invalid"
+        );
+
+      if (firstInvalid) {
+        firstInvalid.focus();
+      }
+
+      return;
+
+    }
+
+    const firstName =
+      document
+        .getElementById("regFirstName")
+        .value
+        .trim();
+
+    const lastName =
+      document
+        .getElementById("regLastName")
+        .value
+        .trim();
+
+    const email =
+      document
+        .getElementById("regEmail")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const password =
+      document
+        .getElementById("regPassword")
+        .value;
+
+    const fullName =
+      `${firstName} ${lastName}`.trim();
+
+    const submitButton =
+      registerBtn;
+
+    isRegistering = true;
+
+    submitButton.disabled = true;
+
+    submitButton.innerHTML = `
+      <span class="spinner"></span>
+      <span>Creating your account...</span>
+    `;
+
+    try {
+
+      /*
+       * Create Firebase Authentication account.
+       */
+
+      const result =
+        await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+      const user =
+        result.user;
+
+      /*
+       * Update Firebase Auth profile.
+       */
+
+      await updateProfile(
+        user,
+        {
+          displayName: fullName
+        }
+      );
+
+      /*
+       * Build the MoonLat profile.
+       */
+
+      const userProfile = {
+
+        name: fullName,
+
+        firstName,
+
+        lastName,
+
+        email,
+
+        role: selectedRole,
+
+        avatar:
+          fullName
+            .split(/\s+/)
+            .map((name) => name[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2),
+
+        photoURL: "",
+
+        phone: "",
+
+        bio: "",
+
+        agency: "",
+
+        license: "",
+
+        serviceArea: "",
+
+        commissionRate:
+          selectedRole === "agent"
+            ? "3%"
+            : "",
+
+        onboardingComplete:
+          false,
+
+        emailVerified:
+          false,
+
+        provider:
+          "password",
+
+        createdAt:
+          Date.now(),
+
+        memberSince:
+          new Date().toLocaleDateString(
+            "en",
+            {
+              month: "short",
+              year: "numeric"
+            }
+          ),
+
+        updatedAt:
+          serverTimestamp()
+
+      };
+
+
+      /*
+       * Role-specific initial state.
+       */
+
+      if (selectedRole === "agent") {
+
+        userProfile.agentStatus =
+          "onboarding";
+
+        userProfile.profileStatus =
+          "incomplete";
+
+      } else {
+
+        userProfile.buyerStatus =
+          "active";
+
+        userProfile.profileStatus =
+          "complete";
+
+      }
+
+
+      /*
+       * IMPORTANT:
+       * Firestore profile is written BEFORE verification
+       * screen is shown.
+       */
+
+      await setDoc(
+        doc(db, "users", user.uid),
+        userProfile
+      );
+
+
+      /*
+       * Send email verification.
+       */
+
+      await sendVerification(user);
+
+
+      /*
+       * Display verification step.
+       */
+
+      showVerificationScreen(user);
+
+    } catch (error) {
+
+      console.error(
+        "Registration failed:",
+        error
+      );
+
+      /*
+       * If account creation succeeded but a later operation
+       * failed, keep the user authenticated so they can retry
+       * the verification step instead of creating another account.
+       */
+
+      if (
+        auth.currentUser &&
+        isRegistering
+      ) {
+
+        const currentUser =
+          auth.currentUser;
+
+        /*
+         * If the verification email itself failed,
+         * expose the verification screen so the user can
+         * retry instead of losing the account.
+         */
+
+        if (
+          error.code !==
+          "auth/email-already-in-use" &&
+          currentUser.uid
+        ) {
+
+          verificationUser =
+            currentUser;
+
+          showVerificationScreen(
+            currentUser
+          );
+
+          showAlert(
+            "warning",
+            "Account created",
+            "Your account was created, but we couldn't send the verification email. Use the resend button to try again.",
+            "verification"
+          );
+
+          return;
+
+        }
+
+      }
+
+      const info =
+        getErrorInfo(error.code);
+
+      showAlert(
+        "error",
+        info.title,
+        info.message
+      );
+
+      submitButton.disabled = false;
+
+      submitButton.innerHTML = `
+        <span id="registerButtonText">
+          Create MoonLat account
+        </span>
+
+        <i
+          id="registerButtonArrow"
+          class="fas fa-arrow-right button-arrow"
+        ></i>
+      `;
+
+    } finally {
+
+      isRegistering = false;
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   EXISTING AUTH SESSION
+   ============================================================ */
+
+onAuthStateChanged(
+  auth,
+  async (user) => {
+
+    /*
+     * Never interfere with the registration transaction.
+     */
+
+    if (isRegistering) {
+      return;
+    }
+
+    if (!user) {
+      return;
+    }
+
+    /*
+     * If an already-authenticated account is visiting
+     * signup, route it according to its actual state.
+     */
+
+    try {
+
+      if (!user.emailVerified) {
+
+        showVerificationScreen(user);
+
+        return;
+
+      }
+
+      await routeVerifiedUser(user);
+
+    } catch (error) {
+
+      console.error(
+        "Existing session routing failed:",
+        error
+      );
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   TERMS / PRIVACY
+   ============================================================ */
+
+document
+  .getElementById("termsLink")
+  .addEventListener("click", (event) => {
+
+    event.preventDefault();
+
+    /*
+     * Replace with the final MoonLat terms URL when that page
+     * is wired into the production information architecture.
+     */
+
+    window.location.href =
+      "terms.html";
+
+  });
+
+
+document
+  .getElementById("privacyLink")
+  .addEventListener("click", (event) => {
+
+    event.preventDefault();
+
+    /*
+     * Replace with the final MoonLat privacy URL when that page
+     * is wired into the production information architecture.
+     */
+
+    window.location.href =
+      "privacy.html";
+
+  });
+
+
+/* ============================================================
+   KEYBOARD ACCESS FOR ROLE CARDS
+   ============================================================ */
+
+document
+  .querySelectorAll(".role-card")
+  .forEach((card) => {
+
+    card.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (
+          event.key === "Enter" ||
+          event.key === " "
+        ) {
+
+          event.preventDefault();
+
+          card.click();
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* ============================================================
+   PAGE VISIBILITY
+   ============================================================ */
+
+document.addEventListener(
+  "visibilitychange",
+  async () => {
+
+    if (
+      document.visibilityState !== "visible" ||
+      !verificationUser
+    ) {
+      return;
+    }
+
+    /*
+     * Refresh the Firebase user whenever the user comes
+     * back from their email application/browser.
+     */
+
+    try {
+
+      await verificationUser.reload();
+
+      const refreshed =
+        auth.currentUser;
+
+      if (
+        refreshed &&
+        refreshed.emailVerified
+      ) {
+
+        showAlert(
+          "success",
+          "Email verified",
+          "Your email is verified. Tap the button below to continue.",
+          "verification"
+        );
+
+      }
+
+    } catch (error) {
+
+      console.warn(
+        "Could not refresh verification state:",
+        error
+      );
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   INITIAL UI STATE
+   ============================================================ */
+
+document
+  .getElementById("regFirstName")
+  .focus();
+
 </script>
+
 </body>
 </html>
-
