@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Properties - MoonLat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: {
+                        primary: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+                    }
+                }
+            }
+        }
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+            authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+            projectId: "moonlat-estate-dashboard",
+            storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+            messagingSenderId: "289878951289",
+            appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+    </script>
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        #map { height: 45vh; min-height: 350px; z-index: 1; }
+        .results-container {
+            margin-top: -50px;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            position: relative;
+            z-index: 10;
+            background: white;
+        }
+        .property-marker {
+            width: 42px;
+            height: 42px;
+            border-radius: 50% 50% 50% 0;
+            background: #2563eb;
+            position: absolute;
+            transform: rotate(-45deg);
+            left: 50%;
+            top: 50%;
+            margin: -21px 0 0 -21px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .property-marker::after {
+            content: '';
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            position: absolute;
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+        .property-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .property-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .favorite-btn.active { color: #ef4444; }
+        .favorite-btn.active i { font-weight: 900; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased font-sans">
+
+    <main class="max-w-7xl mx-auto min-h-screen bg-white relative shadow-xl overflow-hidden md:rounded-3xl md:my-10 md:border md:border-slate-200">
+        
+        <!-- Top Navigation -->
+        <div class="absolute top-0 left-0 right-0 z-[1000] bg-gradient-to-b from-white/95 to-transparent p-4 pointer-events-none">
+            <div class="flex items-center justify-between pointer-events-auto max-w-md mx-auto md:max-w-none md:mx-4">
+                <a href="index.html" class="w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-slate-600 hover:bg-slate-50 transition">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="flex gap-2">
+                    <button onclick="toggleMapView()" class="w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-slate-600 hover:bg-slate-50 transition md:hidden">
+                        <i class="fas fa-list"></i>
+                    </button>
+                    <button onclick="window.location.href='saved-property.html'" class="w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-slate-600 hover:bg-slate-50 transition relative">
+                        <i class="fas fa-heart"></i>
+                        <span id="savedCount" class="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 text-white text-xs font-bold rounded-full flex items-center justify-center hidden">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map -->
+        <div id="map" class="w-full"></div>
+
+        <!-- Search -->
+        <div class="absolute top-20 left-4 right-4 z-[400] max-w-md mx-auto md:max-w-none md:mx-8">
+            <div class="bg-white rounded-2xl shadow-xl p-2 flex items-center gap-2 border border-slate-200">
+                <div class="flex-1 relative">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="searchInput" class="w-full pl-10 pr-4 py-3 bg-slate-50 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="Search location, type...">
+                </div>
+                <button onclick="clearSearch()" class="p-3 bg-slate-100 rounded-xl text-slate-600 hover:bg-slate-200 transition">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="results-container shadow-2xl min-h-[55vh]">
+            <div class="flex justify-center pt-4 pb-2">
+                <div class="w-12 h-1.5 bg-slate-300 rounded-full"></div>
+            </div>
+
+            <div class="px-6 pb-4 border-b border-slate-100">
+                <h2 class="text-xl font-bold text-slate-900">Properties</h2>
+                <p class="text-sm text-slate-500"><span id="resultCount">0</span> properties found</p>
+            </div>
+
+            <!-- Filters -->
+            <div class="px-4 py-4 flex gap-2 overflow-x-auto no-scrollbar border-b border-slate-100">
+                <button onclick="filterByType('all')" class="filter-chip whitespace-nowrap px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium shadow-md transition-all" data-filter="all">All</button>
+                <button onclick="filterByType('Apartment')" class="filter-chip whitespace-nowrap px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-all" data-filter="Apartment">Apartments</button>
+                <button onclick="filterByType('Villa')" class="filter-chip whitespace-nowrap px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-all" data-filter="Villa">Villas</button>
+                <button onclick="filterByType('House')" class="filter-chip whitespace-nowrap px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-all" data-filter="House">Houses</button>
+                <button onclick="filterByFeatured()" class="filter-chip whitespace-nowrap px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-all" data-filter="featured">Featured</button>
+            </div>
+
+            <!-- Properties List -->
+            <div id="propertiesList" class="p-4 space-y-4 pb-24 overflow-y-auto max-h-[60vh]">
+                <div class="text-center py-12">
+                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                        <i class="fas fa-spinner fa-spin text-slate-400 text-2xl"></i>
+                    </div>
+                    <p class="text-slate-500">Loading properties...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let map;
+        let markers = [];
+        let allProperties = [];
+        let filteredProperties = [];
+        let currentFilter = 'all';
+        let savedProperties = new Set();
+        let currentUser = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check auth state
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    currentUser = user;
+                    await loadSavedProperties(); // This will now trigger a re-render
+                } else {
+                    // Redirect to sign in if not logged in
+                    window.location.href = '../sign-in.html';
+                }
+            });
+
+            initMap();
+            await loadProperties(); // Properties load first, rendering them initially without hearts.
+            setupSearch();
+        });
+
+        // Initialize Map
+        function initMap() {
+            map = L.map('map', { zoomControl: false, attributionControl: false })
+                .setView([6.5244, 3.3792], 12); // Lagos default
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+            L.control.zoom({ position: 'bottomright' }).addTo(map);
+        }
+
+        // Load Properties from Firebase
+        async function loadProperties() {
+            try {
+                const snapshot = await db.collection('properties')
+                    .where('status', '==', 'Active')
+                    .get();
+                
+                allProperties = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                
+                filteredProperties = allProperties;
+                renderProperties();
+                updateMapMarkers();
+            } catch (error) {
+                console.error('Error loading properties:', error);
+                showToast('Error loading properties', 'error');
+            }
+        }
+
+        // Render Properties
+        function renderProperties() {
+            const container = document.getElementById('propertiesList');
+            document.getElementById('resultCount').textContent = filteredProperties.length;
+
+            if (filteredProperties.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-search text-slate-400 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-slate-900 mb-2">No properties found</h3>
+                        <p class="text-sm text-slate-500">Try adjusting your filters</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = filteredProperties.map(prop => `
+                <div class="property-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm cursor-pointer group" onclick="viewProperty('${prop.id}')">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="${prop.image || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'}" 
+                             alt="${prop.title}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                             onerror="this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'">
+                        
+                        ${prop.featured ? '<div class="absolute top-3 left-3 bg-amber-500 text-white px-3 py-1 rounded-lg text-xs font-bold shadow-lg">FEATURED</div>' : ''}
+                        
+                        <button onclick="toggleFavorite(event, '${prop.id}')" 
+                                class="favorite-btn absolute top-3 right-3 w-9 h-9 bg-white/95 backdrop-blur rounded-full flex items-center justify-center shadow-md hover:scale-110 transition ${savedProperties.has(prop.id) ? 'active' : ''}">
+                            <i class="${savedProperties.has(prop.id) ? 'fas' : 'far'} fa-heart text-lg"></i>
+                        </button>
+                        
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                            <p class="text-white font-bold text-2xl">₦${formatPrice(prop.price)}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4">
+                        <h3 class="font-bold text-slate-900 text-lg mb-1 line-clamp-1">${prop.title}</h3>
+                        <p class="text-sm text-slate-500 mb-3 flex items-center gap-1">
+                            <i class="fas fa-map-marker-alt text-primary-500"></i> ${prop.location}
+                        </p>
+                        
+                        <div class="flex items-center gap-4 text-sm text-slate-600 pt-3 border-t border-slate-100">
+                            <span class="flex items-center gap-1.5"><i class="fas fa-bed text-primary-500"></i> ${prop.beds || 0}</span>
+                            <span class="flex items-center gap-1.5"><i class="fas fa-bath text-primary-500"></i> ${prop.baths || 0}</span>
+                            <span class="flex items-center gap-1.5"><i class="fas fa-ruler-combined text-primary-500"></i> ${prop.area || 0}m²</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update Map Markers
+        function updateMapMarkers() {
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+
+            const customIcon = L.divIcon({
+                className: 'property-marker-wrapper',
+                html: '<div class="property-marker"></div>',
+                iconSize: [42, 42],
+                iconAnchor: [21, 42]
+            });
+
+            filteredProperties.forEach(prop => {
+                if (prop.lat && prop.lng) {
+                    const marker = L.marker([prop.lat, prop.lng], { icon: customIcon })
+                        .addTo(map)
+                        .bindPopup(`
+                            <div class="text-center p-2">
+                                <p class="font-bold text-slate-900 text-sm">${prop.title}</p>
+                                <p class="text-xs text-slate-600">₦${formatPrice(prop.price)}</p>
+                                <button onclick="viewProperty('${prop.id}')" class="mt-2 px-3 py-1.5 bg-primary-600 text-white text-xs rounded-lg">View</button>
+                            </div>
+                        `);
+                    markers.push(marker);
+                }
+            });
+
+            if (markers.length > 1) {
+                const group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
+
+        // Toggle Favorite - Firebase
+        async function toggleFavorite(event, propertyId) {
+            event.stopPropagation();
+            
+            if (!currentUser) {
+                showToast('Please sign in first', 'error');
+                return;
+            }
+
+            const btn = event.currentTarget;
+            
+            try {
+                if (savedProperties.has(propertyId)) {
+                    // Remove from Firebase
+                    await db.collection('users')
+                        .doc(currentUser.uid)
+                        .collection('savedProperties')
+                        .doc(propertyId)
+                        .delete();
+                    
+                    savedProperties.delete(propertyId);
+                    btn.classList.remove('active');
+                    btn.querySelector('i').classList.remove('fas');
+                    btn.querySelector('i').classList.add('far');
+                    showToast('Removed from favorites');
+                } else {
+                    // Add to Firebase
+                    const prop = allProperties.find(p => p.id === propertyId);
+                    await db.collection('users')
+                        .doc(currentUser.uid)
+                        .collection('savedProperties')
+                        .doc(propertyId)
+                        .set({
+                            ...prop,
+                            savedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    
+                    savedProperties.add(propertyId);
+                    btn.classList.add('active');
+                    btn.querySelector('i').classList.remove('far');
+                    btn.querySelector('i').classList.add('fas');
+                    showToast('Added to favorites');
+                }
+                
+                updateSavedCount();
+            } catch (error) {
+                console.error('Error toggling favorite:', error);
+                showToast('Error saving property', 'error');
+            }
+        }
+
+        // Load Saved Properties from Firebase
+        async function loadSavedProperties() {
+            try {
+                const snapshot = await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('savedProperties')
+                    .get();
+
+                savedProperties.clear(); // Clear existing to prevent duplicates
+                snapshot.forEach(doc => {
+                    savedProperties.add(doc.id);
+                });
+
+                updateSavedCount();
+                renderProperties(); // Re-render UI to update active hearts on loaded properties
+            } catch (error) {
+                console.error('Error loading saved:', error);
+            }
+        }
+
+        // Update Saved Count Badge
+        function updateSavedCount() {
+            const badge = document.getElementById('savedCount');
+            const count = savedProperties.size;
+            
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // Filter Functions
+        function filterByType(type) {
+            currentFilter = type;
+            
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                if (chip.dataset.filter === type) {
+                    chip.classList.remove('bg-slate-100', 'text-slate-600');
+                    chip.classList.add('bg-primary-600', 'text-white', 'shadow-md');
+                } else {
+                    chip.classList.add('bg-slate-100', 'text-slate-600');
+                    chip.classList.remove('bg-primary-600', 'text-white', 'shadow-md');
+                }
+            });
+
+            if (type === 'all') {
+                filteredProperties = allProperties;
+            } else {
+                filteredProperties = allProperties.filter(p => p.type === type);
+            }
+
+            renderProperties();
+            updateMapMarkers();
+        }
+
+        function filterByFeatured() {
+            filteredProperties = allProperties.filter(p => p.featured === true);
+            renderProperties();
+            updateMapMarkers();
+        }
+
+        // Search
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                
+                if (query.length === 0) {
+                    filteredProperties = allProperties;
+                } else {
+                    filteredProperties = allProperties.filter(p => 
+                        p.title?.toLowerCase().includes(query) ||
+                        p.location?.toLowerCase().includes(query) ||
+                        p.type?.toLowerCase().includes(query)
+                    );
+                }
+                
+                renderProperties();
+                updateMapMarkers();
+            });
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            filteredProperties = allProperties;
+            renderProperties();
+            updateMapMarkers();
+        }
+
+        // View Property - Route to detail page
+        function viewProperty(id) {
+            window.location.href = `property-detail.html?id=${id}`;
+        }
+
+        function toggleMapView() {
+            const mapDiv = document.getElementById('map');
+            mapDiv.style.display = mapDiv.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function formatPrice(price) {
+            if (!price) return '0';
+            return Number(price).toLocaleString();
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 left-1/2 -translate-x-1/2 z-[2000] px-6 py-3 rounded-full shadow-xl text-white font-medium text-sm animate-slide-in ${type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Add animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translate(-50%, -100%); opacity: 0; }
+                to { transform: translate(-50%, 0); opacity: 1; }
+            }
+            .animate-slide-in { animation: slideIn 0.3s ease-out; }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

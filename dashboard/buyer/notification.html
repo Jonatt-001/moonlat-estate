@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications — MoonLat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                colors: { primary: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' } }
+            }
+        }
+    }
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+        authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+        projectId: "moonlat-estate-dashboard",
+        storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+        messagingSenderId: "289878951289",
+        appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+  </script>
+</head>
+<body class="text-slate-800 font-sans antialiased bg-slate-50 pb-12">
+
+  <!-- Simple Nav -->
+  <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
+        <button onclick="window.history.back()" class="text-slate-500 hover:text-slate-900 transition flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> <span class="hidden sm:inline">Back</span>
+        </button>
+        <h1 class="text-xl font-bold text-slate-900">MoonLat</h1>
+        <div class="w-8"></div>
+    </div>
+  </nav>
+
+  <div class="max-w-4xl mx-auto p-4 md:p-8 mt-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+      <div>
+        <h1 class="text-3xl font-bold text-slate-900 flex items-center gap-3">
+            Notifications
+            <span id="unreadBadge" class="hidden bg-rose-500 text-white text-sm font-bold px-2.5 py-0.5 rounded-full">0</span>
+        </h1>
+        <p id="notificationSubtitle" class="text-slate-500 mt-1">Loading your updates...</p>
+      </div>
+      <button id="markAllBtn" onclick="markAllAsRead()" class="hidden items-center text-sm font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-4 py-2.5 rounded-xl transition">
+        <i class="fas fa-check-double mr-2"></i>Mark all as read
+      </button>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationsContainer" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden divide-y divide-slate-100">
+      
+      <!-- Skeleton Loader -->
+      <div class="p-5 flex items-start gap-4 animate-pulse">
+        <div class="w-12 h-12 rounded-full bg-slate-200 flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="h-5 bg-slate-200 rounded w-1/3 mb-2"></div>
+          <div class="h-4 bg-slate-200 rounded w-3/4 mb-3"></div>
+          <div class="h-3 bg-slate-200 rounded w-20"></div>
+        </div>
+      </div>
+      <div class="p-5 flex items-start gap-4 animate-pulse">
+        <div class="w-12 h-12 rounded-full bg-slate-200 flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="h-5 bg-slate-200 rounded w-1/4 mb-2"></div>
+          <div class="h-4 bg-slate-200 rounded w-2/3 mb-3"></div>
+          <div class="h-3 bg-slate-200 rounded w-20"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let notifications = [];
+    let unsubscribe = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+                setupRealtimeNotifications();
+            } else {
+                window.location.href = '../sign-in.html';
+            }
+        });
+    });
+
+    // Clean up listener when leaving page
+    window.addEventListener('beforeunload', () => {
+        if (unsubscribe) unsubscribe();
+    });
+
+    function setupRealtimeNotifications() {
+        // Listen to the user's notifications in real-time
+        unsubscribe = db.collection('notifications')
+            .where('userId', '==', currentUser.uid)
+            .orderBy('createdAt', 'desc')
+            .limit(50)
+            .onSnapshot((snapshot) => {
+                notifications = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                renderNotifications();
+            }, (error) => {
+                console.error('Error listening to notifications:', error);
+                
+                // Firestore requires a composite index for where() + orderBy(). 
+                // If it fails, log the link provided in the console to create the index.
+                if(error.message.includes('index')) {
+                    console.warn("Please click the link in the console to create the Firestore Index!");
+                }
+                showToast('Error loading notifications', 'error');
+            });
+    }
+
+    function renderNotifications() {
+        const container = document.getElementById('notificationsContainer');
+        const subtitle = document.getElementById('notificationSubtitle');
+        const badge = document.getElementById('unreadBadge');
+        const markAllBtn = document.getElementById('markAllBtn');
+
+        const unreadCount = notifications.filter(n => !n.isRead).length;
+
+        // Update Headers & Badges
+        subtitle.textContent = unreadCount === 1 ? '1 unread notification' : `${unreadCount} unread notifications`;
+        
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount;
+            badge.classList.remove('hidden');
+            markAllBtn.classList.remove('hidden');
+            markAllBtn.classList.add('inline-flex');
+        } else {
+            badge.classList.add('hidden');
+            markAllBtn.classList.add('hidden');
+            markAllBtn.classList.remove('inline-flex');
+        }
+
+        // Empty State
+        if (notifications.length === 0) {
+            container.innerHTML = `
+                <div class="p-12 text-center">
+                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-bell-slash text-slate-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-1">All caught up!</h3>
+                    <p class="text-slate-500">You have no new notifications right now.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Render List
+        container.innerHTML = notifications.map(notif => {
+            const style = getNotificationStyle(notif.type);
+            const timeString = formatTimeAgo(notif.createdAt);
+            
+            return `
+                <div class="p-5 flex items-start gap-4 transition group relative
+                            ${notif.isRead ? 'bg-white hover:bg-slate-50' : 'bg-primary-50/40 hover:bg-primary-50/60'}">
+                    
+                    <!-- Icon -->
+                    <div class="w-12 h-12 rounded-full ${style.bg} ${style.text} flex items-center justify-center flex-shrink-0">
+                        <i class="${style.icon} text-xl"></i>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="flex-1 min-w-0 pr-12 cursor-pointer" onclick="handleNotificationClick('${notif.id}', '${notif.link || ''}', ${notif.isRead})">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <h4 class="${notif.isRead ? 'font-semibold' : 'font-bold'} text-slate-900">${notif.title}</h4>
+                                <p class="text-sm text-slate-600 mt-1">${notif.message}</p>
+                            </div>
+                            ${!notif.isRead ? '<span class="w-2.5 h-2.5 rounded-full bg-primary-600 flex-shrink-0 mt-2"></span>' : ''}
+                        </div>
+                        <p class="text-xs text-slate-400 mt-2">${timeString}</p>
+                    </div>
+
+                    <!-- Delete Button (Reveals on hover) -->
+                    <button onclick="deleteNotification('${notif.id}')" 
+                            class="absolute right-5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 shadow-sm opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center"
+                            title="Delete notification">
+                        <i class="fas fa-trash text-xs"></i>
+                    </button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    async function handleNotificationClick(id, link, isRead) {
+        // Mark as read if it isn't already
+        if (!isRead) {
+            try {
+                await db.collection('notifications').doc(id).update({
+                    isRead: true
+                });
+            } catch (error) {
+                console.error("Error marking read:", error);
+            }
+        }
+        
+        // Navigate if there's a link provided (e.g., to a property or appointment)
+        if (link && link !== 'undefined') {
+            window.location.href = link;
+        }
+    }
+
+    async function markAllAsRead() {
+        const unreadNotifs = notifications.filter(n => !n.isRead);
+        if (unreadNotifs.length === 0) return;
+
+        const batch = db.batch();
+        unreadNotifs.forEach(notif => {
+            const ref = db.collection('notifications').doc(notif.id);
+            batch.update(ref, { isRead: true });
+        });
+
+        try {
+            await batch.commit();
+            showToast('All caught up!');
+        } catch (error) {
+            console.error("Batch update error:", error);
+            showToast('Error updating notifications', 'error');
+        }
+    }
+
+    async function deleteNotification(id) {
+        try {
+            await db.collection('notifications').doc(id).delete();
+            // Optional: show a discrete toast
+            // showToast('Notification removed');
+        } catch (error) {
+            console.error("Error deleting:", error);
+            showToast('Failed to delete', 'error');
+        }
+    }
+
+    // --- Utility Functions ---
+
+    function getNotificationStyle(type) {
+        const styles = {
+            appointment: { icon: 'fas fa-calendar-check', bg: 'bg-emerald-100', text: 'text-emerald-600' },
+            price_drop: { icon: 'fas fa-tag', bg: 'bg-blue-100', text: 'text-blue-600' },
+            message: { icon: 'fas fa-comment-dots', bg: 'bg-purple-100', text: 'text-purple-600' },
+            alert: { icon: 'fas fa-exclamation-triangle', bg: 'bg-amber-100', text: 'text-amber-600' },
+            system: { icon: 'fas fa-cog', bg: 'bg-slate-200', text: 'text-slate-700' },
+            default: { icon: 'fas fa-bell', bg: 'bg-primary-100', text: 'text-primary-600' }
+        };
+        return styles[type] || styles.default;
+    }
+
+    function formatTimeAgo(timestamp) {
+        if (!timestamp) return 'Just now';
+        
+        // Handle Firebase Timestamp
+        const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+        const seconds = Math.floor((new Date() - date) / 1000);
+        
+        let interval = seconds / 31536000;
+        if (interval > 1) return Math.floor(interval) + "y ago";
+        
+        interval = seconds / 2592000;
+        if (interval > 1) return Math.floor(interval) + "mo ago";
+        
+        interval = seconds / 86400;
+        if (interval >= 1 && interval < 2) return "Yesterday";
+        if (interval >= 2) return Math.floor(interval) + "d ago";
+        
+        interval = seconds / 3600;
+        if (interval >= 1) return Math.floor(interval) + "h ago";
+        
+        interval = seconds / 60;
+        if (interval >= 1) return Math.floor(interval) + "m ago";
+        
+        return "Just now";
+    }
+
+    function showToast(message, type = 'success') {
+        const existingToast = document.querySelector('.custom-toast');
+        if (existingToast) existingToast.remove();
+
+        const toast = document.createElement('div');
+        toast.className = `custom-toast fixed bottom-6 left-1/2 -translate-x-1/2 z-[2000] px-6 py-3 rounded-full shadow-xl text-white font-medium text-sm flex items-center gap-2 transition-all duration-300 transform translate-y-0 opacity-100 ${type === 'success' ? 'bg-slate-900' : 'bg-rose-600'}`;
+        
+        const icon = type === 'success' ? '<i class="fas fa-check-circle text-emerald-400"></i>' : '<i class="fas fa-exclamation-circle"></i>';
+        toast.innerHTML = `${icon} ${message}`;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.add('translate-y-4', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+  </script>
+</body>
+</html>

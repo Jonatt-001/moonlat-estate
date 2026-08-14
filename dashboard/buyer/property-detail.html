@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Property Details - MoonLat</title>
+    <meta name="description" content="View property details, amenities, pricing and schedule a viewing on MoonLat.">
+    <meta name="theme-color" content="#0f172a">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px rgba(15, 23, 42, 0.06)',
+                        'premium': '0 20px 60px rgba(15, 23, 42, 0.10)'
+                    }
+                }
+            }
+        };
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+            authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+            projectId: "moonlat-estate-dashboard",
+            storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+            messagingSenderId: "289878951289",
+            appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+    </script>
+
+    <style>
+        * { -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: radial-gradient(circle at 50% -10%, rgba(37, 99, 235, 0.045), transparent 32%), #f8fafc;
+        }
+        ::selection { background: rgba(37, 99, 235, 0.18); }
+        .glass { background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+        .image-overlay {
+            background: linear-gradient(to top, rgba(2, 6, 23, 0.65), rgba(2, 6, 23, 0.08) 55%, rgba(2, 6, 23, 0.12));
+        }
+        .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .modal-backdrop { background: rgba(2, 6, 23, 0.62); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .modal-enter { animation: modalEnter 0.22s ease-out; }
+        @keyframes modalEnter {
+            from { opacity: 0; transform: translateY(18px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .toast-enter { animation: toastEnter 0.25s ease-out; }
+        @keyframes toastEnter {
+            from { opacity: 0; transform: translate(-50%, -10px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 37%, #e2e8f0 63%);
+            background-size: 400% 100%;
+            animation: skeleton 1.4s ease infinite;
+        }
+        @keyframes skeleton {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+        .favorite-active {
+            color: #e11d48 !important;
+            background: #fff1f2 !important;
+            border-color: #fecdd3 !important;
+        }
+        
+        /* Smooth expand animation for agent info */
+        .agent-info-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s ease;
+        }
+        .agent-info-content.expanded {
+            grid-template-rows: 1fr;
+        }
+        .agent-info-inner { overflow: hidden; }
+
+        @media (max-width: 1023px) {
+            body { padding-bottom: 84px; }
+        }
+    </style>
+</head>
+<body class="text-slate-900 font-sans antialiased">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 glass border-b border-slate-200/70">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="h-[68px] flex items-center justify-between gap-4">
+                <a href="browse-property.html" class="inline-flex items-center gap-2.5 text-sm font-semibold text-slate-600 hover:text-slate-950 transition">
+                    <span class="w-9 h-9 rounded-full border border-slate-200 bg-white flex items-center justify-center shadow-sm">
+                        <i class="fas fa-arrow-left text-xs"></i>
+                    </span>
+                    <span class="hidden sm:inline">Back to Search</span>
+                </a>
+                <div class="flex items-center gap-2">
+                    <button onclick="shareProperty()" class="w-10 h-10 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-primary-600 hover:border-primary-200 transition flex items-center justify-center" aria-label="Share property">
+                        <i class="fas fa-share-nodes text-sm"></i>
+                    </button>
+                    <button onclick="toggleSaveProperty()" id="headerSaveBtn" class="w-10 h-10 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-rose-600 hover:border-rose-200 transition flex items-center justify-center" aria-label="Save property">
+                        <i class="far fa-heart text-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7 lg:py-9">
+        <div id="propertyContent">
+            <!-- Loading -->
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:h-[560px]">
+                    <div class="lg:col-span-8 h-[330px] sm:h-[440px] lg:h-full rounded-[28px] skeleton"></div>
+                    <div class="hidden lg:grid lg:col-span-4 grid-rows-2 gap-3">
+                        <div class="rounded-[28px] skeleton"></div>
+                        <div class="rounded-[28px] skeleton"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[28px] border border-slate-200 p-6 sm:p-8">
+                    <div class="w-2/3 h-8 skeleton rounded-lg mb-4"></div>
+                    <div class="w-1/3 h-5 skeleton rounded-lg"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Action Bar -->
+    <div id="mobileActionBar" class="hidden fixed bottom-0 left-0 right-0 z-[100] bg-white/95 backdrop-blur-xl border-t border-slate-200 px-4 py-3 shadow-[0_-12px_35px_rgba(15,23,42,0.08)]">
+        <div class="max-w-[1440px] mx-auto flex gap-2.5">
+            <button onclick="toggleSaveProperty()" id="mobileSaveBtn" class="w-12 h-12 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-600 shrink-0">
+                <i class="far fa-heart"></i>
+            </button>
+            <button onclick="contactAgent()" class="flex-1 h-12 rounded-xl border border-slate-200 bg-white text-slate-800 font-bold text-sm hover:border-primary-300 hover:text-primary-600 transition">
+                Message
+            </button>
+            <button onclick="openViewingModal()" class="flex-[1.4] h-12 rounded-xl bg-slate-950 text-white font-bold text-sm shadow-lg shadow-slate-900/15 hover:bg-slate-800 transition">
+                Schedule Viewing
+            </button>
+        </div>
+    </div>
+
+    <!-- Viewing Modal -->
+    <div id="viewingModal" class="hidden fixed inset-0 z-[1000] modal-backdrop items-end sm:items-center justify-center p-0 sm:p-5">
+        <div class="modal-enter w-full sm:max-w-lg bg-white sm:rounded-[28px] rounded-t-[28px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="px-5 sm:px-7 pt-5 sm:pt-7 pb-4 border-b border-slate-100 flex items-center justify-between shrink-0">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-600 mb-1">Private Viewing</p>
+                    <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">Schedule a viewing</h3>
+                </div>
+                <button onclick="closeViewingModal()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition">
+                    <i class="fas fa-xmark"></i>
+                </button>
+            </div>
+            <div class="overflow-y-auto p-5 sm:p-7 flex-1 hide-scrollbar">
+                <form id="viewingForm" onsubmit="submitViewingRequest(event)">
+                    <div class="bg-slate-50 rounded-2xl p-4 mb-5 flex gap-3">
+                        <div class="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center shrink-0">
+                            <i class="fas fa-house"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p id="modalPropertyTitle" class="font-bold text-slate-900 truncate">Property</p>
+                            <p id="modalPropertyLocation" class="text-xs text-slate-500 mt-1 truncate">Location</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Preferred Date</label>
+                            <input type="date" id="viewingDate" required class="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Preferred Time</label>
+                            <input type="time" id="viewingTime" required class="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition">
+                        </div>
+                    </div>
+                    <div class="mt-5">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Additional Note <span class="font-normal normal-case tracking-normal">(optional)</span></label>
+                        <textarea id="viewingNote" rows="3" placeholder="Anything the agent should know..." class="w-full rounded-xl border border-slate-200 bg-white p-4 text-sm outline-none resize-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition"></textarea>
+                    </div>
+                    <button id="submitViewingBtn" type="submit" class="w-full mt-5 h-13 py-3.5 rounded-xl bg-slate-950 text-white font-bold hover:bg-slate-800 transition flex items-center justify-center gap-2">
+                        <i class="fas fa-calendar-check"></i> Send Viewing Request
+                    </button>
+                    <p class="text-center text-[11px] text-slate-400 mt-3">Your request will be sent to the property agent for confirmation.</p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Modal (Fallback if no WhatsApp) -->
+    <div id="messageModal" class="hidden fixed inset-0 z-[1000] modal-backdrop items-end sm:items-center justify-center p-0 sm:p-5">
+        <div class="modal-enter w-full sm:max-w-lg bg-white sm:rounded-[28px] rounded-t-[28px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="px-5 sm:px-7 pt-5 sm:pt-7 pb-4 border-b border-slate-100 flex items-center justify-between shrink-0">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-600 mb-1">Direct Message</p>
+                    <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">Contact Agent</h3>
+                </div>
+                <button onclick="closeMessageModal()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition">
+                    <i class="fas fa-xmark"></i>
+                </button>
+            </div>
+            <div class="overflow-y-auto p-5 sm:p-7 flex-1 hide-scrollbar">
+                <form id="messageForm" onsubmit="submitMessageRequest(event)">
+                    <div class="mb-5">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Your Message</label>
+                        <textarea id="directMessageContent" rows="4" required placeholder="Hi, I am interested in this property..." class="w-full rounded-xl border border-slate-200 bg-white p-4 text-sm outline-none resize-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition"></textarea>
+                    </div>
+                    <button id="submitMessageBtn" type="submit" class="w-full h-13 py-3.5 rounded-xl bg-slate-950 text-white font-bold hover:bg-slate-800 transition flex items-center justify-center gap-2">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                    <p class="text-center text-[11px] text-slate-400 mt-3">The agent will receive this message on their dashboard.</p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let propertyId = null;
+        let propertyData = null;
+        let agentData = null;
+        let isSaved = false;
+
+        const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&q=85';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            propertyId = urlParams.get('id');
+
+            if (!propertyId) {
+                window.location.href = 'browse-property.html';
+                return;
+            }
+
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    currentUser = user;
+                    await loadProperty();
+                    await checkIfSaved();
+                } else {
+                    window.location.href = '../sign-in.html';
+                }
+            });
+        });
+
+        async function loadProperty() {
+            try {
+                const doc = await db.collection('properties').doc(propertyId).get();
+                if (!doc.exists) {
+                    window.location.href = 'browse-property.html';
+                    return;
+                }
+
+                propertyData = { id: doc.id, ...doc.data() };
+                
+                // Fetch Agent/Owner details automatically
+                const agentId = propertyData.agentId || propertyData.ownerId || propertyData.userId;
+                if (agentId) {
+                    try {
+                        const agentDoc = await db.collection('users').doc(agentId).get();
+                        if (agentDoc.exists) {
+                            agentData = { id: agentDoc.id, ...agentDoc.data() };
+                        }
+                    } catch (err) {
+                        console.error('Could not fetch agent profile', err);
+                    }
+                }
+
+                renderProperty();
+                document.getElementById('mobileActionBar').classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error loading property:', error);
+                document.getElementById('propertyContent').innerHTML = `
+                    <div class="max-w-xl mx-auto py-24 text-center">
+                        <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center">
+                            <i class="fas fa-triangle-exclamation text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-extrabold text-slate-950">Unable to load property</h2>
+                        <p class="text-slate-500 mt-2 mb-7">Something went wrong while retrieving this property.</p>
+                        <a href="browse-property.html" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-950 text-white font-bold text-sm"><i class="fas fa-arrow-left"></i> Back to Search</a>
+                    </div>
+                `;
+                showToast('Error loading property', 'error');
+            }
+        }
+
+        async function checkIfSaved() {
+            if (!currentUser || !propertyId) return;
+            try {
+                const doc = await db.collection('users').doc(currentUser.uid).collection('savedProperties').doc(propertyId).get();
+                isSaved = doc.exists;
+                updateFavoriteButton();
+            } catch (error) {
+                console.error('Error checking saved:', error);
+            }
+        }
+
+        function getPropertyImages(p) {
+            const images = [];
+            if (Array.isArray(p.images)) {
+                p.images.forEach(image => {
+                    if (image && typeof image === 'string') {
+                        images.push(image);
+                    }
+                });
+            }
+            if (p.image && !images.includes(p.image)) { images.unshift(p.image); }
+            if (!images.length) { images.push(FALLBACK_IMAGE); }
+            return [...new Set(images)].slice(0, 5);
+        }
+
+        function renderProperty() {
+            const p = propertyData;
+            const images = getPropertyImages(p);
+            const container = document.getElementById('propertyContent');
+
+            const price = Number(p.price || 0);
+            const area = Number(p.area || 0);
+            const pricePerMeter = area > 0 ? Math.round(price / area) : 0;
+            const title = escapeHtml(p.title || 'Untitled Property');
+            const location = escapeHtml(p.location || 'Location unavailable');
+            const description = escapeHtml(p.description || 'No description is available for this property.');
+            
+            // Dynamic Agent Handling
+            const ownerName = escapeHtml(agentData?.displayName || agentData?.name || p.ownerName || 'Property Agent');
+            const ownerInitial = ownerName.charAt(0).toUpperCase();
+            const ownerAvatar = agentData?.photoURL || p.ownerPhoto || null;
+            const propertyType = escapeHtml(p.type || 'Residential');
+
+            const avatarMarkup = ownerAvatar 
+                ? `<img src="${escapeAttribute(ownerAvatar)}" alt="Agent" class="w-full h-full object-cover rounded-2xl">`
+                : `${ownerInitial}`;
+
+            container.innerHTML = `
+                <!-- Breadcrumb -->
+                <div class="flex items-center gap-2 text-xs sm:text-sm text-slate-500 mb-5 overflow-hidden">
+                    <a href="browse-property.html" class="hover:text-slate-900 transition shrink-0">Properties</a>
+                    <i class="fas fa-chevron-right text-[9px] text-slate-300"></i>
+                    <span class="truncate text-slate-700 font-medium">${title}</span>
+                </div>
+
+                <!-- Gallery -->
+                <section class="mb-7">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:h-[580px]">
+                        <!-- Main Image -->
+                        <div class="lg:col-span-8 relative group overflow-hidden rounded-[26px] sm:rounded-[30px] bg-slate-900 min-h-[330px] sm:min-h-[460px] lg:min-h-0">
+                            <img id="mainPropertyImage" src="${images[0]}" alt="${title}" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-[1.025]" onerror="this.src='${FALLBACK_IMAGE}'">
+                            <div class="absolute inset-0 image-overlay pointer-events-none"></div>
+                            <div class="absolute top-4 left-4 sm:top-5 sm:left-5 flex flex-wrap gap-2">
+                                ${p.featured ? `<span class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/95 text-slate-900 text-[11px] font-extrabold tracking-wide shadow-lg backdrop-blur"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>FEATURED</span>` : ''}
+                                <span class="inline-flex items-center px-3.5 py-2 rounded-full bg-slate-950/75 text-white text-[11px] font-bold backdrop-blur">${propertyType}</span>
+                            </div>
+                            <div class="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 flex items-end justify-between gap-4">
+                                <div class="text-white min-w-0">
+                                    <p class="text-[11px] uppercase tracking-[0.18em] font-bold text-white/65 mb-2">Property Preview</p>
+                                    <p class="text-sm sm:text-base font-semibold truncate max-w-[75vw]">${title}</p>
+                                </div>
+                                <button onclick="openGallery()" class="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/95 text-slate-900 text-xs font-extrabold shadow-xl hover:bg-white transition">
+                                    <i class="fas fa-images"></i><span>${images.length} Photos</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Secondary Images -->
+                        <div class="hidden lg:grid lg:col-span-4 grid-rows-2 gap-3">
+                            ${images[1] ? `<button onclick="setMainImage('${escapeAttribute(images[1])}')" class="relative overflow-hidden rounded-[26px] bg-slate-200 group text-left"><img src="${images[1]}" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-105" onerror="this.src='${FALLBACK_IMAGE}'"><div class="absolute inset-0 bg-slate-950/5 group-hover:bg-slate-950/0 transition"></div></button>` : `<div class="rounded-[26px] bg-slate-100 flex items-center justify-center text-slate-300"><i class="fas fa-image text-3xl"></i></div>`}
+                            ${images[2] ? `<button onclick="setMainImage('${escapeAttribute(images[2])}')" class="relative overflow-hidden rounded-[26px] bg-slate-200 group text-left"><img src="${images[2]}" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-105" onerror="this.src='${FALLBACK_IMAGE}'">${images.length > 3 ? `<div class="absolute inset-0 bg-slate-950/45 flex items-center justify-center"><span class="px-4 py-2.5 rounded-xl bg-white/95 text-slate-900 text-xs font-extrabold">View ${images.length - 2} more</span></div>` : ''}</button>` : `<div class="rounded-[26px] bg-slate-100 flex items-center justify-center text-slate-300"><i class="fas fa-image text-3xl"></i></div>`}
+                        </div>
+                    </div>
+                    <!-- Mobile gallery thumbnails -->
+                    ${images.length > 1 ? `<div class="flex gap-2.5 overflow-x-auto hide-scrollbar mt-3 lg:hidden">${images.map((image, index) => `<button onclick="setMainImage('${escapeAttribute(image)}')" class="relative w-[82px] h-[64px] rounded-xl overflow-hidden shrink-0 border-2 ${index === 0 ? 'border-primary-500' : 'border-transparent'}"><img src="${image}" class="w-full h-full object-cover" onerror="this.src='${FALLBACK_IMAGE}'"></button>`).join('')}</div>` : ''}
+                </section>
+
+                <!-- Main Content Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-9">
+                    <!-- Main Details -->
+                    <div class="lg:col-span-8 space-y-6">
+                        <!-- Property Heading -->
+                        <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft p-5 sm:p-7 lg:p-8">
+                            <div class="flex flex-col gap-5">
+                                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5">
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-2 mb-3">
+                                            <span class="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-[0.14em] text-emerald-700 bg-emerald-50 px-2.5 py-1.5 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Available</span>
+                                            ${p.verified ? `<span class="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-extrabold text-primary-700 bg-primary-50 px-2.5 py-1.5 rounded-full"><i class="fas fa-circle-check"></i>Verified</span>` : ''}
+                                        </div>
+                                        <h1 class="text-[25px] sm:text-3xl lg:text-[38px] leading-[1.12] font-extrabold tracking-[-0.035em] text-slate-950">${title}</h1>
+                                        <div class="flex items-start gap-2 mt-3 text-slate-500">
+                                            <i class="fas fa-location-dot text-primary-500 mt-1 shrink-0"></i>
+                                            <span class="text-sm sm:text-[15px] leading-6">${location}</span>
+                                        </div>
+                                    </div>
+                                    <div class="sm:text-right shrink-0">
+                                        <p class="text-[28px] sm:text-3xl font-extrabold tracking-tight text-slate-950">₦${formatPrice(price)}</p>
+                                        ${pricePerMeter > 0 ? `<p class="text-xs sm:text-sm text-slate-400 mt-1">₦${formatPrice(pricePerMeter)} / m²</p>` : ''}
+                                    </div>
+                                </div>
+                                <!-- Stats -->
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-5 border-t border-slate-100">
+                                    ${statCard('fa-bed', p.beds || 0, 'Bedrooms')}
+                                    ${statCard('fa-bath', p.baths || 0, 'Bathrooms')}
+                                    ${statCard('fa-ruler-combined', p.area ? `${formatPrice(p.area)}` : '—', 'Square metres')}
+                                    ${statCard('fa-house', propertyType, 'Property type')}
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Description -->
+                        <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft p-5 sm:p-7 lg:p-8">
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600 mb-1">Property Overview</p>
+                                    <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">About this property</h2>
+                                </div>
+                            </div>
+                            <p id="propertyDescription" class="text-[14px] sm:text-[15px] leading-7 text-slate-600 whitespace-pre-line line-clamp-2">${description}</p>
+                            ${(p.description || '').length > 300 ? `<button id="descriptionToggle" onclick="toggleDescription()" class="mt-4 text-sm font-bold text-primary-600 hover:text-primary-700">Read more</button>` : ''}
+                        </section>
+
+                        <!-- Amenities -->
+                        ${p.amenities && p.amenities.length > 0 ? `
+                            <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft p-5 sm:p-7 lg:p-8">
+                                <div class="mb-6">
+                                    <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600 mb-1">Features</p>
+                                    <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">Amenities & features</h2>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    ${p.amenities.map(amenity => `
+                                        <div class="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-slate-50/80 border border-slate-100">
+                                            <span class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-emerald-600 shrink-0"><i class="fas fa-check text-xs"></i></span>
+                                            <span class="text-sm font-semibold text-slate-700">${escapeHtml(amenity)}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </section>
+                        ` : ''}
+
+                        <!-- Location -->
+                        <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft overflow-hidden">
+                            <div class="p-5 sm:p-7 lg:p-8">
+                                <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600 mb-1">Location</p>
+                                <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">Property location</h2>
+                                <div class="flex items-start gap-3 mt-4">
+                                    <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0"><i class="fas fa-location-dot"></i></div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">${location}</p>
+                                        <p class="text-xs text-slate-400 mt-1">Exact location details may be provided by the agent.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="h-[180px] sm:h-[230px] bg-slate-100 relative overflow-hidden">
+                                <div class="absolute inset-0 opacity-[0.55]" style="background-image: linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px); background-size: 40px 40px;"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-14 h-14 rounded-full bg-white shadow-xl flex items-center justify-center text-primary-600 relative">
+                                            <div class="absolute inset-0 rounded-full bg-primary-500/10 animate-ping"></div>
+                                            <i class="fas fa-location-dot relative"></i>
+                                        </div>
+                                        <div class="mt-3 px-4 py-2 rounded-xl bg-white/95 shadow-lg text-xs font-bold text-slate-700">${location}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <aside class="lg:col-span-4">
+                        <div class="lg:sticky lg:top-[92px] space-y-4">
+                            <!-- Inquiry Card -->
+                            <section class="bg-slate-950 rounded-[28px] p-5 sm:p-6 shadow-premium text-white overflow-hidden relative">
+                                <div class="absolute -right-16 -top-16 w-44 h-44 rounded-full bg-primary-500/20 blur-2xl"></div>
+                                <div class="relative">
+                                    <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-300 mb-2">Interested?</p>
+                                    <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Make this property yours.</h2>
+                                    <p class="text-sm leading-6 text-slate-400 mt-2 mb-6">Connect with the property agent to ask questions or arrange a private viewing.</p>
+                                    <button onclick="openViewingModal()" class="w-full h-12 rounded-xl bg-white text-slate-950 font-extrabold text-sm hover:bg-slate-100 transition flex items-center justify-center gap-2">
+                                        <i class="fas fa-calendar-check text-primary-600"></i> Schedule Viewing
+                                    </button>
+                                    <button onclick="contactAgent()" class="w-full h-12 rounded-xl border border-white/15 text-white font-bold text-sm hover:bg-white/5 transition flex items-center justify-center gap-2 mt-2.5">
+                                        <i class="fas fa-message"></i> Message Agent
+                                    </button>
+                                </div>
+                            </section>
+
+                            <!-- Agent -->
+                            <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft p-5 sm:p-6 cursor-pointer hover:shadow-lg transition-shadow" onclick="toggleAgentInfo()">
+                                <div class="flex items-center justify-between mb-5 pointer-events-none">
+                                    <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-slate-400">Listed by</p>
+                                    ${p.verified ? `<span class="text-[10px] font-extrabold text-primary-600 flex items-center gap-1"><i class="fas fa-circle-check"></i>VERIFIED</span>` : ''}
+                                </div>
+                                <div class="flex items-center gap-3.5 pointer-events-none">
+                                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-lg font-extrabold shadow-lg shadow-primary-500/20">
+                                        ${avatarMarkup}
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <h3 class="font-extrabold text-slate-950 truncate">${ownerName}</h3>
+                                        <p class="text-xs text-slate-500 mt-1">Property Agent</p>
+                                    </div>
+                                    <div class="text-slate-300">
+                                        <i id="agentExpandIcon" class="fas fa-chevron-down text-sm transition-transform duration-300"></i>
+                                    </div>
+                                </div>
+                                
+                                <!-- Expandable Agent Info -->
+                                <div id="agentExtendedInfo" class="agent-info-content">
+                                    <div class="agent-info-inner pt-4 mt-4 border-t border-slate-100">
+                                        <p class="text-sm text-slate-600">
+                                            ${agentData?.bio ? escapeHtml(agentData.bio) : 'No additional information provided by this agent yet.'}
+                                        </p>
+                                        ${agentData?.email ? `<p class="text-xs text-slate-400 mt-2"><i class="fas fa-envelope mr-1"></i> ${escapeHtml(agentData.email)}</p>` : ''}
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2.5 mt-5">
+                                    <button onclick="event.stopPropagation(); contactAgent();" class="h-11 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:border-primary-300 hover:text-primary-600 transition">
+                                        <i class="fas fa-message mr-1"></i> Message
+                                    </button>
+                                    <button onclick="event.stopPropagation(); toggleSaveProperty();" id="sidebarSaveBtn" class="h-11 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:border-rose-200 hover:text-rose-600 transition">
+                                        <i class="far fa-heart mr-1"></i> Save
+                                    </button>
+                                </div>
+                            </section>
+
+                            <!-- Trust -->
+                            <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft p-5 sm:p-6">
+                                <div class="flex gap-3.5">
+                                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i class="fas fa-shield-halved"></i></div>
+                                    <div>
+                                        <h3 class="text-sm font-extrabold text-slate-900">Shop with confidence</h3>
+                                        <p class="text-xs leading-5 text-slate-500 mt-1">Always verify property ownership and documentation before making payments.</p>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </aside>
+                </div>
+            `;
+
+            document.getElementById('modalPropertyTitle').textContent = p.title || 'Property';
+            document.getElementById('modalPropertyLocation').textContent = p.location || 'Location unavailable';
+            
+            // Sync initial state of sidebar favorite button
+            updateFavoriteButton();
+        }
+
+        function statCard(icon, value, label) {
+            return `
+                <div class="rounded-2xl bg-slate-50 border border-slate-100 px-3 py-4 min-w-0">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-primary-600 flex items-center justify-center shrink-0"><i class="fas ${icon} text-xs"></i></span>
+                        <div class="min-w-0">
+                            <p class="text-sm font-extrabold text-slate-900 truncate">${escapeHtml(String(value))}</p>
+                            <p class="text-[10px] sm:text-[11px] text-slate-400 font-semibold truncate">${escapeHtml(label)}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function setMainImage(image) {
+            const mainImage = document.getElementById('mainPropertyImage');
+            if (mainImage) mainImage.src = image;
+        }
+
+        function toggleAgentInfo() {
+            const infoDiv = document.getElementById('agentExtendedInfo');
+            const icon = document.getElementById('agentExpandIcon');
+            if(infoDiv && icon) {
+                if (infoDiv.classList.contains('expanded')) {
+                    infoDiv.classList.remove('expanded');
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    infoDiv.classList.add('expanded');
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            }
+        }
+
+        function openGallery() {
+            const images = getPropertyImages(propertyData);
+            if (!images.length) return;
+            const gallery = document.createElement('div');
+            gallery.id = 'galleryOverlay';
+            gallery.className = 'fixed inset-0 z-[1200] bg-slate-950/95 flex items-center justify-center p-4 sm:p-8';
+            gallery.innerHTML = `
+                <button onclick="closeGallery()" class="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"><i class="fas fa-xmark"></i></button>
+                <div class="w-full max-w-6xl h-full flex flex-col items-center justify-center">
+                    <div class="flex-1 w-full flex items-center justify-center min-h-0">
+                        <img id="galleryMainImage" src="${images[0]}" class="max-h-full max-w-full object-contain rounded-xl" alt="${escapeHtml(propertyData.title || 'Property')}">
+                    </div>
+                    <div class="w-full overflow-x-auto hide-scrollbar mt-4">
+                        <div class="flex justify-center gap-2.5 min-w-max px-2">
+                            ${images.map((image, index) => `<button onclick="document.getElementById('galleryMainImage').src='${escapeAttribute(image)}'" class="w-20 h-14 rounded-lg overflow-hidden border border-white/10 hover:border-white/50 transition shrink-0"><img src="${image}" class="w-full h-full object-cover" alt=""></button>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(gallery);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeGallery() {
+            const gallery = document.getElementById('galleryOverlay');
+            if (gallery) gallery.remove();
+            document.body.style.overflow = '';
+        }
+
+        async function toggleSaveProperty() {
+            if (!currentUser || !propertyId) return;
+            try {
+                if (isSaved) {
+                    await db.collection('users').doc(currentUser.uid).collection('savedProperties').doc(propertyId).delete();
+                    isSaved = false;
+                    showToast('Removed from saved properties');
+                } else {
+                    await db.collection('users').doc(currentUser.uid).collection('savedProperties').doc(propertyId).set({
+                        ...propertyData,
+                        savedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    isSaved = true;
+                    showToast('Property saved');
+                }
+                updateFavoriteButton();
+            } catch (error) {
+                console.error('Error saving:', error);
+                showToast('Unable to update saved property', 'error');
+            }
+        }
+
+        function updateFavoriteButton() {
+            const buttons = [
+                document.getElementById('headerSaveBtn'),
+                document.getElementById('mobileSaveBtn'),
+                document.getElementById('sidebarSaveBtn')
+            ];
+
+            buttons.forEach(btn => {
+                if (!btn) return;
+                if (isSaved) {
+                    btn.classList.add('favorite-active');
+                    if (btn.id === 'sidebarSaveBtn') {
+                        btn.innerHTML = '<i class="fas fa-heart mr-1"></i> Saved';
+                    } else {
+                        btn.innerHTML = '<i class="fas fa-heart"></i>';
+                    }
+                } else {
+                    btn.classList.remove('favorite-active');
+                    if (btn.id === 'sidebarSaveBtn') {
+                        btn.innerHTML = '<i class="far fa-heart mr-1"></i> Save';
+                    } else {
+                        btn.innerHTML = '<i class="far fa-heart"></i>';
+                    }
+                }
+            });
+        }
+
+        function openViewingModal() {
+            if (!propertyData) return;
+            const modal = document.getElementById('viewingModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            const dateInput = document.getElementById('viewingDate');
+            const today = new Date();
+            const localDate = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+            dateInput.min = localDate;
+        }
+
+        function closeViewingModal() {
+            const modal = document.getElementById('viewingModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        async function submitViewingRequest(event) {
+            event.preventDefault();
+            
+            if (!currentUser || !propertyId || !propertyData) {
+                showToast('Please sign in to continue', 'error');
+                return;
+            }
+
+            const date = document.getElementById('viewingDate').value;
+            const time = document.getElementById('viewingTime').value;
+            const note = document.getElementById('viewingNote').value.trim();
+
+            if (!date || !time) {
+                showToast('Please select a date and time', 'error');
+                return;
+            }
+
+            const button = document.getElementById('submitViewingBtn');
+            const originalHTML = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending Request...`;
+
+            try {
+                // IMPORTANT: Included agentId so the agent's dashboard can actually query/see it
+                await db.collection('appointments').add({
+                    propertyId: propertyId,
+                    propertyTitle: propertyData.title || '',
+                    propertyLocation: propertyData.location || '',
+                    agentId: propertyData.agentId || propertyData.ownerId || propertyData.userId || '',
+                    buyerId: currentUser.uid,
+                    buyerName: currentUser.displayName || currentUser.email || 'User',
+                    buyerEmail: currentUser.email || '',
+                    date: date,
+                    time: time,
+                    note: note,
+                    status: 'Pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                closeViewingModal();
+                document.getElementById('viewingForm').reset();
+                showToast('Viewing request sent successfully');
+            } catch (error) {
+                console.error('Error scheduling:', error);
+                showToast('Unable to send viewing request', 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHTML;
+            }
+        }
+
+        function contactAgent() {
+            if (!currentUser) {
+                showToast('Please sign in to contact the agent', 'error');
+                return;
+            }
+            // Check if agent has WhatsApp setup
+            if (agentData && agentData.whatsapp) {
+                let phone = agentData.whatsapp.replace(/[^0-9]/g, '');
+                let text = encodeURIComponent(`Hi, I am interested in ${propertyData.title} located at ${propertyData.location}. (Ref: ${propertyId})`);
+                window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+            } else {
+                openMessageModal();
+            }
+        }
+
+        function openMessageModal() {
+            const modal = document.getElementById('messageModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMessageModal() {
+            const modal = document.getElementById('messageModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        async function submitMessageRequest(event) {
+            event.preventDefault();
+            if (!currentUser || !propertyId || !propertyData) return;
+
+            const messageContent = document.getElementById('directMessageContent').value.trim();
+            if (!messageContent) return;
+
+            const button = document.getElementById('submitMessageBtn');
+            const originalHTML = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending...`;
+
+            try {
+                const agentId = propertyData.agentId || propertyData.ownerId || propertyData.userId || '';
+                await db.collection('messages').add({
+                    propertyId: propertyId,
+                    propertyTitle: propertyData.title || '',
+                    senderId: currentUser.uid,
+                    senderName: currentUser.displayName || 'User',
+                    receiverId: agentId,
+                    message: messageContent,
+                    read: false,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                closeMessageModal();
+                document.getElementById('messageForm').reset();
+                showToast('Message sent to agent');
+            } catch(error) {
+                console.error('Error sending message:', error);
+                showToast('Unable to send message', 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHTML;
+            }
+        }
+
+        async function shareProperty() {
+            const url = window.location.href;
+            try {
+                if (navigator.share) {
+                    await navigator.share({
+                        title: propertyData?.title || 'Property on MoonLat',
+                        text: 'Check out this property on MoonLat.',
+                        url: url
+                    });
+                } else if (navigator.clipboard) {
+                    await navigator.clipboard.writeText(url);
+                    showToast('Property link copied');
+                } else {
+                    showToast('Unable to share property', 'error');
+                }
+            } catch (error) {
+                if (error.name !== 'AbortError') console.error('Share error:', error);
+            }
+        }
+
+        function toggleDescription() {
+            const description = document.getElementById('propertyDescription');
+            const button = document.getElementById('descriptionToggle');
+            if (!description || !button) return;
+
+            if (description.classList.contains('line-clamp-2')) {
+                description.classList.remove('line-clamp-2');
+                button.textContent = 'Show less';
+            } else {
+                description.classList.add('line-clamp-2');
+                button.textContent = 'Read more';
+            }
+        }
+
+        function formatPrice(price) {
+            if (!price) return '0';
+            return Number(price).toLocaleString('en-NG');
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function escapeAttribute(value) {
+            return String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        function showToast(message, type = 'success') {
+            const existing = document.getElementById('moonlatToast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'moonlatToast';
+            toast.className = `fixed top-5 left-1/2 -translate-x-1/2 z-[3000] flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl text-white text-sm font-bold toast-enter ${type === 'success' ? 'bg-slate-950' : 'bg-rose-600'}`;
+            toast.innerHTML = `<span class="w-7 h-7 rounded-lg ${type === 'success' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-white/15 text-white'} flex items-center justify-center shrink-0"><i class="fas ${type === 'success' ? 'fa-check' : 'fa-triangle-exclamation'} text-xs"></i></span><span>${escapeHtml(message)}</span>`;
+            
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, -8px)';
+                toast.style.transition = 'all .2s ease';
+                setTimeout(() => toast.remove(), 200);
+            }, 3000);
+        }
+
+        document.getElementById('viewingModal').addEventListener('click', function(event) {
+            if (event.target === this) closeViewingModal();
+        });
+        document.getElementById('messageModal').addEventListener('click', function(event) {
+            if (event.target === this) closeMessageModal();
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeViewingModal();
+                closeMessageModal();
+                closeGallery();
+            }
+        });
+    </script>
+</body>
+</html>

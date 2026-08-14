@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Saved Viewings — MoonLat</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+      authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+      projectId: "moonlat-estate-dashboard",
+      storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+      messagingSenderId: "289878951289",
+      appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  
+  <!-- Custom Styles -->
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    .property-card {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .property-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+    }
+    .property-image-container { overflow: hidden; }
+    .property-image { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    .property-card:hover .property-image { transform: scale(1.05); }
+    
+    .bookmark-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+    .bookmark-btn:hover { transform: scale(1.1); }
+    .bookmark-btn.saved { color: #ef4444; animation: bookmarkPulse 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    @keyframes bookmarkPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    
+    .glass {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    
+    /* 2-Column Mobile Grid, scaling up */
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    @media (min-width: 768px) {
+      .property-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    }
+    @media (min-width: 1024px) {
+      .property-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    }
+    
+    .skeleton {
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 1.5s infinite;
+      border-radius: 8px;
+    }
+    @keyframes skeleton-loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    
+    .toast { animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Header -->
+  <header class="glass sticky top-0 z-50 border-b border-gray-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 gap-4">
+        <div class="flex items-center gap-3 flex-1">
+          <button onclick="window.history.back()" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all group">
+            <div class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-200 group-hover:border-gray-300 group-hover:shadow-sm transition-all">
+              <i class="fas fa-arrow-left text-sm"></i>
+            </div>
+            <span class="hidden sm:inline font-display font-semibold">Back</span>
+          </button>
+          <div class="h-6 w-px bg-gray-300 hidden sm:block"></div>
+          <div>
+            <h1 class="text-lg font-display font-bold text-gray-900">My Saved Viewings</h1>
+            <p class="text-xs text-gray-500 hidden sm:block">Properties you've bookmarked</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="buyer-browse-property.html" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/30">
+            <i class="fas fa-plus"></i>
+            <span class="hidden sm:inline">Browse More</span>
+          </a>
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg shadow-indigo-500/30 cursor-pointer" onclick="window.location.href='settings.html'" id="userAvatar">U</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex items-center justify-between mb-6">
+      <p class="text-sm text-gray-600">
+        Showing <span class="font-semibold text-gray-900" id="resultsCount">0</span> saved properties
+      </p>
+      <div class="flex items-center gap-2 text-sm text-gray-500">
+        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+        Live updates
+      </div>
+    </div>
+
+    <!-- Properties Grid -->
+    <div id="savedPropertiesGrid" class="property-grid">
+      <!-- Loading Skeleton -->
+      <div class="skeleton h-80 rounded-2xl"></div>
+      <div class="skeleton h-80 rounded-2xl"></div>
+      <div class="skeleton h-80 rounded-2xl"></div>
+      <div class="skeleton h-80 rounded-2xl"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden text-center py-20">
+      <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+        <i class="far fa-heart text-3xl text-gray-400"></i>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">No saved properties yet</h3>
+      <p class="text-gray-500 text-sm mb-6">Start browsing and bookmark properties you love</p>
+      <a href="buyer-browse-property.html" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/30">
+        <i class="fas fa-search"></i> Browse Properties
+      </a>
+    </div>
+  </main>
+
+  <!-- Property Detail Modal -->
+  <div id="propertyModal" class="fixed inset-0 z-[60] hidden">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closePropertyModal()"></div>
+    <div class="absolute inset-y-0 right-0 w-full max-w-2xl bg-white shadow-2xl transform transition-transform duration-300 translate-x-full" id="modalContent">
+      <div id="modalBody" class="h-full overflow-y-auto"></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-[70] flex flex-col gap-2"></div>
+
+  <!-- Confirm Modal for Contact -->
+  <div id="confirmModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeContactModal()"></div>
+    <div class="relative bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden">
+      <div class="p-6">
+        <div class="flex items-start gap-4">
+          <div id="confirmIcon" class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0"><i class="fas fa-user-tie text-xl"></i></div>
+          <div class="flex-1">
+            <h3 id="confirmTitle" class="text-lg font-bold text-gray-900">Contact Agent</h3>
+            <p id="confirmMessage" class="text-sm text-gray-600 mt-1">Choose how you want to reach the agent:</p>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 bg-gray-50 flex flex-col gap-2 border-t" id="confirmActions"></div>
+    </div>
+  </div>
+<!-- Load the external script as a module -->
+<script src="js/script.js"></script>
+
+
+  <script>
+    let currentUser = null;
+    let savedPropertiesMap = new Map(); // propertyId -> propertyData
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initPage();
+    });
+
+    async function initPage() {
+      firebase.auth().onAuthStateChanged(async (user) => {
+        if (user) {
+          currentUser = user;
+          document.getElementById('userAvatar').textContent = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
+          loadSavedProperties();
+        } else {
+          window.location.href = 'sign-in.html';
+        }
+      });
+    }
+
+    async function loadSavedProperties() {
+      if (!currentUser) return;
+
+      try {
+        // 1. Get saved property IDs
+        const savedSnapshot = await firebase.firestore()
+          .collection('savedProperties')
+          .where('userId', '==', currentUser.uid)
+          .orderBy('savedAt', 'desc')
+          .get();
+
+        if (savedSnapshot.empty) {
+          showEmptyState();
+          return;
+        }
+
+        const propertyIds = savedSnapshot.docs.map(doc => doc.data().propertyId);
+        document.getElementById('resultsCount').textContent = propertyIds.length;
+
+        // 2. Fetch actual property details
+        const grid = document.getElementById('savedPropertiesGrid');
+        grid.innerHTML = ''; // Clear skeletons
+
+        // Fetch in batches or individually (Firestore 'in' query supports up to 10, so we chunk if needed, but for simplicity we loop)
+        for (const propId of propertyIds) {
+          try {
+            const propDoc = await firebase.firestore().collection('properties').doc(propId).get();
+            if (propDoc.exists) {
+              const property = { id: propDoc.id, ...propDoc.data() };
+              savedPropertiesMap.set(propId, property);
+              grid.innerHTML += createPropertyCard(property);
+            } else {
+              // Property was deleted by agent, clean up the saved reference
+              await firebase.firestore().collection('savedProperties').doc(savedSnapshot.docs.find(d => d.data().propertyId === propId).id).delete();
+            }
+          } catch (err) {
+            console.error('Error fetching property:', propId, err);
+          }
+        }
+
+        if (savedPropertiesMap.size === 0) {
+          showEmptyState();
+        }
+
+      } catch (err) {
+        console.error('Error loading saved properties:', err);
+        showToast('Failed to load saved properties', 'error');
+      }
+    }
+
+    function createPropertyCard(property) {
+      const price = formatMoney(property.price);
+      const image = property.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800';
+      
+      return `
+        <div class="property-card group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl">
+          <div class="property-image-container relative aspect-[4/3]">
+            <img src="${escapeHtml(image)}" alt="${escapeHtml(property.title)}" class="property-image w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800'">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            
+            <div class="absolute top-3 left-3 flex flex-col gap-2">
+              ${property.featured ? `<span class="px-2.5 py-1 bg-amber-500 text-white text-[10px] font-bold rounded-lg shadow-lg flex items-center gap-1"><i class="fas fa-star"></i> FEATURED</span>` : ''}
+              <span class="px-2.5 py-1 bg-white/95 backdrop-blur-sm text-gray-900 text-[10px] font-bold rounded-lg shadow-sm">${escapeHtml(property.status)}</span>
+            </div>
+            
+            <button onclick="removeSavedProperty('${property.id}')" class="bookmark-btn saved absolute top-3 right-3 w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm shadow-lg flex items-center justify-center text-red-500" title="Remove from saved">
+              <i class="fas fa-heart text-sm"></i>
+            </button>
+            
+            <div class="absolute bottom-3 left-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+              <button onclick="scheduleInspection('${property.id}')" class="flex-1 px-3 py-2 bg-white text-gray-900 text-xs font-semibold rounded-lg shadow-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-1.5">
+                <i class="fas fa-calendar"></i> <span>Inspect</span>
+              </button>
+              <button onclick="contactAgent('${property.id}')" class="flex-1 px-3 py-2 bg-indigo-600 text-white text-xs font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-1.5">
+                <i class="fas fa-phone"></i> <span>Contact</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="p-4">
+            <h3 class="text-lg font-display font-bold text-gray-900 mb-1">${price}</h3>
+            <p class="text-sm font-semibold text-gray-900 mb-1 line-clamp-1">${escapeHtml(property.title)}</p>
+            <p class="text-xs text-gray-500 mb-3 flex items-center gap-1">
+              <i class="fas fa-map-marker-alt text-gray-400"></i>
+              <span class="line-clamp-1">${escapeHtml(property.location)}</span>
+            </p>
+            
+            <div class="flex items-center gap-3 pt-3 border-t border-gray-100">
+              ${property.beds ? `<div class="flex items-center gap-1 text-xs text-gray-600"><i class="fas fa-bed text-gray-400"></i><span>${property.beds}</span></div>` : ''}
+              <div class="flex items-center gap-1 text-xs text-gray-600"><i class="fas fa-bath text-gray-400"></i><span>${property.baths}</span></div>
+              <div class="flex items-center gap-1 text-xs text-gray-600"><i class="fas fa-ruler-combined text-gray-400"></i><span>${property.area} ft²</span></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function removeSavedProperty(propertyId) {
+      if (!currentUser) return;
+      
+      try {
+        const snapshot = await firebase.firestore()
+          .collection('savedProperties')
+          .where('userId', '==', currentUser.uid)
+          .where('propertyId', '==', propertyId)
+          .get();
+        
+        const batch = firebase.firestore().batch();
+        snapshot.docs.forEach(doc => batch.delete(doc.ref));
+        await batch.commit();
+        
+        savedPropertiesMap.delete(propertyId);
+        document.getElementById('resultsCount').textContent = savedPropertiesMap.size;
+        
+        // Remove from DOM with animation
+        const cards = document.querySelectorAll('.property-card');
+        cards.forEach(card => {
+          if (card.innerHTML.includes(`scheduleInspection('${propertyId}')`)) {
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+              card.remove();
+              if (savedPropertiesMap.size === 0) showEmptyState();
+            }, 300);
+          }
+        });
+        
+        showToast('Removed from saved viewings', 'info');
+      } catch (err) {
+        console.error('Error removing saved property:', err);
+        showToast('Failed to remove property', 'error');
+      }
+    }
+
+    function scheduleInspection(propertyId) {
+      window.location.href = `schedule-inspection.html?property=${propertyId}`;
+    }
+
+    function contactAgent(propertyId) {
+      const property = savedPropertiesMap.get(propertyId);
+      if (!property) return;
+      
+      const agentName = property.agentName || 'Agent';
+      const agentPhone = property.agentPhone || '';
+      const agentEmail = property.agentEmail || '';
+      
+      let actions = '';
+      if (agentPhone) actions += `<button onclick="window.location.href='tel:${agentPhone}'; closeContactModal()" class="w-full btn btn-primary mb-2 flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all"><i class="fas fa-phone"></i> Call ${escapeHtml(agentName)}</button>`;
+      if (agentEmail) actions += `<button onclick="window.location.href='mailto:${agentEmail}?subject=Inquiry about ${encodeURIComponent(property.title)}'; closeContactModal()" class="w-full btn btn-ghost mb-2 flex items-center justify-center gap-2 px-4 py-3 bg-white text-gray-900 font-semibold rounded-xl border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all"><i class="fas fa-envelope"></i> Email Agent</button>`;
+      actions += `<button onclick="closeContactModal()" class="w-full flex items-center justify-center gap-2 px-4 py-3 text-gray-600 font-semibold rounded-xl hover:bg-gray-100 transition-all mt-2">Cancel</button>`;
+      
+      document.getElementById('confirmTitle').textContent = `Contact ${escapeHtml(agentName)}`;
+      document.getElementById('confirmMessage').textContent = `Regarding: ${escapeHtml(property.title)}`;
+      document.getElementById('confirmIcon').innerHTML = '<i class="fas fa-user-tie text-xl"></i>';
+      document.getElementById('confirmIcon').className = 'w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0';
+      document.getElementById('confirmActions').innerHTML = actions;
+      document.getElementById('confirmModal').classList.remove('hidden');
+    }
+
+    function closeContactModal() {
+      document.getElementById('confirmModal').classList.add('hidden');
+    }
+
+    function openPropertyDetail(propertyId) {
+      const property = savedPropertiesMap.get(propertyId);
+      if (!property) return;
+      
+      const modal = document.getElementById('propertyModal');
+      const modalContent = document.getElementById('modalContent');
+      const modalBody = document.getElementById('modalBody');
+      const image = property.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800';
+      
+      modalBody.innerHTML = `
+        <div class="relative">
+          <button onclick="closePropertyModal()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center text-gray-600 hover:text-gray-900 hover:scale-110 transition-all">
+            <i class="fas fa-times"></i>
+          </button>
+          <div class="relative h-64 sm:h-80">
+            <img src="${escapeHtml(image)}" class="w-full h-full object-cover" alt="${escapeHtml(property.title)}">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+              <h2 class="text-2xl sm:text-3xl font-display font-bold mb-2">${escapeHtml(property.title)}</h2>
+              <p class="text-lg font-semibold text-amber-400">${formatMoney(property.price)}</p>
+            </div>
+          </div>
+          <div class="p-6 space-y-6">
+            <div class="grid grid-cols-3 gap-4">
+              <div class="text-center p-3 bg-gray-50 rounded-xl"><i class="fas fa-bed text-indigo-600 text-xl mb-1"></i><p class="text-sm font-semibold text-gray-900">${property.beds || 0} Beds</p></div>
+              <div class="text-center p-3 bg-gray-50 rounded-xl"><i class="fas fa-bath text-indigo-600 text-xl mb-1"></i><p class="text-sm font-semibold text-gray-900">${property.baths || 0} Baths</p></div>
+              <div class="text-center p-3 bg-gray-50 rounded-xl"><i class="fas fa-ruler-combined text-indigo-600 text-xl mb-1"></i><p class="text-sm font-semibold text-gray-900">${property.area || 0} ft²</p></div>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Description</h3>
+              <p class="text-gray-600 text-sm leading-relaxed">${escapeHtml(property.description) || 'No description available.'}</p>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Location</h3>
+              <p class="text-gray-600 text-sm flex items-center gap-2"><i class="fas fa-map-marker-alt text-gray-400"></i> ${escapeHtml(property.location)}</p>
+            </div>
+            <div class="flex gap-3 pt-4 border-t border-gray-200">
+              <button onclick="scheduleInspection('${property.id}'); closePropertyModal();" class="flex-1 px-4 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/30 flex items-center justify-center gap-2">
+                <i class="fas fa-calendar"></i> Schedule Inspection
+              </button>
+              <button onclick="contactAgent('${property.id}'); closePropertyModal();" class="flex-1 px-4 py-3 bg-white text-gray-900 font-semibold rounded-xl border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all flex items-center justify-center gap-2">
+                <i class="fas fa-phone"></i> Contact Agent
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      modal.classList.remove('hidden');
+      setTimeout(() => modalContent.classList.remove('translate-x-full'), 10);
+    }
+
+    function closePropertyModal() {
+      const modal = document.getElementById('propertyModal');
+      const modalContent = document.getElementById('modalContent');
+      modalContent.classList.add('translate-x-full');
+      setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    function showEmptyState() {
+      document.getElementById('savedPropertiesGrid').innerHTML = '';
+      document.getElementById('emptyState').classList.remove('hidden');
+      document.getElementById('resultsCount').textContent = '0';
+    }
+
+    function formatMoney(amount) {
+      if (!amount) return '₦0';
+      return '₦' + Number(amount).toLocaleString();
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const colors = { success: 'bg-green-500', error: 'bg-red-500', info: 'bg-indigo-600' };
+      const icons = { success: 'fa-check', error: 'fa-times', info: 'fa-info' };
+      
+      toast.className = `toast flex items-center gap-3 px-4 py-3 ${colors[type]} text-white rounded-xl shadow-lg min-w-[300px]`;
+      toast.innerHTML = `<i class="fas ${icons[type]}"></i><span class="font-medium text-sm">${message}</span>`;
+      
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Properties - MoonLat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { primary: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' } }
+                }
+            }
+        }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+            authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+            projectId: "moonlat-estate-dashboard",
+            storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+            messagingSenderId: "289878951289",
+            appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans pb-12">
+
+    <!-- Simple Nav -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
+            <button onclick="window.history.back()" class="text-slate-500 hover:text-slate-900 transition flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> <span class="hidden sm:inline">Back</span>
+            </button>
+            <h1 class="text-xl font-bold text-slate-900">MoonLat</h1>
+            <div class="w-8"></div> <!-- Spacer for centering -->
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto p-4 md:p-8 mt-4">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-900">Saved Properties</h1>
+                <p class="text-slate-500 mt-1">Properties you've bookmarked for later</p>
+            </div>
+            <a href="browse-property.html" class="inline-flex items-center justify-center px-6 py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition shadow-sm hover:shadow active:scale-95">
+                <i class="fas fa-search mr-2"></i> Browse More
+            </a>
+        </div>
+
+        <div id="savedPropertiesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Skeleton Loading State -->
+            <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm animate-pulse">
+                <div class="aspect-[4/3] bg-slate-200"></div>
+                <div class="p-5">
+                    <div class="h-5 bg-slate-200 rounded w-3/4 mb-3"></div>
+                    <div class="h-4 bg-slate-200 rounded w-1/2 mb-4"></div>
+                    <div class="flex gap-3 pt-3 border-t border-slate-100">
+                        <div class="h-4 bg-slate-200 rounded w-8"></div>
+                        <div class="h-4 bg-slate-200 rounded w-8"></div>
+                        <div class="h-4 bg-slate-200 rounded w-12"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm animate-pulse hidden sm:block">
+                <div class="aspect-[4/3] bg-slate-200"></div>
+                <div class="p-5">
+                    <div class="h-5 bg-slate-200 rounded w-3/4 mb-3"></div>
+                    <div class="h-4 bg-slate-200 rounded w-1/2 mb-4"></div>
+                    <div class="flex gap-3 pt-3 border-t border-slate-100">
+                        <div class="h-4 bg-slate-200 rounded w-8"></div>
+                        <div class="h-4 bg-slate-200 rounded w-8"></div>
+                        <div class="h-4 bg-slate-200 rounded w-12"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let savedProperties = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    currentUser = user;
+                    await loadSavedProperties();
+                } else {
+                    // Save the intended destination so they can return after logging in
+                    sessionStorage.setItem('redirectAfterLogin', window.location.href);
+                    window.location.href = '../sign-in.html';
+                }
+            });
+        });
+
+        async function loadSavedProperties() {
+            try {
+                const snapshot = await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('savedProperties')
+                    .orderBy('savedAt', 'desc')
+                    .get();
+
+                savedProperties = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                renderSavedProperties();
+            } catch (error) {
+                console.error('Error loading saved properties:', error);
+                
+                // Fallback rendering on error
+                document.getElementById('savedPropertiesList').innerHTML = `
+                    <div class="col-span-full text-center py-16 bg-white rounded-2xl border border-slate-200">
+                        <i class="fas fa-exclamation-circle text-rose-400 text-4xl mb-3"></i>
+                        <h3 class="text-lg font-bold text-slate-900">Failed to load properties</h3>
+                        <p class="text-slate-500 mb-4">Please check your connection and try again.</p>
+                        <button onclick="loadSavedProperties()" class="text-primary-600 font-semibold hover:underline">Try Again</button>
+                    </div>`;
+                showToast('Error connecting to database', 'error');
+            }
+        }
+
+        function renderSavedProperties() {
+            const container = document.getElementById('savedPropertiesList');
+
+            if (savedProperties.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-24 bg-white rounded-3xl border border-dashed border-slate-300">
+                        <div class="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-5">
+                            <i class="fas fa-heart-broken text-rose-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">No saved properties yet</h3>
+                        <p class="text-slate-500 mb-6 max-w-sm mx-auto">You haven't bookmarked any properties. Start browsing to find your dream home.</p>
+                        <a href="browse-property.html" class="text-primary-600 font-semibold hover:text-primary-700 hover:underline">Explore Properties →</a>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = savedProperties.map(prop => `
+                <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative flex flex-col h-full">
+                    
+                    <button onclick="removeFromSaved(event, '${prop.id}')" 
+                            class="absolute top-3 right-3 z-10 w-9 h-9 bg-white/90 backdrop-blur text-rose-500 rounded-full flex items-center justify-center hover:bg-rose-500 hover:text-white transition shadow-sm" 
+                            title="Remove from saved">
+                        <i class="fas fa-heart text-sm"></i>
+                    </button>
+                    
+                    <div class="relative aspect-[4/3] cursor-pointer bg-slate-100 overflow-hidden" onclick="window.location.href='property-detail.html?id=${prop.id}'">
+                        <img src="${prop.image || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                             alt="${prop.title || 'Property Image'}"
+                             onerror="this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
+                            <p class="text-white font-bold text-xl">₦${formatPrice(prop.price)}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h4 class="font-bold text-slate-900 mb-1 cursor-pointer hover:text-primary-600 line-clamp-1" onclick="window.location.href='property-detail.html?id=${prop.id}'">
+                            ${prop.title || 'Untitled Property'}
+                        </h4>
+                        <p class="text-sm text-slate-500 mb-4 line-clamp-1">
+                            <i class="fas fa-map-marker-alt text-slate-400 mr-1"></i> ${prop.location || 'Location not specified'}
+                        </p>
+                        
+                        <div class="mt-auto">
+                            <div class="flex items-center gap-4 text-sm text-slate-600 pt-4 border-t border-slate-100">
+                                <span class="flex items-center gap-1.5" title="Bedrooms"><i class="fas fa-bed text-slate-400"></i> ${prop.beds || 0}</span>
+                                <span class="flex items-center gap-1.5" title="Bathrooms"><i class="fas fa-bath text-slate-400"></i> ${prop.baths || 0}</span>
+                                <span class="flex items-center gap-1.5" title="Area"><i class="fas fa-vector-square text-slate-400"></i> ${prop.area || 0}m²</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function removeFromSaved(event, propertyId) {
+            event.stopPropagation(); // Prevents the card click event from firing
+
+            // Find the card element to animate it out
+            const button = event.currentTarget;
+            const card = button.closest('.group');
+
+            // Optimistic UI update: fade out immediately for better feel
+            card.style.opacity = '0.5';
+            card.style.pointerEvents = 'none';
+
+            try {
+                await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('savedProperties')
+                    .doc(propertyId)
+                    .delete();
+
+                // Remove from local array
+                savedProperties = savedProperties.filter(p => p.id !== propertyId);
+                
+                // Re-render
+                renderSavedProperties();
+                showToast('Removed from favorites');
+            } catch (error) {
+                console.error('Error removing property:', error);
+                // Revert optimistic UI on failure
+                card.style.opacity = '1';
+                card.style.pointerEvents = 'auto';
+                showToast('Failed to remove property', 'error');
+            }
+        }
+
+        function formatPrice(price) {
+            if (!price) return '0';
+            // Handles both string and number inputs safely
+            return Number(price.toString().replace(/,/g, '')).toLocaleString(); 
+        }
+
+        function showToast(message, type = 'success') {
+            // Remove existing toasts to prevent stacking
+            const existingToast = document.querySelector('.custom-toast');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = `custom-toast fixed bottom-6 left-1/2 -translate-x-1/2 z-[2000] px-6 py-3 rounded-full shadow-xl text-white font-medium text-sm flex items-center gap-2 transition-all duration-300 transform translate-y-0 opacity-100 ${type === 'success' ? 'bg-slate-900' : 'bg-rose-600'}`;
+            
+            const icon = type === 'success' ? '<i class="fas fa-check-circle text-emerald-400"></i>' : '<i class="fas fa-exclamation-circle"></i>';
+            toast.innerHTML = `${icon} ${message}`;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-4', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

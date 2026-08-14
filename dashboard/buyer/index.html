@@ -1,0 +1,1922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - MoonLat</title>
+  <meta name="description" content="Your MoonLat property dashboard. Discover properties, manage saved homes and schedule viewings.">
+  <meta name="theme-color" content="#080b12">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif']
+          },
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a'
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 35px rgba(15, 23, 42, 0.055)',
+            premium: '0 24px 70px rgba(15, 23, 42, 0.12)'
+          }
+        }
+      }
+    };
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+      authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+      projectId: "moonlat-estate-dashboard",
+      storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+      messagingSenderId: "289878951289",
+      appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background:
+        radial-gradient(circle at 80% -10%, rgba(37, 99, 235, 0.045), transparent 28%),
+        #f7f8fa;
+      min-height: 100vh;
+      color: #0f172a;
+    }
+    ::selection {
+      background: rgba(37, 99, 235, 0.18);
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .sidebar {
+      background: #ffffff;
+    }
+    .nav-link {
+      position: relative;
+      transition:
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease;
+    }
+    .nav-link:hover {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+    .nav-link.active {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+    }
+    .nav-link.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 3px;
+      height: 22px;
+      transform: translateY(-50%);
+      border-radius: 0 5px 5px 0;
+      background: #2563eb;
+    }
+    .nav-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      transition: all .2s ease;
+    }
+    .nav-link.active .nav-icon {
+      background: #ffffff;
+      color: #2563eb;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
+    }
+    .dashboard-shell {
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+    .soft-card {
+      background: #ffffff;
+      border: 1px solid #e7ebf0;
+      box-shadow: 0 10px 35px rgba(15, 23, 42, 0.045);
+    }
+    .hover-card {
+      transition:
+        transform .25s cubic-bezier(.4,0,.2,1),
+        box-shadow .25s cubic-bezier(.4,0,.2,1),
+        border-color .25s ease;
+    }
+    .hover-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.10);
+      border-color: #dbe3ec;
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 88% 20%, rgba(96, 165, 250, .28), transparent 27%),
+        radial-gradient(circle at 20% 100%, rgba(37, 99, 235, .25), transparent 32%),
+        #090d16;
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      opacity: .08;
+      background-image:
+        linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom right, black, transparent 75%);
+      -webkit-mask-image: linear-gradient(to bottom right, black, transparent 75%);
+    }
+    .hero-orb {
+      position: absolute;
+      width: 380px;
+      height: 380px;
+      border-radius: 999px;
+      right: -160px;
+      top: -180px;
+      background: rgba(59, 130, 246, .22);
+      filter: blur(55px);
+    }
+    .hero-orb-two {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 999px;
+      left: -140px;
+      bottom: -170px;
+      background: rgba(29, 78, 216, .25);
+      filter: blur(60px);
+    }
+    .search-shell {
+      background: rgba(255,255,255,.98);
+      box-shadow:
+        0 24px 60px rgba(0,0,0,.22),
+        0 3px 12px rgba(0,0,0,.08);
+    }
+    .search-input:focus {
+      outline: none;
+    }
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid #e7ebf0;
+      transition: all .25s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(15,23,42,.07);
+      border-color: #dbe3ec;
+    }
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .property-card {
+      background: #ffffff;
+      border: 1px solid #e7ebf0;
+      transition:
+        transform .3s cubic-bezier(.4,0,.2,1),
+        box-shadow .3s cubic-bezier(.4,0,.2,1);
+    }
+    .property-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 24px 55px rgba(15,23,42,.10);
+    }
+    .property-image {
+      transition: transform .65s cubic-bezier(.4,0,.2,1);
+    }
+    .property-card:hover .property-image {
+      transform: scale(1.045);
+    }
+    .property-image-overlay {
+      background: linear-gradient(
+        to top,
+        rgba(2, 6, 23, .72),
+        rgba(2, 6, 23, .08) 65%
+      );
+    }
+    .favorite-btn {
+      transition:
+        transform .2s ease,
+        background .2s ease,
+        color .2s ease;
+    }
+    .favorite-btn:hover {
+      transform: scale(1.08);
+    }
+    .favorite-btn.active {
+      color: #e11d48;
+      background: #fff1f2;
+    }
+    .favorite-btn.active i {
+      font-weight: 900;
+    }
+    .skeleton {
+      background: linear-gradient(
+        90deg,
+        #eef1f5 25%,
+        #f7f8fa 50%,
+        #eef1f5 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+    .fade-up {
+      animation: fadeUp .5s ease-out both;
+    }
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .mobile-bottom-nav {
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
+    }
+    .hide-scrollbar {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .line-clamp-1 {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      overflow: hidden;
+    }
+    @media (max-width: 1023px) {
+      body {
+        padding-bottom: 76px;
+      }
+    }
+    @media (min-width: 1024px) {
+      .desktop-sidebar {
+        width: 260px;
+      }
+      .desktop-main {
+        margin-left: 260px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div
+    id="loadingOverlay"
+    class="fixed inset-0 z-[9999] bg-white flex items-center justify-center">
+<div class="text-center px-6">
+  <div class="w-14 h-14 rounded-2xl bg-slate-950 flex items-center justify-center mx-auto mb-5 shadow-xl">
+    <i class="fas fa-house text-white text-lg"></i>
+  </div>
+  <div class="w-32 h-1 bg-slate-100 rounded-full overflow-hidden mx-auto mb-4">
+    <div class="h-full w-1/2 bg-primary-600 rounded-full animate-pulse"></div>
+  </div>
+  <p class="text-xs font-bold uppercase tracking-[.16em] text-slate-400">
+    MoonLat
+  </p>
+</div>
+  </div>
+  <!-- Mobile Sidebar Backdrop -->
+  <div
+    id="sidebarBackdrop"
+    onclick="toggleSidebar()"
+    class="hidden opacity-0 transition-opacity duration-300 fixed inset-0 z-[55] bg-slate-950/45 backdrop-blur-sm lg:hidden">
+  </div>
+
+  <div id="appContainer" class="opacity-0">
+<!-- Sidebar -->
+<aside
+  id="sidebar"
+  class="desktop-sidebar sidebar fixed left-0 top-0 bottom-0 z-[60] border-r border-slate-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+  <!-- Brand -->
+  <div class="h-[82px] px-5 border-b border-slate-100 flex items-center">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-slate-950 flex items-center justify-center shadow-lg">
+        <i class="fas fa-house text-white text-sm"></i>
+      </div>
+      <div>
+        <div class="font-extrabold text-lg tracking-tight text-slate-950">
+          MoonLat
+        </div>
+        <div class="text-[10px] uppercase tracking-[.16em] font-bold text-slate-400">
+          Buyer Portal
+        </div>
+      </div>
+    </a>
+    <button
+      onclick="toggleSidebar()"
+      class="ml-auto lg:hidden w-9 h-9 rounded-lg bg-slate-100 text-slate-500">
+      <i class="fas fa-xmark"></i>
+    </button>
+  </div>
+  <!-- Navigation -->
+  <nav class="p-4 overflow-y-auto h-[calc(100%-160px)]">
+    <div class="px-3 mb-2 text-[10px] uppercase tracking-[.17em] font-extrabold text-slate-400">
+      Discover
+    </div>
+    <div class="space-y-1">
+      <a
+        href="index.html"
+        class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-xl">
+        <span class="nav-icon">
+          <i class="fas fa-grid-2"></i>
+        </span>
+        <span class="text-sm">Dashboard</span>
+      </a>
+      <a
+        href="browse-property.html"
+        class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500">
+        <span class="nav-icon">
+          <i class="fas fa-compass"></i>
+        </span>
+        <span class="text-sm">Browse Properties</span>
+      </a>
+      <a
+        href="saved-property.html"
+        class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500">
+        <span class="nav-icon">
+          <i class="far fa-heart"></i>
+        </span>
+        <span class="text-sm">Saved Properties</span>
+        <span
+          id="sidebarSavedBadge"
+          class="hidden ml-auto min-w-5 h-5 px-1.5 rounded-full bg-rose-500 text-white text-[10px] font-extrabold items-center justify-center">
+          0
+        </span>
+      </a>
+    </div>
+    <div class="px-3 mt-8 mb-2 text-[10px] uppercase tracking-[.17em] font-extrabold text-slate-400">
+      Activity
+    </div>
+    <div class="space-y-1">
+      <a
+        href="my-viewing.html"
+        class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500">
+        <span class="nav-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="text-sm">My Viewings</span>
+      </a>
+      <a
+        href="#"
+        onclick="showToast('Messaging is coming soon'); return false;"
+        class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500">
+        <span class="nav-icon">
+          <i class="far fa-comment-dots"></i>
+        </span>
+        <span class="text-sm">Messages</span>
+        <span
+          id="sidebarMessageBadge"
+          class="hidden ml-auto min-w-5 h-5 px-1.5 rounded-full bg-primary-600 text-white text-[10px] font-extrabold items-center justify-center">
+          0
+        </span>
+      </a>
+    </div>
+    <div class="px-3 mt-8 mb-2 text-[10px] uppercase tracking-[.17em] font-extrabold text-slate-400">
+      Account
+    </div>
+    <div class="space-y-1">
+      <a
+        href="notification.html"
+        class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500">
+        <span class="nav-icon">
+          <i class="far fa-bell"></i>
+        </span>
+        <span class="text-sm">Notifications</span>
+        <span
+          id="sidebarNotifBadge"
+          class="hidden ml-auto min-w-5 h-5 px-1.5 rounded-full bg-rose-500 text-white text-[10px] font-extrabold items-center justify-center">
+          0
+        </span>
+      </a>
+      <a
+        href="settings.html"
+        class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500">
+        <span class="nav-icon">
+          <i class="fas fa-sliders"></i>
+        </span>
+        <span class="text-sm">Settings</span>
+      </a>
+    </div>
+  </nav>
+  <!-- User -->
+  <div class="absolute left-0 right-0 bottom-0 p-4 border-t border-slate-100 bg-white">
+    <div class="flex items-center gap-3">
+      <img
+        id="sidebarAvatar"
+        src=""
+        alt=""
+        class="hidden w-10 h-10 rounded-full object-cover bg-slate-100">
+      <div
+        id="sidebarAvatarInitials"
+        class="w-10 h-10 rounded-full bg-slate-950 text-white flex items-center justify-center font-extrabold text-xs">
+        U
+      </div>
+      <div class="min-w-0 flex-1">
+        <p
+          id="sidebarUserName"
+          class="text-xs font-extrabold text-slate-900 truncate">
+          User
+        </p>
+        <p class="text-[10px] text-slate-400 truncate">
+          Buyer account
+        </p>
+      </div>
+      <button
+        onclick="handleSignOut()"
+        class="w-9 h-9 rounded-lg hover:bg-rose-50 hover:text-rose-500 text-slate-400 transition"
+        aria-label="Sign out">
+        <i class="fas fa-arrow-right-from-bracket text-xs"></i>
+      </button>
+    </div>
+  </div>
+</aside>
+<!-- Main -->
+<main class="desktop-main min-h-screen">
+  <!-- Topbar -->
+  <header class="sticky top-0 z-40 glass border-b border-slate-200/70">
+    <div class="dashboard-shell px-4 sm:px-6 lg:px-8">
+      <div class="h-[72px] flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <button
+            onclick="toggleSidebar()"
+            class="lg:hidden w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600">
+            <i class="fas fa-bars text-sm"></i>
+          </button>
+          <div>
+            <p class="text-[10px] sm:text-xs uppercase tracking-[.14em] font-bold text-slate-400">
+              Your dashboard
+            </p>
+            <h1
+              id="headerGreeting"
+              class="text-base sm:text-lg font-extrabold text-slate-950 tracking-tight">
+              Welcome back
+            </h1>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <!-- Desktop Search -->
+          <div class="hidden md:flex w-[270px] h-10 rounded-xl bg-slate-100 border border-slate-200 items-center px-3 gap-2">
+            <i class="fas fa-search text-slate-400 text-xs"></i>
+            <input
+              id="headerSearch"
+              type="text"
+              placeholder="Search properties..."
+              class="search-input w-full bg-transparent border-none text-xs font-medium text-slate-800 placeholder:text-slate-400"
+              onkeypress="if(event.key==='Enter') handleSearch(this.value)">
+          </div>
+          <button
+            onclick="window.location.href='notification.html'"
+            class="relative w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-slate-950 hover:shadow-sm transition">
+            <i class="far fa-bell text-sm"></i>
+            <span
+              id="headerNotifBadge"
+              class="hidden absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white">
+            </span>
+          </button>
+          <div class="hidden sm:block h-7 w-px bg-slate-200 mx-1"></div>
+          <img
+            id="headerAvatar"
+            src=""
+            alt=""
+            class="hidden w-9 h-9 rounded-full object-cover bg-slate-100">
+          <div
+            id="headerAvatarInitials"
+            class="sm:hidden w-9 h-9 rounded-full bg-slate-950 text-white flex items-center justify-center font-extrabold text-xs">
+            U
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Content -->
+  <div class="dashboard-shell px-4 sm:px-6 lg:px-8 py-5 sm:py-7 lg:py-9 space-y-6">
+    <!-- Hero -->
+    <section class="hero rounded-[28px] sm:rounded-[32px] min-h-[365px] sm:min-h-[400px] p-5 sm:p-8 lg:p-11 flex items-center">
+      <div class="hero-grid"></div>
+      <div class="hero-orb"></div>
+      <div class="hero-orb-two"></div>
+      <div class="relative z-10 w-full">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 mb-5">
+            <span class="w-7 h-px bg-blue-400"></span>
+            <span class="text-[10px] sm:text-xs uppercase tracking-[.2em] font-extrabold text-blue-300">
+              MoonLat Property Discovery
+            </span>
+          </div>
+          <h2
+            id="heroUserName"
+            class="text-3xl sm:text-4xl lg:text-[50px] leading-[1.04] font-extrabold tracking-[-.045em] text-white max-w-2xl">
+            Find Your Perfect Home
+          </h2>
+          <p class="text-sm sm:text-base lg:text-lg leading-7 text-slate-300 max-w-xl mt-4">
+            Explore
+            <span id="heroPropertyCount" class="font-extrabold text-white">0</span>
+            properties and discover a place that fits the way you want to live.
+          </p>
+        </div>
+        <!-- Search -->
+        <div class="search-shell rounded-2xl sm:rounded-[20px] p-2 mt-8 max-w-3xl">
+          <div class="flex flex-col sm:flex-row gap-2">
+            <div class="flex-1 min-w-0 flex items-center gap-3 px-3 sm:px-4">
+              <span class="w-9 h-9 rounded-xl bg-slate-100 text-primary-600 flex items-center justify-center shrink-0">
+                <i class="fas fa-search text-xs"></i>
+              </span>
+              <input
+                id="heroSearch"
+                type="text"
+                placeholder="Search by location, property type or price..."
+                class="search-input w-full h-12 bg-transparent border-none text-sm text-slate-900 placeholder:text-slate-400 font-medium"
+                onkeypress="if(event.key==='Enter') handleSearch(this.value)">
+            </div>
+            <button
+              onclick="handleSearch(document.getElementById('heroSearch').value)"
+              class="h-12 px-7 rounded-xl bg-slate-950 text-white text-sm font-extrabold hover:bg-slate-800 transition flex items-center justify-center gap-2">
+              Search
+              <i class="fas fa-arrow-right text-xs"></i>
+            </button>
+          </div>
+        </div>
+        <!-- Hero Links -->
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-5 text-xs font-semibold text-slate-400">
+          <button
+            onclick="window.location.href='browse-property.html'"
+            class="hover:text-white transition">
+            Browse all properties
+          </button>
+          <span class="w-1 h-1 rounded-full bg-slate-600"></span>
+          <button
+            onclick="window.location.href='saved-property.html'"
+            class="hover:text-white transition">
+            View saved homes
+          </button>
+        </div>
+      </div>
+    </section>
+    <!-- Stats -->
+    <section>
+      <div class="flex items-end justify-between mb-3 px-1">
+        <div>
+          <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+            Your activity
+          </p>
+          <h2 class="text-lg font-extrabold text-slate-950 tracking-tight">
+            At a glance
+          </h2>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div class="stat-card rounded-2xl p-4 sm:p-5">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">
+                Properties
+              </p>
+              <p
+                id="statProperties"
+                class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-950 mt-2">
+                --
+              </p>
+              <p class="text-[11px] text-slate-400 mt-1">
+                Currently available
+              </p>
+            </div>
+            <div class="stat-icon bg-primary-50 text-primary-600">
+              <i class="fas fa-building text-sm"></i>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card rounded-2xl p-4 sm:p-5">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">
+                Viewings
+              </p>
+              <p
+                id="statViewings"
+                class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-950 mt-2">
+                --
+              </p>
+              <p class="text-[11px] text-slate-400 mt-1">
+                Upcoming visits
+              </p>
+            </div>
+            <div class="stat-icon bg-emerald-50 text-emerald-600">
+              <i class="far fa-calendar-check text-sm"></i>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card rounded-2xl p-4 sm:p-5">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">
+                Saved
+              </p>
+              <p
+                id="statSaved"
+                class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-950 mt-2">
+                --
+              </p>
+              <p class="text-[11px] text-slate-400 mt-1">
+                Favourite properties
+              </p>
+            </div>
+            <div class="stat-icon bg-rose-50 text-rose-600">
+              <i class="far fa-heart text-sm"></i>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card rounded-2xl p-4 sm:p-5">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">
+                Notifications
+              </p>
+              <p
+                id="statNotifs"
+                class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-950 mt-2">
+                --
+              </p>
+              <p class="text-[11px] text-slate-400 mt-1">
+                Waiting for you
+              </p>
+            </div>
+            <div class="stat-icon bg-violet-50 text-violet-600">
+              <i class="far fa-bell text-sm"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Quick Actions -->
+    <section>
+      <div class="flex items-end justify-between mb-3 px-1">
+        <div>
+          <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+            Shortcuts
+          </p>
+          <h2 class="text-lg font-extrabold text-slate-950 tracking-tight">
+            Quick actions
+          </h2>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <button
+          onclick="window.location.href='browse-property.html'"
+          class="soft-card hover-card rounded-2xl p-4 sm:p-5 text-left group">
+          <div class="flex items-start justify-between">
+            <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center group-hover:scale-105 transition">
+              <i class="fas fa-compass text-sm"></i>
+            </div>
+            <i class="fas fa-arrow-up-right-from-square text-[10px] text-slate-300 group-hover:text-primary-500 transition"></i>
+          </div>
+          <h3 class="text-sm font-extrabold text-slate-950 mt-4">
+            Browse
+          </h3>
+          <p class="text-[11px] text-slate-400 mt-1">
+            Explore properties
+          </p>
+        </button>
+        <button
+          onclick="window.location.href='my-viewing.html'"
+          class="soft-card hover-card rounded-2xl p-4 sm:p-5 text-left group">
+          <div class="flex items-start justify-between">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-105 transition">
+              <i class="far fa-calendar-check text-sm"></i>
+            </div>
+            <i class="fas fa-arrow-up-right-from-square text-[10px] text-slate-300 group-hover:text-emerald-500 transition"></i>
+          </div>
+          <h3 class="text-sm font-extrabold text-slate-950 mt-4">
+            Viewings
+          </h3>
+          <p class="text-[11px] text-slate-400 mt-1">
+            Manage appointments
+          </p>
+        </button>
+        <button
+          onclick="window.location.href='saved-property.html'"
+          class="soft-card hover-card rounded-2xl p-4 sm:p-5 text-left group">
+          <div class="flex items-start justify-between">
+            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-105 transition">
+              <i class="far fa-heart text-sm"></i>
+            </div>
+            <i class="fas fa-arrow-up-right-from-square text-[10px] text-slate-300 group-hover:text-rose-500 transition"></i>
+          </div>
+          <h3 class="text-sm font-extrabold text-slate-950 mt-4">
+            Saved homes
+          </h3>
+          <p class="text-[11px] text-slate-400 mt-1">
+            Your favourites
+          </p>
+        </button>
+        <button
+          onclick="window.location.href='settings.html'"
+          class="soft-card hover-card rounded-2xl p-4 sm:p-5 text-left group">
+          <div class="flex items-start justify-between">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center group-hover:scale-105 transition">
+              <i class="fas fa-sliders text-sm"></i>
+            </div>
+            <i class="fas fa-arrow-up-right-from-square text-[10px] text-slate-300 group-hover:text-slate-700 transition"></i>
+          </div>
+          <h3 class="text-sm font-extrabold text-slate-950 mt-4">
+            Settings
+          </h3>
+          <p class="text-[11px] text-slate-400 mt-1">
+            Manage your account
+          </p>
+        </button>
+      </div>
+    </section>
+    <!-- Featured Properties -->
+    <section>
+      <div class="flex items-end justify-between mb-4 px-1">
+        <div>
+          <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-primary-600">
+            Curated for you
+          </p>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-950 tracking-tight mt-1">
+            Featured properties
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Discover standout listings currently available on MoonLat.
+          </p>
+        </div>
+        <a
+          href="browse-property.html"
+          class="hidden sm:inline-flex items-center gap-2 text-xs font-extrabold text-slate-600 hover:text-primary-600 transition">
+          View all
+          <i class="fas fa-arrow-right text-[10px]"></i>
+        </a>
+      </div>
+      <div
+        id="featuredProperties"
+        class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+        <div class="bg-white rounded-[22px] overflow-hidden border border-slate-200">
+          <div class="aspect-[4/3] skeleton"></div>
+          <div class="p-5 space-y-3">
+            <div class="h-5 skeleton rounded w-3/4"></div>
+            <div class="h-3 skeleton rounded w-1/2"></div>
+            <div class="h-3 skeleton rounded w-2/3"></div>
+          </div>
+        </div>
+        <div class="hidden sm:block bg-white rounded-[22px] overflow-hidden border border-slate-200">
+          <div class="aspect-[4/3] skeleton"></div>
+          <div class="p-5 space-y-3">
+            <div class="h-5 skeleton rounded w-3/4"></div>
+            <div class="h-3 skeleton rounded w-1/2"></div>
+            <div class="h-3 skeleton rounded w-2/3"></div>
+          </div>
+        </div>
+        <div class="hidden xl:block bg-white rounded-[22px] overflow-hidden border border-slate-200">
+          <div class="aspect-[4/3] skeleton"></div>
+          <div class="p-5 space-y-3">
+            <div class="h-5 skeleton rounded w-3/4"></div>
+            <div class="h-3 skeleton rounded w-1/2"></div>
+            <div class="h-3 skeleton rounded w-2/3"></div>
+          </div>
+        </div>
+      </div>
+      <a
+        href="browse-property.html"
+        class="sm:hidden flex items-center justify-center gap-2 mt-4 h-11 rounded-xl bg-white border border-slate-200 text-xs font-extrabold text-slate-700">
+        View all properties
+        <i class="fas fa-arrow-right text-[10px]"></i>
+      </a>
+    </section>
+    <!-- Bottom Grid -->
+    <section class="grid grid-cols-1 xl:grid-cols-5 gap-5">
+      <!-- Upcoming Viewings -->
+      <div class="xl:col-span-3 soft-card rounded-[24px] p-5 sm:p-6">
+        <div class="flex items-start justify-between gap-4 mb-5">
+          <div>
+            <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-emerald-600">
+              Your schedule
+            </p>
+            <h2 class="text-xl font-extrabold text-slate-950 tracking-tight mt-1">
+              Upcoming viewings
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">
+              Your next property visits.
+            </p>
+          </div>
+          <a
+            href="my-viewing.html"
+            class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:text-primary-600 transition">
+            <i class="fas fa-arrow-up-right-from-square text-xs"></i>
+          </a>
+        </div>
+        <div id="upcomingViewings" class="space-y-2.5">
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50">
+            <div class="w-14 h-14 rounded-xl skeleton shrink-0"></div>
+            <div class="flex-1 space-y-2">
+              <div class="h-3 skeleton rounded w-3/4"></div>
+              <div class="h-3 skeleton rounded w-1/2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Account Panel -->
+      <div class="xl:col-span-2 bg-slate-950 rounded-[24px] p-5 sm:p-6 text-white relative overflow-hidden">
+        <div class="absolute -right-20 -top-20 w-52 h-52 rounded-full bg-primary-500/20 blur-3xl"></div>
+        <div class="relative">
+          <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-primary-300">
+            Account
+          </p>
+          <h2 class="text-xl font-extrabold tracking-tight mt-1">
+            Keep your profile ready.
+          </h2>
+          <p class="text-xs leading-5 text-slate-400 mt-2 max-w-sm">
+            Keep your account information up to date so agents can contact you when you request a viewing.
+          </p>
+          <div class="mt-6 flex items-center gap-3">
+            <img
+              id="accountPanelAvatar"
+              src=""
+              alt=""
+              class="hidden w-11 h-11 rounded-full object-cover bg-white/10">
+            <div
+              id="accountPanelInitials"
+              class="w-11 h-11 rounded-full bg-white/10 border border-white/10 flex items-center justify-center font-extrabold text-sm">
+              U
+            </div>
+            <div class="min-w-0">
+              <p
+                id="accountPanelName"
+                class="text-sm font-extrabold truncate">
+                User
+              </p>
+              <p class="text-[10px] text-slate-500 truncate">
+                Buyer account
+              </p>
+            </div>
+          </div>
+          <button
+            onclick="window.location.href='settings.html'"
+            class="mt-6 w-full h-11 rounded-xl bg-white text-slate-950 font-extrabold text-xs hover:bg-slate-100 transition">
+            Manage account
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+  </div>
+  <!-- Mobile Bottom Navigation -->
+  <nav class="mobile-bottom-nav fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/95 backdrop-blur-xl border-t border-slate-200">
+<div class="grid grid-cols-4 h-[66px]">
+  <a
+    href="index.html"
+    class="flex flex-col items-center justify-center gap-1 text-primary-600">
+    <i class="fas fa-grid-2 text-sm"></i>
+    <span class="text-[9px] font-extrabold">Home</span>
+  </a>
+  <a
+    href="browse-property.html"
+    class="flex flex-col items-center justify-center gap-1 text-slate-400">
+    <i class="fas fa-compass text-sm"></i>
+    <span class="text-[9px] font-bold">Explore</span>
+  </a>
+  <a
+    href="saved-property.html"
+    class="flex flex-col items-center justify-center gap-1 text-slate-400">
+    <i class="far fa-heart text-sm"></i>
+    <span class="text-[9px] font-bold">Saved</span>
+  </a>
+  <a
+    href="settings.html"
+    class="flex flex-col items-center justify-center gap-1 text-slate-400">
+    <i class="fas fa-sliders text-sm"></i>
+    <span class="text-[9px] font-bold">Account</span>
+  </a>
+</div>
+  </nav>
+  <script>
+    let currentUser = null;
+    let userData = {};
+    let allProperties = [];
+    let savedPropertyIds = new Set();
+    let appointments = [];
+    let notifications = [];
+    const FALLBACK_IMAGE =
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1000&q=85';
+    // ============================
+    // INIT
+    // ============================
+    document.addEventListener('DOMContentLoaded', () => {
+      auth.onAuthStateChanged(async (user) => {
+        if (!user) {
+          window.location.href = '../sign-in.html';
+          return;
+        }
+        currentUser = user;
+        try {
+          await Promise.all([
+            loadUserProfile(),
+            loadProperties(),
+            loadSavedProperties(),
+            loadAppointments(),
+            loadNotifications()
+          ]);
+          renderDashboard();
+          document.getElementById('loadingOverlay').style.display = 'none';
+          const app =
+            document.getElementById('appContainer');
+          app.style.opacity = '1';
+          app.classList.add('fade-up');
+        } catch (error) {
+          console.error('Dashboard initialization error:', error);
+          document.getElementById('loadingOverlay').style.display = 'none';
+          document.getElementById('appContainer').style.opacity = '1';
+          showToast(
+            'Some dashboard information could not be loaded.',
+            'error'
+          );
+        }
+      });
+    });
+    // ============================
+    // DATA
+    // ============================
+    async function loadUserProfile() {
+      try {
+        const doc =
+          await db
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+        if (doc.exists) {
+          userData = doc.data();
+        } else {
+          userData = {
+            firstName:
+              currentUser.displayName?.split(' ')[0] ||
+              'User',
+            lastName:
+              currentUser.displayName?.split(' ').slice(1).join(' ') ||
+              '',
+            email:
+              currentUser.email || '',
+            photoURL:
+              currentUser.photoURL || ''
+          };
+          await db
+            .collection('users')
+            .doc(currentUser.uid)
+            .set(userData);
+        }
+      } catch (error) {
+        console.error(
+          'Error loading profile:',
+          error
+        );
+        userData = {};
+      }
+    }
+    async function loadProperties() {
+      try {
+        const snapshot =
+          await db
+            .collection('properties')
+            .where('status', '==', 'Active')
+            .get();
+        allProperties =
+          snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+      } catch (error) {
+        console.error(
+          'Error loading properties:',
+          error
+        );
+        allProperties = [];
+      }
+    }
+    async function loadSavedProperties() {
+      try {
+        const snapshot =
+          await db
+            .collection('users')
+            .doc(currentUser.uid)
+            .collection('savedProperties')
+            .get();
+        savedPropertyIds = new Set();
+        snapshot.forEach(doc => {
+          savedPropertyIds.add(doc.id);
+        });
+      } catch (error) {
+        console.error(
+          'Error loading saved properties:',
+          error
+        );
+      }
+    }
+    async function loadAppointments() {
+      try {
+        const snapshot =
+          await db
+            .collection('appointments')
+            .where('buyerId', '==', currentUser.uid)
+            .get();
+        appointments =
+          snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+      } catch (error) {
+        console.error(
+          'Error loading appointments:',
+          error
+        );
+        appointments = [];
+      }
+    }
+    async function loadNotifications() {
+      try {
+        const snapshot =
+          await db
+            .collection('notifications')
+            .where('userId', '==', currentUser.uid)
+            .get();
+        notifications =
+          snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+      } catch (error) {
+        console.error(
+          'Error loading notifications:',
+          error
+        );
+        notifications = [];
+      }
+    }
+    // ============================
+    // RENDER
+    // ============================
+    function renderDashboard() {
+      renderUserProfile();
+      renderStats();
+      renderFeaturedProperties();
+      renderUpcomingViewings();
+      updateSavedBadge();
+      updateNotificationBadges();
+    }
+    function renderUserProfile() {
+      const firstName =
+        userData.firstName ||
+        currentUser.displayName?.split(' ')[0] ||
+        'User';
+      const lastName =
+        userData.lastName ||
+        '';
+      const fullName =
+        `${firstName} ${lastName}`.trim();
+      const initials =
+        (
+          (userData.firstName?.[0] || firstName[0] || '') +
+          (userData.lastName?.[0] || lastName[0] || '')
+        ).toUpperCase() || 'U';
+      document.getElementById(
+        'headerGreeting'
+      ).textContent =
+        `Welcome back, ${firstName}`;
+      document.getElementById(
+        'heroUserName'
+      ).textContent =
+        `Find Your Perfect Home, ${firstName}`;
+      document.getElementById(
+        'sidebarUserName'
+      ).textContent =
+        fullName;
+      document.getElementById(
+        'accountPanelName'
+      ).textContent =
+        fullName;
+      document.getElementById(
+        'sidebarAvatarInitials'
+      ).textContent =
+        initials;
+      document.getElementById(
+        'headerAvatarInitials'
+      ).textContent =
+        initials;
+      document.getElementById(
+        'accountPanelInitials'
+      ).textContent =
+        initials;
+      const photoURL =
+        userData.photoURL ||
+        currentUser.photoURL ||
+        '';
+      if (photoURL) {
+        const sidebarAvatar =
+          document.getElementById('sidebarAvatar');
+        sidebarAvatar.src =
+          photoURL;
+        sidebarAvatar.classList.remove('hidden');
+        document
+          .getElementById('sidebarAvatarInitials')
+          .classList.add('hidden');
+        const headerAvatar =
+          document.getElementById('headerAvatar');
+        headerAvatar.src =
+          photoURL;
+        headerAvatar.classList.remove('hidden');
+        document
+          .getElementById('headerAvatarInitials')
+          .classList.add('hidden');
+        const accountAvatar =
+          document.getElementById(
+            'accountPanelAvatar'
+          );
+        accountAvatar.src =
+          photoURL;
+        accountAvatar.classList.remove('hidden');
+        document
+          .getElementById('accountPanelInitials')
+          .classList.add('hidden');
+      }
+    }
+    function renderStats() {
+      const upcoming =
+        getUpcomingAppointments();
+      const unread =
+        getUnreadNotifications();
+      document.getElementById(
+        'statProperties'
+      ).textContent =
+        allProperties.length;
+      document.getElementById(
+        'heroPropertyCount'
+      ).textContent =
+        allProperties.length;
+      document.getElementById(
+        'statViewings'
+      ).textContent =
+        upcoming.length;
+      document.getElementById(
+        'statSaved'
+      ).textContent =
+        savedPropertyIds.size;
+      document.getElementById(
+        'statNotifs'
+      ).textContent =
+        unread.length;
+    }
+    function renderFeaturedProperties() {
+      const container =
+        document.getElementById(
+          'featuredProperties'
+        );
+      const featured =
+        allProperties
+          .filter(property => property.featured)
+          .slice(0, 3);
+      const display =
+        featured.length
+          ? featured
+          : allProperties.slice(0, 3);
+      if (!display.length) {
+        container.innerHTML = `
+          <div class="col-span-full bg-white rounded-[22px] border border-dashed border-slate-300 py-16 px-6 text-center">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mb-4">
+              <i class="fas fa-building text-lg"></i>
+            </div>
+            <h3 class="text-sm font-extrabold text-slate-900">
+              No properties available
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">
+              New listings will appear here when they become available.
+            </p>
+          </div>
+        `;
+        return;
+      }
+      container.innerHTML =
+        display.map(property =>
+          propertyCard(property)
+        ).join('');
+    }
+    function propertyCard(property) {
+      const image =
+        property.image ||
+        FALLBACK_IMAGE;
+      const title =
+        escapeHtml(
+          property.title ||
+          'Untitled Property'
+        );
+      const location =
+        escapeHtml(
+          property.location ||
+          'Location unavailable'
+        );
+      const price =
+        formatPrice(
+          property.price
+        );
+      const saved =
+        savedPropertyIds.has(
+          property.id
+        );
+      return `
+        <article
+          class="property-card rounded-[22px] overflow-hidden cursor-pointer group"
+          onclick="openProperty('${escapeAttribute(property.id)}')">
+          <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+            <img
+              src="${escapeAttribute(image)}"
+              alt="${title}"
+              class="property-image absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              onerror="this.src='${FALLBACK_IMAGE}'">
+            <div class="property-image-overlay absolute inset-0 pointer-events-none"></div>
+            <div class="absolute top-3 left-3 right-3 flex items-start justify-between gap-2">
+              <div class="flex flex-wrap gap-1.5">
+                ${
+                  property.featured
+                    ? `
+                      <span class="px-2.5 py-1.5 rounded-lg bg-white/95 text-slate-900 text-[9px] font-extrabold tracking-wide shadow-sm">
+                        FEATURED
+                      </span>
+                    `
+                    : ''
+                }
+                ${
+                  property.type
+                    ? `
+                      <span class="px-2.5 py-1.5 rounded-lg bg-slate-950/70 text-white text-[9px] font-bold backdrop-blur">
+                        ${escapeHtml(property.type)}
+                      </span>
+                    `
+                    : ''
+                }
+              </div>
+              <button
+                onclick="toggleFavorite(event, '${escapeAttribute(property.id)}')"
+                class="favorite-btn ${saved ? 'active' : ''} w-9 h-9 rounded-full bg-white/95 backdrop-blur flex items-center justify-center shadow-md shrink-0"
+                aria-label="Save property">
+                <i class="${saved ? 'fas' : 'far'} fa-heart text-sm"></i>
+              </button>
+            </div>
+            <div class="absolute bottom-4 left-4 right-4">
+              <p class="text-white text-xl font-extrabold tracking-tight">
+                ₦${price}
+              </p>
+            </div>
+          </div>
+          <div class="p-4 sm:p-5">
+            <h3 class="text-sm font-extrabold text-slate-950 line-clamp-1">
+              ${title}
+            </h3>
+            <div class="flex items-center gap-1.5 mt-1.5">
+              <i class="fas fa-location-dot text-primary-500 text-[10px]"></i>
+              <p class="text-xs text-slate-400 truncate">
+                ${location}
+              </p>
+            </div>
+            <div class="flex items-center gap-4 pt-4 mt-4 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
+              <span class="flex items-center gap-1.5">
+                <i class="fas fa-bed text-primary-500"></i>
+                ${property.beds || 0} beds
+              </span>
+              <span class="flex items-center gap-1.5">
+                <i class="fas fa-bath text-primary-500"></i>
+                ${property.baths || 0} baths
+              </span>
+              <span class="flex items-center gap-1.5">
+                <i class="fas fa-ruler-combined text-primary-500"></i>
+                ${property.area || 0} m²
+              </span>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+    function renderUpcomingViewings() {
+      const container =
+        document.getElementById(
+          'upcomingViewings'
+        );
+      const upcoming =
+        getUpcomingAppointments()
+          .slice(0, 3);
+      if (!upcoming.length) {
+        container.innerHTML = `
+          <div class="rounded-2xl bg-slate-50 border border-dashed border-slate-200 py-10 px-5 text-center">
+            <div class="w-12 h-12 mx-auto rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 mb-3">
+              <i class="far fa-calendar text-sm"></i>
+            </div>
+            <h3 class="text-sm font-extrabold text-slate-900">
+              No upcoming viewings
+            </h3>
+            <p class="text-xs text-slate-400 mt-1 max-w-xs mx-auto">
+              Find a property you like and schedule a private viewing.
+            </p>
+            <button
+              onclick="window.location.href='browse-property.html'"
+              class="mt-4 text-xs font-extrabold text-primary-600 hover:text-primary-700">
+              Browse properties
+              <i class="fas fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+        `;
+        return;
+      }
+      container.innerHTML =
+        upcoming.map(appointment => {
+          const date =
+            parseAppointmentDate(
+              appointment.date
+            );
+          const month =
+            date
+              ? date.toLocaleString(
+                  'en-US',
+                  { month: 'short' }
+                ).toUpperCase()
+              : '--';
+          const day =
+            date
+              ? date.getDate()
+              : '--';
+          const status =
+            appointment.status ||
+            'Pending';
+          let statusClass =
+            'bg-amber-50 text-amber-700 border-amber-100';
+          if (
+            status.toLowerCase() ===
+            'confirmed'
+          ) {
+            statusClass =
+              'bg-emerald-50 text-emerald-700 border-emerald-100';
+          }
+          if (
+            status.toLowerCase() ===
+            'cancelled'
+          ) {
+            statusClass =
+              'bg-rose-50 text-rose-700 border-rose-100';
+          }
+          return `
+            <div
+              class="group flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100 hover:border-slate-200 hover:bg-white transition cursor-pointer"
+              onclick="openProperty('${escapeAttribute(appointment.propertyId || '')}')">
+              <div class="w-14 h-14 rounded-xl bg-slate-950 text-white flex flex-col items-center justify-center shrink-0 group-hover:bg-primary-600 transition">
+                <span class="text-[9px] font-extrabold tracking-wider opacity-70">
+                  ${month}
+                </span>
+                <span class="text-lg font-extrabold leading-none mt-0.5">
+                  ${day}
+                </span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 truncate group-hover:text-primary-600 transition">
+                  ${escapeHtml(
+                    appointment.propertyTitle ||
+                    appointment.property ||
+                    'Property Viewing'
+                  )}
+                </h3>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-[10px] text-slate-400">
+                    <i class="far fa-clock mr-1"></i>
+                    ${escapeHtml(
+                      appointment.time ||
+                      'Time TBD'
+                    )}
+                  </span>
+                  <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                  <span class="text-[10px] text-slate-400">
+                    ${date ? formatShortDate(date) : 'Date TBD'}
+                  </span>
+                </div>
+              </div>
+              <span class="hidden sm:inline-flex px-2.5 py-1.5 rounded-lg border ${statusClass} text-[9px] font-extrabold shrink-0">
+                ${escapeHtml(status)}
+              </span>
+            </div>
+          `;
+        }).join('');
+    }
+    // ============================
+    // FAVORITES
+    // ============================
+    async function toggleFavorite(
+      event,
+      propertyId
+    ) {
+      event.stopPropagation();
+      if (!currentUser) {
+        showToast(
+          'Please sign in first.',
+          'error'
+        );
+        return;
+      }
+      const button =
+        event.currentTarget;
+      const icon =
+        button.querySelector('i');
+      try {
+        if (
+          savedPropertyIds.has(
+            propertyId
+          )
+        ) {
+          await db
+            .collection('users')
+            .doc(currentUser.uid)
+            .collection('savedProperties')
+            .doc(propertyId)
+            .delete();
+          savedPropertyIds.delete(
+            propertyId
+          );
+          button.classList.remove(
+            'active'
+          );
+          icon.classList.remove(
+            'fas'
+          );
+          icon.classList.add(
+            'far'
+          );
+          showToast(
+            'Removed from saved properties'
+          );
+        } else {
+          const property =
+            allProperties.find(
+              item =>
+                item.id === propertyId
+            );
+          if (!property) {
+            showToast(
+              'Property could not be found.',
+              'error'
+            );
+            return;
+          }
+          await db
+            .collection('users')
+            .doc(currentUser.uid)
+            .collection('savedProperties')
+            .doc(propertyId)
+            .set({
+              ...property,
+              savedAt:
+                firebase.firestore.FieldValue
+                  .serverTimestamp()
+            });
+          savedPropertyIds.add(
+            propertyId
+          );
+          button.classList.add(
+            'active'
+          );
+          icon.classList.remove(
+            'far'
+          );
+          icon.classList.add(
+            'fas'
+          );
+          showToast(
+            'Property saved'
+          );
+        }
+        renderStats();
+        updateSavedBadge();
+      } catch (error) {
+        console.error(
+          'Error toggling favorite:',
+          error
+        );
+        showToast(
+          'Unable to update saved property.',
+          'error'
+        );
+      }
+    }
+    // ============================
+    // SEARCH
+    // ============================
+    function handleSearch(query) {
+      const value =
+        String(query || '').trim();
+      if (!value) {
+        window.location.href =
+          'browse-property.html';
+        return;
+      }
+      window.location.href =
+        `browse-property.html?q=${encodeURIComponent(value)}`;
+    }
+    // ============================
+    // NAVIGATION
+    // ============================
+    function openProperty(id) {
+      if (!id) return;
+      window.location.href =
+        `property-detail.html?id=${encodeURIComponent(id)}`;
+    }
+    function toggleSidebar() {
+      const sidebar =
+        document.getElementById(
+          'sidebar'
+        );
+      const backdrop =
+        document.getElementById(
+          'sidebarBackdrop'
+        );
+      const isOpen =
+        !sidebar.classList.contains(
+          '-translate-x-full'
+        );
+      if (isOpen) {
+        sidebar.classList.add(
+          '-translate-x-full'
+        );
+        backdrop.classList.add(
+          'hidden'
+        );
+      } else {
+        sidebar.classList.remove(
+          '-translate-x-full'
+        );
+        backdrop.classList.remove(
+          'hidden'
+        );
+      }
+    }
+    // ============================
+    // SIGN OUT
+    // ============================
+    async function handleSignOut() {
+      const confirmed =
+        confirm(
+          'Are you sure you want to sign out?'
+        );
+      if (!confirmed) return;
+      try {
+        await auth.signOut();
+        window.location.href =
+          '../sign-in.html';
+      } catch (error) {
+        console.error(
+          'Sign out error:',
+          error
+        );
+        showToast(
+          'Unable to sign out.',
+          'error'
+        );
+      }
+    }
+    // ============================
+    // BADGES
+    // ============================
+    function updateSavedBadge() {
+      const badge =
+        document.getElementById(
+          'sidebarSavedBadge'
+        );
+      if (!badge) return;
+      const count =
+        savedPropertyIds.size;
+      if (count > 0) {
+        badge.textContent =
+          count;
+        badge.classList.remove(
+          'hidden'
+        );
+        badge.classList.add(
+          'flex'
+        );
+      } else {
+        badge.classList.add(
+          'hidden'
+        );
+        badge.classList.remove(
+          'flex'
+        );
+      }
+    }
+    function updateNotificationBadges() {
+      const unread =
+        getUnreadNotifications();
+      const count =
+        unread.length;
+      const sidebarBadge =
+        document.getElementById(
+          'sidebarNotifBadge'
+        );
+      const headerBadge =
+        document.getElementById(
+          'headerNotifBadge'
+        );
+      if (count > 0) {
+        sidebarBadge.textContent =
+          count;
+        sidebarBadge.classList.remove(
+          'hidden'
+        );
+        sidebarBadge.classList.add(
+          'flex'
+        );
+        headerBadge.classList.remove(
+          'hidden'
+        );
+      } else {
+        sidebarBadge.classList.add(
+          'hidden'
+        );
+        sidebarBadge.classList.remove(
+          'flex'
+        );
+        headerBadge.classList.add(
+          'hidden'
+        );
+      }
+    }
+    // ============================
+    // APPOINTMENTS
+    // ============================
+    function getUpcomingAppointments() {
+      const today =
+        new Date();
+      today.setHours(
+        0,
+        0,
+        0,
+        0
+      );
+      return appointments
+        .filter(appointment => {
+          const date =
+            parseAppointmentDate(
+              appointment.date
+            );
+          if (!date) return false;
+          date.setHours(
+            0,
+            0,
+            0,
+            0
+          );
+          if (
+            appointment.status &&
+            appointment.status.toLowerCase() ===
+              'cancelled'
+          ) {
+            return false;
+          }
+          return date >= today;
+        })
+        .sort((a, b) => {
+          const first =
+            parseAppointmentDate(
+              a.date
+            );
+          const second =
+            parseAppointmentDate(
+              b.date
+            );
+          return (
+            (first?.getTime() || 0) -
+            (second?.getTime() || 0)
+          );
+        });
+    }
+    function parseAppointmentDate(value) {
+      if (!value) return null;
+      if (
+        value &&
+        typeof value.toDate ===
+          'function'
+      ) {
+        return value.toDate();
+      }
+      if (
+        value &&
+        typeof value.seconds ===
+          'number'
+      ) {
+        return new Date(
+          value.seconds * 1000
+        );
+      }
+      const parsed =
+        new Date(value);
+      if (
+        Number.isNaN(
+          parsed.getTime()
+        )
+      ) {
+        return null;
+      }
+      return parsed;
+    }
+    function getUnreadNotifications() {
+      return notifications.filter(
+        notification =>
+          notification.read !== true &&
+          notification.isRead !== true
+      );
+    }
+    // ============================
+    // UTILITIES
+    // ============================
+    function formatPrice(price) {
+      if (!price) {
+        return '0';
+      }
+      return Number(price)
+        .toLocaleString('en-NG');
+    }
+    function formatShortDate(date) {
+      return date.toLocaleDateString(
+        'en-NG',
+        {
+          day: 'numeric',
+          month: 'short'
+        }
+      );
+    }
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+    function escapeAttribute(value) {
+      return String(value)
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '&quot;');
+    }
+    function showToast(
+      message,
+      type = 'success'
+    ) {
+      const existing =
+        document.getElementById(
+          'moonlatToast'
+        );
+      if (existing) {
+        existing.remove();
+      }
+      const toast =
+        document.createElement(
+          'div'
+        );
+      toast.id =
+        'moonlatToast';
+      toast.className = `
+        fixed
+        top-5
+        left-1/2
+        -translate-x-1/2
+        z-[3000]
+        flex
+        items-center
+        gap-3
+        px-4
+        py-3
+        rounded-2xl
+        shadow-2xl
+        text-white
+        text-xs
+        font-bold
+        ${type === 'success'
+          ? 'bg-slate-950'
+          : 'bg-rose-600'}
+      `;
+      toast.innerHTML = `
+        <span class="w-7 h-7 rounded-lg ${
+          type === 'success'
+            ? 'bg-emerald-500/15 text-emerald-400'
+            : 'bg-white/15 text-white'
+        } flex items-center justify-center shrink-0">
+          <i class="fas ${
+            type === 'success'
+              ? 'fa-check'
+              : 'fa-triangle-exclamation'
+          } text-[10px]"></i>
+        </span>
+        <span>
+          ${escapeHtml(message)}
+        </span>
+      `;
+      document.body.appendChild(
+        toast
+      );
+      setTimeout(() => {
+        toast.style.opacity =
+          '0';
+        toast.style.transform =
+          'translate(-50%, -8px)';
+        toast.style.transition =
+          'all .2s ease';
+        setTimeout(() => {
+          toast.remove();
+        }, 200);
+      }, 2800);
+    }
+    // ============================
+    // MOBILE SIDEBAR
+    // ============================
+    document.addEventListener(
+      'click',
+      (event) => {
+        if (
+          window.innerWidth >= 1024
+        ) {
+          return;
+        }
+        const sidebar =
+          document.getElementById(
+            'sidebar'
+          );
+        const backdrop =
+          document.getElementById(
+            'sidebarBackdrop'
+          );
+        if (
+          !sidebar.contains(
+            event.target
+          ) &&
+          !event.target.closest(
+            'button[onclick="toggleSidebar()"]'
+          )
+        ) {
+          sidebar.classList.add(
+            '-translate-x-full'
+          );
+          backdrop.classList.add(
+            'hidden'
+          );
+        }
+      }
+    );
+  </script>
+</body>
+</html>
