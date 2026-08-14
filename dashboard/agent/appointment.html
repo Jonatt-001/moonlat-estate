@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4f1">
+<meta name="color-scheme" content="light">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="Appointments — MoonLat Agent Workspace.">
+<title>Appointments — MoonLat Agent</title>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script>
+window.MOONLAT_FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+  projectId: "moonlat-estate-dashboard",
+  storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+  messagingSenderId: "289878951289",
+  appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+</script>
+
+<style>
+:root{
+  --bg:#f5f4f1;--surface:#fff;--soft:#fafaf8;--ink:#171717;--muted:#777773;
+  --muted2:#a09f99;--line:#e7e6e1;--accent:#e95218;--accent-dark:#bd3e0f;
+  --accent-soft:#fff0e9;--green:#22a866;--green-soft:#eaf8f0;--red:#c7372f;
+  --red-soft:#fff0ef;--amber:#d58b17;--amber-soft:#fff7e5;--black:#181818;
+  --shadow-sm:0 4px 18px rgba(20,20,20,.035);--shadow-md:0 14px 40px rgba(20,20,20,.07);
+  --shadow-lg:0 28px 70px rgba(20,20,20,.12);--r:24px
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 85% 5%,rgba(233,82,24,.035),transparent 30rem),var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit}button,a{touch-action:manipulation}
+button{cursor:pointer}a{text-decoration:none;color:inherit}
+.app{max-width:1180px;margin:0 auto;padding:0 18px 100px}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(245,244,241,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(231,230,225,.8)}
+.topbar-inner{max-width:1180px;margin:auto;min-height:76px;padding:0 18px;display:flex;align-items:center;gap:14px}
+.back{width:44px;height:44px;border:1px solid var(--line);border-radius:14px;background:#fff;display:grid;place-items:center;color:#50504d}
+.brand{width:44px;height:44px;border-radius:14px;background:#181818;color:#fff;display:grid;place-items:center;box-shadow:var(--shadow-md)}
+.title{min-width:0;flex:1}.title h1{margin:0;font-size:18px;font-weight:800;letter-spacing:-.03em}.title p{margin:3px 0 0;color:var(--muted);font-size:11px}
+.sync{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap}.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(34,168,102,.12)}
+.sync.saving .sync-dot{background:var(--accent);box-shadow:0 0 0 4px rgba(233,82,24,.12)}.sync.error .sync-dot{background:var(--red);box-shadow:0 0 0 4px rgba(199,55,47,.12)}
+.profile-chip{display:none;align-items:center;gap:8px}.avatar{width:36px;height:36px;border-radius:50%;overflow:hidden;background:#222;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800}.avatar img{width:100%;height:100%;object-fit:cover}
+.hero{padding:30px 0 20px}.eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:900}.hero h2{margin:7px 0 7px;font-size:30px;line-height:1.08;letter-spacing:-.045em}.hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.7;max-width:680px}
+.card{background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm)}
+.card-pad{padding:20px}.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}.section-head h3{margin:0;font-size:18px;letter-spacing:-.025em}.section-head p{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.5}
+.btn{min-height:44px;border:1px solid transparent;border-radius:14px;padding:0 16px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:12px;font-weight:800;transition:.18s ease}.btn-primary{background:var(--accent);color:#fff;box-shadow:0 10px 24px rgba(233,82,24,.18)}.btn-primary:hover{background:var(--accent-dark);transform:translateY(-1px)}.btn-light{background:#fff;border-color:var(--line);color:#333}.btn-danger{background:var(--red);color:#fff}.btn-quiet{background:var(--soft);border-color:var(--line);color:#555}
+.field{width:100%;min-height:46px;border:1px solid var(--line);background:#fff;border-radius:13px;padding:0 13px;outline:none;color:var(--ink);font-size:13px}.field:focus{border-color:rgba(233,82,24,.5);box-shadow:0 0 0 4px rgba(233,82,24,.08)}textarea.field{padding:12px;min-height:100px;resize:vertical}.label{display:block;margin:0 0 7px;font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#8a8984}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.stat{padding:16px;border-radius:18px}.stat .icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;margin-bottom:13px}.stat b{display:block;font-size:25px;letter-spacing:-.04em}.stat span{display:block;margin-top:4px;color:var(--muted);font-size:11px;font-weight:700}
+.list{display:grid;gap:10px}.row{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);background:#fff;border-radius:17px;transition:.18s ease}.row:hover{border-color:#d8b3a2;box-shadow:0 8px 24px rgba(20,20,20,.045)}.row-main{min-width:0;flex:1}.row-title{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row-sub{margin-top:4px;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row-actions{display:flex;gap:6px;flex-shrink:0}
+.icon-btn{width:38px;height:38px;border:1px solid var(--line);border-radius:11px;background:#fff;color:#666;display:grid;place-items:center}.icon-btn:hover{color:var(--ink);background:var(--soft)}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:999px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}.badge.green{background:var(--green-soft);color:#16834f}.badge.orange{background:var(--accent-soft);color:var(--accent-dark)}.badge.red{background:var(--red-soft);color:var(--red)}.badge.gray{background:#f1f1ee;color:#686761}.badge.blue{background:#edf3ff;color:#315bbd}
+.tabs{display:flex;gap:7px;overflow:auto;padding-bottom:2px}.tab{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:#777;padding:10px 14px;border-radius:999px;font-size:11px;font-weight:800}.tab.active{background:#181818;color:#fff;border-color:#181818}
+.empty{padding:44px 20px;text-align:center;color:var(--muted)}.empty-icon{width:54px;height:54px;border-radius:17px;background:var(--soft);margin:0 auto 13px;display:grid;place-items:center;color:#aaa}.empty h4{margin:0;color:#333;font-size:14px}.empty p{margin:6px auto 0;font-size:11px;line-height:1.6;max-width:420px}
+.modal{position:fixed;inset:0;z-index:100;background:rgba(15,15,15,.58);backdrop-filter:blur(9px);display:flex;align-items:flex-end;justify-content:center;padding:0}.modal.hidden{display:none}.sheet{width:min(680px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:28px 28px 0 0;padding:22px;box-shadow:var(--shadow-lg)}.sheet-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}.sheet h3{margin:0;font-size:20px}.sheet p{margin:5px 0 0;color:var(--muted);font-size:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.toast-wrap{position:fixed;z-index:200;right:16px;bottom:18px;width:min(390px,calc(100vw - 32px));display:grid;gap:8px}.toast{padding:13px 14px;background:#181818;color:#fff;border-radius:15px;box-shadow:var(--shadow-lg);font-size:12px;font-weight:700;animation:toastIn .22s ease}.toast.error{background:#8f241f}.toast.success{background:#166b46}@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.loader{position:fixed;inset:0;z-index:999;background:var(--bg);display:grid;place-items:center}.loader.hide{display:none}.loader-box{text-align:center}.spinner{width:38px;height:38px;border:3px solid #deddd8;border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:auto}@keyframes spin{to{transform:rotate(360deg)}}
+@media(min-width:700px){.app{padding-left:28px;padding-right:28px}.topbar-inner{padding-left:28px;padding-right:28px}.profile-chip{display:flex}.hero{padding-top:42px}.sheet{border-radius:26px;margin-bottom:20px}.modal{align-items:center;padding:18px}}
+@media(max-width:699px){.sync span{display:none}.stats{grid-template-columns:1fr 1fr}.hero h2{font-size:28px}.card-pad{padding:17px}.grid2{grid-template-columns:1fr}.row-actions .hide-mobile{display:none}.actions{position:sticky;bottom:0;background:#fff;padding-top:12px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div id="loader" class="loader"><div class="loader-box"><div class="spinner"></div><div style="margin-top:13px;font-weight:900;font-size:13px">MoonLat</div><div id="loaderText" style="margin-top:5px;color:var(--muted);font-size:11px">Connecting to MoonLat</div></div></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="back" aria-label="Back to dashboard">←</a>
+    <div class="brand">☾</div>
+    <div class="title"><h1>Appointments</h1><p>Agent workspace</p></div>
+    <div id="sync" class="sync"><i class="sync-dot"></i><span id="syncText">Live sync</span></div>
+    <div class="profile-chip"><div id="headerAvatar" class="avatar">AG</div><div id="headerName" style="font-size:11px;font-weight:800;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Agent</div></div>
+  </div>
+</header>
+
+<main class="app">
+<section class="hero">
+  <div class="eyebrow">Client scheduling</div>
+  <h2>Appointments, under control.</h2>
+  <p>Schedule property viewings, client meetings and follow-ups from one live workspace. Changes are reflected in your agent dashboard automatically.</p>
+</section>
+
+<section class="stats">
+  <div class="card stat"><div class="icon" style="background:#fff0e9;color:var(--accent)">◷</div><b id="statUpcoming">0</b><span>Upcoming</span></div>
+  <div class="card stat"><div class="icon" style="background:#eaf8f0;color:#16834f">✓</div><b id="statConfirmed">0</b><span>Confirmed</span></div>
+  <div class="card stat"><div class="icon" style="background:#fff7e5;color:#b16d08">◌</div><b id="statPending">0</b><span>Pending</span></div>
+  <div class="card stat"><div class="icon" style="background:#edf3ff;color:#315bbd">⌂</div><b id="statCompleted">0</b><span>Completed</span></div>
+</section>
+
+<section class="card card-pad" style="margin-bottom:16px">
+ <div class="section-head"><div><h3>Schedule a viewing</h3><p>Use the same property and agent records used throughout MoonLat.</p></div><button class="btn btn-primary" onclick="openAppointment()">＋ New appointment</button></div>
+ <div class="tabs">
+  <button class="tab active" onclick="setFilter(this,'upcoming')">Upcoming</button>
+  <button class="tab" onclick="setFilter(this,'all')">All</button>
+  <button class="tab" onclick="setFilter(this,'completed')">Completed</button>
+  <button class="tab" onclick="setFilter(this,'cancelled')">Cancelled</button>
+ </div>
+</section>
+
+<section class="card card-pad">
+ <div class="grid2">
+  <div><label class="label">Search</label><input id="search" class="field" placeholder="Client or property..." oninput="render()"></div>
+  <div><label class="label">Date</label><input id="dateFilter" class="field" type="date" onchange="render()"></div>
+ </div>
+ <div style="margin-top:16px" id="appointmentList"></div>
+</section>
+
+<div id="appointmentModal" class="modal hidden">
+ <div class="sheet">
+  <div class="sheet-top"><div><h3>New appointment</h3><p>Create a synchronized client appointment.</p></div><button class="icon-btn" onclick="closeAppointment()">×</button></div>
+  <div class="grid2">
+   <div style="grid-column:1/-1"><label class="label">Property</label><select id="propertyId" class="field"><option value="">Choose property</option></select></div>
+   <div><label class="label">Client name</label><input id="clientName" class="field" placeholder="Client name"></div>
+   <div><label class="label">Client phone</label><input id="clientPhone" class="field" type="tel" placeholder="080..."></div>
+   <div><label class="label">Date</label><input id="appointmentDate" class="field" type="date"></div>
+   <div><label class="label">Time</label><input id="appointmentTime" class="field" type="time"></div>
+   <div style="grid-column:1/-1"><label class="label">Notes</label><textarea id="notes" class="field" placeholder="Viewing notes, requirements or follow-up details..."></textarea></div>
+  </div>
+  <div class="actions"><button class="btn btn-light" onclick="closeAppointment()">Cancel</button><button id="saveBtn" class="btn btn-primary" onclick="saveAppointment()">Create appointment</button></div>
+ </div>
+</div>
+
+<div id="editModal" class="modal hidden">
+ <div class="sheet">
+  <div class="sheet-top"><div><h3>Update appointment</h3><p>Keep the client schedule accurate.</p></div><button class="icon-btn" onclick="closeEdit()">×</button></div>
+  <input id="editId" type="hidden">
+  <div class="grid2">
+   <div><label class="label">Status</label><select id="editStatus" class="field"><option>Confirmed</option><option>Pending</option><option>Completed</option><option>Cancelled</option><option>Rescheduled</option></select></div>
+   <div><label class="label">Time</label><input id="editTime" class="field" type="time"></div>
+   <div><label class="label">Date</label><input id="editDate" class="field" type="date"></div>
+   <div><label class="label">Client phone</label><input id="editPhone" class="field" type="tel"></div>
+   <div style="grid-column:1/-1"><label class="label">Notes</label><textarea id="editNotes" class="field"></textarea></div>
+  </div>
+  <div class="actions"><button class="btn btn-light" onclick="closeEdit()">Cancel</button><button class="btn btn-primary" onclick="updateAppointment()">Save changes</button></div>
+ </div>
+</div>
+</main>
+<div id="toastWrap" class="toast-wrap"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+<script>
+"use strict";
+(function(){
+ const C=window.MOONLAT_FIREBASE_CONFIG;let auth,db,user=null,items=[],properties=[],unsubs=[],filter="upcoming";
+ const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+ const sync=(t,x)=>{$("sync").className=`sync ${t||""}`;$("syncText").textContent=x}, toast=(m,t="success")=>{const x=document.createElement("div");x.className=`toast ${t}`;x.textContent=m;$("toastWrap").appendChild(x);setTimeout(()=>x.remove(),4200)};
+ const hide=()=>$("loader").classList.add("hide"), name=p=>p?.title||p?.name||"Untitled property";
+ function badge(s){const x=String(s||"Pending").toLowerCase();return `<span class="badge ${x==="confirmed"?"green":x==="completed"?"blue":x==="cancelled"?"red":"orange"}">${esc(s||"Pending")}</span>`}
+ function dateLabel(v){if(!v)return"Date not set";const d=new Date(`${v}T00:00:00`);return Number.isNaN(d.getTime())?v:d.toLocaleDateString("en-NG",{weekday:"short",day:"numeric",month:"short",year:"numeric"})}
+ function upcoming(a){const d=new Date(`${a.date||"1970-01-01"}T${a.time||"23:59"}`);return d>=new Date()&&!["Cancelled","Completed"].includes(a.status)}
+ function populate(){const s=$("propertyId");s.innerHTML='<option value="">Choose property</option>';properties.filter(p=>p.status!=="Deleted").sort((a,b)=>name(a).localeCompare(name(b))).forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=name(p);s.appendChild(o)})}
+ window.setFilter=(btn,val)=>{filter=val;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));btn.classList.add("active");render()}
+ function render(){
+   const q=($("search").value||"").toLowerCase().trim(),df=$("dateFilter").value;
+   const now=items.filter(upcoming),confirmed=items.filter(x=>x.status==="Confirmed"&&!["Cancelled"].includes(x.status)),pending=items.filter(x=>x.status==="Pending"),completed=items.filter(x=>x.status==="Completed");
+   $("statUpcoming").textContent=now.length;$("statConfirmed").textContent=confirmed.length;$("statPending").textContent=pending.length;$("statCompleted").textContent=completed.length;
+   let arr=items.filter(a=>{if(filter==="upcoming"&&!upcoming(a))return false;if(filter==="completed"&&a.status!=="Completed")return false;if(filter==="cancelled"&&a.status!=="Cancelled")return false;if(df&&a.date!==df)return false;return !q||`${a.client||""} ${a.clientName||""} ${a.property||""} ${a.propertyTitle||""}`.toLowerCase().includes(q)});
+   arr.sort((a,b)=>`${a.date||""} ${a.time||""}`.localeCompare(`${b.date||""} ${b.time||""}`));
+   if(!arr.length){$("appointmentList").innerHTML='<div class="empty"><div class="empty-icon">◷</div><h4>No appointments found</h4><p>Create a viewing or change your filters to see appointments.</p></div>';return}
+   $("appointmentList").innerHTML=`<div class="list">${arr.map(a=>`<article class="row"><div style="width:52px;height:52px;border-radius:15px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:12px;font-weight:900;flex-shrink:0">${esc((a.time||"--").slice(0,5))}</div><div class="row-main"><div class="row-title">${esc(a.client||a.clientName||"Client")} ${badge(a.status)}</div><div class="row-sub">${esc(a.propertyTitle||a.property||"Property")} · ${esc(dateLabel(a.date))}${a.clientPhone?" · "+esc(a.clientPhone):""}</div>${a.notes?`<div class="row-sub">${esc(a.notes)}</div>`:""}</div><div class="row-actions"><button class="icon-btn" onclick="editAppointment('${esc(a.id)}')">✎</button>${a.status!=="Cancelled"&&a.status!=="Completed"?`<button class="icon-btn" onclick="cancelAppointment('${esc(a.id)}')">×</button>`:""}</div></article>`).join("")}</div>`;
+ }
+ window.openAppointment=()=>{$("appointmentModal").classList.remove("hidden");$("appointmentDate").value=new Date().toISOString().slice(0,10);$("appointmentTime").value="10:00"}
+ window.closeAppointment=()=>{$("appointmentModal").classList.add("hidden")}
+ window.saveAppointment=async()=>{
+   const pid=$("propertyId").value,client=$("clientName").value.trim(),phone=$("clientPhone").value.trim(),date=$("appointmentDate").value,time=$("appointmentTime").value,notes=$("notes").value.trim();
+   if(!pid||!client||!date||!time){toast("Property, client, date and time are required.","error");return}
+   const p=properties.find(x=>x.id===pid);if(!p){toast("Selected property is no longer available.","error");return}
+   const b=$("saveBtn");b.disabled=true;b.textContent="Saving…";sync("saving","Saving");
+   try{
+     const data={ownerId:user.uid,agentId:user.uid,userId:user.uid,propertyId:pid,propertyTitle:name(p),client,clientName:client,clientPhone:phone,date,time,status:"Confirmed",notes,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+     const ref=await db.collection("appointments").add(data);
+     await db.collection("notifications").add({userId:user.uid,ownerId:user.uid,type:"appointment",title:"Appointment scheduled",message:`${client} is scheduled for ${dateLabel(date)} at ${time}.`,appointmentId:ref.id,propertyId:pid,propertyTitle:name(p),read:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+     toast("Appointment created.");closeAppointment();["clientName","clientPhone","notes"].forEach(id=>$(id).value="");
+   }catch(e){console.error(e);toast(e.message||"Unable to create appointment.","error")}finally{b.disabled=false;b.textContent="Create appointment";sync("live","Live sync")}
+ }
+ window.editAppointment=id=>{const a=items.find(x=>x.id===id);if(!a)return;$("editId").value=id;$("editStatus").value=a.status||"Pending";$("editDate").value=a.date||"";$("editTime").value=a.time||"";$("editPhone").value=a.clientPhone||"";$("editNotes").value=a.notes||"";$("editModal").classList.remove("hidden")}
+ window.closeEdit=()=>{$("editModal").classList.add("hidden")}
+ window.updateAppointment=async()=>{const id=$("editId").value;sync("saving","Updating");try{await db.collection("appointments").doc(id).update({status:$("editStatus").value,date:$("editDate").value,time:$("editTime").value,clientPhone:$("editPhone").value.trim(),notes:$("editNotes").value.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});await db.collection("notifications").add({userId:user.uid,ownerId:user.uid,type:"appointment_update",title:"Appointment updated",message:"An appointment in your workspace was updated.",appointmentId:id,read:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()});toast("Appointment updated.");closeEdit()}catch(e){console.error(e);toast(e.message||"Unable to update appointment.","error")}finally{sync("live","Live sync")}}
+ window.cancelAppointment=async id=>{if(!confirm("Cancel this appointment?"))return;sync("saving","Updating");try{await db.collection("appointments").doc(id).update({status:"Cancelled",updatedAt:firebase.firestore.FieldValue.serverTimestamp()});await db.collection("notifications").add({userId:user.uid,ownerId:user.uid,type:"appointment_cancelled",title:"Appointment cancelled",message:"An appointment was marked as cancelled.",appointmentId:id,read:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()});toast("Appointment cancelled.")}catch(e){toast(e.message||"Unable to cancel appointment.","error")}finally{sync("live","Live sync")}}
+ async function init(){
+  try{if(!firebase.apps.length)firebase.initializeApp(C);auth=firebase.auth();db=firebase.firestore();const timer=setTimeout(()=>{$("loaderText").textContent="Connection timed out. Retry the page.";sync("error","Connection error")},15000);
+   auth.onAuthStateChanged(u=>{if(!u){clearTimeout(timer);location.href="../sign-in.html";return}clearTimeout(timer);user=u;$("headerName").textContent=u.displayName||u.email?.split("@")[0]||"Agent";$("headerAvatar").textContent=(u.displayName||u.email||"Agent").split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();sync("saving","Syncing");
+    unsubs.forEach(x=>x());unsubs=[];unsubs.push(db.collection("properties").where("ownerId","==",u.uid).onSnapshot(s=>{properties=s.docs.map(d=>({id:d.id,...d.data()}));populate();render();hide();sync("live","Live sync")},e=>{console.error(e);toast("Properties could not be synchronized.","error")}));
+    unsubs.push(db.collection("appointments").where("ownerId","==",u.uid).onSnapshot(s=>{items=s.docs.map(d=>({id:d.id,...d.data()}));render();hide();sync("live","Live sync")},e=>{console.error(e);toast("Appointments could not be synchronized.","error")}));
+   })
+  }catch(e){console.error(e);$("loaderText").textContent=e.message||"Firebase initialization failed";sync("error","Connection error")}
+ }
+ init();
+})();
+</script>
+</body>
+</html>

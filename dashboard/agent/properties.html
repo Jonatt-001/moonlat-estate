@@ -1,0 +1,2870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f7f8fa">
+<meta name="color-scheme" content="light">
+<meta name="description" content="MoonLat agent property marketplace and listing management workspace.">
+<title>Properties | MoonLat Agent Workspace</title>
+
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+:root {
+  --orange: #ff5b0a;
+  --orange-dark: #e94800;
+  --orange-soft: #fff4ec;
+  --orange-line: #ffd7c2;
+  --ink: #111827;
+  --ink-2: #1f2937;
+  --muted: #667085;
+  --muted-2: #98a2b3;
+  --line: #e7e9ed;
+  --surface: #fff;
+  --page: #f7f8fa;
+  --green: #059669;
+  --green-soft: #ecfdf3;
+  --blue: #2563eb;
+  --blue-soft: #eff6ff;
+  --purple: #7c3aed;
+  --purple-soft: #f5f3ff;
+  --red: #dc2626;
+  --red-soft: #fef2f2;
+  --amber: #d97706;
+  --amber-soft: #fffaeb;
+  --shadow-sm: 0 4px 18px rgba(15, 23, 42, .045);
+  --shadow-md: 0 18px 50px rgba(15, 23, 42, .10);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  min-height: 100%;
+  background: var(--page);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(255, 91, 10, .035), transparent 26rem),
+    var(--page);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+button, a {
+  -webkit-touch-callout: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: .58;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--page);
+}
+
+@media (min-width: 820px) {
+  .app {
+    min-height: calc(100vh - 48px);
+    margin: 24px auto;
+    border: 1px solid var(--line);
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 28px 90px rgba(15, 23, 42, .08);
+  }
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(255,255,255,.92);
+  border-bottom: 1px solid rgba(231,233,237,.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.header-inner {
+  padding: calc(14px + env(safe-area-inset-top)) 18px 14px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  color: #536176;
+  transition: .18s ease;
+}
+
+.icon-btn:hover {
+  border-color: var(--orange-line);
+  color: var(--orange);
+  background: var(--orange-soft);
+}
+
+.brand {
+  min-width: 0;
+  flex: 1;
+}
+
+.eyebrow {
+  color: var(--muted-2);
+  font-size: 9px;
+  line-height: 1.1;
+  font-weight: 900;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: 3px;
+  color: #101828;
+  font-size: 21px;
+  line-height: 1.1;
+  font-weight: 900;
+  letter-spacing: -.045em;
+}
+
+.sync-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 31px;
+  padding: 0 9px;
+  border: 1px solid #dbeee5;
+  border-radius: 999px;
+  color: #087443;
+  background: #f3fbf7;
+  font-size: 9px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.sync-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22,163,74,.09);
+}
+
+.sync-pill.offline {
+  border-color: #fed7aa;
+  color: #9a3412;
+  background: #fff7ed;
+}
+
+.sync-pill.offline .sync-dot {
+  background: #f97316;
+  box-shadow: none;
+}
+
+.new-btn {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 13px;
+  color: #fff;
+  background: linear-gradient(135deg, #ff7b30, var(--orange-dark));
+  box-shadow: 0 10px 24px rgba(255,91,10,.18);
+  font-size: 11px;
+  font-weight: 900;
+  transition: .18s ease;
+}
+
+.new-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(255,91,10,.23);
+}
+
+.content {
+  padding: 20px 17px calc(28px + env(safe-area-inset-bottom));
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 15px;
+  padding: 20px;
+  border: 1px solid #ffe0cf;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255,91,10,.15), transparent 42%),
+    linear-gradient(135deg, #fff8f3, #fff);
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -65px;
+  bottom: -95px;
+  border: 24px solid rgba(255,91,10,.055);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 570px;
+}
+
+.hero h1 {
+  margin: 5px 0 7px;
+  font-size: 28px;
+  line-height: 1.06;
+  letter-spacing: -.055em;
+  font-weight: 900;
+}
+
+.hero p {
+  color: #667085;
+  font-size: 11px;
+  line-height: 1.7;
+  font-weight: 600;
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 13px;
+}
+
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 27px;
+  padding: 0 9px;
+  border: 1px solid #f0d9ca;
+  border-radius: 999px;
+  color: #8a4b2a;
+  background: rgba(255,255,255,.7);
+  font-size: 9px;
+  font-weight: 850;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.stat {
+  min-width: 0;
+  padding: 12px 11px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.stat-value {
+  margin-top: 7px;
+  color: #101828;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -.045em;
+}
+
+.stat-help {
+  margin-top: 4px;
+  color: var(--muted-2);
+  font-size: 7px;
+  font-weight: 700;
+}
+
+.stat:nth-child(2) .stat-value { color: var(--green); }
+.stat:nth-child(3) .stat-value { color: var(--amber); }
+.stat:nth-child(4) .stat-value { color: var(--blue); }
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 5px;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #f0f2f5;
+}
+
+.tab {
+  min-height: 42px;
+  border: 0;
+  border-radius: 12px;
+  color: #78849a;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 900;
+  transition: .18s ease;
+}
+
+.tab.active {
+  color: #111827;
+  background: #fff;
+  box-shadow: 0 4px 13px rgba(15,23,42,.08);
+}
+
+.tab-count {
+  display: inline-flex;
+  min-width: 19px;
+  min-height: 19px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  padding: 0 5px;
+  border-radius: 999px;
+  color: #7a8598;
+  background: #eef0f3;
+  font-size: 8px;
+}
+
+.tab.active .tab-count {
+  color: var(--orange);
+  background: var(--orange-soft);
+}
+
+.toolbar {
+  display: grid;
+  gap: 9px;
+  margin-bottom: 13px;
+}
+
+.search {
+  position: relative;
+}
+
+.search i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #98a2b3;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.search input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 43px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  outline: 0;
+  color: #101828;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.search input:focus {
+  border-color: #ffb58d;
+  box-shadow: 0 0 0 4px var(--orange-soft);
+}
+
+.search-clear {
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 10px;
+  color: #8792a5;
+  background: #f4f5f7;
+}
+
+.toolbar-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.select {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  outline: 0;
+  color: #475467;
+  background: #fff;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 17px 1px 10px;
+}
+
+.section-title {
+  color: #101828;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: -.02em;
+}
+
+.section-subtitle {
+  margin-top: 3px;
+  color: var(--muted-2);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.result-count {
+  color: var(--muted-2);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.list {
+  display: grid;
+  gap: 11px;
+}
+
+.card {
+  overflow: hidden;
+  border: 1px solid #e7e9ed;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  animation: cardIn .25s ease both;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.card:hover {
+  border-color: #ffd2bb;
+  box-shadow: var(--shadow-md);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card-media {
+  position: relative;
+  height: 190px;
+  overflow: hidden;
+  background: #eef0f2;
+}
+
+.card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .45s cubic-bezier(.2,.7,.2,1);
+}
+
+.card:hover .card-media img {
+  transform: scale(1.035);
+}
+
+.media-top {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 11px;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 27px;
+  padding: 0 9px;
+  border-radius: 9px;
+  font-size: 8px;
+  font-weight: 900;
+  box-shadow: 0 3px 10px rgba(15,23,42,.07);
+  backdrop-filter: blur(8px);
+}
+
+.status i {
+  font-size: 6px;
+}
+
+.status-active { color: #047857; background: rgba(236,253,243,.95); }
+.status-active i { color: #10b981; }
+.status-pending { color: #c2410c; background: rgba(255,247,237,.95); }
+.status-pending i { color: #f97316; }
+.status-sold { color: #1d4ed8; background: rgba(239,246,255,.96); }
+.status-sold i { color: #3b82f6; }
+.status-rented { color: #6d28d9; background: rgba(245,243,255,.96); }
+.status-rented i { color: #8b5cf6; }
+.status-unavailable { color: #475569; background: rgba(241,245,249,.96); }
+.status-unavailable i { color: #64748b; }
+
+.manage-btn {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 11px;
+  color: #344054;
+  background: rgba(255,255,255,.95);
+  box-shadow: 0 4px 12px rgba(15,23,42,.09);
+}
+
+.tags {
+  position: absolute;
+  left: 11px;
+  bottom: 11px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-width: calc(100% - 22px);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 23px;
+  padding: 0 8px;
+  border-radius: 7px;
+  color: #344054;
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 3px 9px rgba(15,23,42,.07);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.tag.featured { color: #b45309; }
+.tag.sold { color: #b91c1c; background: #fff1f2; }
+.tag.unavailable { color: #475569; background: #f1f5f9; }
+.tag.available { color: #047857; background: #ecfdf3; }
+
+.card-body {
+  padding: 15px;
+}
+
+.card-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 11px;
+}
+
+.card-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.price {
+  color: #101828;
+  font-size: 20px;
+  line-height: 1.1;
+  font-weight: 900;
+  letter-spacing: -.045em;
+}
+
+.card-title {
+  overflow: hidden;
+  margin-top: 4px;
+  color: #101828;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 850;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.location {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  color: #667085;
+  font-size: 9px;
+  line-height: 1.45;
+  font-weight: 650;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.location i {
+  color: var(--orange);
+  flex: 0 0 auto;
+}
+
+.public-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  min-height: 25px;
+  padding: 0 8px;
+  border-radius: 8px;
+  color: #087443;
+  background: #f0faf5;
+  font-size: 7px;
+  font-weight: 900;
+}
+
+.features {
+  display: flex;
+  gap: 13px;
+  overflow: hidden;
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid #f0f1f3;
+}
+
+.feature {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  color: #667085;
+  font-size: 8px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.feature i {
+  color: #98a2b3;
+}
+
+.card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.action {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 11px;
+  font-size: 9px;
+  font-weight: 900;
+  transition: .16s ease;
+}
+
+.action.secondary {
+  border: 1px solid var(--line);
+  color: #344054;
+  background: #fff;
+}
+
+.action.primary {
+  border: 0;
+  color: #fff;
+  background: #111827;
+  box-shadow: 0 7px 15px rgba(17,24,39,.12);
+}
+
+.action:hover {
+  transform: translateY(-1px);
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 9px;
+  color: #98a2b3;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.empty {
+  padding: 52px 15px;
+  text-align: center;
+  border: 1px dashed #dfe3e8;
+  border-radius: 22px;
+  background: rgba(255,255,255,.55);
+}
+
+.empty-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+  border-radius: 19px;
+  color: var(--orange);
+  background: var(--orange-soft);
+}
+
+.empty h3 {
+  margin-top: 13px;
+  color: #101828;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.empty p {
+  max-width: 310px;
+  margin: 5px auto 0;
+  color: #667085;
+  font-size: 10px;
+  line-height: 1.7;
+  font-weight: 600;
+}
+
+.empty .new-btn {
+  margin-top: 15px;
+}
+
+.skeleton-list {
+  display: grid;
+  gap: 11px;
+}
+
+.skeleton-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fff;
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #e9ebee;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.62), transparent);
+  animation: shimmer 1.15s infinite;
+}
+
+@keyframes shimmer {
+  to { transform: translateX(100%); }
+}
+
+.skeleton-media {
+  height: 190px;
+}
+
+.skeleton-body {
+  padding: 15px;
+}
+
+.skeleton-line {
+  height: 11px;
+  border-radius: 6px;
+  margin-bottom: 9px;
+}
+
+.skeleton-line.price {
+  width: 31%;
+  height: 20px;
+}
+
+.skeleton-line.title {
+  width: 68%;
+}
+
+.skeleton-line.location {
+  width: 48%;
+}
+
+.skeleton-line.button {
+  width: 100%;
+  height: 38px;
+  margin-top: 13px;
+  border-radius: 11px;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+  background: rgba(15,23,42,.57);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-panel {
+  width: 100%;
+  max-width: 560px;
+  max-height: min(91vh, 800px);
+  overflow: auto;
+  padding: 19px;
+  border-radius: 27px 27px 18px 18px;
+  background: #fff;
+  box-shadow: 0 30px 90px rgba(15,23,42,.24);
+  animation: modalIn .2s ease both;
+}
+
+@media (min-width: 640px) {
+  .modal {
+    align-items: center;
+  }
+
+  .modal-panel {
+    border-radius: 27px;
+  }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(12px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.handle {
+  width: 40px;
+  height: 5px;
+  margin: 0 auto 14px;
+  border-radius: 999px;
+  background: #e4e7ec;
+}
+
+@media (min-width: 640px) {
+  .handle {
+    display: none;
+  }
+}
+
+.modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-title {
+  color: #101828;
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 900;
+  letter-spacing: -.03em;
+}
+
+.modal-subtitle {
+  margin-top: 4px;
+  color: #667085;
+  font-size: 10px;
+  line-height: 1.65;
+  font-weight: 600;
+}
+
+.close {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 11px;
+  color: #667085;
+  background: #f2f4f7;
+}
+
+.detail-hero {
+  position: relative;
+  overflow: hidden;
+  height: 190px;
+  margin: 16px -2px 0;
+  border-radius: 19px;
+  background: #eef0f2;
+}
+
+.detail-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-price {
+  margin-top: 15px;
+  color: #101828;
+  font-size: 25px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -.05em;
+}
+
+.detail-title {
+  margin-top: 6px;
+  color: #101828;
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 900;
+}
+
+.detail-location {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 6px;
+  color: #667085;
+  font-size: 10px;
+  line-height: 1.5;
+  font-weight: 650;
+}
+
+.detail-location i {
+  margin-top: 2px;
+  color: var(--orange);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.detail-stat {
+  padding: 11px 8px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fafbfc;
+  text-align: center;
+}
+
+.detail-stat strong {
+  display: block;
+  color: #101828;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.detail-stat span {
+  display: block;
+  margin-top: 3px;
+  color: #98a2b3;
+  font-size: 7px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.modal-action {
+  min-height: 44px;
+  border-radius: 13px;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.modal-action.light {
+  border: 1px solid var(--line);
+  color: #344054;
+  background: #fff;
+}
+
+.modal-action.dark {
+  border: 0;
+  color: #fff;
+  background: #111827;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 17px;
+}
+
+.tile {
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  color: #101828;
+  background: #fff;
+  text-align: left;
+  transition: .16s ease;
+}
+
+.tile:hover {
+  border-color: var(--orange-line);
+  background: #fffaf7;
+}
+
+.tile-icon {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+}
+
+.tile-icon.blue { color: var(--blue); background: var(--blue-soft); }
+.tile-icon.green { color: var(--green); background: var(--green-soft); }
+.tile-icon.orange { color: var(--orange); background: var(--orange-soft); }
+.tile-icon.purple { color: var(--purple); background: var(--purple-soft); }
+.tile-icon.red { color: var(--red); background: var(--red-soft); }
+
+.tile strong {
+  display: block;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.tile span {
+  display: block;
+  margin-top: 2px;
+  color: #98a2b3;
+  font-size: 8px;
+  line-height: 1.35;
+  font-weight: 650;
+}
+
+.form-group {
+  margin-top: 15px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 7px;
+  color: #344054;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  outline: 0;
+  color: #101828;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 650;
+  transition: .16s ease;
+}
+
+.form-input,
+.form-select {
+  min-height: 44px;
+  padding: 0 12px;
+}
+
+.form-textarea {
+  min-height: 90px;
+  padding: 11px 12px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: #ffb58d;
+  box-shadow: 0 0 0 4px var(--orange-soft);
+}
+
+.tag-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tag-preset {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #475467;
+  background: #fff;
+  font-size: 8px;
+  font-weight: 900;
+}
+
+.tag-preset:hover,
+.tag-preset.selected {
+  border-color: var(--orange);
+  color: var(--orange-dark);
+  background: var(--orange-soft);
+}
+
+.modal-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 17px;
+}
+
+.primary {
+  min-height: 45px;
+  border: 0;
+  border-radius: 13px;
+  color: #fff;
+  background: linear-gradient(135deg, #ff7b30, var(--orange-dark));
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.cancel {
+  min-height: 45px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  color: #667085;
+  background: #fff;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.danger {
+  min-height: 45px;
+  border: 0;
+  border-radius: 13px;
+  color: #fff;
+  background: #dc2626;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.warning-box {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  padding: 11px;
+  border: 1px solid #fed7aa;
+  border-radius: 13px;
+  color: #9a3412;
+  background: #fff7ed;
+  font-size: 9px;
+  line-height: 1.6;
+  font-weight: 650;
+}
+
+.toast-container {
+  position: fixed;
+  left: 14px;
+  right: 14px;
+  bottom: calc(15px + env(safe-area-inset-bottom));
+  z-index: 220;
+  display: grid;
+  gap: 7px;
+  max-width: 450px;
+  margin: 0 auto;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 13px;
+  border: 1px solid #e4e7ec;
+  border-radius: 15px;
+  background: rgba(255,255,255,.97);
+  box-shadow: 0 18px 42px rgba(15,23,42,.15);
+  animation: toastIn .2s ease both;
+}
+
+.toast-icon {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 9px;
+  color: var(--green);
+  background: var(--green-soft);
+}
+
+.toast.error .toast-icon {
+  color: var(--red);
+  background: var(--red-soft);
+}
+
+.toast.warning .toast-icon {
+  color: var(--amber);
+  background: var(--amber-soft);
+}
+
+.toast span:last-child {
+  color: #344054;
+  font-size: 10px;
+  line-height: 1.45;
+  font-weight: 800;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.connection {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 11px;
+  padding: 9px 11px;
+  border: 1px solid #dcefe5;
+  border-radius: 12px;
+  color: #087443;
+  background: #f3fbf7;
+  font-size: 9px;
+  line-height: 1.4;
+  font-weight: 800;
+}
+
+.connection.warning {
+  border-color: #fed7aa;
+  color: #9a3412;
+  background: #fff7ed;
+}
+
+.connection i {
+  font-size: 8px;
+}
+
+@media (min-width: 480px) {
+  .content {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .header-inner {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .card-media,
+  .skeleton-media {
+    height: 225px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+}
+
+@media (min-width: 640px) {
+  .content {
+    padding: 25px 28px 36px;
+  }
+
+  .header-inner {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+
+  .list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .skeleton-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+  <header class="header">
+    <div class="header-inner">
+      <div class="topbar">
+        <a href="index.html" class="icon-btn" aria-label="Back to dashboard" title="Back to dashboard">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div class="brand">
+          <div class="eyebrow">Agent workspace</div>
+          <div class="title">Properties</div>
+        </div>
+
+        <div id="syncPill" class="sync-pill">
+          <span class="sync-dot"></span>
+          <span id="syncText">Live sync</span>
+        </div>
+
+        <a href="upload.html" class="new-btn">
+          <i class="fa-solid fa-plus"></i>
+          <span>Add</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div id="connectionBox" class="connection hidden">
+      <i class="fa-solid fa-circle-info"></i>
+      <span id="connectionText">Connecting to MoonLat...</span>
+    </div>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow" style="color:#c15b2c">Property marketplace</div>
+        <h1>Explore the marketplace. Manage what you own.</h1>
+        <p>Browse active properties across MoonLat, switch to your uploads, and keep your live inventory accurate from one connected workspace.</p>
+        <div class="hero-meta">
+          <span class="hero-chip"><i class="fa-solid fa-bolt"></i> Real-time inventory</span>
+          <span class="hero-chip"><i class="fa-solid fa-shield-halved"></i> Owner-controlled actions</span>
+          <span class="hero-chip"><i class="fa-solid fa-arrows-rotate"></i> Firestore sync</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Property statistics">
+      <div class="stat">
+        <div class="stat-label">Marketplace</div>
+        <div id="statMarketplace" class="stat-value">0</div>
+        <div class="stat-help">Active online</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">My uploads</div>
+        <div id="statMine" class="stat-value">0</div>
+        <div class="stat-help">Your inventory</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Active</div>
+        <div id="statActive" class="stat-value">0</div>
+        <div class="stat-help">Available</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Attention</div>
+        <div id="statAttention" class="stat-value">0</div>
+        <div class="stat-help">Sold / unavailable</div>
+      </div>
+    </section>
+
+    <div class="tabs" role="tablist" aria-label="Property views">
+      <button id="marketTab" class="tab active" type="button" role="tab" aria-selected="true">
+        <i class="fa-solid fa-compass"></i>
+        Marketplace
+        <span id="marketCount" class="tab-count">0</span>
+      </button>
+      <button id="mineTab" class="tab" type="button" role="tab" aria-selected="false">
+        <i class="fa-solid fa-house-circle-check"></i>
+        My uploads
+        <span id="mineCount" class="tab-count">0</span>
+      </button>
+    </div>
+
+    <section class="toolbar" aria-label="Property search and filters">
+      <div class="search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input id="searchInput" type="search" placeholder="Search properties, locations, types..." autocomplete="off" spellcheck="false">
+        <button id="clearSearch" class="search-clear hidden" type="button" aria-label="Clear search">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="toolbar-row">
+        <select id="statusFilter" class="select" aria-label="Filter by status">
+          <option value="all">All statuses</option>
+          <option value="active">Active</option>
+          <option value="pending">Pending</option>
+          <option value="sold">Sold</option>
+          <option value="rented">Rented</option>
+          <option value="unavailable">Not available</option>
+        </select>
+
+        <select id="sortFilter" class="select" aria-label="Sort properties">
+          <option value="newest">Newest first</option>
+          <option value="price-high">Price: high to low</option>
+          <option value="price-low">Price: low to high</option>
+          <option value="title">Title A-Z</option>
+        </select>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <div id="sectionTitle" class="section-title">Marketplace properties</div>
+          <div id="sectionSubtitle" class="section-subtitle">Active properties currently visible on MoonLat.</div>
+        </div>
+        <div id="resultCount" class="result-count">0 results</div>
+      </div>
+
+      <div id="loadingList" class="skeleton-list">
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-media"></div>
+          <div class="skeleton-body">
+            <div class="skeleton skeleton-line price"></div>
+            <div class="skeleton skeleton-line title"></div>
+            <div class="skeleton skeleton-line location"></div>
+            <div class="skeleton skeleton-line button"></div>
+          </div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-media"></div>
+          <div class="skeleton-body">
+            <div class="skeleton skeleton-line price"></div>
+            <div class="skeleton skeleton-line title"></div>
+            <div class="skeleton skeleton-line location"></div>
+            <div class="skeleton skeleton-line button"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="propertyList" class="list hidden"></div>
+
+      <div id="emptyState" class="empty hidden">
+        <div class="empty-icon">
+          <i id="emptyIcon" class="fa-solid fa-house-circle-xmark fa-lg"></i>
+        </div>
+        <h3 id="emptyTitle">No properties found</h3>
+        <p id="emptyMessage">Try another search or change your filters.</p>
+        <a href="upload.html" id="emptyAction" class="new-btn">
+          <i class="fa-solid fa-plus"></i>
+          Add property
+        </a>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- DETAIL / ACTION MODAL -->
+<div id="detailModal" class="modal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <div class="handle"></div>
+    <div class="modal-head">
+      <div>
+        <div class="eyebrow" style="color:var(--orange)">Property</div>
+        <div id="detailTitle" class="modal-title">Property</div>
+        <div id="detailSubtitle" class="modal-subtitle">Listing details</div>
+      </div>
+      <button class="close" type="button" data-close="detailModal" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<!-- STATUS / TAG MODAL -->
+<div id="statusModal" class="modal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="statusTitle">
+    <div class="handle"></div>
+    <div class="modal-head">
+      <div>
+        <div class="eyebrow" style="color:var(--orange)">Inventory control</div>
+        <div id="statusTitle" class="modal-title">Update listing</div>
+        <div id="statusSubtitle" class="modal-subtitle">Change the live availability state and agent tag.</div>
+      </div>
+      <button class="close" type="button" data-close="statusModal" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="form-group">
+      <label class="label" for="statusSelect">Listing status</label>
+      <select id="statusSelect" class="form-select">
+        <option value="Active">Active</option>
+        <option value="Pending">Pending</option>
+        <option value="Sold">Sold</option>
+        <option value="Rented">Rented</option>
+        <option value="Not Available">Not Available</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="label">Quick tags</label>
+      <div class="tag-presets">
+        <button type="button" class="tag-preset" data-tag="SOLD">SOLD</button>
+        <button type="button" class="tag-preset" data-tag="NOT AVAILABLE">NOT AVAILABLE</button>
+        <button type="button" class="tag-preset" data-tag="AVAILABLE">AVAILABLE</button>
+        <button type="button" class="tag-preset" data-tag="NEW">NEW</button>
+        <button type="button" class="tag-preset" data-tag="FEATURED">FEATURED</button>
+        <button type="button" class="tag-preset" data-tag="PRICE REDUCED">PRICE REDUCED</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="label" for="tagInput">Custom agent tag</label>
+      <input id="tagInput" class="form-input" maxlength="40" placeholder="e.g. HOT DEAL, RESERVED, PRICE REDUCED">
+    </div>
+
+    <div class="warning-box">
+      <i class="fa-solid fa-circle-info" style="margin-top:2px"></i>
+      <span>This changes the shared property record in Firestore. Marketplace, dashboard and other connected pages will receive the update through their real-time listeners.</span>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="cancel" data-close="statusModal">Cancel</button>
+      <button id="saveStatusButton" type="button" class="primary">Save update</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div id="deleteModal" class="modal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+    <div class="handle"></div>
+    <div class="modal-head">
+      <div>
+        <div class="eyebrow" style="color:var(--red)">Danger zone</div>
+        <div id="deleteTitle" class="modal-title">Delete this property?</div>
+        <div class="modal-subtitle">This permanently removes the listing record from Firestore.</div>
+      </div>
+      <button class="close" type="button" data-close="deleteModal" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="warning-box" style="margin-top:18px;border-color:#fecaca;color:#991b1b;background:#fff5f5">
+      <i class="fa-solid fa-triangle-exclamation" style="margin-top:2px"></i>
+      <span><strong id="deletePropertyName">Property</strong><br>Only the authenticated owner/agent can perform this action. Once confirmed, the marketplace listener will remove the listing automatically.</span>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="cancel" data-close="deleteModal">Keep listing</button>
+      <button id="confirmDeleteButton" type="button" class="danger">Delete property</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+<script>
+(function () {
+  "use strict";
+
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+    authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+    projectId: "moonlat-estate-dashboard",
+    storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+    messagingSenderId: "289878951289",
+    appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+  };
+
+  const CACHE_KEY = "moonlat:agent-properties:v1";
+  const EDIT_KEYS = ["moonlat-edit-property", "dyve-edit-property"];
+  const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80";
+
+  const state = {
+    user: null,
+    firebaseReady: false,
+    authResolved: false,
+    view: "marketplace",
+    search: "",
+    status: "all",
+    sort: "newest",
+    marketplace: [],
+    mine: [],
+    selected: null,
+    listeners: [],
+    loading: true,
+    syncReady: false
+  };
+
+  const $ = id => document.getElementById(id);
+
+  function escapeHTML(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function text(value) {
+    return String(value ?? "").trim();
+  }
+
+  function getId(item) {
+    return text(item?.id || item?.propertyId || item?.listingId || item?._documentId);
+  }
+
+  function getTitle(item) {
+    return text(item?.title || item?.propertyTitle || item?.name || "Untitled Property");
+  }
+
+  function getImage(item) {
+    if (Array.isArray(item?.images)) {
+      for (const image of item.images) {
+        const url = typeof image === "string"
+          ? image
+          : image?.url || image?.secure_url || image?.src || image?.downloadURL || "";
+        if (text(url)) return text(url);
+      }
+    }
+
+    return text(item?.image || item?.featuredImage || item?.coverImage || item?.thumbnail || FALLBACK_IMAGE);
+  }
+
+  function getPriceNumber(item) {
+    const raw = item?.price ?? item?.amount ?? item?.listingPrice ?? 0;
+    const number = Number(String(raw).replace(/[^\d.-]/g, ""));
+    return Number.isFinite(number) ? number : 0;
+  }
+
+  function getPrice(item) {
+    const value = getPriceNumber(item);
+    if (!value) return "Price on request";
+    return "₦" + Math.round(value).toLocaleString("en-NG");
+  }
+
+  function getLocation(item) {
+    if (item?.location && typeof item.location === "object") {
+      const joined = [
+        item.location.address,
+        item.location.area,
+        item.location.city,
+        item.location.state
+      ].filter(Boolean).join(", ");
+      if (joined) return joined;
+    }
+
+    return text(
+      item?.address ||
+      item?.location ||
+      [item?.area, item?.city, item?.state].filter(Boolean).join(", ") ||
+      "Location not specified"
+    );
+  }
+
+  function getStatus(item) {
+    const raw = text(item?.status || item?.listingStatus || item?.availabilityStatus).toLowerCase();
+
+    if (["active", "available", "published", "live"].includes(raw)) return "active";
+    if (["pending", "under review", "awaiting review", "submitted"].includes(raw)) return "pending";
+    if (["sold", "closed", "closed won"].includes(raw)) return "sold";
+    if (["rented", "rental"].includes(raw)) return "rented";
+    if (["not available", "unavailable", "inactive", "off market"].includes(raw)) return "unavailable";
+    if (["draft", "unpublished"].includes(raw)) return "draft";
+
+    return raw || "active";
+  }
+
+  function getStatusLabel(item) {
+    const status = getStatus(item);
+    const labels = {
+      active: "Active",
+      pending: "Pending",
+      sold: "Sold",
+      rented: "Rented",
+      unavailable: "Not Available",
+      draft: "Draft"
+    };
+    return labels[status] || status.replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function getStatusClass(item) {
+    return "status-" + getStatus(item);
+  }
+
+  function getTags(item) {
+    const source = [];
+
+    if (Array.isArray(item?.tags)) {
+      source.push(...item.tags);
+    }
+
+    if (Array.isArray(item?.agentTags)) {
+      source.push(...item.agentTags);
+    }
+
+    [
+      item?.agentTag,
+      item?.availabilityTag,
+      item?.listingTag
+    ].forEach(value => {
+      if (value) source.push(value);
+    });
+
+    const unique = [];
+    const seen = new Set();
+
+    source.forEach(value => {
+      const tag = text(value).toUpperCase();
+      if (!tag || seen.has(tag)) return;
+      seen.add(tag);
+      unique.push(tag);
+    });
+
+    return unique.slice(0, 5);
+  }
+
+  function getBeds(item) {
+    return Number(item?.bedrooms ?? item?.beds ?? 0) || 0;
+  }
+
+  function getBaths(item) {
+    return Number(item?.bathrooms ?? item?.baths ?? 0) || 0;
+  }
+
+  function getArea(item) {
+    const value = item?.size ?? item?.areaSize ?? item?.squareFeet ?? item?.sqft ?? "";
+    return value === "" || value === null || value === undefined
+      ? ""
+      : Number(value) ? Number(value).toLocaleString("en-NG") + (item?.sizeUnit ? " " + text(item.sizeUnit) : "") : text(value);
+  }
+
+  function getViews(item) {
+    return Number(item?.views ?? item?.viewCount ?? 0) || 0;
+  }
+
+  function getInquiries(item) {
+    return Number(item?.inquiries ?? item?.inquiryCount ?? item?.leads ?? 0) || 0;
+  }
+
+  function getDate(item) {
+    const value = item?.updatedAt || item?.createdAt || item?.publishedAt || item?.date;
+
+    try {
+      let date = null;
+
+      if (value?.toDate) {
+        date = value.toDate();
+      } else if (typeof value === "number") {
+        date = new Date(value);
+      } else if (value?.seconds) {
+        date = new Date(Number(value.seconds) * 1000);
+      } else if (value) {
+        date = new Date(value);
+      }
+
+      if (!date || Number.isNaN(date.getTime())) return "";
+      return date.toLocaleDateString("en-NG", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      });
+    } catch {
+      return "";
+    }
+  }
+
+  function getOwnerId(item) {
+    return text(
+      item?.agentId ||
+      item?.agentID ||
+      item?.ownerId ||
+      item?.ownerID ||
+      item?.userId ||
+      item?.userID ||
+      item?.createdBy ||
+      item?.createdById
+    );
+  }
+
+  function normalize(item, collection, id) {
+    return {
+      ...(item || {}),
+      id: getId({ ...(item || {}), id }) || id || "",
+      _collection: collection || "properties",
+      _documentId: id || getId(item)
+    };
+  }
+
+  function mergeById(items) {
+    const map = new Map();
+
+    items.forEach(item => {
+      const id = getId(item);
+      if (!id) return;
+
+      if (!map.has(id)) {
+        map.set(id, item);
+      } else {
+        map.set(id, { ...map.get(id), ...item });
+      }
+    });
+
+    return Array.from(map.values());
+  }
+
+  function formatSort(items) {
+    const output = [...items];
+
+    output.sort((a, b) => {
+      if (state.sort === "price-high") {
+        return getPriceNumber(b) - getPriceNumber(a);
+      }
+
+      if (state.sort === "price-low") {
+        return getPriceNumber(a) - getPriceNumber(b);
+      }
+
+      if (state.sort === "title") {
+        return getTitle(a).localeCompare(getTitle(b));
+      }
+
+      const getTime = item => {
+        const value = item?.updatedAt || item?.createdAt || item?.publishedAt;
+        try {
+          if (value?.toDate) return value.toDate().getTime();
+          if (value?.seconds) return Number(value.seconds) * 1000;
+          return new Date(value || 0).getTime() || 0;
+        } catch {
+          return 0;
+        }
+      };
+
+      return getTime(b) - getTime(a);
+    });
+
+    return output;
+  }
+
+  function saveCache() {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        savedAt: Date.now(),
+        userId: state.user?.uid || "",
+        marketplace: state.marketplace,
+        mine: state.mine
+      }));
+    } catch (error) {
+      console.warn("MoonLat property cache skipped:", error);
+    }
+  }
+
+  function loadCache() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return;
+
+      const data = JSON.parse(raw);
+
+      if (data?.userId && state.user?.uid && data.userId !== state.user.uid) return;
+
+      if (Array.isArray(data.marketplace)) {
+        state.marketplace = data.marketplace;
+      }
+
+      if (Array.isArray(data.mine)) {
+        state.mine = data.mine;
+      }
+    } catch (error) {
+      console.warn("MoonLat property cache read skipped:", error);
+    }
+  }
+
+  function setSync(online, message) {
+    const pill = $("syncPill");
+    const dot = pill.querySelector(".sync-dot");
+
+    pill.classList.toggle("offline", !online);
+    dot.style.background = online ? "#16a34a" : "#f97316";
+    $("syncText").textContent = message || (online ? "Live sync" : "Offline");
+
+    $("connectionBox").classList.toggle("hidden", online);
+    if (!online) $("connectionText").textContent = message || "Live sync is temporarily unavailable.";
+  }
+
+  function showToast(message, type = "success") {
+    const toast = document.createElement("div");
+    toast.className = "toast" + (type === "error" ? " error" : type === "warning" ? " warning" : "");
+
+    const icon = type === "error"
+      ? "fa-circle-xmark"
+      : type === "warning"
+        ? "fa-triangle-exclamation"
+        : "fa-circle-check";
+
+    toast.innerHTML = `
+      <span class="toast-icon"><i class="fa-solid ${icon}"></i></span>
+      <span>${escapeHTML(message)}</span>
+    `;
+
+    $("toastContainer").appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = "0";
+      toast.style.transform = "translateY(7px)";
+      setTimeout(() => toast.remove(), 180);
+    }, 3200);
+  }
+
+  function openModal(id) {
+    const modal = $(id);
+    if (!modal) return;
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+  }
+
+  function closeModal(id) {
+    const modal = $(id);
+    if (!modal) return;
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+
+    if (!document.querySelector(".modal.open")) {
+      document.body.classList.remove("modal-open");
+    }
+  }
+
+  function closeAllModals() {
+    document.querySelectorAll(".modal.open").forEach(modal => {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+    });
+
+    document.body.classList.remove("modal-open");
+  }
+
+  function getCurrentItems() {
+    return state.view === "mine" ? state.mine : state.marketplace;
+  }
+
+  function matchesSearch(item) {
+    const query = state.search.toLowerCase().trim();
+    if (!query) return true;
+
+    const haystack = [
+      getTitle(item),
+      getLocation(item),
+      item?.description,
+      item?.type,
+      item?.propertyType,
+      item?.purpose,
+      item?.category,
+      item?.status,
+      ...getTags(item)
+    ].filter(Boolean).join(" ").toLowerCase();
+
+    return haystack.includes(query);
+  }
+
+  function getVisibleItems() {
+    return formatSort(
+      getCurrentItems().filter(item => {
+        if (state.status !== "all" && getStatus(item) !== state.status) return false;
+        return matchesSearch(item);
+      })
+    );
+  }
+
+  function updateStats() {
+    const marketplace = state.marketplace;
+    const mine = state.mine;
+
+    $("statMarketplace").textContent = marketplace.length;
+    $("statMine").textContent = mine.length;
+    $("statActive").textContent = mine.filter(item => getStatus(item) === "active").length;
+    $("statAttention").textContent = mine.filter(item => ["sold", "unavailable"].includes(getStatus(item))).length;
+
+    $("marketCount").textContent = marketplace.length;
+    $("mineCount").textContent = mine.length;
+  }
+
+  function renderCard(item, index) {
+    const id = escapeHTML(getId(item));
+    const title = escapeHTML(getTitle(item));
+    const image = escapeHTML(getImage(item));
+    const location = escapeHTML(getLocation(item));
+    const price = escapeHTML(getPrice(item));
+    const status = getStatus(item);
+    const tags = getTags(item);
+
+    const tagsHtml = tags.map(tag => {
+      let cls = "";
+      if (tag === "SOLD") cls = "sold";
+      if (tag === "NOT AVAILABLE") cls = "unavailable";
+      if (tag === "AVAILABLE") cls = "available";
+      if (tag === "FEATURED") cls = "featured";
+      return `<span class="tag ${cls}">${escapeHTML(tag)}</span>`;
+    }).join("");
+
+    const mine = state.view === "mine";
+
+    return `
+      <article class="card" style="animation-delay:${Math.min(index * 30, 180)}ms">
+        <div class="card-media">
+          <img
+            src="${image}"
+            alt="${title}"
+            loading="${index < 2 ? "eager" : "lazy"}"
+            decoding="async"
+            onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'"
+          >
+
+          <div class="media-top">
+            <span class="status ${getStatusClass(item)}">
+              <i class="fa-solid fa-circle"></i>
+              ${escapeHTML(getStatusLabel(item))}
+            </span>
+
+            <button
+              type="button"
+              class="manage-btn"
+              data-action="details"
+              data-id="${id}"
+              aria-label="Open ${title}"
+              title="${mine ? "Manage property" : "View property"}"
+            >
+              <i class="fa-solid fa-ellipsis"></i>
+            </button>
+          </div>
+
+          ${tagsHtml ? `<div class="tags">${tagsHtml}</div>` : ""}
+        </div>
+
+        <div class="card-body">
+          <div class="card-main">
+            <div class="card-copy">
+              <div class="price">${price}</div>
+              <div class="card-title">${title}</div>
+              <div class="location">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>${location}</span>
+              </div>
+            </div>
+
+            ${mine ? `
+              <span class="public-badge">
+                <i class="fa-solid fa-globe"></i>
+                Online
+              </span>
+            ` : ""}
+          </div>
+
+          <div class="features">
+            <span class="feature"><i class="fa-solid fa-bed"></i>${getBeds(item)} Beds</span>
+            <span class="feature"><i class="fa-solid fa-bath"></i>${getBaths(item)} Baths</span>
+            ${getArea(item) ? `<span class="feature"><i class="fa-solid fa-maximize"></i>${escapeHTML(getArea(item))}</span>` : ""}
+          </div>
+
+          <div class="card-actions">
+            <button type="button" class="action secondary" data-action="share" data-id="${id}">
+              <i class="fa-solid fa-arrow-up-from-bracket"></i>
+              Share
+            </button>
+
+            <button type="button" class="action ${mine ? "primary" : "secondary"}" data-action="${mine ? "manage" : "details"}" data-id="${id}">
+              <i class="fa-solid ${mine ? "fa-sliders" : "fa-eye"}"></i>
+              ${mine ? "Manage" : "View property"}
+            </button>
+          </div>
+
+          <div class="card-meta">
+            <span><i class="fa-regular fa-eye"></i> ${getViews(item)} views</span>
+            <span><i class="fa-regular fa-message"></i> ${getInquiries(item)} inquiries</span>
+            <span>${escapeHTML(getDate(item))}</span>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function render() {
+    updateStats();
+
+    const items = getVisibleItems();
+    $("resultCount").textContent = `${items.length} result${items.length === 1 ? "" : "s"}`;
+
+    $("marketTab").classList.toggle("active", state.view === "marketplace");
+    $("mineTab").classList.toggle("active", state.view === "mine");
+    $("marketTab").setAttribute("aria-selected", state.view === "marketplace" ? "true" : "false");
+    $("mineTab").setAttribute("aria-selected", state.view === "mine" ? "true" : "false");
+
+    if (state.view === "mine") {
+      $("sectionTitle").textContent = "My uploads";
+      $("sectionSubtitle").textContent = "Properties published by your authenticated agent account.";
+    } else {
+      $("sectionTitle").textContent = "Marketplace properties";
+      $("sectionSubtitle").textContent = "Active properties currently visible across MoonLat.";
+    }
+
+    const list = $("propertyList");
+    const empty = $("emptyState");
+
+    if (!items.length) {
+      list.innerHTML = "";
+      list.classList.add("hidden");
+      empty.classList.remove("hidden");
+
+      if (state.search) {
+        $("emptyTitle").textContent = "No matching properties";
+        $("emptyMessage").textContent = "Try another property name, location, type or tag.";
+        $("emptyAction").classList.add("hidden");
+      } else if (state.status !== "all") {
+        $("emptyTitle").textContent = "Nothing in this status";
+        $("emptyMessage").textContent = `There are no ${state.status} properties in the current view.`;
+        $("emptyAction").classList.toggle("hidden", state.view !== "mine");
+      } else if (state.view === "mine") {
+        $("emptyTitle").textContent = "No uploads yet";
+        $("emptyMessage").textContent = "Publish your first property and it will appear here automatically.";
+        $("emptyAction").classList.remove("hidden");
+      } else {
+        $("emptyTitle").textContent = "No marketplace properties";
+        $("emptyMessage").textContent = "There are currently no active marketplace listings available to display.";
+        $("emptyAction").classList.add("hidden");
+      }
+
+      return;
+    }
+
+    empty.classList.add("hidden");
+    list.classList.remove("hidden");
+    list.innerHTML = items.map(renderCard).join("");
+  }
+
+  function setView(view) {
+    state.view = view;
+    state.status = "all";
+    $("statusFilter").value = "all";
+    render();
+  }
+
+  function findItem(id) {
+    return [...state.marketplace, ...state.mine].find(item => getId(item) === String(id)) || null;
+  }
+
+  function isMine(item) {
+    if (!state.user || !item) return false;
+    return getOwnerId(item) === state.user.uid;
+  }
+
+  function buildPublicUrl(item) {
+    const existing = text(item?.publicUrl || item?.listingUrl || item?.url || item?.link);
+    if (existing) {
+      try {
+        return new URL(existing, window.location.origin).href;
+      } catch {
+        return existing;
+      }
+    }
+
+    const slug = text(item?.slug || item?.propertySlug || getId(item));
+    return `${window.location.origin}/property.html?id=${encodeURIComponent(slug)}`;
+  }
+
+  async function shareItem(item) {
+    const url = buildPublicUrl(item);
+    const title = getTitle(item);
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title,
+          text: `Check out this property on MoonLat: ${title}`,
+          url
+        });
+        return;
+      }
+    } catch (error) {
+      if (error?.name === "AbortError") return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      showToast("Property link copied.", "success");
+      return;
+    } catch {}
+
+    const input = document.createElement("textarea");
+    input.value = url;
+    input.style.position = "fixed";
+    input.style.left = "-9999px";
+    document.body.appendChild(input);
+    input.select();
+
+    try {
+      document.execCommand("copy");
+      showToast("Property link copied.", "success");
+    } catch {
+      showToast("Unable to copy the property link.", "error");
+    } finally {
+      input.remove();
+    }
+  }
+
+  function openDetails(item) {
+    if (!item) return;
+
+    state.selected = item;
+    const mine = isMine(item);
+
+    $("detailTitle").textContent = getTitle(item);
+    $("detailSubtitle").textContent = mine
+      ? "Your live property record"
+      : "Marketplace property";
+
+    const tags = getTags(item).map(tag => `<span class="tag">${escapeHTML(tag)}</span>`).join("");
+
+    $("detailContent").innerHTML = `
+      <div class="detail-hero">
+        <img src="${escapeHTML(getImage(item))}" alt="${escapeHTML(getTitle(item))}" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'">
+      </div>
+
+      <div class="detail-price">${escapeHTML(getPrice(item))}</div>
+      <div class="detail-title">${escapeHTML(getTitle(item))}</div>
+
+      <div class="detail-location">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>${escapeHTML(getLocation(item))}</span>
+      </div>
+
+      <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:5px">
+        <span class="status ${getStatusClass(item)}">
+          <i class="fa-solid fa-circle"></i>
+          ${escapeHTML(getStatusLabel(item))}
+        </span>
+        ${tags}
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-stat">
+          <strong>${getBeds(item)}</strong>
+          <span>Bedrooms</span>
+        </div>
+        <div class="detail-stat">
+          <strong>${getBaths(item)}</strong>
+          <span>Bathrooms</span>
+        </div>
+        <div class="detail-stat">
+          <strong>${escapeHTML(getArea(item) || "—")}</strong>
+          <span>Size</span>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="modal-action light" data-detail-action="share">
+          <i class="fa-solid fa-arrow-up-from-bracket"></i> Share
+        </button>
+        <button type="button" class="modal-action ${mine ? "dark" : "light"}" data-detail-action="${mine ? "manage" : "open"}">
+          <i class="fa-solid ${mine ? "fa-sliders" : "fa-arrow-up-right-from-square"}"></i>
+          ${mine ? "Manage listing" : "Open property"}
+        </button>
+      </div>
+
+      ${mine ? `
+        <div class="action-grid">
+          <button type="button" class="tile" data-detail-action="edit">
+            <span class="tile-icon blue"><i class="fa-solid fa-pen"></i></span>
+            <span><strong>Edit listing</strong><span>Update property information</span></span>
+          </button>
+
+          <button type="button" class="tile" data-detail-action="status">
+            <span class="tile-icon orange"><i class="fa-solid fa-tag"></i></span>
+            <span><strong>Status & tags</strong><span>Mark sold, unavailable, featured...</span></span>
+          </button>
+
+          <button type="button" class="tile" data-detail-action="share">
+            <span class="tile-icon green"><i class="fa-solid fa-share-nodes"></i></span>
+            <span><strong>Share</strong><span>Copy or share live property link</span></span>
+          </button>
+
+          <button type="button" class="tile" data-detail-action="delete">
+            <span class="tile-icon red"><i class="fa-solid fa-trash"></i></span>
+            <span><strong>Delete</strong><span>Remove your listing permanently</span></span>
+          </button>
+        </div>
+      ` : ""}
+    `;
+
+    openModal("detailModal");
+  }
+
+  function prepareEdit(item) {
+    if (!item || !isMine(item)) {
+      showToast("You can only edit properties owned by your agent account.", "error");
+      return;
+    }
+
+    const payload = JSON.parse(JSON.stringify({
+      ...item,
+      id: getId(item),
+      _documentId: getId(item)
+    }));
+
+    try {
+      EDIT_KEYS.forEach(key => localStorage.setItem(key, JSON.stringify(payload)));
+    } catch (error) {
+      console.warn("MoonLat edit bridge failed:", error);
+    }
+
+    closeAllModals();
+
+    window.location.href = `upload.html?mode=edit&id=${encodeURIComponent(getId(item))}`;
+  }
+
+  function openStatusEditor(item) {
+    if (!item || !isMine(item)) {
+      showToast("You can only update your own listings.", "error");
+      return;
+    }
+
+    state.selected = item;
+
+    $("statusTitle").textContent = "Update listing";
+    $("statusSubtitle").textContent = getTitle(item);
+
+    const current = getStatus(item);
+    const currentValue = {
+      active: "Active",
+      pending: "Pending",
+      sold: "Sold",
+      rented: "Rented",
+      unavailable: "Not Available"
+    }[current] || "Active";
+
+    $("statusSelect").value = currentValue;
+
+    const tags = getTags(item);
+    $("tagInput").value = tags.find(tag => !["SOLD", "NOT AVAILABLE", "AVAILABLE", "NEW", "FEATURED", "PRICE REDUCED"].includes(tag)) || "";
+
+    document.querySelectorAll(".tag-preset").forEach(button => {
+      button.classList.toggle("selected", tags.includes(button.dataset.tag));
+    });
+
+    closeModal("detailModal");
+    openModal("statusModal");
+  }
+
+  async function updateListingStatus() {
+    const item = state.selected;
+    const user = state.user;
+
+    if (!item || !user || !isMine(item)) {
+      showToast("This property is not owned by the current agent.", "error");
+      return;
+    }
+
+    if (!state.firebaseReady) {
+      showToast("Property service is unavailable.", "error");
+      return;
+    }
+
+    const button = $("saveStatusButton");
+    button.disabled = true;
+    button.textContent = "Saving...";
+
+    const status = $("statusSelect").value;
+    const customTag = text($("tagInput").value).toUpperCase();
+
+    const selectedPreset = [...document.querySelectorAll(".tag-preset.selected")]
+      .map(button => button.dataset.tag);
+
+    let tags = [...selectedPreset];
+
+    if (customTag && !tags.includes(customTag)) {
+      tags.push(customTag);
+    }
+
+    if (status === "Sold" && !tags.includes("SOLD")) tags.push("SOLD");
+    if (status === "Not Available" && !tags.includes("NOT AVAILABLE")) tags.push("NOT AVAILABLE");
+    if (status === "Active" && !tags.includes("AVAILABLE")) tags.push("AVAILABLE");
+
+    const ref = firebase.firestore().collection("properties").doc(getId(item));
+
+    try {
+      await ref.update({
+        status,
+        listingStatus: status,
+        availabilityStatus: status,
+        tags: tags.slice(0, 8),
+        agentTags: tags.slice(0, 8),
+        agentTag: customTag || tags[0] || "",
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      closeModal("statusModal");
+      showToast("Listing status updated and synced.", "success");
+    } catch (error) {
+      console.error("MoonLat property status update failed:", error);
+
+      if (error?.code === "permission-denied") {
+        showToast("Firestore denied this update. The listing ownership rules must allow this agent to update the record.", "error");
+      } else {
+        showToast("Could not update this property. Please try again.", "error");
+      }
+    } finally {
+      button.disabled = false;
+      button.textContent = "Save update";
+    }
+  }
+
+  function openDelete(item) {
+    if (!item || !isMine(item)) {
+      showToast("You can only delete properties owned by your agent account.", "error");
+      return;
+    }
+
+    state.selected = item;
+    $("deletePropertyName").textContent = getTitle(item);
+
+    closeModal("detailModal");
+    openModal("deleteModal");
+  }
+
+  async function deleteListing() {
+    const item = state.selected;
+    const user = state.user;
+
+    if (!item || !user || !isMine(item)) {
+      showToast("This property is not owned by the current agent.", "error");
+      return;
+    }
+
+    const button = $("confirmDeleteButton");
+    button.disabled = true;
+    button.textContent = "Deleting...";
+
+    try {
+      const ref = firebase.firestore().collection("properties").doc(getId(item));
+      await ref.delete();
+
+      state.mine = state.mine.filter(record => getId(record) !== getId(item));
+      state.marketplace = state.marketplace.filter(record => getId(record) !== getId(item));
+      state.selected = null;
+
+      saveCache();
+      updateStats();
+      render();
+      closeModal("deleteModal");
+
+      showToast("Property deleted successfully.", "success");
+    } catch (error) {
+      console.error("MoonLat property delete failed:", error);
+
+      if (error?.code === "permission-denied") {
+        showToast("Firestore denied deletion. Only the listing owner can delete this property.", "error");
+      } else {
+        showToast("Could not delete the property. Please try again.", "error");
+      }
+    } finally {
+      button.disabled = false;
+      button.textContent = "Delete property";
+    }
+  }
+
+  function openProperty(item) {
+    const url = buildPublicUrl(item);
+    window.location.href = url;
+  }
+
+  function clearListeners() {
+    state.listeners.forEach(unsubscribe => {
+      try {
+        unsubscribe();
+      } catch {}
+    });
+
+    state.listeners = [];
+  }
+
+  function handleMarketplaceSnapshot(snapshot) {
+    state.marketplace = snapshot.docs
+      .map(doc => normalize(doc.data(), "properties", doc.id))
+      .filter(item => getStatus(item) === "active");
+
+    saveCache();
+    state.loading = false;
+    state.syncReady = true;
+    setSync(true, "Live sync");
+    $("loadingList").classList.add("hidden");
+    render();
+  }
+
+  function handleMineSnapshot(snapshot) {
+    state.mine = snapshot.docs.map(doc => normalize(doc.data(), "properties", doc.id));
+
+    saveCache();
+    state.loading = false;
+    state.syncReady = true;
+    setSync(true, "Live sync");
+    $("loadingList").classList.add("hidden");
+    render();
+  }
+
+  function subscribeMarketplace(db) {
+    try {
+      const unsubscribe = db
+        .collection("properties")
+        .where("status", "==", "Active")
+        .onSnapshot(
+          snapshot => handleMarketplaceSnapshot(snapshot),
+          error => {
+            console.warn("MoonLat marketplace listener failed:", error);
+            setSync(false, "Marketplace sync unavailable");
+          }
+        );
+
+      state.listeners.push(unsubscribe);
+    } catch (error) {
+      console.warn("MoonLat marketplace listener could not start:", error);
+    }
+  }
+
+  function subscribeMine(db, user) {
+    try {
+      const unsubscribe = db
+        .collection("properties")
+        .where("ownerId", "==", user.uid)
+        .onSnapshot(
+          snapshot => handleMineSnapshot(snapshot),
+          error => {
+            console.warn("MoonLat ownerId listener failed:", error);
+
+            tryAgentIdFallback(db, user);
+          }
+        );
+
+      state.listeners.push(unsubscribe);
+    } catch (error) {
+      console.warn("MoonLat ownerId listener could not start:", error);
+      tryAgentIdFallback(db, user);
+    }
+  }
+
+  function tryAgentIdFallback(db, user) {
+    try {
+      const unsubscribe = db
+        .collection("properties")
+        .where("agentId", "==", user.uid)
+        .onSnapshot(
+          snapshot => handleMineSnapshot(snapshot),
+          error => {
+            console.warn("MoonLat agentId listener failed:", error);
+            setSync(false, "Your upload sync is unavailable");
+            $("loadingList").classList.add("hidden");
+            state.loading = false;
+            render();
+          }
+        );
+
+      state.listeners.push(unsubscribe);
+    } catch (error) {
+      console.warn("MoonLat agentId listener could not start:", error);
+      $("loadingList").classList.add("hidden");
+      state.loading = false;
+      render();
+    }
+  }
+
+  function startRealtimeSync(user) {
+    clearListeners();
+
+    if (!user) return;
+
+    const db = firebase.firestore();
+
+    setSync(true, "Syncing...");
+
+    subscribeMarketplace(db);
+    subscribeMine(db, user);
+  }
+
+  function initializeFirebase() {
+    if (!window.firebase) {
+      setSync(false, "Firebase SDK unavailable");
+      $("loadingList").classList.add("hidden");
+      state.loading = false;
+      render();
+      return false;
+    }
+
+    try {
+      if (!firebase.apps.length) {
+        firebase.initializeApp(FIREBASE_CONFIG);
+      }
+
+      state.firebaseReady = true;
+      return true;
+    } catch (error) {
+      console.error("MoonLat Firebase initialization failed:", error);
+      setSync(false, "Firebase initialization failed");
+      $("loadingList").classList.add("hidden");
+      state.loading = false;
+      render();
+      return false;
+    }
+  }
+
+  function bindEvents() {
+    $("marketTab").addEventListener("click", () => setView("marketplace"));
+    $("mineTab").addEventListener("click", () => setView("mine"));
+
+    $("searchInput").addEventListener("input", event => {
+      state.search = text(event.target.value);
+      $("clearSearch").classList.toggle("hidden", !state.search);
+      render();
+    });
+
+    $("clearSearch").addEventListener("click", () => {
+      $("searchInput").value = "";
+      state.search = "";
+      $("clearSearch").classList.add("hidden");
+      $("searchInput").focus();
+      render();
+    });
+
+    $("statusFilter").addEventListener("change", event => {
+      state.status = event.target.value;
+      render();
+    });
+
+    $("sortFilter").addEventListener("change", event => {
+      state.sort = event.target.value;
+      render();
+    });
+
+    $("propertyList").addEventListener("click", event => {
+      const action = event.target.closest("[data-action]");
+      if (!action) return;
+
+      const item = findItem(action.dataset.id);
+      if (!item) {
+        showToast("Property could not be found.", "error");
+        return;
+      }
+
+      if (action.dataset.action === "share") {
+        shareItem(item);
+        return;
+      }
+
+      if (action.dataset.action === "manage") {
+        openDetails(item);
+        return;
+      }
+
+      if (action.dataset.action === "details") {
+        openDetails(item);
+      }
+    });
+
+    $("detailContent").addEventListener("click", event => {
+      const button = event.target.closest("[data-detail-action]");
+      if (!button || !state.selected) return;
+
+      const action = button.dataset.detailAction;
+      const item = state.selected;
+
+      if (action === "share") {
+        shareItem(item);
+      }
+
+      if (action === "edit") {
+        prepareEdit(item);
+      }
+
+      if (action === "status") {
+        openStatusEditor(item);
+      }
+
+      if (action === "delete") {
+        openDelete(item);
+      }
+
+      if (action === "manage") {
+        openDetails(item);
+      }
+
+      if (action === "open") {
+        openProperty(item);
+      }
+    });
+
+    $("saveStatusButton").addEventListener("click", updateListingStatus);
+    $("confirmDeleteButton").addEventListener("click", deleteListing);
+
+    document.querySelectorAll(".tag-preset").forEach(button => {
+      button.addEventListener("click", () => {
+        button.classList.toggle("selected");
+      });
+    });
+
+    document.querySelectorAll("[data-close]").forEach(button => {
+      button.addEventListener("click", () => closeModal(button.dataset.close));
+    });
+
+    document.querySelectorAll(".modal").forEach(modal => {
+      modal.addEventListener("click", event => {
+        if (event.target === modal) closeModal(modal.id);
+      });
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeAllModals();
+    });
+
+    window.addEventListener("online", () => {
+      if (state.user) {
+        setSync(true, "Reconnecting...");
+        startRealtimeSync(state.user);
+      }
+    });
+
+    window.addEventListener("offline", () => {
+      setSync(false, "Offline — showing last synced data");
+    });
+
+    window.addEventListener("beforeunload", clearListeners);
+  }
+
+  function boot() {
+    bindEvents();
+    loadCache();
+    updateStats();
+    render();
+
+    if (!initializeFirebase()) return;
+
+    firebase.auth().onAuthStateChanged(async user => {
+      state.authResolved = true;
+      state.user = user || null;
+
+      if (!user) {
+        clearListeners();
+        setSync(false, "Sign in required");
+        $("loadingList").classList.add("hidden");
+        state.loading = false;
+        render();
+
+        setTimeout(() => {
+          window.location.href = "../sign-in.html";
+        }, 450);
+        return;
+      }
+
+      try {
+        await user.reload();
+      } catch (error) {
+        console.warn("MoonLat auth refresh skipped:", error);
+      }
+
+      state.user = firebase.auth().currentUser || user;
+
+      loadCache();
+      startRealtimeSync(state.user);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  } else {
+    boot();
+  }
+
+  window.MoonLatProperties = Object.freeze({
+    getState: () => ({
+      view: state.view,
+      marketplace: [...state.marketplace],
+      mine: [...state.mine],
+      userId: state.user?.uid || null
+    }),
+    refresh: () => state.user && startRealtimeSync(state.user)
+  });
+})();
+</script>
+</body>
+</html>

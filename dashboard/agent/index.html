@@ -1,0 +1,2903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="MoonLat agent workspace dashboard for managing property listings, leads, appointments, deals, analytics and earnings.">
+  <meta name="format-detection" content="telephone=no">
+  <title>MoonLat Agent Dashboard</title>
+
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="index.css">
+  <script>
+    window.MOONLAT_FIREBASE_CONFIG = {
+      apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+      authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+      projectId: "moonlat-estate-dashboard",
+      storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+      messagingSenderId: "289878951289",
+      appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+    };
+
+    window.tailwind = window.tailwind || {};
+    window.tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            display: ["Plus Jakarta Sans", "Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+
+  </style>
+</head>
+
+<body>
+
+  <div id="loadingScreen">
+    <div class="loading-card">
+      <div class="loading-mark">
+        <div class="loading-spinner"></div>
+      </div>
+      <div class="font-extrabold text-lg tracking-tight">MOONLAT</div>
+      <div class="mt-1 text-xs text-slate-400">Preparing agent workspace</div>
+    </div>
+  </div>
+
+  <div
+    id="sidebarBackdrop"
+    class="fixed inset-0 z-40 hidden bg-slate-950/60 backdrop-blur-sm lg:hidden"
+    onclick="toggleSidebar()">
+  </div>
+
+  <div id="app" class="app-shell hidden">
+
+    <aside id="sidebar" class="desktop-sidebar">
+
+      <div class="sidebar-brand">
+        <a href="index.html" class="flex items-center gap-3 min-w-0">
+          <div class="brand-mark">
+            <i class="fas fa-moon"></i>
+          </div>
+
+          <div class="min-w-0">
+            <div class="font-extrabold text-sm text-white tracking-tight">
+              MOONLAT
+            </div>
+
+            <div class="text-[9px] font-bold uppercase tracking-[.18em] text-slate-500">
+              agent workspace
+            </div>
+          </div>
+        </a>
+
+        <button
+          class="ml-auto text-slate-500 hover:text-white lg:hidden"
+          onclick="toggleSidebar()"
+          aria-label="Close menu">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="sidebar-scroll">
+        <nav id="sidebarNav"></nav>
+      </div>
+
+      <div class="sidebar-user">
+
+        <div class="sidebar-user-card">
+          <div id="sidebarAvatar" class="sidebar-avatar"></div>
+
+          <div class="min-w-0 flex-1">
+            <div
+              id="sidebarUserName"
+              class="truncate text-xs font-extrabold text-white">
+              User
+            </div>
+
+            <div
+              id="sidebarUserRole"
+              class="mt-0.5 text-[9px] font-semibold text-slate-500">
+              Agent
+            </div>
+          </div>
+
+          <button
+            onclick="handleLogout()"
+            class="w-8 h-8 rounded-lg text-slate-500 hover:bg-red-500/10 hover:text-red-400"
+            aria-label="Sign out">
+            <i class="fas fa-right-from-bracket text-xs"></i>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mt-2">
+
+          <div class="rounded-xl border border-white/[.06] bg-white/[.025] px-3 py-2">
+            <div class="text-[8px] uppercase tracking-wider text-slate-600">
+              Listings
+            </div>
+
+            <div
+              id="sidebarStat1"
+              class="mt-1 text-sm font-extrabold text-white">
+              0
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-white/[.06] bg-white/[.025] px-3 py-2">
+            <div class="text-[8px] uppercase tracking-wider text-slate-600">
+              Viewings
+            </div>
+
+            <div
+              id="sidebarStat2"
+              class="mt-1 text-sm font-extrabold text-white">
+              0
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+      <header class="topbar">
+        <div class="topbar-inner">
+
+          <button
+            class="icon-button lg:hidden"
+            onclick="toggleSidebar()"
+            aria-label="Open menu">
+            <i class="fas fa-bars-staggered"></i>
+          </button>
+
+          <div class="topbar-title">
+            <div class="topbar-kicker">
+              agent workspace
+            </div>
+
+            <div class="topbar-heading">
+              Dashboard
+            </div>
+          </div>
+
+          <div class="topbar-search hidden sm:flex relative">
+            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+
+            <input
+              id="globalSearch"
+              class="input pl-9"
+              type="search"
+              placeholder="Search listings..."
+              autocomplete="off">
+          </div>
+
+          <a
+            href="notifications.html"
+            class="icon-button relative"
+            aria-label="Notifications">
+
+            <i class="fas fa-bell text-sm"></i>
+
+            <span
+              id="headerNotifDot"
+              class="notif-dot hidden absolute right-2 top-2">
+            </span>
+
+          </a>
+
+          <div
+            id="headerAvatar"
+            class="header-avatar hidden sm:grid">
+          </div>
+
+        </div>
+      </header>
+
+      <section
+        id="page-content"
+        class="min-h-[calc(100vh-82px)]">
+        <div class="dashboard-content">
+
+          <div class="space-y-4">
+            <div class="skeleton h-48 w-full"></div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div class="skeleton h-36"></div>
+              <div class="skeleton h-36"></div>
+              <div class="skeleton h-36"></div>
+              <div class="skeleton h-36"></div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="bottom-nav-grid">
+
+      <a href="index.html" class="active">
+        <i class="fas fa-grid-2"></i>
+        <span>Home</span>
+      </a>
+
+      <a href="manager.html">
+        <i class="fas fa-building"></i>
+        <span>Properties</span>
+      </a>
+
+      <a href="leads.html">
+        <i class="fas fa-user-plus"></i>
+        <span>Leads</span>
+      </a>
+
+      <a href="settings.html">
+        <i class="fas fa-sliders"></i>
+        <span>Settings</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <div
+    id="toastContainer"
+    class="fixed bottom-[76px] left-4 right-4 z-[80] flex max-w-sm flex-col gap-2 sm:bottom-6 sm:left-auto sm:right-6">
+  </div>
+
+  <div
+    id="confirmModal"
+    class="modal-backdrop hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="confirmTitle">
+
+    <div class="confirm-modal">
+
+      <div class="flex items-start gap-4">
+
+        <div id="confirmIcon" class="confirm-icon flex-shrink-0">
+          <i class="fas fa-triangle-exclamation"></i>
+        </div>
+
+        <div class="min-w-0 flex-1">
+
+          <h3
+            id="confirmTitle"
+            class="font-extrabold text-slate-900">
+            Are you sure?
+          </h3>
+
+          <p
+            id="confirmMessage"
+            class="mt-1 text-sm leading-6 text-slate-500">
+            This action cannot be undone.
+          </p>
+
+          <div class="mt-5 flex justify-end gap-2">
+
+            <button
+              type="button"
+              onclick="UI.hideModal('confirmModal')"
+              class="btn btn-ghost">
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              id="confirmAction"
+              class="btn btn-danger">
+              Confirm
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    (function () {
+      "use strict";
+
+      try {
+        if (!window.firebase || !firebase.apps) {
+          throw new Error("Firebase App SDK failed to load.");
+        }
+
+        if (!firebase.apps.length) {
+          firebase.initializeApp(window.MOONLAT_FIREBASE_CONFIG);
+        }
+      } catch (error) {
+        console.error("MoonLat Firebase initialization failed:", error);
+
+        const loading = document.getElementById("loadingScreen");
+
+        if (loading) {
+          loading.innerHTML = `
+            <div class="text-center px-6">
+              <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-red-600">
+                <i class="fas fa-triangle-exclamation"></i>
+              </div>
+
+              <div class="mt-4 font-extrabold text-white">
+                Workspace unavailable
+              </div>
+
+              <div class="mt-2 max-w-xs text-xs leading-5 text-slate-400">
+                MoonLat could not initialize Firebase. Check your connection and try again.
+              </div>
+
+              <button
+                onclick="location.reload()"
+                class="mt-5 rounded-xl bg-white px-5 py-3 text-xs font-bold text-slate-900">
+                Retry
+              </button>
+            </div>
+          `;
+        }
+
+        return;
+      }
+    })();
+  </script>
+
+  <script>
+    // =================== FIREBASE IS LOADED GLOBALLY ===================
+    // Auth & Firestore are available from HTML
+
+    // =================== STATE ===================
+    const state = {
+      user: null,
+      userProfile: null,
+      properties: [],
+      leads: [],
+      clients: [],
+      appointments: [],
+      deals: [],
+      notifications: [],
+      transactions: [],
+      currentPage: 'dashboard',
+      editingPropertyId: null,
+      filters: {
+        properties: { type: '', status: '', search: '' },
+        leads: { status: '', search: '' },
+        clients: { type: '', search: '' },
+        appointments: { status: '', search: '' }
+      },
+      unsubscribers: [],
+      initialized: false
+    };
+
+    // =================== AUTH SERVICE ===================
+    const AuthService = {
+      async init() {
+        firebase.auth().onAuthStateChanged(async (user) => {
+          if (user) {
+            state.user = user;
+
+            try {
+              const profileDoc = await firebase.firestore()
+                .collection('users')
+                .doc(user.uid)
+                .get();
+
+              if (profileDoc.exists) {
+                state.userProfile = {
+                  id: user.uid,
+                  ...profileDoc.data()
+                };
+              } else {
+                state.userProfile = {
+                  id: user.uid,
+                  name: user.displayName || user.email?.split('@')[0] || 'User',
+                  email: user.email,
+                  role: 'buyer',
+                  avatar: getInitials(user.displayName || user.email),
+                  createdAt: Date.now(),
+                  memberSince: new Date().toLocaleDateString('en', {
+                    month: 'short',
+                    year: 'numeric'
+                  })
+                };
+              }
+
+              setupUI();
+              subscribeToData();
+
+            } catch (err) {
+              console.error('Profile load error:', err);
+              UI.toast('Failed to load profile', 'error');
+            }
+
+          } else {
+            window.location.href = '../sign-in.html';
+          }
+        });
+      },
+
+      async logout() {
+        try {
+          await firebase.auth().signOut();
+
+          state.unsubscribers.forEach(unsub => unsub());
+          state.unsubscribers = [];
+
+          window.location.href = '../sign-in.html';
+
+        } catch (err) {
+          UI.toast('Failed to sign out', 'error');
+        }
+      }
+    };
+
+
+    // =================== FIRESTORE SERVICE ===================
+    const FirestoreService = {
+
+      subscribeToData() {
+        const uid = state.user.uid;
+        const role = state.userProfile?.role || 'buyer';
+
+        let propsQuery;
+
+        if (role === 'buyer') {
+
+          propsQuery = firebase.firestore()
+            .collection('properties')
+            .where('status', '==', 'Active');
+
+        } else {
+
+          propsQuery = firebase.firestore()
+            .collection('properties')
+            .where('ownerId', '==', uid);
+
+        }
+
+        const unsubProps = propsQuery.onSnapshot((snap) => {
+
+          state.properties = snap.docs.map(d => ({
+            id: d.id,
+            ...d.data()
+          }));
+
+          if (state.initialized) {
+            renderPage();
+          } else {
+            state.initialized = true;
+            renderPage();
+          }
+
+        });
+
+        state.unsubscribers.push(unsubProps);
+
+
+        const leadsQuery = firebase.firestore()
+          .collection('leads')
+          .where('ownerId', '==', uid);
+
+        const unsubLeads = leadsQuery.onSnapshot((snap) => {
+
+          state.leads = snap.docs.map(d => ({
+            id: d.id,
+            ...d.data()
+          }));
+
+          renderPage();
+
+        });
+
+        state.unsubscribers.push(unsubLeads);
+
+
+        const clientsQuery = firebase.firestore()
+          .collection('clients')
+          .where('ownerId', '==', uid);
+
+        const unsubClients = clientsQuery.onSnapshot((snap) => {
+
+          state.clients = snap.docs.map(d => ({
+            id: d.id,
+            ...d.data()
+          }));
+
+          renderPage();
+
+        });
+
+        state.unsubscribers.push(unsubClients);
+
+
+        const apptsQuery = firebase.firestore()
+          .collection('appointments')
+          .where('ownerId', '==', uid);
+
+        const unsubAppts = apptsQuery.onSnapshot((snap) => {
+
+          state.appointments = snap.docs.map(d => ({
+            id: d.id,
+            ...d.data()
+          }));
+
+          renderPage();
+
+        });
+
+        state.unsubscribers.push(unsubAppts);
+
+
+        const dealsQuery = firebase.firestore()
+          .collection('deals')
+          .where('ownerId', '==', uid);
+
+        const unsubDeals = dealsQuery.onSnapshot((snap) => {
+
+          state.deals = snap.docs.map(d => ({
+            id: d.id,
+            ...d.data()
+          }));
+
+          renderPage();
+
+        });
+
+        state.unsubscribers.push(unsubDeals);
+
+
+        const notifsQuery = firebase.firestore()
+          .collection('notifications')
+          .where('userId', '==', uid);
+
+        const unsubNotifs = notifsQuery.onSnapshot((snap) => {
+
+          state.notifications = snap.docs.map(d => ({
+            id: d.id,
+            ...d.data()
+          }));
+
+          updateNotifBadge();
+          renderPage();
+
+        });
+
+        state.unsubscribers.push(unsubNotifs);
+
+
+        const transQuery = firebase.firestore()
+          .collection('transactions')
+          .where('ownerId', '==', uid);
+
+        const unsubTrans = transQuery.onSnapshot((snap) => {
+
+          state.transactions = snap.docs.map(d => ({
+            id: d.id,
+            ...d.data()
+          }));
+
+          renderPage();
+
+        });
+
+        state.unsubscribers.push(unsubTrans);
+      },
+
+      async add(collectionName, data) {
+
+        try {
+
+          const docRef = await firebase.firestore()
+            .collection(collectionName)
+            .add({
+              ...data,
+              ownerId: state.user.uid,
+              userId: state.user.uid,
+              createdAt: Date.now(),
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+          return docRef.id;
+
+        } catch (err) {
+
+          console.error(`Add error for ${collectionName}:`, err);
+          UI.toast('Failed to save data', 'error');
+          throw err;
+
+        }
+      },
+
+      async update(collectionName, id, data) {
+
+        try {
+
+          await firebase.firestore()
+            .collection(collectionName)
+            .doc(id)
+            .update({
+              ...data,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+        } catch (err) {
+
+          console.error(`Update error for ${collectionName}/${id}:`, err);
+          UI.toast('Failed to update data', 'error');
+          throw err;
+
+        }
+      },
+
+      async remove(collectionName, id) {
+
+        try {
+
+          await firebase.firestore()
+            .collection(collectionName)
+            .doc(id)
+            .delete();
+
+        } catch (err) {
+
+          console.error(`Delete error for ${collectionName}/${id}:`, err);
+          UI.toast('Failed to delete data', 'error');
+          throw err;
+
+        }
+      }
+    };
+
+
+    // =================== UI SERVICE ===================
+    const UI = {
+
+      toast(message, type = 'info', duration = 4000) {
+
+        const container = document.getElementById('toastContainer');
+
+        const toast = document.createElement('div');
+
+        toast.className = `toast ${type}`;
+
+        const icons = {
+          success: 'fa-check',
+          error: 'fa-times',
+          info: 'fa-info',
+          warning: 'fa-exclamation'
+        };
+
+        toast.innerHTML = `
+          <div class="toast-icon">
+            <i class="fas ${icons[type]}"></i>
+          </div>
+
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-gray-900">
+              ${type.charAt(0).toUpperCase() + type.slice(1)}
+            </p>
+
+            <p class="text-sm text-gray-600 mt-0.5">
+              ${message}
+            </p>
+          </div>
+
+          <button
+            onclick="this.parentElement.classList.add('hiding'); setTimeout(() => this.parentElement.remove(), 300)"
+            class="text-gray-400 hover:text-gray-600 p-1">
+
+            <i class="fas fa-times text-xs"></i>
+
+          </button>
+        `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+
+          if (toast.parentElement) {
+
+            toast.classList.add('hiding');
+
+            setTimeout(() => toast.remove(), 300);
+
+          }
+
+        }, duration);
+      },
+
+      confirm({
+        title = 'Are you sure?',
+        message = 'This action cannot be undone.',
+        confirmText = 'Confirm',
+        danger = true,
+        icon = 'fa-exclamation-triangle'
+      } = {}) {
+
+        return new Promise((resolve) => {
+
+          document.getElementById('confirmTitle').textContent = title;
+          document.getElementById('confirmMessage').textContent = message;
+
+          const actionBtn = document.getElementById('confirmAction');
+
+          actionBtn.textContent = confirmText;
+
+          actionBtn.className = danger
+            ? 'btn btn-danger'
+            : 'btn btn-primary';
+
+          const iconEl = document.getElementById('confirmIcon');
+
+          iconEl.className =
+            `w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+              danger
+                ? 'bg-red-100 text-red-600'
+                : 'bg-blue-100 text-blue-600'
+            }`;
+
+          iconEl.innerHTML =
+            `<i class="fas ${icon} text-xl"></i>`;
+
+          const modal =
+            document.getElementById('confirmModal');
+
+          modal.classList.remove('hidden');
+
+          const cleanup = (result) => {
+
+            modal.classList.add('hidden');
+            actionBtn.onclick = null;
+            resolve(result);
+
+          };
+
+          actionBtn.onclick = () => cleanup(true);
+
+          modal.onclick = (e) => {
+
+            if (e.target === modal) {
+              cleanup(false);
+            }
+
+          };
+
+        });
+      },
+
+      showModal(id) {
+
+        document.getElementById(id).classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+      },
+
+      hideModal(id) {
+
+        document.getElementById(id).classList.add('hidden');
+        document.body.style.overflow = '';
+
+      },
+
+      showLoader(container) {
+
+        container.innerHTML = `
+          <div class="dashboard-content">
+
+            <div class="space-y-4">
+
+              <div class="skeleton h-56 w-full"></div>
+
+              <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                ${Array(4)
+                  .fill('<div class="skeleton h-36"></div>')
+                  .join('')}
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+                <div class="lg:col-span-2 skeleton h-80"></div>
+
+                <div class="skeleton h-80"></div>
+
+              </div>
+
+            </div>
+
+          </div>
+        `;
+      }
+    };
+
+
+    // =================== HELPERS ===================
+
+    function formatCurrency(n) {
+
+      if (!n || isNaN(n)) {
+        return '₦0';
+      }
+
+      if (n >= 1000000000) {
+        return '₦' + (n / 1000000000).toFixed(1) + 'B';
+      }
+
+      if (n >= 1000000) {
+        return '₦' + (n / 1000000).toFixed(1) + 'M';
+      }
+
+      if (n >= 1000) {
+        return '₦' + (n / 1000).toFixed(0) + 'K';
+      }
+
+      return '₦' + n.toLocaleString();
+    }
+
+
+    function formatMoney(n) {
+
+      if (!n || isNaN(n)) {
+        return '₦0';
+      }
+
+      return '₦' + Number(n).toLocaleString();
+    }
+
+
+    function getInitials(name) {
+
+      if (!name) {
+        return 'U';
+      }
+
+      return name
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+    }
+
+
+    function escapeHtml(s) {
+
+      if (!s) {
+        return '';
+      }
+
+      return String(s).replace(
+        /[&<>"']/g,
+        m => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[m])
+      );
+    }
+
+
+    function statusBadge(status) {
+
+      const map = {
+        'Active': 'badge-active',
+        'Pending': 'badge-pending',
+        'Sold': 'badge-sold',
+        'Rented': 'badge-rented',
+        'Featured': 'badge-featured',
+        'New': 'badge-new',
+        'Contacted': 'badge-pending',
+        'Qualified': 'badge-active',
+        'Negotiating': 'badge-rented',
+        'Closed': 'badge-neutral',
+        'Confirmed': 'badge-active',
+        'Closed Won': 'badge-active',
+        'Closed Lost': 'badge-danger',
+        'Proposal': 'badge-sold',
+        'Initial Contact': 'badge-new',
+        'Negotiation': 'badge-pending',
+        'Paid': 'badge-active',
+        'Processing': 'badge-pending',
+        'VIP': 'badge-vip',
+        'Inactive': 'badge-neutral'
+      };
+
+      return map[status] || 'badge-neutral';
+    }
+
+
+    function typeBadge(type) {
+
+      return type === 'Buy' || type === 'Sale'
+        ? 'badge-sold'
+        : type === 'Rent' || type === 'Rental'
+          ? 'badge-rented'
+          : 'badge-neutral';
+    }
+
+
+    function updateNotifBadge() {
+
+      const unread =
+        state.notifications.filter(n => !n.read).length;
+
+      const dot =
+        document.getElementById('headerNotifDot');
+
+      if (dot) {
+        dot.classList.toggle(
+          'hidden',
+          unread === 0
+        );
+      }
+
+      const sidebarDot =
+        document.getElementById('sidebarNotifDot');
+
+      if (sidebarDot) {
+        sidebarDot.classList.toggle(
+          'hidden',
+          unread === 0
+        );
+      }
+    }
+
+
+    function getGreeting() {
+
+      const hour = new Date().getHours();
+
+      if (hour < 12) {
+        return 'Good morning';
+      }
+
+      if (hour < 17) {
+        return 'Good afternoon';
+      }
+
+      return 'Good evening';
+    }
+
+
+    function getMonthKey(date) {
+
+      return `${date.getFullYear()}-${String(
+        date.getMonth() + 1
+      ).padStart(2, '0')}`;
+    }
+
+
+    function getLastSixMonths() {
+
+      const months = [];
+
+      const now = new Date();
+
+      for (let i = 5; i >= 0; i--) {
+
+        const date = new Date(
+          now.getFullYear(),
+          now.getMonth() - i,
+          1
+        );
+
+        months.push({
+          key: getMonthKey(date),
+          label: date.toLocaleString('en', {
+            month: 'short'
+          })
+        });
+
+      }
+
+      return months;
+    }
+
+
+    function getTransactionDate(transaction) {
+
+      const raw =
+        transaction.createdAt ||
+        transaction.date ||
+        transaction.paidAt ||
+        transaction.timestamp;
+
+      if (!raw) {
+        return null;
+      }
+
+      if (
+        typeof raw === 'object' &&
+        typeof raw.toDate === 'function'
+      ) {
+        return raw.toDate();
+      }
+
+      if (typeof raw === 'number') {
+        return new Date(
+          raw < 10000000000
+            ? raw * 1000
+            : raw
+        );
+      }
+
+      const parsed = new Date(raw);
+
+      return isNaN(parsed.getTime())
+        ? null
+        : parsed;
+    }
+
+
+    function getRevenueByMonth() {
+
+      const months = getLastSixMonths();
+
+      return months.map(month => {
+
+        const total = state.transactions
+          .filter(transaction => {
+
+            if (transaction.status !== 'Paid') {
+              return false;
+            }
+
+            const date =
+              getTransactionDate(transaction);
+
+            if (!date) {
+              return false;
+            }
+
+            return getMonthKey(date) === month.key;
+
+          })
+          .reduce(
+            (sum, transaction) =>
+              sum + Number(transaction.amount || 0),
+            0
+          );
+
+        return total;
+
+      });
+    }
+
+
+    // =================== AGENT DASHBOARD ===================
+
+    function renderAgentDashboard(c) {
+
+      const total =
+        state.properties.length;
+
+      const active =
+        state.properties.filter(
+          p => p.status === 'Active'
+        ).length;
+
+      const sold =
+        state.properties.filter(
+          p => p.status === 'Sold'
+        ).length;
+
+      const pendingDeals =
+        state.deals.filter(
+          d => d.stage !== 'Closed Won'
+        ).length;
+
+      const totalInq =
+        state.properties.reduce(
+          (s, p) =>
+            s + Number(p.inquiries || 0),
+          0
+        );
+
+      const scheduled =
+        state.appointments.filter(
+          a => a.status === 'Confirmed'
+        ).length;
+
+      const earnings =
+        state.transactions
+          .filter(t => t.status === 'Paid')
+          .reduce(
+            (s, t) =>
+              s + Number(t.amount || 0),
+            0
+          );
+
+      const pipelineValue =
+        state.deals
+          .filter(
+            d => d.stage !== 'Closed Won'
+          )
+          .reduce(
+            (s, d) =>
+              s + Number(d.value || 0),
+            0
+          );
+
+      const userName =
+        state.userProfile?.name ||
+        'Agent';
+
+      const firstName =
+        userName
+          .trim()
+          .split(/\s+/)[0] ||
+        'Agent';
+
+      const unreadNotifications =
+        state.notifications.filter(
+          n => !n.read
+        ).length;
+
+      const recentAppointments =
+        [...state.appointments]
+          .sort((a, b) => {
+
+            const aDate =
+              new Date(
+                `${a.date || ''} ${a.time || ''}`
+              ).getTime();
+
+            const bDate =
+              new Date(
+                `${b.date || ''} ${b.time || ''}`
+              ).getTime();
+
+            return aDate - bDate;
+
+          })
+          .slice(0, 4);
+
+      const recentLeads =
+        [...state.leads]
+          .slice()
+          .sort(
+            (a, b) =>
+              Number(b.createdAt || 0) -
+              Number(a.createdAt || 0)
+          )
+          .slice(0, 4);
+
+      c.innerHTML = `
+
+        <div class="dashboard-content animate-fade">
+
+          <!-- =====================================================
+               PREMIUM WELCOME HERO
+               ===================================================== -->
+
+          <section class="premium-hero">
+
+            <div class="hero-content">
+
+              <div class="hero-copy">
+
+                <div class="hero-eyebrow">
+                  <i class="fas fa-sparkles"></i>
+                  MoonLat Private Workspace
+                </div>
+
+                <h1 class="hero-title">
+                  ${getGreeting()},
+                  <span>${escapeHtml(firstName)}.</span>
+                </h1>
+
+                <p class="hero-description">
+                  Your business command center for properties,
+                  clients, leads, appointments and deals.
+                  Everything important, in one place.
+                </p>
+
+                <div class="hero-actions">
+
+                  <a
+                    href="upload.html"
+                    class="hero-primary">
+
+                    <i class="fas fa-plus"></i>
+                    Upload property
+
+                  </a>
+
+                  <a
+                    href="manager.html"
+                    class="hero-secondary">
+
+                    <i class="fas fa-building"></i>
+                    Manage listings
+
+                  </a>
+
+                </div>
+
+              </div>
+
+              <div class="hero-side">
+
+                <div class="hero-side-label">
+                  Portfolio
+                </div>
+
+                <div class="hero-side-value">
+                  ${total}
+                </div>
+
+                <div class="hero-side-meta">
+                  ${total === 1 ? 'property' : 'properties'}
+                  currently connected to your workspace.
+                </div>
+
+                <div class="hero-side-line"></div>
+
+                <div class="hero-mini">
+
+                  <div class="hero-mini-icon">
+                    <i class="fas fa-circle-check"></i>
+                  </div>
+
+                  <div>
+                    <strong>
+                      ${active} active
+                    </strong>
+
+                    <span>
+                      Currently live
+                    </span>
+                  </div>
+
+                </div>
+
+                <div class="hero-side-line"></div>
+
+                <div class="hero-mini">
+
+                  <div class="hero-mini-icon">
+                    <i class="fas fa-bell"></i>
+                  </div>
+
+                  <div>
+                    <strong>
+                      ${unreadNotifications}
+                      unread
+                    </strong>
+
+                    <span>
+                      Account notifications
+                    </span>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- =====================================================
+               BUSINESS SNAPSHOT
+               ===================================================== -->
+
+          <div class="section-header">
+
+            <div>
+              <div class="section-kicker">
+                Business snapshot
+              </div>
+
+              <div class="section-title">
+                Your performance at a glance
+              </div>
+            </div>
+
+            <a
+              href="analytics.html"
+              class="section-link">
+
+              View analytics
+              <i class="fas fa-arrow-right text-[9px]"></i>
+
+            </a>
+
+          </div>
+
+
+          <div class="metrics-grid">
+
+            ${statCard(
+              'Total Listings',
+              total,
+              'fa-building',
+              'blue'
+            )}
+
+            ${statCard(
+              'Active Listings',
+              active,
+              'fa-circle-check',
+              'green'
+            )}
+
+            ${statCard(
+              'Pipeline Value',
+              formatCurrency(pipelineValue),
+              'fa-handshake',
+              'purple'
+            )}
+
+            ${statCard(
+              'Total Earnings',
+              formatCurrency(earnings),
+              'fa-wallet',
+              'gold'
+            )}
+
+          </div>
+
+
+          <!-- =====================================================
+               SECONDARY METRICS
+               ===================================================== -->
+
+          <div class="metrics-grid mt-3">
+
+            ${statCard(
+              'Inquiries',
+              totalInq,
+              'fa-envelope',
+              'gold'
+            )}
+
+            ${statCard(
+              'Confirmed Viewings',
+              scheduled,
+              'fa-calendar-check',
+              'blue'
+            )}
+
+            ${statCard(
+              'Properties Sold',
+              sold,
+              'fa-house-circle-check',
+              'green'
+            )}
+
+            ${statCard(
+              'Active Clients',
+              state.clients.length,
+              'fa-users',
+              'purple'
+            )}
+
+          </div>
+
+
+          <!-- =====================================================
+               ANALYTICS
+               ===================================================== -->
+
+          <div class="section-header">
+
+            <div>
+              <div class="section-kicker">
+                Intelligence
+              </div>
+
+              <div class="section-title">
+                Performance overview
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+            <div class="card chart-card lg:col-span-2">
+
+              <div class="card-header">
+
+                <div>
+                  <div class="card-title">
+                    Revenue performance
+                  </div>
+
+                  <div class="card-subtitle">
+                    Paid transactions recorded in your workspace
+                  </div>
+                </div>
+
+                <select class="select chart-select">
+                  <option>Last 6 months</option>
+                  <option>Last year</option>
+                  <option>All time</option>
+                </select>
+
+              </div>
+
+              <div class="chart-wrap">
+                <canvas id="revenueChart"></canvas>
+              </div>
+
+            </div>
+
+
+            <div class="card chart-card">
+
+              <div class="card-header">
+
+                <div>
+                  <div class="card-title">
+                    Portfolio status
+                  </div>
+
+                  <div class="card-subtitle">
+                    Current listing distribution
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="chart-wrap">
+                <canvas id="statusChart"></canvas>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =====================================================
+               ACTIVITY
+               ===================================================== -->
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
+
+            <div class="card activity-card">
+
+              <div class="card-header">
+
+                <div>
+                  <div class="card-title">
+                    Upcoming appointments
+                  </div>
+
+                  <div class="card-subtitle">
+                    Your next confirmed client activities
+                  </div>
+                </div>
+
+                <a
+                  href="appointments.html"
+                  class="section-link">
+
+                  View all
+                  <i class="fas fa-arrow-right text-[8px]"></i>
+
+                </a>
+
+              </div>
+
+              <div class="activity-list">
+
+                ${
+                  recentAppointments.length
+                    ? recentAppointments.map(a => {
+
+                        let month = '--';
+                        let day = '--';
+
+                        if (a.date) {
+
+                          const date =
+                            new Date(a.date);
+
+                          if (!isNaN(date.getTime())) {
+
+                            month =
+                              date.toLocaleString(
+                                'en',
+                                { month: 'short' }
+                              );
+
+                            day =
+                              String(
+                                date.getDate()
+                              );
+
+                          }
+
+                        }
+
+                        return `
+
+                          <div class="activity-row">
+
+                            <div class="appointment-date">
+
+                              <span>
+                                ${escapeHtml(month)}
+                              </span>
+
+                              <span>
+                                ${escapeHtml(day)}
+                              </span>
+
+                            </div>
+
+                            <div class="activity-main">
+
+                              <div class="activity-title">
+                                ${escapeHtml(
+                                  a.property ||
+                                  'Property viewing'
+                                )}
+                              </div>
+
+                              <div class="activity-meta">
+                                ${escapeHtml(
+                                  a.client ||
+                                  'Client'
+                                )}
+                                ${a.time
+                                  ? ` • ${escapeHtml(a.time)}`
+                                  : ''}
+                              </div>
+
+                            </div>
+
+                            <span
+                              class="badge ${statusBadge(a.status)}">
+                              ${escapeHtml(
+                                a.status || 'Scheduled'
+                              )}
+                            </span>
+
+                          </div>
+
+                        `;
+
+                      }).join('')
+                    : emptyStateMini(
+                        'No upcoming appointments'
+                      )
+                }
+
+              </div>
+
+            </div>
+
+
+            <div class="card activity-card">
+
+              <div class="card-header">
+
+                <div>
+                  <div class="card-title">
+                    Recent inquiries
+                  </div>
+
+                  <div class="card-subtitle">
+                    New activity from prospective clients
+                  </div>
+                </div>
+
+                <a
+                  href="leads.html"
+                  class="section-link">
+
+                  View all
+                  <i class="fas fa-arrow-right text-[8px]"></i>
+
+                </a>
+
+              </div>
+
+              <div class="activity-list">
+
+                ${
+                  recentLeads.length
+                    ? recentLeads.map(l => `
+
+                        <div class="activity-row">
+
+                          <div class="activity-avatar">
+
+                            ${
+                              l.photoURL ||
+                              l.avatar
+                                ? `
+                                  <img
+                                    src="${escapeHtml(
+                                      l.photoURL ||
+                                      l.avatar
+                                    )}"
+                                    alt=""
+                                    referrerpolicy="no-referrer">
+                                `
+                                : `
+                                  ${escapeHtml(
+                                    getInitials(
+                                      l.name ||
+                                      'Client'
+                                    )
+                                  )}
+                                `
+                            }
+
+                          </div>
+
+                          <div class="activity-main">
+
+                            <div class="activity-title">
+                              ${escapeHtml(
+                                l.name ||
+                                'New inquiry'
+                              )}
+                            </div>
+
+                            <div class="activity-meta">
+                              ${escapeHtml(
+                                l.propertyTitle ||
+                                'Property inquiry'
+                              )}
+                            </div>
+
+                          </div>
+
+                          <span
+                            class="badge ${statusBadge(
+                              l.status
+                            )}">
+                            ${escapeHtml(
+                              l.status ||
+                              'New'
+                            )}
+                          </span>
+
+                        </div>
+
+                      `).join('')
+                    : emptyStateMini(
+                        'No recent inquiries'
+                      )
+                }
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =====================================================
+               QUICK ACTIONS
+               ===================================================== -->
+
+          <div class="section-header">
+
+            <div>
+              <div class="section-kicker">
+                Workspace
+              </div>
+
+              <div class="section-title">
+                Quick actions
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+
+            ${quickAction(
+              'Upload property',
+              'Add a new listing',
+              'fa-plus',
+              'upload.html'
+            )}
+
+            ${quickAction(
+              'Manage listings',
+              'Review your properties',
+              'fa-building',
+              'properties.html'
+            )}
+
+            ${quickAction(
+              'Review leads',
+              'Follow up with prospects',
+              'fa-user-plus',
+              'leads.html'
+            )}
+
+            ${quickAction(
+              'Media Library',
+              'Manage yur assets',
+              'fa-wallet',
+              'media.html'
+            )}
+
+          </div>
+
+        </div>
+      `;
+
+      setTimeout(
+        initDashboardCharts,
+        60
+      );
+    }
+
+
+    function statCard(
+      label,
+      value,
+      icon,
+      color
+    ) {
+
+      return `
+
+        <div class="metric-card metric-${color}">
+
+          <div class="metric-top">
+
+            <div class="metric-icon">
+              <i class="fas ${icon}"></i>
+            </div>
+
+            <span class="metric-trend">
+              Live
+            </span>
+
+          </div>
+
+          <div class="metric-value">
+            ${escapeHtml(value)}
+          </div>
+
+          <div class="metric-label">
+            ${escapeHtml(label)}
+          </div>
+
+        </div>
+
+      `;
+    }
+
+
+    function quickAction(
+      title,
+      description,
+      icon,
+      href
+    ) {
+
+      return `
+
+        <a
+          href="${href}"
+          class="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md">
+
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700 transition group-hover:bg-slate-900 group-hover:text-white">
+
+            <i class="fas ${icon} text-xs"></i>
+
+          </div>
+
+          <div class="mt-4 text-[11px] font-extrabold text-slate-900">
+            ${escapeHtml(title)}
+          </div>
+
+          <div class="mt-1 text-[9px] leading-4 text-slate-400">
+            ${escapeHtml(description)}
+          </div>
+
+        </a>
+
+      `;
+    }
+
+
+    function emptyStateMini(msg) {
+
+      return `
+
+        <div class="empty-mini">
+
+          <div class="empty-mini-icon">
+            <i class="fas fa-inbox"></i>
+          </div>
+
+          ${escapeHtml(msg)}
+
+        </div>
+
+      `;
+    }
+
+
+    // ============================================================
+    // REAL DASHBOARD CHARTS
+    // ============================================================
+
+    function initDashboardCharts() {
+
+      if (typeof Chart === 'undefined') {
+        return;
+      }
+
+      const rc =
+        document.getElementById(
+          'revenueChart'
+        );
+
+      if (rc) {
+
+        const months =
+          getLastSixMonths();
+
+        const revenue =
+          getRevenueByMonth();
+
+        new Chart(rc, {
+
+          type: 'line',
+
+          data: {
+
+            labels:
+              months.map(
+                month => month.label
+              ),
+
+            datasets: [{
+
+              label: 'Revenue',
+
+              data: revenue,
+
+              borderColor: '#0b1220',
+
+              backgroundColor: (ctx) => {
+
+                const gradient =
+                  ctx.chart.ctx.createLinearGradient(
+                    0,
+                    0,
+                    0,
+                    280
+                  );
+
+                gradient.addColorStop(
+                  0,
+                  'rgba(201,154,69,0.18)'
+                );
+
+                gradient.addColorStop(
+                  1,
+                  'rgba(201,154,69,0)'
+                );
+
+                return gradient;
+              },
+
+              fill: true,
+
+              tension: .42,
+
+              borderWidth: 2.2,
+
+              pointRadius: 0,
+
+              pointHoverRadius: 5,
+
+              pointBackgroundColor:
+                '#c99a45'
+
+            }]
+
+          },
+
+          options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+              legend: {
+                display: false
+              },
+
+              tooltip: {
+
+                backgroundColor:
+                  '#0b1220',
+
+                padding: 11,
+
+                titleFont: {
+                  size: 11,
+                  weight: '700'
+                },
+
+                bodyFont: {
+                  size: 11
+                },
+
+                cornerRadius: 10,
+
+                displayColors: false,
+
+                callbacks: {
+
+                  label: (ctx) =>
+                    `${formatMoney(
+                      ctx.parsed.y || 0
+                    )}`
+
+                }
+
+              }
+
+            },
+
+            scales: {
+
+              y: {
+
+                beginAtZero: true,
+
+                grid: {
+                  color:
+                    'rgba(15,23,42,.055)'
+                },
+
+                border: {
+                  display: false
+                },
+
+                ticks: {
+
+                  color: '#94a3b8',
+
+                  font: {
+                    size: 9
+                  },
+
+                  callback: value =>
+                    formatCurrency(
+                      value
+                    )
+
+                }
+
+              },
+
+              x: {
+
+                grid: {
+                  display: false
+                },
+
+                border: {
+                  display: false
+                },
+
+                ticks: {
+
+                  color: '#94a3b8',
+
+                  font: {
+                    size: 9
+                  }
+
+                }
+
+              }
+
+            },
+
+            interaction: {
+
+              intersect: false,
+
+              mode: 'index'
+
+            }
+
+          }
+
+        });
+
+      }
+
+
+      const sc =
+        document.getElementById(
+          'statusChart'
+        );
+
+      if (sc) {
+
+        const counts = [
+          'Active',
+          'Pending',
+          'Sold',
+          'Rented'
+        ].map(
+          status =>
+            state.properties.filter(
+              p => p.status === status
+            ).length
+        );
+
+        new Chart(sc, {
+
+          type: 'doughnut',
+
+          data: {
+
+            labels: [
+              'Active',
+              'Pending',
+              'Sold',
+              'Rented'
+            ],
+
+            datasets: [{
+
+              data: counts,
+
+              backgroundColor: [
+                '#315fc8',
+                '#c99a45',
+                '#0b1220',
+                '#7656c7'
+              ],
+
+              borderWidth: 0,
+
+              hoverOffset: 7
+
+            }]
+
+          },
+
+          options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            cutout: '72%',
+
+            plugins: {
+
+              legend: {
+
+                position: 'bottom',
+
+                labels: {
+
+                  usePointStyle: true,
+
+                  pointStyle: 'circle',
+
+                  padding: 13,
+
+                  color: '#718096',
+
+                  font: {
+                    size: 9,
+                    weight: '700'
+                  }
+
+                }
+
+              },
+
+              tooltip: {
+
+                backgroundColor:
+                  '#0b1220',
+
+                padding: 10,
+
+                cornerRadius: 9,
+
+                displayColors: false
+
+              }
+
+            }
+
+          }
+
+        });
+
+      }
+
+    }
+
+
+    // ============================================================
+    // STANDALONE DASHBOARD RUNTIME
+    // ============================================================
+
+    const agent = 'agent';
+
+    const DASHBOARD_ROOT = '..';
+
+    const ROUTES = agent === 'agent'
+      ? {
+          dashboard: 'index.html',
+          properties: 'manager.html',
+          leads: 'leads.html',
+          clients: 'clients.html',
+          appointments: 'appointments.html',
+          deals: 'deals.html',
+          earnings: 'earnings.html',
+          analytics: 'analytics.html',
+          media: 'media.html',
+          notifications: 'notifications.html',
+          settings: 'settings.html',
+          upload: 'upload.html'
+        }
+      : {
+          dashboard: 'index.html',
+          properties: 'explore-property.html',
+          bookmarks: 'bookmark.html',
+          appointments: 'appointments.html',
+          notifications: 'notifications.html',
+          settings: 'settings.html'
+        };
+
+
+    let roleMismatch = false;
+
+
+    function setAvatar(
+      elementId,
+      name,
+      photo
+    ) {
+
+      const element =
+        document.getElementById(
+          elementId
+        );
+
+      if (!element) {
+        return;
+      }
+
+      if (photo) {
+
+        element.innerHTML = `
+          <img
+            src="${escapeHtml(photo)}"
+            alt=""
+            class="w-full h-full rounded-full object-cover"
+            referrerpolicy="no-referrer">
+        `;
+
+        element.style.background =
+          'transparent';
+
+        return;
+      }
+
+      element.textContent =
+        getInitials(name);
+    }
+
+
+    function setupUI() {
+
+      if (!state.userProfile) {
+        return;
+      }
+
+      const role =
+        state.userProfile.role ||
+        'buyer';
+
+      if (role !== agent) {
+
+        roleMismatch = true;
+
+        const target =
+          agent === 'agent'
+            ? '../buyer/index.html'
+            : '../agent/index.html';
+
+        window.location.replace(target);
+
+        return;
+      }
+
+      const name =
+        state.userProfile.name ||
+        'User';
+
+      const email =
+        state.userProfile.email ||
+        state.user?.email ||
+        '';
+
+      const photo =
+        state.userProfile.photoURL ||
+        state.userProfile.profileImage ||
+        '';
+
+      setAvatar(
+        'sidebarAvatar',
+        name,
+        photo
+      );
+
+      setAvatar(
+        'headerAvatar',
+        name,
+        photo
+      );
+
+      const sidebarUserName =
+        document.getElementById(
+          'sidebarUserName'
+        );
+
+      const headerUserName =
+        document.getElementById(
+          'headerUserName'
+        );
+
+      const headerUserEmail =
+        document.getElementById(
+          'headerUserEmail'
+        );
+
+      const sidebarUserRole =
+        document.getElementById(
+          'sidebarUserRole'
+        );
+
+      if (sidebarUserName) {
+        sidebarUserName.textContent =
+          name;
+      }
+
+      if (headerUserName) {
+        headerUserName.textContent =
+          name;
+      }
+
+      if (headerUserEmail) {
+        headerUserEmail.textContent =
+          email;
+      }
+
+      if (sidebarUserRole) {
+        sidebarUserRole.textContent =
+          agent === 'agent'
+            ? 'Agent'
+            : 'Buyer';
+      }
+
+
+      const sidebarNav =
+        document.getElementById(
+          'sidebarNav'
+        );
+
+
+      if (sidebarNav) {
+
+        if (agent === 'agent') {
+
+          sidebarNav.innerHTML = `
+
+            <div class="sidebar-section-label">
+              Overview
+            </div>
+
+            <a
+              href="index.html"
+              class="sidebar-link active">
+
+              <i class="fas fa-grid-2"></i>
+              <span>Dashboard</span>
+
+            </a>
+
+
+            <div class="sidebar-section-label">
+              Pipeline
+            </div>
+
+            <a
+              href="properties.html"
+              class="sidebar-link">
+
+              <i class="fas fa-building"></i>
+              <span>Properties</span>
+
+            </a>
+
+            <a
+              href="manager.html"
+              class="sidebar-link">
+
+              <i class="fas fa-user-plus"></i>
+              <span>Manager</span>
+
+            </a>
+
+            <a
+              href="../../community/index.html"
+              class="sidebar-link">
+
+              <i class="fas fa-users"></i>
+              <span>Explore community</span>
+
+            </a>
+
+            <a
+              href="appointments.html"
+              class="sidebar-link">
+
+              <i class="fas fa-calendar-days"></i>
+              <span>Appointments</span>
+
+            </a>
+
+      
+
+            <div class="sidebar-section-label">
+              Tools
+            </div>
+
+            <a
+              href="media.html"
+              class="sidebar-link">
+
+              <i class="fas fa-images"></i>
+              <span>Media Library</span>
+
+            </a>
+
+      
+
+
+            <div class="sidebar-section-label">
+              Account
+            </div>
+
+            <a
+              href="notifications.html"
+              class="sidebar-link">
+
+              <i class="fas fa-bell"></i>
+              <span>Notifications</span>
+
+              <span
+                id="sidebarNotifDot"
+                class="notif-dot hidden ml-auto">
+              </span>
+
+            </a>
+
+            <a
+              href="settings.html"
+              class="sidebar-link">
+
+              <i class="fas fa-sliders"></i>
+              <span>Settings</span>
+
+            </a>
+
+          `;
+
+        } else {
+
+          sidebarNav.innerHTML = `
+
+            <div class="sidebar-section-label">
+              Main
+            </div>
+
+            <a
+              href="index.html"
+              class="sidebar-link active">
+
+              <i class="fas fa-grid-2"></i>
+              <span>Dashboard</span>
+
+            </a>
+
+            <a
+              href="explore-property.html"
+              class="sidebar-link">
+
+              <i class="fas fa-search"></i>
+              <span>Explore Properties</span>
+
+            </a>
+
+            <a
+              href="bookmark.html"
+              class="sidebar-link">
+
+              <i class="fas fa-bookmark"></i>
+              <span>Bookmarks</span>
+
+            </a>
+
+            <a
+              href="appointments.html"
+              class="sidebar-link">
+
+              <i class="fas fa-calendar-days"></i>
+              <span>My Viewings</span>
+
+            </a>
+
+
+            <div class="sidebar-section-label">
+              Account
+            </div>
+
+            <a
+              href="notifications.html"
+              class="sidebar-link">
+
+              <i class="fas fa-bell"></i>
+              <span>Notifications</span>
+
+              <span
+                id="sidebarNotifDot"
+                class="notif-dot hidden ml-auto">
+              </span>
+
+            </a>
+
+            <a
+              href="settings.html"
+              class="sidebar-link">
+
+              <i class="fas fa-sliders"></i>
+              <span>Settings</span>
+
+            </a>
+
+          `;
+
+        }
+
+      }
+
+
+      updateSidebarStats();
+
+
+      const app =
+        document.getElementById(
+          'app'
+        );
+
+      if (app) {
+        app.classList.remove(
+          'hidden'
+        );
+      }
+
+
+      const loading =
+        document.getElementById(
+          'loadingScreen'
+        );
+
+      if (loading) {
+        loading.classList.add(
+          'hidden'
+        );
+      }
+
+    }
+
+
+    function updateSidebarStats() {
+
+      const stat1 =
+        document.getElementById(
+          'sidebarStat1'
+        );
+
+      const stat2 =
+        document.getElementById(
+          'sidebarStat2'
+        );
+
+
+      if (agent === 'agent') {
+
+        if (stat1) {
+          stat1.textContent =
+            state.properties.length;
+        }
+
+        if (stat2) {
+          stat2.textContent =
+            state.appointments.filter(
+              a =>
+                a.status === 'Confirmed'
+            ).length;
+        }
+
+      } else {
+
+        if (stat1) {
+          stat1.textContent =
+            state.properties.filter(
+              p => p.saved
+            ).length;
+        }
+
+        if (stat2) {
+          stat2.textContent =
+            state.appointments.filter(
+              a =>
+                a.status === 'Confirmed'
+            ).length;
+        }
+
+      }
+
+      updateNotifBadge();
+    }
+
+
+    function subscribeToData() {
+
+      if (
+        roleMismatch ||
+        !state.user ||
+        !state.userProfile
+      ) {
+        return;
+      }
+
+      FirestoreService.subscribeToData();
+    }
+
+
+    function renderPage() {
+
+      const content =
+        document.getElementById(
+          'page-content'
+        );
+
+      if (!content) {
+        return;
+      }
+
+
+      if (!state.initialized) {
+
+        UI.showLoader(content);
+
+        return;
+      }
+
+
+      content.className =
+        'min-h-[calc(100vh-82px)] animate-fade';
+
+
+      if (agent === 'agent') {
+
+        renderAgentDashboard(
+          content
+        );
+
+      } else {
+
+        renderBuyerDashboard(
+          content
+        );
+
+      }
+
+
+      updateSidebarStats();
+
+
+      const loading =
+        document.getElementById(
+          'loadingScreen'
+        );
+
+      if (loading) {
+        loading.classList.add(
+          'hidden'
+        );
+      }
+
+    }
+
+
+    window.navigate =
+      function (page) {
+
+        const target =
+          ROUTES[page] ||
+          ROUTES.dashboard;
+
+        window.location.href =
+          target;
+      };
+
+
+    window.toggleSidebar =
+      function () {
+
+        const sidebar =
+          document.getElementById(
+            'sidebar'
+          );
+
+        const backdrop =
+          document.getElementById(
+            'sidebarBackdrop'
+          );
+
+        if (
+          !sidebar ||
+          !backdrop
+        ) {
+          return;
+        }
+
+        sidebar.classList.toggle(
+          'open'
+        );
+
+        sidebar.classList.toggle(
+          '-translate-x-full'
+        );
+
+        backdrop.classList.toggle(
+          'hidden'
+        );
+      };
+
+
+    window.handleLogout =
+      async function () {
+
+        const ok =
+          await UI.confirm({
+
+            title: 'Sign out?',
+
+            message:
+              'You will need to sign in again to access your dashboard.',
+
+            confirmText:
+              'Sign Out',
+
+            icon:
+              'fa-sign-out-alt'
+
+          });
+
+        if (ok) {
+          await AuthService.logout();
+        }
+      };
+
+
+    AuthService.logout =
+      async function () {
+
+        try {
+
+          await firebase
+            .auth()
+            .signOut();
+
+          state.unsubscribers.forEach(
+            unsub => {
+
+              try {
+                unsub();
+              } catch (error) {
+                console.warn(
+                  'MoonLat unsubscribe failed:',
+                  error
+                );
+              }
+
+            }
+          );
+
+          state.unsubscribers = [];
+
+          window.location.href =
+            '../sign-in.html';
+
+        } catch (err) {
+
+          console.error(
+            'Sign out error:',
+            err
+          );
+
+          UI.toast(
+            'Failed to sign out',
+            'error'
+          );
+
+        }
+      };
+
+
+    document.addEventListener(
+      'keydown',
+      (event) => {
+
+        if (event.key !== 'Escape') {
+          return;
+        }
+
+        ['confirmModal'].forEach(
+          id => {
+
+            const modal =
+              document.getElementById(
+                id
+              );
+
+            if (
+              modal &&
+              !modal.classList.contains(
+                'hidden'
+              )
+            ) {
+              UI.hideModal(id);
+            }
+
+          }
+        );
+
+      }
+    );
+
+
+    document.addEventListener(
+      'click',
+      (event) => {
+
+        const modal =
+          event.target.closest(
+            '#confirmModal'
+          );
+
+        if (
+          modal &&
+          event.target === modal
+        ) {
+          UI.hideModal(
+            'confirmModal'
+          );
+        }
+
+      }
+    );
+
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      () => {
+
+        const search =
+          document.getElementById(
+            'globalSearch'
+          );
+
+        if (search) {
+
+          search.addEventListener(
+            'keydown',
+            (event) => {
+
+              if (
+                event.key === 'Enter'
+              ) {
+
+                const query =
+                  search.value.trim();
+
+                if (
+                  query.length >= 1
+                ) {
+
+                  window.location.href =
+                    agent === 'buyer'
+                      ? `explore-property.html?q=${encodeURIComponent(query)}`
+                      : `manager.html?q=${encodeURIComponent(query)}`;
+
+                }
+
+              }
+
+            }
+          );
+
+        }
+
+      }
+    );
+
+
+    function standaloneDashboardInit() {
+      AuthService.init();
+    }
+
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      standaloneDashboardInit
+    );
+
+
+    window.UI = UI;
+    window.FirestoreService =
+      FirestoreService;
+    window.AuthService =
+      AuthService;
+
+  </script>
+
+</body>
+</html>

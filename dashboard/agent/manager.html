@@ -1,0 +1,2723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#FF5B0A">
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="MoonLat Listing Manager — Manage, edit, share and promote your property listings.">
+    <title>Listing Manager — MoonLat</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+            authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+            projectId: "moonlat-estate-dashboard",
+            storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+            messagingSenderId: "289878951289",
+            appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+    </script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        vermilion: {
+                            50: '#FFF5EC',
+                            100: '#FFE9D3',
+                            200: '#FFCFA5',
+                            300: '#FFAD6D',
+                            400: '#FF7E32',
+                            500: '#FF5B0A',
+                            600: '#FF4000',
+                            700: '#CC2B02',
+                            800: '#A1220B',
+                            900: '#821F0C',
+                            950: '#460C04'
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        :root {
+            --orange: #FF5B0A;
+            --orange-dark: #FF4000;
+            --orange-soft: #FFF5EC;
+            --text: #111827;
+            --muted: #6B7280;
+            --line: #E5E7EB;
+            --surface: #FFFFFF;
+            --background: #F9FAFB;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            background: var(--background);
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        button,
+        a {
+            -webkit-touch-callout: none;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .page-shell {
+            width: 100%;
+            max-width: 560px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #F9FAFB;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .page-shell {
+                margin: 32px auto;
+                min-height: calc(100vh - 64px);
+                border: 1px solid #E5E7EB;
+                border-radius: 28px;
+                box-shadow:
+                    0 20px 50px rgba(17, 24, 39, .08),
+                    0 4px 12px rgba(17, 24, 39, .04);
+                overflow: hidden;
+            }
+        }
+
+        .glass-header {
+            background: rgba(255,255,255,.92);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(229,231,235,.85);
+        }
+
+        .soft-card {
+            background: #fff;
+            border: 1px solid #EEF0F2;
+            box-shadow: 0 3px 14px rgba(17,24,39,.035);
+        }
+
+        .stat-card {
+            background: #fff;
+            border: 1px solid #EEF0F2;
+            border-radius: 18px;
+            transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+        }
+
+        .stat-card:hover {
+            border-color: #FFD4B8;
+            box-shadow: 0 8px 22px rgba(255,91,10,.07);
+            transform: translateY(-1px);
+        }
+
+        .listing-card {
+            background: #fff;
+            border: 1px solid #ECEEF0;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 3px 14px rgba(17,24,39,.035);
+            transition:
+                border-color .18s ease,
+                box-shadow .18s ease,
+                transform .18s ease;
+        }
+
+        .listing-card:hover {
+            border-color: #FFD0B2;
+            box-shadow: 0 12px 30px rgba(17,24,39,.08);
+        }
+
+        .listing-image {
+            height: 205px;
+            background: #F1F3F5;
+        }
+
+        @media (min-width: 480px) {
+            .listing-image {
+                height: 225px;
+            }
+        }
+
+        .listing-image img {
+            transition: transform .5s cubic-bezier(.2,.7,.2,1);
+        }
+
+        .listing-card:hover .listing-image img {
+            transform: scale(1.035);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            flex-shrink: 0;
+        }
+
+        .status-active {
+            background: #ECFDF5;
+            color: #047857;
+        }
+
+        .status-active .status-dot {
+            background: #10B981;
+        }
+
+        .status-pending {
+            background: #FFF7ED;
+            color: #C2410C;
+        }
+
+        .status-pending .status-dot {
+            background: #F97316;
+        }
+
+        .status-sold {
+            background: #EFF6FF;
+            color: #1D4ED8;
+        }
+
+        .status-sold .status-dot {
+            background: #3B82F6;
+        }
+
+        .status-rented {
+            background: #F5F3FF;
+            color: #6D28D9;
+        }
+
+        .status-rented .status-dot {
+            background: #8B5CF6;
+        }
+
+        .status-draft {
+            background: #F3F4F6;
+            color: #4B5563;
+        }
+
+        .status-draft .status-dot {
+            background: #9CA3AF;
+        }
+
+        .status-rejected {
+            background: #FEF2F2;
+            color: #B91C1C;
+        }
+
+        .status-rejected .status-dot {
+            background: #EF4444;
+        }
+
+        .action-button {
+            transition:
+                background .16s ease,
+                color .16s ease,
+                border-color .16s ease,
+                transform .16s ease;
+        }
+
+        .action-button:active {
+            transform: scale(.97);
+        }
+
+        .primary-action {
+            background: linear-gradient(135deg, #FF7E32, #FF4000);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(255,91,10,.17);
+        }
+
+        .primary-action:hover {
+            box-shadow: 0 10px 26px rgba(255,91,10,.23);
+            filter: brightness(1.025);
+        }
+
+        .filter-button {
+            white-space: nowrap;
+            transition: all .16s ease;
+        }
+
+        .filter-button.active {
+            background: var(--orange);
+            color: white;
+            border-color: var(--orange);
+            box-shadow: 0 5px 14px rgba(255,91,10,.15);
+        }
+
+        .skeleton {
+            position: relative;
+            overflow: hidden;
+            background: #EDEFF1;
+        }
+
+        .skeleton::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,.55),
+                transparent
+            );
+            animation: skeleton 1.25s infinite;
+        }
+
+        @keyframes skeleton {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .fade-up {
+            animation: fadeUp .25s ease both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-backdrop {
+            background: rgba(17,24,39,.58);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+        }
+
+        .modal-panel {
+            animation: modalIn .2s ease both;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .toast {
+            animation: toastIn .22s ease both;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .promo-glow {
+            background:
+                radial-gradient(circle at 100% 0%, rgba(255,91,10,.13), transparent 36%),
+                linear-gradient(135deg, #FFF7F1, #FFFFFF);
+        }
+
+        .promo-chip {
+            background: rgba(255,91,10,.08);
+            color: #C2410C;
+            border: 1px solid rgba(255,91,10,.12);
+        }
+
+        .bottom-safe {
+            padding-bottom: calc(24px + env(safe-area-inset-bottom));
+        }
+
+        .hidden-important {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="page-shell">
+
+        <!-- HEADER -->
+        <header class="glass-header sticky top-0 z-40 px-5 pt-7 pb-4 sm:px-6">
+
+            <div class="flex items-center justify-between gap-4">
+
+                <div class="flex min-w-0 items-center gap-3">
+
+                    <a
+                        href="index.html"
+                        class="action-button flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 hover:border-vermilion-200 hover:bg-vermilion-50 hover:text-vermilion-600"
+                        aria-label="Back to dashboard"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </a>
+
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-semibold uppercase tracking-[.13em] text-gray-400">
+                            Workspace
+                        </p>
+
+                        <h1 class="truncate text-xl font-bold tracking-tight text-gray-900">
+                            Listing Manager
+                        </h1>
+                    </div>
+
+                </div>
+
+                <a
+                    href="upload-property.html"
+                    class="primary-action action-button flex h-10 flex-shrink-0 items-center gap-1.5 rounded-xl px-3.5 text-sm font-bold"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+
+                    <span>New</span>
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE CONTENT -->
+        <div class="px-5 py-5 sm:px-6">
+
+            <!-- INTRO -->
+            <section class="mb-5">
+
+                <p class="text-sm font-medium text-gray-500">
+                    Manage your property portfolio
+                </p>
+
+                <div class="mt-1 flex items-end justify-between gap-4">
+
+                    <div>
+                        <h2 class="text-2xl font-bold tracking-tight text-gray-900">
+                            Your Listings
+                        </h2>
+
+                        <p id="portfolioSummary" class="mt-1 text-xs text-gray-500">
+                            Loading your listings...
+                        </p>
+                    </div>
+
+                    <button
+                        id="refreshButton"
+                        type="button"
+                        onclick="Manager.refresh()"
+                        class="action-button flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 hover:border-vermilion-200 hover:bg-vermilion-50 hover:text-vermilion-600"
+                        aria-label="Refresh listings"
+                    >
+                        <svg id="refreshIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M5.07 9A7 7 0 0117.66 6.34L20 9M19 15a7 7 0 01-12.59 2.66L4 15" />
+                        </svg>
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- STATISTICS -->
+            <section class="grid grid-cols-2 gap-3 mb-6">
+
+                <div class="stat-card p-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-gray-500">Total</span>
+
+                        <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-vermilion-50 text-vermilion-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <p id="statTotal" class="mt-3 text-2xl font-bold tracking-tight text-gray-900">0</p>
+                    <p class="mt-0.5 text-[11px] text-gray-400">All listings</p>
+                </div>
+
+
+                <div class="stat-card p-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-gray-500">Active</span>
+
+                        <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <p id="statActive" class="mt-3 text-2xl font-bold tracking-tight text-gray-900">0</p>
+                    <p class="mt-0.5 text-[11px] text-gray-400">Live listings</p>
+                </div>
+
+
+                <div class="stat-card p-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-gray-500">Pending</span>
+
+                        <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 2" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <p id="statPending" class="mt-3 text-2xl font-bold tracking-tight text-gray-900">0</p>
+                    <p class="mt-0.5 text-[11px] text-gray-400">Awaiting review</p>
+                </div>
+
+
+                <div class="stat-card p-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-gray-500">Promoted</span>
+
+                        <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l2.7 5.47L21 9.39l-4.5 4.38 1.06 6.19L12 17.04l-5.56 2.92 1.06-6.19L3 9.39l6.3-.92L12 3z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <p id="statPromoted" class="mt-3 text-2xl font-bold tracking-tight text-gray-900">0</p>
+                    <p class="mt-0.5 text-[11px] text-gray-400">Featured / sponsored</p>
+                </div>
+
+            </section>
+
+
+            <!-- PROMOTION BANNER -->
+            <section class="promo-glow mb-6 overflow-hidden rounded-3xl border border-vermilion-100 p-5">
+
+                <div class="flex items-start gap-3">
+
+                    <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-vermilion-500 text-white shadow-lg shadow-vermilion-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l2.7 5.47L21 9.39l-4.5 4.38 1.06 6.19L12 17.04l-5.56 2.92 1.06-6.19L3 9.39l6.3-.92L12 17.04l-5.56 2.92 1.06-6.19L3 9.39l6.3-.92L12 3z" />
+                        </svg>
+                    </div>
+
+                    <div class="min-w-0 flex-1">
+
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h3 class="text-sm font-bold text-gray-900">
+                                Increase listing visibility
+                            </h3>
+
+                            <span class="promo-chip rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide">
+                                Promote
+                            </span>
+                        </div>
+
+                        <p class="mt-1 text-xs leading-5 text-gray-500">
+                            Submit a listing for platform review to become a Featured Listing or Sponsored Post.
+                        </p>
+
+                        <button
+                            type="button"
+                            onclick="Manager.openPromotionInfo()"
+                            class="mt-3 text-xs font-bold text-vermilion-600 hover:text-vermilion-800"
+                        >
+                            Learn how promotion works →
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- SEARCH -->
+            <section class="mb-4">
+
+                <div class="relative">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+
+                    <input
+                        id="searchInput"
+                        type="search"
+                        autocomplete="off"
+                        placeholder="Search your listings..."
+                        class="block w-full rounded-2xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm text-gray-900 shadow-sm outline-none transition-all placeholder:text-gray-400 focus:border-vermilion-400 focus:ring-4 focus:ring-vermilion-50"
+                    >
+
+                </div>
+
+            </section>
+
+
+            <!-- FILTERS -->
+            <section class="mb-5">
+
+                <div id="filterBar" class="no-scrollbar flex gap-2 overflow-x-auto pb-1">
+
+                    <button
+                        type="button"
+                        data-filter="all"
+                        class="filter-button active rounded-xl border px-4 py-2 text-xs font-semibold"
+                        onclick="Manager.setFilter('all', this)"
+                    >
+                        All
+                    </button>
+
+                    <button
+                        type="button"
+                        data-filter="active"
+                        class="filter-button rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-600"
+                        onclick="Manager.setFilter('active', this)"
+                    >
+                        Active
+                    </button>
+
+                    <button
+                        type="button"
+                        data-filter="pending"
+                        class="filter-button rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-600"
+                        onclick="Manager.setFilter('pending', this)"
+                    >
+                        Pending
+                    </button>
+
+                    <button
+                        type="button"
+                        data-filter="draft"
+                        class="filter-button rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-600"
+                        onclick="Manager.setFilter('draft', this)"
+                    >
+                        Drafts
+                    </button>
+
+                    <button
+                        type="button"
+                        data-filter="sold"
+                        class="filter-button rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-600"
+                        onclick="Manager.setFilter('sold', this)"
+                    >
+                        Sold
+                    </button>
+
+                    <button
+                        type="button"
+                        data-filter="rented"
+                        class="filter-button rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-600"
+                        onclick="Manager.setFilter('rented', this)"
+                    >
+                        Rented
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- LISTINGS -->
+            <section>
+
+                <div class="mb-3 flex items-center justify-between">
+
+                    <h3 class="text-sm font-bold text-gray-900">
+                        Listings
+                    </h3>
+
+                    <span id="visibleCount" class="text-xs font-medium text-gray-400">
+                        0 results
+                    </span>
+
+                </div>
+
+                <div id="loadingState" class="space-y-4">
+
+                    <div class="listing-card overflow-hidden">
+                        <div class="skeleton h-[205px]"></div>
+
+                        <div class="space-y-3 p-5">
+                            <div class="skeleton h-5 w-32 rounded"></div>
+                            <div class="skeleton h-4 w-3/4 rounded"></div>
+                            <div class="skeleton h-10 w-full rounded-xl"></div>
+                        </div>
+                    </div>
+
+                    <div class="listing-card overflow-hidden">
+                        <div class="skeleton h-[205px]"></div>
+
+                        <div class="space-y-3 p-5">
+                            <div class="skeleton h-5 w-32 rounded"></div>
+                            <div class="skeleton h-4 w-3/4 rounded"></div>
+                            <div class="skeleton h-10 w-full rounded-xl"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div id="listingsContainer" class="hidden space-y-4">
+                </div>
+
+
+                <div id="emptyState" class="hidden py-14 text-center">
+
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-vermilion-50 text-vermilion-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10.5L12 4l9 6.5M5 9.5V20h14V9.5M9 20v-5h6v5" />
+                        </svg>
+                    </div>
+
+                    <h3 id="emptyTitle" class="mt-4 text-base font-bold text-gray-900">
+                        No listings yet
+                    </h3>
+
+                    <p id="emptyMessage" class="mx-auto mt-1 max-w-xs text-sm leading-6 text-gray-500">
+                        Add your first property to start building your portfolio.
+                    </p>
+
+                    <a
+                        href="upload-property.html"
+                        class="primary-action mt-5 inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Add Listing
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- REPORT -->
+            <section class="bottom-safe pt-6">
+
+                <button
+                    type="button"
+                    onclick="Manager.generateReport()"
+                    class="action-button flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-vermilion-200 bg-white py-3.5 text-sm font-bold text-vermilion-600 hover:border-vermilion-500 hover:bg-vermilion-50"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+
+                    Generate Agent Report
+                </button>
+
+            </section>
+
+        </div>
+    </main>
+
+
+    <!-- ACTION SHEET -->
+    <div
+        id="actionSheet"
+        class="modal-backdrop fixed inset-0 z-[80] hidden items-end justify-center p-3 sm:items-center"
+    >
+
+        <div
+            class="modal-panel w-full max-w-md rounded-[28px] bg-white p-5 shadow-2xl"
+            onclick="event.stopPropagation()"
+        >
+
+            <div class="mx-auto mb-4 h-1.5 w-10 rounded-full bg-gray-200 sm:hidden"></div>
+
+            <div class="flex items-start justify-between gap-4">
+
+                <div class="min-w-0">
+                    <p class="text-[10px] font-bold uppercase tracking-[.14em] text-vermilion-500">
+                        Listing actions
+                    </p>
+
+                    <h3 id="actionSheetTitle" class="mt-1 truncate text-lg font-bold text-gray-900">
+                        Property
+                    </h3>
+                </div>
+
+                <button
+                    type="button"
+                    onclick="Manager.closeActionSheet()"
+                    class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-500 hover:bg-gray-200"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+            </div>
+
+
+            <div class="mt-5 grid grid-cols-2 gap-2.5">
+
+                <button
+                    type="button"
+                    onclick="Manager.editSelected()"
+                    class="action-button flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3.5 text-left hover:border-vermilion-200 hover:bg-vermilion-50"
+                >
+                    <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 3.487a2.1 2.1 0 013.651 2.1L8.5 17.6 4 19l1.4-4.5L16.862 3.487z" />
+                        </svg>
+                    </span>
+
+                    <span>
+                        <strong class="block text-xs font-bold text-gray-900">Edit</strong>
+                        <small class="mt-0.5 block text-[10px] text-gray-400">Update listing</small>
+                    </span>
+                </button>
+
+
+                <button
+                    type="button"
+                    onclick="Manager.shareSelected()"
+                    class="action-button flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3.5 text-left hover:border-vermilion-200 hover:bg-vermilion-50"
+                >
+                    <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-green-50 text-green-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C9.41 14.314 10.61 15 12 15c2.21 0 4-1.79 4-4s-1.79-4-4-4c-1.39 0-2.59.686-3.316 1.658M12 12h.01M19 12h.01M5 12h.01" />
+                        </svg>
+                    </span>
+
+                    <span>
+                        <strong class="block text-xs font-bold text-gray-900">Share</strong>
+                        <small class="mt-0.5 block text-[10px] text-gray-400">Copy listing link</small>
+                    </span>
+                </button>
+
+
+                <button
+                    type="button"
+                    onclick="Manager.openPromotion('featured')"
+                    class="action-button flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3.5 text-left hover:border-vermilion-200 hover:bg-vermilion-50"
+                >
+                    <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-vermilion-50 text-vermilion-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.8l2.87 5.82 6.43.94-4.65 4.53 1.1 6.4L12 17.47l-5.75 3.02 1.1-6.4L2.7 9.56l6.43-.94L12 2.8z"/>
+                        </svg>
+                    </span>
+
+                    <span>
+                        <strong class="block text-xs font-bold text-gray-900">Featured</strong>
+                        <small class="mt-0.5 block text-[10px] text-gray-400">Request promotion</small>
+                    </span>
+                </button>
+
+
+                <button
+                    type="button"
+                    onclick="Manager.openPromotion('sponsored')"
+                    class="action-button flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3.5 text-left hover:border-vermilion-200 hover:bg-vermilion-50"
+                >
+                    <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 2l-1 7h7l-9 13 1-8H4l9-12z" />
+                        </svg>
+                    </span>
+
+                    <span>
+                        <strong class="block text-xs font-bold text-gray-900">Sponsored</strong>
+                        <small class="mt-0.5 block text-[10px] text-gray-400">Request sponsored post</small>
+                    </span>
+                </button>
+
+            </div>
+
+
+            <button
+                type="button"
+                onclick="Manager.deleteSelected()"
+                class="action-button mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-red-100 bg-red-50 py-3.5 text-xs font-bold text-red-600 hover:bg-red-100"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4h6v3m-9 0h12" />
+                </svg>
+
+                Delete Listing
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- PROMOTION MODAL -->
+    <div
+        id="promotionModal"
+        class="modal-backdrop fixed inset-0 z-[90] hidden items-center justify-center p-4"
+    >
+
+        <div
+            class="modal-panel w-full max-w-md rounded-[28px] bg-white p-5 shadow-2xl"
+            onclick="event.stopPropagation()"
+        >
+
+            <div class="flex items-start justify-between gap-4">
+
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-[.14em] text-vermilion-500">
+                        Promotion request
+                    </p>
+
+                    <h3 id="promotionTitle" class="mt-1 text-xl font-bold tracking-tight text-gray-900">
+                        Feature this listing
+                    </h3>
+
+                    <p id="promotionSubtitle" class="mt-1 text-xs leading-5 text-gray-500">
+                        Submit this property for platform review.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    onclick="Manager.closePromotion()"
+                    class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-500"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+            </div>
+
+
+            <div class="mt-5 rounded-2xl border border-gray-100 bg-gray-50 p-4">
+
+                <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                    Selected listing
+                </p>
+
+                <p id="promotionPropertyName" class="mt-1 text-sm font-bold text-gray-900">
+                    Property
+                </p>
+
+            </div>
+
+
+            <div class="mt-4">
+
+                <label class="text-xs font-bold text-gray-700">
+                    Message to platform
+                </label>
+
+                <textarea
+                    id="promotionMessage"
+                    rows="4"
+                    maxlength="500"
+                    placeholder="Tell the platform team why this listing should be promoted..."
+                    class="mt-2 block w-full resize-none rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-vermilion-400 focus:ring-4 focus:ring-vermilion-50"
+                ></textarea>
+
+                <div class="mt-1 text-right text-[10px] text-gray-400">
+                    Optional
+                </div>
+
+            </div>
+
+
+            <div class="mt-5 flex gap-2">
+
+                <button
+                    type="button"
+                    onclick="Manager.closePromotion()"
+                    class="action-button flex-1 rounded-xl border border-gray-200 bg-white py-3 text-sm font-bold text-gray-600 hover:bg-gray-50"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="submitPromotionButton"
+                    type="button"
+                    onclick="Manager.submitPromotion()"
+                    class="primary-action action-button flex-1 rounded-xl py-3 text-sm font-bold"
+                >
+                    Submit Request
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DELETE MODAL -->
+    <div
+        id="deleteModal"
+        class="modal-backdrop fixed inset-0 z-[100] hidden items-center justify-center p-4"
+    >
+
+        <div
+            class="modal-panel w-full max-w-sm rounded-[28px] bg-white p-5 shadow-2xl"
+            onclick="event.stopPropagation()"
+        >
+
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4h6v3m-9 0h12" />
+                </svg>
+            </div>
+
+            <h3 class="mt-4 text-lg font-bold text-gray-900">
+                Delete this listing?
+            </h3>
+
+            <p class="mt-1 text-sm leading-6 text-gray-500">
+                This action will remove the listing from your managed portfolio. This cannot be undone.
+            </p>
+
+            <p id="deletePropertyName" class="mt-3 rounded-xl bg-gray-50 p-3 text-xs font-bold text-gray-700">
+                Property
+            </p>
+
+            <div class="mt-5 flex gap-2">
+
+                <button
+                    type="button"
+                    onclick="Manager.closeDelete()"
+                    class="flex-1 rounded-xl border border-gray-200 bg-white py-3 text-sm font-bold text-gray-600 hover:bg-gray-50"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="confirmDeleteButton"
+                    type="button"
+                    onclick="Manager.confirmDelete()"
+                    class="flex-1 rounded-xl bg-red-600 py-3 text-sm font-bold text-white hover:bg-red-700"
+                >
+                    Delete
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- INFO MODAL -->
+    <div
+        id="infoModal"
+        class="modal-backdrop fixed inset-0 z-[95] hidden items-center justify-center p-4"
+    >
+
+        <div
+            class="modal-panel w-full max-w-md rounded-[28px] bg-white p-5 shadow-2xl"
+            onclick="event.stopPropagation()"
+        >
+
+            <div class="flex items-start justify-between">
+
+                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-vermilion-50 text-vermilion-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M10.3 3.2l-8 14A2 2 0 004 20h16a2 2 0 001.7-2.8l-8-14a2 2 0 00-3.4 0z" />
+                    </svg>
+                </div>
+
+                <button
+                    type="button"
+                    onclick="Manager.closeInfo()"
+                    class="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-100 text-gray-500"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+            </div>
+
+            <h3 class="mt-4 text-lg font-bold text-gray-900">
+                Listing promotion
+            </h3>
+
+            <div class="mt-3 space-y-3 text-sm leading-6 text-gray-500">
+
+                <p>
+                    <strong class="text-gray-900">Featured Listing</strong> gives an eligible property enhanced visibility in designated platform discovery areas.
+                </p>
+
+                <p>
+                    <strong class="text-gray-900">Sponsored Post</strong> is a promotional placement that can be reviewed and scheduled by the platform team.
+                </p>
+
+                <p>
+                    Every promotion request is submitted for review. Approval, duration, placement and any applicable commercial terms are controlled by the platform.
+                </p>
+
+            </div>
+
+            <button
+                type="button"
+                onclick="Manager.closeInfo()"
+                class="primary-action mt-5 w-full rounded-xl py-3 text-sm font-bold"
+            >
+                Got it
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- TOAST -->
+    <div
+        id="toastContainer"
+        class="pointer-events-none fixed bottom-5 left-4 right-4 z-[150] mx-auto flex max-w-md flex-col gap-2"
+    ></div>
+
+
+    <!-- EXISTING AGENT SYSTEM -->
+    <script src="agent.js"></script>
+
+
+    <!-- MANAGER LOGIC -->
+    <script>
+        window.Manager = (function () {
+
+            let allListings = [];
+            let currentFilter = 'all';
+            let currentSearch = '';
+            let selectedListing = null;
+            let promotionType = null;
+
+
+            function escapeHTML(value) {
+                return String(value ?? '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+
+            function normalizeStatus(value) {
+                const status = String(value || 'active').trim().toLowerCase();
+
+                if (
+                    status === 'published' ||
+                    status === 'live' ||
+                    status === 'available'
+                ) {
+                    return 'active';
+                }
+
+                if (
+                    status === 'awaiting review' ||
+                    status === 'under review' ||
+                    status === 'review'
+                ) {
+                    return 'pending';
+                }
+
+                if (status === 'for rent' || status === 'rented') {
+                    return 'rented';
+                }
+
+                if (status === 'for sale' || status === 'listed') {
+                    return 'active';
+                }
+
+                return status;
+            }
+
+
+            function getListingId(listing) {
+                return (
+                    listing.id ||
+                    listing.propertyId ||
+                    listing.propertyID ||
+                    listing.uid ||
+                    listing._id ||
+                    listing.slug ||
+                    ''
+                );
+            }
+
+
+            function getTitle(listing) {
+                return (
+                    listing.title ||
+                    listing.propertyTitle ||
+                    listing.name ||
+                    listing.propertyName ||
+                    'Untitled Property'
+                );
+            }
+
+
+            function getImage(listing) {
+                if (Array.isArray(listing.images) && listing.images.length) {
+                    const first = listing.images[0];
+
+                    if (typeof first === 'string') {
+                        return first;
+                    }
+
+                    if (first && typeof first === 'object') {
+                        return first.url || first.src || first.secure_url || '';
+                    }
+                }
+
+                return (
+                    listing.image ||
+                    listing.featuredImage ||
+                    listing.coverImage ||
+                    listing.thumbnail ||
+                    listing.photo ||
+                    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80'
+                );
+            }
+
+
+            function getPrice(listing) {
+                const price =
+                    listing.price ??
+                    listing.amount ??
+                    listing.listingPrice ??
+                    '';
+
+                if (price === '') {
+                    return 'Price on request';
+                }
+
+                if (typeof price === 'number') {
+                    return '$' + price.toLocaleString();
+                }
+
+                return escapeHTML(String(price));
+            }
+
+
+            function getLocation(listing) {
+                return (
+                    listing.address ||
+                    listing.location ||
+                    listing.city ||
+                    listing.area ||
+                    listing.propertyAddress ||
+                    'Location not specified'
+                );
+            }
+
+
+            function getBeds(listing) {
+                return (
+                    listing.beds ??
+                    listing.bedrooms ??
+                    listing.bed ??
+                    0
+                );
+            }
+
+
+            function getBaths(listing) {
+                return (
+                    listing.baths ??
+                    listing.bathrooms ??
+                    listing.bath ??
+                    0
+                );
+            }
+
+
+            function getArea(listing) {
+                return (
+                    listing.area ??
+                    listing.squareFeet ??
+                    listing.sqft ??
+                    listing.size ??
+                    ''
+                );
+            }
+
+
+            function getPromotionState(listing) {
+                return {
+                    featured:
+                        listing.featured === true ||
+                        listing.isFeatured === true ||
+                        String(listing.promotionType || '').toLowerCase() === 'featured',
+
+                    sponsored:
+                        listing.sponsored === true ||
+                        listing.isSponsored === true ||
+                        String(listing.promotionType || '').toLowerCase() === 'sponsored'
+                };
+            }
+
+
+            function getDateLabel(listing) {
+                const date =
+                    listing.createdAt ||
+                    listing.dateCreated ||
+                    listing.updatedAt ||
+                    listing.date ||
+                    null;
+
+                if (!date) {
+                    return '';
+                }
+
+                let parsed;
+
+                try {
+                    if (date && typeof date.toDate === 'function') {
+                        parsed = date.toDate();
+                    } else if (date instanceof Date) {
+                        parsed = date;
+                    } else if (typeof date === 'number') {
+                        parsed = new Date(date);
+                    } else {
+                        parsed = new Date(date);
+                    }
+
+                    if (Number.isNaN(parsed.getTime())) {
+                        return '';
+                    }
+
+                    return parsed.toLocaleDateString(undefined, {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+
+                } catch (error) {
+                    return '';
+                }
+            }
+
+
+            function getViews(listing) {
+                return Number(
+                    listing.views ??
+                    listing.viewCount ??
+                    listing.viewsCount ??
+                    0
+                );
+            }
+
+
+            function getLeads(listing) {
+                return Number(
+                    listing.leads ??
+                    listing.leadCount ??
+                    listing.inquiries ??
+                    listing.inquiryCount ??
+                    0
+                );
+            }
+
+
+            function getStatusClass(status) {
+                const normalized = normalizeStatus(status);
+
+                if (normalized === 'active') return 'status-active';
+                if (normalized === 'pending') return 'status-pending';
+                if (normalized === 'sold') return 'status-sold';
+                if (normalized === 'rented') return 'status-rented';
+                if (normalized === 'draft') return 'status-draft';
+                if (normalized === 'rejected') return 'status-rejected';
+
+                return 'status-draft';
+            }
+
+
+            function getStatusLabel(status) {
+                const normalized = normalizeStatus(status);
+
+                return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+            }
+
+
+            function getListingsFromState() {
+
+                if (window.agentState) {
+
+                    if (Array.isArray(window.agentState.properties)) {
+                        return window.agentState.properties;
+                    }
+
+                    if (Array.isArray(window.agentState.listings)) {
+                        return window.agentState.listings;
+                    }
+
+                    if (Array.isArray(window.agentState.propertiesList)) {
+                        return window.agentState.propertiesList;
+                    }
+                }
+
+                return [];
+            }
+
+
+            async function loadFromFirestoreFallback() {
+
+                try {
+
+                    if (!firebase.auth || !firebase.firestore) {
+                        return [];
+                    }
+
+                    const user = firebase.auth().currentUser;
+
+                    if (!user) {
+                        return [];
+                    }
+
+                    const db = firebase.firestore();
+
+                    const possibleQueries = [
+                        () => db.collection('properties').where('agentId', '==', user.uid).get(),
+                        () => db.collection('properties').where('ownerId', '==', user.uid).get(),
+                        () => db.collection('listings').where('agentId', '==', user.uid).get(),
+                        () => db.collection('listings').where('ownerId', '==', user.uid).get()
+                    ];
+
+                    for (const queryFactory of possibleQueries) {
+
+                        try {
+
+                            const snapshot = await queryFactory();
+
+                            if (!snapshot.empty) {
+
+                                return snapshot.docs.map(doc => ({
+                                    id: doc.id,
+                                    ...doc.data()
+                                }));
+
+                            }
+
+                        } catch (error) {
+                            console.warn('Listing query skipped:', error);
+                        }
+                    }
+
+                } catch (error) {
+                    console.warn('Firestore listing fallback failed:', error);
+                }
+
+                return [];
+            }
+
+
+            async function loadListings() {
+
+                setLoading(true);
+
+                let listings = getListingsFromState();
+
+                if (!listings.length) {
+                    listings = await loadFromFirestoreFallback();
+                }
+
+                allListings = Array.isArray(listings)
+                    ? listings.map(item => ({ ...item }))
+                    : [];
+
+                updateStats();
+                render();
+
+                setLoading(false);
+            }
+
+
+            function setLoading(loading) {
+
+                const loadingState = document.getElementById('loadingState');
+                const container = document.getElementById('listingsContainer');
+
+                if (!loadingState || !container) {
+                    return;
+                }
+
+                if (loading) {
+                    loadingState.classList.remove('hidden');
+                    container.classList.add('hidden');
+                } else {
+                    loadingState.classList.add('hidden');
+                    container.classList.remove('hidden');
+                }
+            }
+
+
+            function updateStats() {
+
+                const total = allListings.length;
+
+                const active = allListings.filter(item =>
+                    normalizeStatus(item.status || item.listingStatus) === 'active'
+                ).length;
+
+                const pending = allListings.filter(item =>
+                    normalizeStatus(item.status || item.listingStatus) === 'pending'
+                ).length;
+
+                const promoted = allListings.filter(item => {
+
+                    const promotion = getPromotionState(item);
+
+                    return promotion.featured || promotion.sponsored;
+
+                }).length;
+
+                document.getElementById('statTotal').textContent = total;
+                document.getElementById('statActive').textContent = active;
+                document.getElementById('statPending').textContent = pending;
+                document.getElementById('statPromoted').textContent = promoted;
+
+                document.getElementById('portfolioSummary').textContent =
+                    total === 0
+                        ? 'No listings in your portfolio'
+                        : `${total} listing${total === 1 ? '' : 's'} in your portfolio`;
+            }
+
+
+            function setFilter(filter, button) {
+
+                currentFilter = filter;
+
+                document.querySelectorAll('.filter-button').forEach(item => {
+                    item.classList.remove('active');
+
+                    item.classList.add(
+                        'border-gray-200',
+                        'bg-white',
+                        'text-gray-600'
+                    );
+                });
+
+                if (button) {
+
+                    button.classList.add('active');
+
+                    button.classList.remove(
+                        'border-gray-200',
+                        'bg-white',
+                        'text-gray-600'
+                    );
+                }
+
+                render();
+            }
+
+
+            function matchesSearch(listing) {
+
+                if (!currentSearch) {
+                    return true;
+                }
+
+                const haystack = [
+                    getTitle(listing),
+                    getLocation(listing),
+                    listing.description,
+                    listing.category,
+                    listing.type,
+                    listing.propertyType,
+                    listing.status
+                ]
+                    .filter(Boolean)
+                    .join(' ')
+                    .toLowerCase();
+
+                return haystack.includes(currentSearch);
+            }
+
+
+            function matchesFilter(listing) {
+
+                if (currentFilter === 'all') {
+                    return true;
+                }
+
+                return normalizeStatus(
+                    listing.status || listing.listingStatus
+                ) === currentFilter;
+            }
+
+
+            function getVisibleListings() {
+
+                return allListings.filter(listing =>
+                    matchesFilter(listing) &&
+                    matchesSearch(listing)
+                );
+            }
+
+
+            function render() {
+
+                const container = document.getElementById('listingsContainer');
+                const emptyState = document.getElementById('emptyState');
+                const visibleCount = document.getElementById('visibleCount');
+
+                if (!container || !emptyState) {
+                    return;
+                }
+
+                const listings = getVisibleListings();
+
+                visibleCount.textContent =
+                    `${listings.length} result${listings.length === 1 ? '' : 's'}`;
+
+                if (!listings.length) {
+
+                    container.innerHTML = '';
+
+                    emptyState.classList.remove('hidden');
+
+                    const emptyTitle = document.getElementById('emptyTitle');
+                    const emptyMessage = document.getElementById('emptyMessage');
+
+                    if (allListings.length && currentSearch) {
+
+                        emptyTitle.textContent = 'No matching listings';
+
+                        emptyMessage.textContent =
+                            'Try a different search term or clear your filters.';
+
+                    } else if (allListings.length && currentFilter !== 'all') {
+
+                        emptyTitle.textContent = 'Nothing here yet';
+
+                        emptyMessage.textContent =
+                            `You do not have any ${currentFilter} listings right now.`;
+
+                    } else {
+
+                        emptyTitle.textContent = 'No listings yet';
+
+                        emptyMessage.textContent =
+                            'Add your first property to start building your portfolio.';
+                    }
+
+                    return;
+                }
+
+                emptyState.classList.add('hidden');
+
+                container.innerHTML = listings
+                    .map(renderListing)
+                    .join('');
+            }
+
+
+            function renderListing(listing) {
+
+                const id = escapeHTML(getListingId(listing));
+                const title = escapeHTML(getTitle(listing));
+                const image = escapeHTML(getImage(listing));
+                const location = escapeHTML(getLocation(listing));
+                const price = getPrice(listing);
+                const beds = escapeHTML(getBeds(listing));
+                const baths = escapeHTML(getBaths(listing));
+                const area = escapeHTML(getArea(listing));
+                const status = normalizeStatus(
+                    listing.status || listing.listingStatus
+                );
+
+                const statusClass = getStatusClass(status);
+                const statusLabel = getStatusLabel(status);
+                const promotion = getPromotionState(listing);
+                const views = getViews(listing);
+                const leads = getLeads(listing);
+                const dateLabel = escapeHTML(getDateLabel(listing));
+
+                const promotionBadges = [];
+
+                if (promotion.featured) {
+                    promotionBadges.push(`
+                        <span class="rounded-lg bg-vermilion-50 px-2 py-1 text-[9px] font-bold text-vermilion-600">
+                            Featured
+                        </span>
+                    `);
+                }
+
+                if (promotion.sponsored) {
+                    promotionBadges.push(`
+                        <span class="rounded-lg bg-purple-50 px-2 py-1 text-[9px] font-bold text-purple-600">
+                            Sponsored
+                        </span>
+                    `);
+                }
+
+                return `
+                    <article
+                        class="listing-card fade-up"
+                        data-id="${id}"
+                    >
+
+                        <div class="listing-image relative overflow-hidden">
+
+                            <img
+                                src="${image}"
+                                alt="${title}"
+                                class="h-full w-full object-cover"
+                                loading="lazy"
+                                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80';"
+                            >
+
+                            <div class="absolute inset-x-0 top-0 flex items-start justify-between p-3">
+
+                                <span class="${statusClass} flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[10px] font-bold shadow-sm">
+                                    <span class="status-dot"></span>
+                                    ${statusLabel}
+                                </span>
+
+                                <button
+                                    type="button"
+                                    onclick="Manager.openActions('${id}')"
+                                    class="action-button flex h-9 w-9 items-center justify-center rounded-xl bg-white/95 text-gray-600 shadow-sm backdrop-blur hover:bg-white hover:text-vermilion-600"
+                                    aria-label="Listing actions"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M5 10a2 2 0 110 4 2 2 0 010-4zm7 0a2 2 0 110 4 2 2 0 010-4zm7 0a2 2 0 110 4 2 2 0 010-4z"/>
+                                    </svg>
+                                </button>
+
+                            </div>
+
+                            ${
+                                promotionBadges.length
+                                    ? `
+                                        <div class="absolute bottom-3 left-3 flex gap-1.5">
+                                            ${promotionBadges.join('')}
+                                        </div>
+                                    `
+                                    : ''
+                            }
+
+                        </div>
+
+
+                        <div class="p-5">
+
+                            <div class="flex items-start justify-between gap-3">
+
+                                <div class="min-w-0 flex-1">
+
+                                    <p class="text-xl font-bold tracking-tight text-gray-900">
+                                        ${price}
+                                    </p>
+
+                                    <h4 class="mt-1 truncate text-sm font-bold text-gray-900">
+                                        ${title}
+                                    </h4>
+
+                                    <p class="mt-1 truncate text-xs font-medium text-gray-500">
+                                        ${location}
+                                    </p>
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onclick="Manager.share('${id}')"
+                                    class="action-button flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 hover:border-vermilion-200 hover:bg-vermilion-50 hover:text-vermilion-600"
+                                    aria-label="Share listing"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <circle cx="18" cy="5" r="3"/>
+                                        <circle cx="6" cy="12" r="3"/>
+                                        <circle cx="18" cy="19" r="3"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.59 13.51l6.83 3.98M15.41 6.51L8.59 10.49"/>
+                                    </svg>
+                                </button>
+
+                            </div>
+
+
+                            <div class="mt-4 flex items-center gap-4 border-t border-gray-100 pt-3">
+
+                                <div class="flex items-center gap-1.5 text-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+
+                                    <span class="text-[10px] font-semibold">
+                                        ${beds} Beds
+                                    </span>
+                                </div>
+
+
+                                <div class="flex items-center gap-1.5 text-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                                    </svg>
+
+                                    <span class="text-[10px] font-semibold">
+                                        ${baths} Baths
+                                    </span>
+                                </div>
+
+
+                                ${
+                                    area
+                                        ? `
+                                            <div class="flex min-w-0 items-center gap-1.5 text-gray-600">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                                </svg>
+
+                                                <span class="truncate text-[10px] font-semibold">
+                                                    ${area}
+                                                </span>
+                                            </div>
+                                        `
+                                        : ''
+                                }
+
+                            </div>
+
+
+                            <div class="mt-4 grid grid-cols-2 gap-2">
+
+                                <button
+                                    type="button"
+                                    onclick="Manager.edit('${id}')"
+                                    class="action-button flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white py-2.5 text-xs font-bold text-gray-700 hover:border-vermilion-200 hover:bg-vermilion-50 hover:text-vermilion-700"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 3.487a2.1 2.1 0 013.651 2.1L8.5 17.6 4 19l1.4-4.5L16.862 3.487z" />
+                                    </svg>
+                                    Edit
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onclick="Manager.openActions('${id}')"
+                                    class="primary-action action-button flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold"
+                                >
+                                    Manage
+                                </button>
+
+                            </div>
+
+
+                            <div class="mt-3 flex items-center justify-between text-[10px] text-gray-400">
+
+                                <div class="flex items-center gap-3">
+
+                                    <span class="flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.46 12C3.73 7.94 7.52 5 12 5s8.27 2.94 9.54 7c-1.27 4.06-5.06 7-9.54 7s-8.27-2.94-9.54-7z"/>
+                                        </svg>
+                                        ${views} views
+                                    </span>
+
+                                    <span>
+                                        ${leads} leads
+                                    </span>
+
+                                </div>
+
+                                ${
+                                    dateLabel
+                                        ? `<span>${dateLabel}</span>`
+                                        : ''
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </article>
+                `;
+            }
+
+
+            function findListing(id) {
+
+                return allListings.find(item =>
+                    String(getListingId(item)) === String(id)
+                ) || null;
+            }
+
+
+            function openActions(id) {
+
+                selectedListing = findListing(id);
+
+                if (!selectedListing) {
+                    showToast('Listing could not be found.', 'error');
+                    return;
+                }
+
+                document.getElementById('actionSheetTitle').textContent =
+                    getTitle(selectedListing);
+
+                const modal = document.getElementById('actionSheet');
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+
+                document.body.style.overflow = 'hidden';
+            }
+
+
+            function closeActionSheet() {
+
+                const modal = document.getElementById('actionSheet');
+
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+
+                document.body.style.overflow = '';
+
+            }
+
+
+            function edit(id) {
+
+                const listing = findListing(id);
+
+                if (!listing) {
+                    showToast('Listing could not be found.', 'error');
+                    return;
+                }
+
+                const listingId = getListingId(listing);
+
+                localStorage.setItem(
+                    'moonlat-edit-property',
+                    JSON.stringify(listing)
+                );
+
+                localStorage.setItem(
+                    'dyve-edit-property',
+                    JSON.stringify(listing)
+                );
+
+                const url =
+                    `upload-property.html?mode=edit&id=${encodeURIComponent(listingId)}`;
+
+                window.location.href = url;
+            }
+
+
+            function editSelected() {
+
+                if (!selectedListing) {
+                    return;
+                }
+
+                const id = getListingId(selectedListing);
+
+                closeActionSheet();
+
+                edit(id);
+            }
+
+
+            async function share(id) {
+
+                const listing = findListing(id);
+
+                if (!listing) {
+                    showToast('Listing could not be found.', 'error');
+                    return;
+                }
+
+                const title = getTitle(listing);
+
+                let url =
+                    listing.url ||
+                    listing.link ||
+                    listing.publicUrl ||
+                    listing.listingUrl ||
+                    '';
+
+                if (!url) {
+
+                    const slug =
+                        listing.slug ||
+                        listing.propertySlug ||
+                        getListingId(listing);
+
+                    url =
+                        `${window.location.origin}/property.html?slug=${encodeURIComponent(slug)}`;
+                }
+
+                const shareData = {
+                    title: title,
+                    text: `Check out this property: ${title}`,
+                    url: url
+                };
+
+                try {
+
+                    if (
+                        navigator.share &&
+                        /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+                    ) {
+
+                        await navigator.share(shareData);
+
+                        return;
+                    }
+
+                } catch (error) {
+
+                    if (error && error.name === 'AbortError') {
+                        return;
+                    }
+                }
+
+
+                try {
+
+                    if (navigator.clipboard) {
+
+                        await navigator.clipboard.writeText(url);
+
+                        showToast('Listing link copied.', 'success');
+
+                        return;
+                    }
+
+                } catch (error) {
+                    console.warn('Clipboard failed:', error);
+                }
+
+
+                const textarea = document.createElement('textarea');
+
+                textarea.value = url;
+
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+
+                document.body.appendChild(textarea);
+
+                textarea.select();
+
+                try {
+                    document.execCommand('copy');
+                    showToast('Listing link copied.', 'success');
+                } catch (error) {
+                    showToast('Unable to copy listing link.', 'error');
+                }
+
+                textarea.remove();
+            }
+
+
+            function shareSelected() {
+
+                if (!selectedListing) {
+                    return;
+                }
+
+                const id = getListingId(selectedListing);
+
+                closeActionSheet();
+
+                share(id);
+            }
+
+
+            function openPromotion(type) {
+
+                if (!selectedListing) {
+                    showToast('Select a listing first.', 'error');
+                    return;
+                }
+
+                promotionType = type;
+
+                closeActionSheet();
+
+                const isFeatured = type === 'featured';
+
+                document.getElementById('promotionTitle').textContent =
+                    isFeatured
+                        ? 'Feature this listing'
+                        : 'Sponsor this listing';
+
+                document.getElementById('promotionSubtitle').textContent =
+                    isFeatured
+                        ? 'Submit this property for Featured Listing review.'
+                        : 'Submit this property for Sponsored Post review.';
+
+                document.getElementById('promotionPropertyName').textContent =
+                    getTitle(selectedListing);
+
+                document.getElementById('promotionMessage').value = '';
+
+                const modal = document.getElementById('promotionModal');
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+
+                document.body.style.overflow = 'hidden';
+            }
+
+
+            function closePromotion() {
+
+                const modal = document.getElementById('promotionModal');
+
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+
+                document.body.style.overflow = '';
+
+                promotionType = null;
+            }
+
+
+            async function submitPromotion() {
+
+                if (!selectedListing || !promotionType) {
+                    return;
+                }
+
+                const user =
+                    firebase.auth &&
+                    firebase.auth().currentUser;
+
+                if (!user) {
+                    showToast('Please sign in again before submitting a promotion request.', 'error');
+                    return;
+                }
+
+                const button =
+                    document.getElementById('submitPromotionButton');
+
+                const message =
+                    document.getElementById('promotionMessage').value.trim();
+
+                const listingId =
+                    getListingId(selectedListing);
+
+                button.disabled = true;
+                button.textContent = 'Submitting...';
+
+
+                try {
+
+                    const db = firebase.firestore();
+
+                    const request = {
+
+                        propertyId: String(listingId),
+
+                        listingId: String(listingId),
+
+                        agentId: user.uid,
+
+                        agentEmail: user.email || '',
+
+                        type: promotionType,
+
+                        promotionType: promotionType,
+
+                        status: 'pending',
+
+                        message: message,
+
+                        propertyTitle: getTitle(selectedListing),
+
+                        propertyImage: getImage(selectedListing),
+
+                        propertyLocation: getLocation(selectedListing),
+
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+
+                    };
+
+
+                    await db
+                        .collection('promotionRequests')
+                        .add(request);
+
+
+                    closePromotion();
+
+                    showToast(
+                        promotionType === 'featured'
+                            ? 'Featured Listing request submitted.'
+                            : 'Sponsored Post request submitted.',
+                        'success'
+                    );
+
+
+                    markLocalPromotionRequest(
+                        listingId,
+                        promotionType
+                    );
+
+                } catch (error) {
+
+                    console.error('Promotion request failed:', error);
+
+                    showToast(
+                        error && error.code === 'permission-denied'
+                            ? 'You do not have permission to submit this request.'
+                            : 'Could not submit promotion request.',
+                        'error'
+                    );
+
+                } finally {
+
+                    button.disabled = false;
+                    button.textContent = 'Submit Request';
+
+                }
+            }
+
+
+            function markLocalPromotionRequest(id, type) {
+
+                const listing = findListing(id);
+
+                if (!listing) {
+                    return;
+                }
+
+                listing.promotionRequest = type;
+                listing.promotionStatus = 'pending';
+
+                render();
+            }
+
+
+            function deleteSelected() {
+
+                if (!selectedListing) {
+                    return;
+                }
+
+                closeActionSheet();
+
+                document.getElementById('deletePropertyName').textContent =
+                    getTitle(selectedListing);
+
+                const modal = document.getElementById('deleteModal');
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+
+                document.body.style.overflow = 'hidden';
+            }
+
+
+            function closeDelete() {
+
+                const modal = document.getElementById('deleteModal');
+
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+
+                document.body.style.overflow = '';
+            }
+
+
+            async function confirmDelete() {
+
+                if (!selectedListing) {
+                    return;
+                }
+
+                const button =
+                    document.getElementById('confirmDeleteButton');
+
+                const listingId =
+                    getListingId(selectedListing);
+
+                if (!listingId) {
+                    showToast('This listing has no valid ID.', 'error');
+                    return;
+                }
+
+                button.disabled = true;
+                button.textContent = 'Deleting...';
+
+
+                try {
+
+                    let handledByAgentSystem = false;
+
+
+                    if (
+                        typeof window.deleteProperty === 'function'
+                    ) {
+
+                        await window.deleteProperty(listingId);
+
+                        handledByAgentSystem = true;
+
+                    } else if (
+                        typeof window.deleteListing === 'function'
+                    ) {
+
+                        await window.deleteListing(listingId);
+
+                        handledByAgentSystem = true;
+                    }
+
+
+                    if (!handledByAgentSystem) {
+
+                        const db = firebase.firestore();
+
+                        const possibleCollections = [
+                            'properties',
+                            'listings'
+                        ];
+
+                        let deleted = false;
+
+                        for (const collectionName of possibleCollections) {
+
+                            try {
+
+                                const ref = db
+                                    .collection(collectionName)
+                                    .doc(String(listingId));
+
+                                const snapshot = await ref.get();
+
+                                if (snapshot.exists) {
+
+                                    await ref.delete();
+
+                                    deleted = true;
+
+                                    break;
+                                }
+
+                            } catch (error) {
+
+                                console.warn(
+                                    `Could not delete from ${collectionName}:`,
+                                    error
+                                );
+
+                            }
+                        }
+
+                        if (!deleted) {
+                            throw new Error('Listing record could not be located.');
+                        }
+                    }
+
+
+                    allListings = allListings.filter(item =>
+                        String(getListingId(item)) !== String(listingId)
+                    );
+
+
+                    selectedListing = null;
+
+                    closeDelete();
+
+                    updateStats();
+
+                    render();
+
+                    showToast('Listing deleted successfully.', 'success');
+
+
+                } catch (error) {
+
+                    console.error('Delete listing failed:', error);
+
+                    showToast(
+                        'Unable to delete listing. Please try again.',
+                        'error'
+                    );
+
+                } finally {
+
+                    button.disabled = false;
+                    button.textContent = 'Delete';
+
+                }
+            }
+
+
+            function openPromotionInfo() {
+
+                const modal = document.getElementById('infoModal');
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+
+                document.body.style.overflow = 'hidden';
+            }
+
+
+            function closeInfo() {
+
+                const modal = document.getElementById('infoModal');
+
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+
+                document.body.style.overflow = '';
+            }
+
+
+            function generateReport() {
+
+                const total = allListings.length;
+
+                const active = allListings.filter(item =>
+                    normalizeStatus(item.status || item.listingStatus) === 'active'
+                ).length;
+
+                const pending = allListings.filter(item =>
+                    normalizeStatus(item.status || item.listingStatus) === 'pending'
+                ).length;
+
+                const promoted = allListings.filter(item => {
+
+                    const promotion = getPromotionState(item);
+
+                    return promotion.featured || promotion.sponsored;
+
+                }).length;
+
+                const report = [
+                    'MOONLAT AGENT LISTING REPORT',
+                    '',
+                    `Generated: ${new Date().toLocaleString()}`,
+                    '',
+                    `Total listings: ${total}`,
+                    `Active listings: ${active}`,
+                    `Pending listings: ${pending}`,
+                    `Promoted listings: ${promoted}`,
+                    ''
+                ].join('\n');
+
+                const blob = new Blob(
+                    [report],
+                    { type: 'text/plain;charset=utf-8' }
+                );
+
+                const url = URL.createObjectURL(blob);
+
+                const anchor = document.createElement('a');
+
+                anchor.href = url;
+                anchor.download =
+                    `moonlat-agent-report-${new Date().toISOString().slice(0,10)}.txt`;
+
+                document.body.appendChild(anchor);
+
+                anchor.click();
+
+                anchor.remove();
+
+                URL.revokeObjectURL(url);
+
+                showToast('Agent report generated.', 'success');
+            }
+
+
+            async function refresh() {
+
+                const icon =
+                    document.getElementById('refreshIcon');
+
+                icon.classList.add('animate-spin');
+
+                await loadListings();
+
+                setTimeout(() => {
+                    icon.classList.remove('animate-spin');
+                }, 500);
+
+                showToast('Listings refreshed.', 'success');
+            }
+
+
+            function showToast(message, type = 'success') {
+
+                const container =
+                    document.getElementById('toastContainer');
+
+                if (!container) {
+                    return;
+                }
+
+                const toast = document.createElement('div');
+
+                const isError = type === 'error';
+
+                toast.className =
+                    `toast pointer-events-auto rounded-2xl border p-4 shadow-xl ${
+                        isError
+                            ? 'border-red-100 bg-white text-red-700'
+                            : 'border-vermilion-100 bg-white text-gray-800'
+                    }`;
+
+                toast.innerHTML = `
+                    <div class="flex items-center gap-3">
+
+                        <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl ${
+                            isError
+                                ? 'bg-red-50 text-red-600'
+                                : 'bg-vermilion-50 text-vermilion-600'
+                        }">
+
+                            ${
+                                isError
+                                    ? `
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4m0 4h.01M10.3 3.2l-8 14A2 2 0 004 20h16a2 2 0 001.7-2.8l-8-14a2 2 0 00-3.4 0z" />
+                                        </svg>
+                                    `
+                                    : `
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    `
+                            }
+
+                        </div>
+
+                        <p class="min-w-0 flex-1 text-xs font-bold">
+                            ${escapeHTML(message)}
+                        </p>
+
+                    </div>
+                `;
+
+                container.appendChild(toast);
+
+                setTimeout(() => {
+
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(6px)';
+
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 200);
+
+                }, 3000);
+            }
+
+
+            function bindEvents() {
+
+                const searchInput =
+                    document.getElementById('searchInput');
+
+                if (searchInput) {
+
+                    searchInput.addEventListener(
+                        'input',
+                        function () {
+
+                            currentSearch =
+                                this.value.trim().toLowerCase();
+
+                            render();
+                        }
+                    );
+                }
+
+
+                document.getElementById('actionSheet')
+                    ?.addEventListener('click', function (event) {
+
+                        if (event.target === this) {
+                            closeActionSheet();
+                        }
+
+                    });
+
+
+                document.getElementById('promotionModal')
+                    ?.addEventListener('click', function (event) {
+
+                        if (event.target === this) {
+                            closePromotion();
+                        }
+
+                    });
+
+
+                document.getElementById('deleteModal')
+                    ?.addEventListener('click', function (event) {
+
+                        if (event.target === this) {
+                            closeDelete();
+                        }
+
+                    });
+
+
+                document.getElementById('infoModal')
+                    ?.addEventListener('click', function (event) {
+
+                        if (event.target === this) {
+                            closeInfo();
+                        }
+
+                    });
+
+
+                document.addEventListener('keydown', function (event) {
+
+                    if (event.key !== 'Escape') {
+                        return;
+                    }
+
+                    closeActionSheet();
+                    closePromotion();
+                    closeDelete();
+                    closeInfo();
+
+                });
+
+            }
+
+
+            function initialize() {
+
+                bindEvents();
+
+                if (
+                    window.agentState &&
+                    (
+                        Array.isArray(window.agentState.properties) ||
+                        Array.isArray(window.agentState.listings)
+                    )
+                ) {
+                    loadListings();
+                }
+
+            }
+
+
+            window.onDataLoaded = function () {
+                loadListings();
+            };
+
+
+            if (
+                window.firebase &&
+                firebase.auth
+            ) {
+
+                firebase.auth().onAuthStateChanged(function () {
+
+                    loadListings();
+
+                });
+
+            }
+
+
+            if (document.readyState === 'loading') {
+
+                document.addEventListener(
+                    'DOMContentLoaded',
+                    initialize
+                );
+
+            } else {
+
+                initialize();
+
+            }
+
+
+            return {
+                refresh,
+                setFilter,
+                openActions,
+                closeActionSheet,
+                edit,
+                editSelected,
+                share,
+                shareSelected,
+                openPromotion,
+                closePromotion,
+                submitPromotion,
+                deleteSelected,
+                closeDelete,
+                confirmDelete,
+                openPromotionInfo,
+                closeInfo,
+                generateReport
+            };
+
+        })();
+    </script>
+
+</body>
+</html>

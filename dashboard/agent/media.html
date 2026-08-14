@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4f1">
+<meta name="color-scheme" content="light">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="Media Library — MoonLat Agent Workspace.">
+<title>Media Library — MoonLat Agent</title>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script>
+window.MOONLAT_FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+  projectId: "moonlat-estate-dashboard",
+  storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+  messagingSenderId: "289878951289",
+  appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+</script>
+
+<style>
+:root{
+  --bg:#f5f4f1;--surface:#fff;--soft:#fafaf8;--ink:#171717;--muted:#777773;
+  --muted2:#a09f99;--line:#e7e6e1;--accent:#e95218;--accent-dark:#bd3e0f;
+  --accent-soft:#fff0e9;--green:#22a866;--green-soft:#eaf8f0;--red:#c7372f;
+  --red-soft:#fff0ef;--amber:#d58b17;--amber-soft:#fff7e5;--black:#181818;
+  --shadow-sm:0 4px 18px rgba(20,20,20,.035);--shadow-md:0 14px 40px rgba(20,20,20,.07);
+  --shadow-lg:0 28px 70px rgba(20,20,20,.12);--r:24px
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 85% 5%,rgba(233,82,24,.035),transparent 30rem),var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit}button,a{touch-action:manipulation}
+button{cursor:pointer}a{text-decoration:none;color:inherit}
+.app{max-width:1180px;margin:0 auto;padding:0 18px 100px}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(245,244,241,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(231,230,225,.8)}
+.topbar-inner{max-width:1180px;margin:auto;min-height:76px;padding:0 18px;display:flex;align-items:center;gap:14px}
+.back{width:44px;height:44px;border:1px solid var(--line);border-radius:14px;background:#fff;display:grid;place-items:center;color:#50504d}
+.brand{width:44px;height:44px;border-radius:14px;background:#181818;color:#fff;display:grid;place-items:center;box-shadow:var(--shadow-md)}
+.title{min-width:0;flex:1}.title h1{margin:0;font-size:18px;font-weight:800;letter-spacing:-.03em}.title p{margin:3px 0 0;color:var(--muted);font-size:11px}
+.sync{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap}.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(34,168,102,.12)}
+.sync.saving .sync-dot{background:var(--accent);box-shadow:0 0 0 4px rgba(233,82,24,.12)}.sync.error .sync-dot{background:var(--red);box-shadow:0 0 0 4px rgba(199,55,47,.12)}
+.profile-chip{display:none;align-items:center;gap:8px}.avatar{width:36px;height:36px;border-radius:50%;overflow:hidden;background:#222;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800}.avatar img{width:100%;height:100%;object-fit:cover}
+.hero{padding:30px 0 20px}.eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:900}.hero h2{margin:7px 0 7px;font-size:30px;line-height:1.08;letter-spacing:-.045em}.hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.7;max-width:680px}
+.card{background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm)}
+.card-pad{padding:20px}.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}.section-head h3{margin:0;font-size:18px;letter-spacing:-.025em}.section-head p{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.5}
+.btn{min-height:44px;border:1px solid transparent;border-radius:14px;padding:0 16px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:12px;font-weight:800;transition:.18s ease}.btn-primary{background:var(--accent);color:#fff;box-shadow:0 10px 24px rgba(233,82,24,.18)}.btn-primary:hover{background:var(--accent-dark);transform:translateY(-1px)}.btn-light{background:#fff;border-color:var(--line);color:#333}.btn-danger{background:var(--red);color:#fff}.btn-quiet{background:var(--soft);border-color:var(--line);color:#555}
+.field{width:100%;min-height:46px;border:1px solid var(--line);background:#fff;border-radius:13px;padding:0 13px;outline:none;color:var(--ink);font-size:13px}.field:focus{border-color:rgba(233,82,24,.5);box-shadow:0 0 0 4px rgba(233,82,24,.08)}textarea.field{padding:12px;min-height:100px;resize:vertical}.label{display:block;margin:0 0 7px;font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#8a8984}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.stat{padding:16px;border-radius:18px}.stat .icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;margin-bottom:13px}.stat b{display:block;font-size:25px;letter-spacing:-.04em}.stat span{display:block;margin-top:4px;color:var(--muted);font-size:11px;font-weight:700}
+.list{display:grid;gap:10px}.row{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);background:#fff;border-radius:17px;transition:.18s ease}.row:hover{border-color:#d8b3a2;box-shadow:0 8px 24px rgba(20,20,20,.045)}.row-main{min-width:0;flex:1}.row-title{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row-sub{margin-top:4px;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row-actions{display:flex;gap:6px;flex-shrink:0}
+.icon-btn{width:38px;height:38px;border:1px solid var(--line);border-radius:11px;background:#fff;color:#666;display:grid;place-items:center}.icon-btn:hover{color:var(--ink);background:var(--soft)}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:999px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}.badge.green{background:var(--green-soft);color:#16834f}.badge.orange{background:var(--accent-soft);color:var(--accent-dark)}.badge.red{background:var(--red-soft);color:var(--red)}.badge.gray{background:#f1f1ee;color:#686761}.badge.blue{background:#edf3ff;color:#315bbd}
+.tabs{display:flex;gap:7px;overflow:auto;padding-bottom:2px}.tab{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:#777;padding:10px 14px;border-radius:999px;font-size:11px;font-weight:800}.tab.active{background:#181818;color:#fff;border-color:#181818}
+.empty{padding:44px 20px;text-align:center;color:var(--muted)}.empty-icon{width:54px;height:54px;border-radius:17px;background:var(--soft);margin:0 auto 13px;display:grid;place-items:center;color:#aaa}.empty h4{margin:0;color:#333;font-size:14px}.empty p{margin:6px auto 0;font-size:11px;line-height:1.6;max-width:420px}
+.modal{position:fixed;inset:0;z-index:100;background:rgba(15,15,15,.58);backdrop-filter:blur(9px);display:flex;align-items:flex-end;justify-content:center;padding:0}.modal.hidden{display:none}.sheet{width:min(680px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:28px 28px 0 0;padding:22px;box-shadow:var(--shadow-lg)}.sheet-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}.sheet h3{margin:0;font-size:20px}.sheet p{margin:5px 0 0;color:var(--muted);font-size:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.toast-wrap{position:fixed;z-index:200;right:16px;bottom:18px;width:min(390px,calc(100vw - 32px));display:grid;gap:8px}.toast{padding:13px 14px;background:#181818;color:#fff;border-radius:15px;box-shadow:var(--shadow-lg);font-size:12px;font-weight:700;animation:toastIn .22s ease}.toast.error{background:#8f241f}.toast.success{background:#166b46}@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.loader{position:fixed;inset:0;z-index:999;background:var(--bg);display:grid;place-items:center}.loader.hide{display:none}.loader-box{text-align:center}.spinner{width:38px;height:38px;border:3px solid #deddd8;border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:auto}@keyframes spin{to{transform:rotate(360deg)}}
+@media(min-width:700px){.app{padding-left:28px;padding-right:28px}.topbar-inner{padding-left:28px;padding-right:28px}.profile-chip{display:flex}.hero{padding-top:42px}.sheet{border-radius:26px;margin-bottom:20px}.modal{align-items:center;padding:18px}}
+@media(max-width:699px){.sync span{display:none}.stats{grid-template-columns:1fr 1fr}.hero h2{font-size:28px}.card-pad{padding:17px}.grid2{grid-template-columns:1fr}.row-actions .hide-mobile{display:none}.actions{position:sticky;bottom:0;background:#fff;padding-top:12px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div id="loader" class="loader"><div class="loader-box"><div class="spinner"></div><div style="margin-top:13px;font-weight:900;font-size:13px">MoonLat</div><div id="loaderText" style="margin-top:5px;color:var(--muted);font-size:11px">Connecting to MoonLat</div></div></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="back" aria-label="Back to dashboard">←</a>
+    <div class="brand">☾</div>
+    <div class="title"><h1>Media Library</h1><p>Agent workspace</p></div>
+    <div id="sync" class="sync"><i class="sync-dot"></i><span id="syncText">Live sync</span></div>
+    <div class="profile-chip"><div id="headerAvatar" class="avatar">AG</div><div id="headerName" style="font-size:11px;font-weight:800;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Agent</div></div>
+  </div>
+</header>
+
+<main class="app">
+<section class="hero">
+  <div class="eyebrow">Asset management</div>
+  <h2>Your media, organized.</h2>
+  <p>One live library for property photography. Upload once, attach to a listing, and keep the property record synchronized everywhere.</p>
+</section>
+
+<section class="stats">
+  <div class="card stat"><div class="icon" style="background:#fff0e9;color:var(--accent)">▧</div><b id="statTotal">0</b><span>Total images</span></div>
+  <div class="card stat"><div class="icon" style="background:#edf3ff;color:#315bbd">⌂</div><b id="statProperties">0</b><span>Properties with media</span></div>
+  <div class="card stat"><div class="icon" style="background:#eaf8f0;color:#16834f">↥</div><b id="statStorage">0 MB</b><span>Storage indexed</span></div>
+  <div class="card stat"><div class="icon" style="background:#fff7e5;color:#b16d08">★</div><b id="statFeatured">0</b><span>Primary images</span></div>
+</section>
+
+<section class="card card-pad" style="margin-bottom:16px">
+  <div class="section-head">
+    <div><h3>Upload property media</h3><p>Images uploaded here can be attached directly to one of your live property records.</p></div>
+    <button class="btn btn-primary" onclick="openUpload()">＋ Upload</button>
+  </div>
+  <div class="tabs">
+    <button class="tab active" data-source="" onclick="setSource(this,'')">All media</button>
+    <button class="tab" data-source="property" onclick="setSource(this,'property')">Property media</button>
+    <button class="tab" data-source="library" onclick="setSource(this,'library')">Library only</button>
+  </div>
+</section>
+
+<section class="card card-pad" style="margin-bottom:16px">
+  <div class="grid2">
+    <div><label class="label">Search</label><input id="search" class="field" placeholder="Filename or property..." oninput="render()"></div>
+    <div><label class="label">Property</label><select id="propertyFilter" class="field" onchange="render()"><option value="">All properties</option></select></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <div><h3>Media library</h3><p id="mediaCount">0 assets</p></div>
+    <span class="badge green"><i class="sync-dot"></i> Live</span>
+  </div>
+  <div id="grid" class="list"></div>
+</section>
+
+<div id="uploadModal" class="modal hidden">
+ <div class="sheet">
+  <div class="sheet-top"><div><h3>Upload media</h3><p>Select a property and add one or more high-quality images.</p></div><button class="icon-btn" onclick="closeUpload()">×</button></div>
+  <label class="label">Attach to property</label>
+  <select id="uploadProperty" class="field"><option value="">Choose property</option></select>
+  <div style="margin-top:12px"><label class="label">Images</label><input id="files" class="field" type="file" accept="image/*" multiple></div>
+  <div id="uploadList" style="margin-top:12px;display:grid;gap:7px"></div>
+  <div class="actions"><button class="btn btn-light" onclick="closeUpload()">Cancel</button><button id="uploadBtn" class="btn btn-primary" onclick="uploadFiles()">Upload images</button></div>
+ </div>
+</div>
+
+<div id="previewModal" class="modal hidden">
+ <div class="sheet" style="max-width:820px">
+  <div class="sheet-top"><div><h3 id="previewTitle">Media</h3><p id="previewMeta"></p></div><button class="icon-btn" onclick="closePreview()">×</button></div>
+  <img id="previewImg" style="display:block;width:100%;max-height:65vh;object-fit:contain;background:#f1f1ee;border-radius:18px" alt="">
+  <div class="actions"><button class="btn btn-light" onclick="copyUrl()">Copy URL</button><button class="btn btn-danger" onclick="deleteCurrent()">Remove</button></div>
+ </div>
+</div>
+</main>
+<div id="toastWrap" class="toast-wrap"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+<script>
+"use strict";
+(function(){
+  const CONFIG=window.MOONLAT_FIREBASE_CONFIG;
+  let auth,db,user=null,profile={},properties=[],records=[],unsubs=[],sourceFilter="";
+  let current=null;
+
+  const $=id=>document.getElementById(id);
+  const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+  const initials=n=>String(n||"Agent").trim().split(/\s+/).map(x=>x[0]).join("").toUpperCase().slice(0,2)||"AG";
+  function sync(type,text){$("sync").className=`sync ${type||""}`;$("syncText").textContent=text}
+  function toast(msg,type="success"){const x=document.createElement("div");x.className=`toast ${type}`;x.textContent=msg;$("toastWrap").appendChild(x);setTimeout(()=>x.remove(),4200)}
+  function hideLoader(){ $("loader").classList.add("hide") }
+  function formatBytes(n){if(!n)return"0 MB";const mb=n/1048576;return mb<1?`${Math.round(n/1024)} KB`:`${mb.toFixed(1)} MB`}
+  function getName(p){return p.title||p.name||p.propertyTitle||"Untitled property"}
+  function getImages(p){const arr=Array.isArray(p.images)?p.images:[];return arr.map((x,i)=>typeof x==="string"?{url:x,index:i}:{...(x||{}),index:i}).filter(x=>x.url)}
+  function rebuild(){
+    const seen=new Map();
+    records.forEach(m=>seen.set(`media:${m.id}`,{...m,kind:"media",propertyId:m.propertyId||""}));
+    properties.forEach(p=>getImages(p).forEach((im,i)=>{
+      const key=`property:${p.id}:${im.url}`;
+      if(![...seen.values()].some(x=>x.url===im.url)){
+        seen.set(key,{id:key,url:im.url,filename:im.filename||`Property image ${i+1}`,size:im.size||0,propertyId:p.id,propertyTitle:getName(p),kind:"property",isFeatured:i===0,publicId:im.publicId||""});
+      }
+    }));
+    window.mediaView=[...seen.values()];
+  }
+  function populate(){
+    const selects=[$("propertyFilter"),$("uploadProperty")];
+    selects.forEach(s=>{const val=s.value;s.innerHTML=s===selects[0]?'<option value="">All properties</option>':'<option value="">Choose property</option>';properties.slice().sort((a,b)=>getName(a).localeCompare(getName(b))).forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=getName(p);s.appendChild(o)});if(val)s.value=val});
+  }
+  window.setSource=(btn,val)=>{sourceFilter=val;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));btn.classList.add("active");render()}
+  window.render=render;
+  function render(){
+    rebuild();
+    const q=($("search").value||"").trim().toLowerCase(), pf=$("propertyFilter").value;
+    let arr=window.mediaView.filter(m=>{
+      if(sourceFilter==="property"&&m.kind!=="property")return false;
+      if(sourceFilter==="library"&&m.kind!=="media")return false;
+      if(pf&&m.propertyId!==pf)return false;
+      return !q||`${m.filename||""} ${m.propertyTitle||""}`.toLowerCase().includes(q)
+    });
+    $("mediaCount").textContent=`${arr.length} of ${window.mediaView.length} assets`;
+    $("statTotal").textContent=window.mediaView.length;
+    $("statProperties").textContent=new Set(window.mediaView.map(x=>x.propertyId).filter(Boolean)).size;
+    $("statStorage").textContent=formatBytes(window.mediaView.reduce((s,x)=>s+Number(x.size||0),0));
+    $("statFeatured").textContent=window.mediaView.filter(x=>x.isFeatured).length;
+    if(!arr.length){$("grid").innerHTML='<div class="card empty"><div class="empty-icon">▧</div><h4>No media found</h4><p>Upload property photography or adjust your search and filters.</p></div>';return}
+    $("grid").innerHTML=arr.map(m=>`
+      <article class="row">
+        <button style="width:74px;height:64px;border-radius:13px;overflow:hidden;border:0;padding:0;background:#eee;flex-shrink:0" onclick="openPreview('${esc(m.id)}')">
+          <img src="${esc(m.url)}" alt="" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.style.opacity=.25">
+        </button>
+        <div class="row-main">
+          <div class="row-title">${esc(m.filename||"Untitled image")}</div>
+          <div class="row-sub">${esc(m.propertyTitle||"Library asset")} · ${formatBytes(m.size||0)}</div>
+          <div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">
+            <span class="badge ${m.kind==="property"?"green":"gray"}">${m.kind==="property"?"Attached":"Library"}</span>
+            ${m.isFeatured?'<span class="badge orange">Primary</span>':""}
+          </div>
+        </div>
+        <div class="row-actions">
+          <button class="icon-btn" onclick="openPreview('${esc(m.id)}')" title="Preview">↗</button>
+          <button class="icon-btn" onclick="deleteMedia('${esc(m.id)}')" title="Remove">×</button>
+        </div>
+      </article>`).join("")
+  }
+  window.openPreview=id=>{current=window.mediaView.find(x=>x.id===id);if(!current)return;$("previewTitle").textContent=current.filename||"Media";$("previewMeta").textContent=`${current.propertyTitle||"Library asset"} · ${formatBytes(current.size||0)}`;$("previewImg").src=current.url;$("previewModal").classList.remove("hidden")}
+  window.closePreview=()=>{$("previewModal").classList.add("hidden");current=null}
+  window.copyUrl=async()=>{if(!current)return;try{await navigator.clipboard.writeText(current.url);toast("Image URL copied.")}catch{toast("Clipboard access is unavailable.","error")}}
+  window.deleteCurrent=()=>current&&deleteMedia(current.id)
+  window.deleteMedia=async id=>{
+    const item=window.mediaView.find(x=>x.id===id);if(!item)return;
+    if(!confirm("Remove this media from MoonLat?"))return;
+    sync("saving","Updating");
+    try{
+      if(item.kind==="property"){
+        const p=properties.find(x=>x.id===item.propertyId);if(!p)throw new Error("Property not found.");
+        const imgs=getImages(p).map(x=>x.url).filter(u=>u!==item.url);
+        await db.collection("properties").doc(p.id).update({images:imgs,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+        const linked=records.filter(m=>m.propertyId===p.id&&m.url===item.url);
+        for(const m of linked)await db.collection("media").doc(m.id).delete();
+      }else{
+        await db.collection("media").doc(item.id).delete();
+      }
+      toast("Media removed.");closePreview();
+    }catch(e){console.error(e);toast(e.message||"Unable to remove media.","error")}
+    finally{sync("live","Live sync")}
+  }
+  window.openUpload=()=>{$("uploadModal").classList.remove("hidden");$("uploadList").innerHTML=""}
+  window.closeUpload=()=>{$("uploadModal").classList.add("hidden");$("files").value="";$("uploadList").innerHTML=""}
+  $("files").addEventListener("change",()=>{$("uploadList").innerHTML=[...$("files").files].map(f=>`<div class="row"><div class="row-main"><div class="row-title">${esc(f.name)}</div><div class="row-sub">${formatBytes(f.size)}</div></div></div>`).join("")})
+  async function uploadOne(file,propertyId){
+    if(!file.type.startsWith("image/"))throw new Error(`${file.name}: image files only.`);
+    if(file.size>10*1024*1024)throw new Error(`${file.name}: maximum size is 10MB.`);
+    const fd=new FormData();fd.append("file",file);fd.append("upload_preset","geefox_unsigned");fd.append("folder","moonlat_properties");
+    const res=await fetch("https://api.cloudinary.com/v1_1/dxdbn6xwy/image/upload",{method:"POST",body:fd});const out=await res.json().catch(()=>({}));
+    if(!res.ok||!out.secure_url)throw new Error(out.error?.message||"Cloudinary upload failed.");
+    await db.collection("media").add({url:out.secure_url,publicId:out.public_id||"",filename:file.name,size:file.size,format:out.format||"",width:out.width||0,height:out.height||0,ownerId:user.uid,agentId:user.uid,userId:user.uid,propertyId:propertyId||"",propertyTitle:propertyId?(getName(properties.find(p=>p.id===propertyId)||{})):"",type:"property_image",createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+    if(propertyId)await db.collection("properties").doc(propertyId).update({images:firebase.firestore.FieldValue.arrayUnion(out.secure_url),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+  }
+  window.uploadFiles=async()=>{
+    const pid=$("uploadProperty").value, files=[...$("files").files];if(!pid){toast("Choose a property first.","error");return}if(!files.length){toast("Choose at least one image.","error");return}
+    const btn=$("uploadBtn");btn.disabled=true;btn.textContent="Uploading…";sync("saving","Uploading");
+    let ok=0;
+    try{for(const f of files){await uploadOne(f,pid);ok++;toast(`${f.name} uploaded.`)}toast(`${ok} image${ok===1?"":"s"} attached to the property.`);closeUpload()}catch(e){console.error(e);toast(e.message||"Upload failed.","error")}finally{btn.disabled=false;btn.textContent="Upload images";sync("live","Live sync")}
+  }
+
+  async function init(){
+    try{
+      if(!firebase.apps.length)firebase.initializeApp(CONFIG);auth=firebase.auth();db=firebase.firestore();
+      const timer=setTimeout(()=>{if(!user){$("loaderText").textContent="Connection timed out. Retry the page.";sync("error","Connection error")}},15000);
+      auth.onAuthStateChanged(u=>{
+        if(!u){clearTimeout(timer);location.href="../sign-in.html";return}
+        clearTimeout(timer);user=u;sync("saving","Syncing");$("headerName").textContent=u.displayName||u.email?.split("@")[0]||"Agent";$("headerAvatar").textContent=initials(u.displayName||u.email);
+        unsubs.forEach(fn=>fn());unsubs=[];
+        unsubs.push(db.collection("users").doc(u.uid).onSnapshot(s=>{profile=s.exists?s.data():{};}));
+        unsubs.push(db.collection("properties").where("ownerId","==",u.uid).onSnapshot(s=>{properties=s.docs.map(d=>({id:d.id,...d.data()}));populate();render();hideLoader();sync("live","Live sync")},e=>{console.error(e);sync("error","Sync error");toast("Property data could not be synchronized.","error")}));
+        unsubs.push(db.collection("media").where("ownerId","==",u.uid).onSnapshot(s=>{records=s.docs.map(d=>({id:d.id,...d.data()}));render();hideLoader();sync("live","Live sync")},e=>{console.error(e);toast("Media data could not be synchronized.","error")}));
+      });
+    }catch(e){console.error(e);$("loaderText").textContent=e.message||"Firebase initialization failed";sync("error","Connection error")}
+  }
+  init();
+})();
+</script>
+</body>
+</html>
