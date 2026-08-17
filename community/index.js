@@ -1,7 +1,6 @@
-
-
 /* ============================================================
-   FIREBASE
+   MOONLAT COMMUNITY — PRODUCTION COMMUNITY ENGINE
+   Firebase + Cloudinary + Firestore realtime community workflow
 ============================================================ */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
@@ -14,6 +13,7 @@ import {
 import {
   getFirestore,
   collection,
+  collectionGroup,
   doc,
   addDoc,
   setDoc,
@@ -28,9 +28,14 @@ import {
   serverTimestamp,
   updateDoc,
   increment,
-  runTransaction
+  runTransaction,
+  writeBatch
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
+
+/* ============================================================
+   FIREBASE
+============================================================ */
 
 const firebaseConfig = {
   apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
@@ -77,6 +82,7 @@ let selectedPostType = "discussion";
 let selectedImages = [];
 let currentCommentsPostId = null;
 let currentReportPostId = null;
+let editingPostId = null;
 
 let feedUnsubscribe = null;
 let commentsUnsubscribe = null;
@@ -84,12 +90,374 @@ let notificationUnsubscribe = null;
 
 let userLocation = null;
 
+/*
+ * User-specific state is deliberately kept separate from public
+ * post documents. This prevents currentUserLiked/currentUserSaved
+ * from becoming stale or being incorrectly shared between users.
+ */
+const likedPostIds = new Set();
+const savedPostIds = new Set();
+const pendingPostActions = new Set();
+const pendingCommentActions = new Set();
+
 
 /* ============================================================
    DOM
 ============================================================ */
 
 const $ = (id) => document.getElementById(id);
+
+
+/* ============================================================
+   PRODUCTION UI ENHANCEMENTS
+============================================================ */
+
+function injectCommunityEnhancementStyles() {
+
+  if ($("communityProductionStyles")) return;
+
+  const style = document.createElement("style");
+
+  style.id = "communityProductionStyles";
+
+  style.textContent = `
+    .community-action-sheet {
+      position: fixed;
+      inset: 0;
+      z-index: 99990;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0,0,0,.48);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 12px;
+    }
+
+    .community-action-sheet.open {
+      display: flex;
+    }
+
+    .community-action-panel {
+      width: min(100%, 520px);
+      background: #fff;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,.25);
+      animation: communitySheetIn .18s ease-out;
+    }
+
+    @keyframes communitySheetIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .community-action-header {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid rgba(0,0,0,.07);
+    }
+
+    .community-action-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: #151515;
+    }
+
+    .community-action-subtitle {
+      margin-top: 3px;
+      font-size: 11px;
+      color: #777;
+    }
+
+    .community-action-button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 50px;
+      padding: 0 18px;
+      border: 0;
+      background: transparent;
+      color: #202020;
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .community-action-button:hover {
+      background: rgba(0,0,0,.035);
+    }
+
+    .community-action-button i {
+      width: 20px;
+      text-align: center;
+      color: #555;
+    }
+
+    .community-action-button.danger {
+      color: #b42318;
+    }
+
+    .community-action-button.danger i {
+      color: #b42318;
+    }
+
+    .community-action-cancel {
+      margin-top: 8px;
+      background: #fff;
+      border-radius: 16px;
+      justify-content: center;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .post-action.is-busy,
+    .comment-action.is-busy {
+      pointer-events: none;
+      opacity: .55;
+    }
+
+    .post-action.liked {
+      color: #d92d20 !important;
+    }
+
+    .post-action.liked i {
+      color: #d92d20 !important;
+    }
+
+    .post-action.saved {
+      color: #111 !important;
+    }
+
+    .comment-thread {
+      display: flex;
+      gap: 9px;
+      margin-bottom: 16px;
+    }
+
+    .comment-thread.is-reply {
+      margin-left: 38px;
+      margin-top: -6px;
+    }
+
+    .comment-shell {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .comment-bubble {
+      background: #f6f6f6;
+      border-radius: 14px;
+      padding: 9px 11px;
+    }
+
+    .comment-author-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .comment-author-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: #171717;
+    }
+
+    .comment-role {
+      font-size: 9px;
+      font-weight: 700;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .comment-text {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .comment-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 5px;
+      padding-left: 3px;
+    }
+
+    .comment-action {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      color: #777;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .comment-action.liked {
+      color: #d92d20;
+    }
+
+    .comment-edited {
+      font-size: 9px;
+      color: #999;
+    }
+
+    .comment-replies {
+      margin-top: 8px;
+    }
+
+    .comment-inline-editor {
+      display: none;
+      margin-top: 8px;
+    }
+
+    .comment-inline-editor.open {
+      display: block;
+    }
+
+    .comment-inline-editor textarea {
+      width: 100%;
+      min-height: 62px;
+      resize: vertical;
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 12px;
+      padding: 9px 10px;
+      font: inherit;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .comment-inline-editor-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .community-small-button {
+      border: 0;
+      border-radius: 9px;
+      padding: 7px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .community-small-button.secondary {
+      background: #f1f1f1;
+      color: #444;
+    }
+
+    .community-small-button.primary {
+      background: #111;
+      color: #fff;
+    }
+
+    .accepted-answer {
+      border: 1px solid rgba(16,185,129,.28);
+      background: rgba(16,185,129,.06);
+    }
+
+    .accepted-answer-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 5px;
+      font-size: 9px;
+      font-weight: 800;
+      color: #087443;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .post-card.post-updating {
+      opacity: .72;
+      pointer-events: none;
+    }
+
+    .community-confirm {
+      position: fixed;
+      inset: 0;
+      z-index: 99995;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(0,0,0,.5);
+      backdrop-filter: blur(8px);
+    }
+
+    .community-confirm.open {
+      display: flex;
+    }
+
+    .community-confirm-panel {
+      width: min(100%, 410px);
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.28);
+    }
+
+    .community-confirm-panel h3 {
+      margin: 0;
+      font-size: 17px;
+      color: #151515;
+    }
+
+    .community-confirm-panel p {
+      margin: 8px 0 18px;
+      color: #6b6b6b;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .community-confirm-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .community-confirm-actions button {
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .community-confirm-cancel {
+      background: #f1f1f1;
+      color: #444;
+    }
+
+    .community-confirm-danger {
+      background: #b42318;
+      color: #fff;
+    }
+
+    @media (min-width: 768px) {
+      .community-action-sheet {
+        align-items: center;
+      }
+
+      .community-action-panel {
+        border-radius: 20px;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+}
 
 
 /* ============================================================
@@ -249,6 +617,11 @@ function toast(message, type = "success") {
 
   const stack = $("toastStack");
 
+  if (!stack) {
+    console[type === "error" ? "error" : "log"](message);
+    return;
+  }
+
   const item = document.createElement("div");
 
   item.className = `toast ${type}`;
@@ -324,7 +697,11 @@ function isOnline() {
 
 function updateNetworkState() {
 
-  $("networkBanner").classList.toggle("show", !navigator.onLine);
+  const banner = $("networkBanner");
+
+  if (banner) {
+    banner.classList.toggle("show", !navigator.onLine);
+  }
 }
 
 window.addEventListener("online", updateNetworkState);
@@ -428,14 +805,90 @@ function updateIdentityUI() {
   }
 
 
-  $("modalAuthorName").textContent = name;
+  if ($("modalAuthorName")) {
+    $("modalAuthorName").textContent = name;
+  }
 
-  $("modalAuthorRole").textContent =
-    role === "agent"
-      ? "Verified agent"
-      : role === "admin"
-        ? "Administrator"
-        : "Community member";
+  if ($("modalAuthorRole")) {
+    $("modalAuthorRole").textContent =
+      role === "agent"
+        ? "Verified agent"
+        : role === "admin"
+          ? "Administrator"
+          : "Community member";
+  }
+}
+
+
+/* ============================================================
+   USER INTERACTION STATE
+============================================================ */
+
+async function loadUserInteractionState() {
+
+  likedPostIds.clear();
+  savedPostIds.clear();
+
+  if (!currentUser) return;
+
+  try {
+
+    const savedSnap = await getDocs(
+      collection(
+        db,
+        "users",
+        currentUser.uid,
+        "savedPosts"
+      )
+    );
+
+    savedSnap.forEach(docSnap => {
+      savedPostIds.add(docSnap.id);
+    });
+
+  } catch (error) {
+
+    console.warn(
+      "Saved-post state could not be loaded:",
+      error
+    );
+  }
+
+
+  try {
+
+    /*
+     * Existing schema:
+     * communityPosts/{postId}/reactions/{uid}
+     *
+     * collectionGroup lets us retrieve the current user's reactions
+     * without issuing one Firestore read per feed card.
+     */
+    const reactionQuery = query(
+      collectionGroup(db, "reactions"),
+      where("userId", "==", currentUser.uid),
+      limit(1000)
+    );
+
+    const reactionSnap = await getDocs(reactionQuery);
+
+    reactionSnap.forEach(docSnap => {
+
+      const parentPostId =
+        docSnap.ref.parent.parent?.id;
+
+      if (parentPostId) {
+        likedPostIds.add(parentPostId);
+      }
+    });
+
+  } catch (error) {
+
+    console.warn(
+      "Reaction state could not be loaded:",
+      error
+    );
+  }
 }
 
 
@@ -477,6 +930,8 @@ function populatePropertySelector() {
 
   const select = $("propertySelect");
 
+  if (!select) return;
+
   select.innerHTML = `
     <option value="">Choose one of your properties</option>
   `;
@@ -500,7 +955,11 @@ function populatePropertySelector() {
 
 function getSelectedProperty() {
 
-  const id = $("propertySelect").value;
+  const select = $("propertySelect");
+
+  if (!select) return null;
+
+  const id = select.value;
 
   if (!id) return null;
 
@@ -611,6 +1070,8 @@ async function uploadImage(file, onProgress) {
 function renderImagePreviews() {
 
   const grid = $("imagePreviewGrid");
+
+  if (!grid) return;
 
   grid.innerHTML = "";
 
@@ -806,34 +1267,42 @@ async function requestLiveLocation() {
 
 async function handleLocationToggle() {
 
-  const checked = $("attachLocation").checked;
+  const checked = $("attachLocation")?.checked;
 
   if (!checked) {
 
     userLocation = null;
 
-    $("locationStatus").textContent =
-      "Your location will only be requested when you enable this.";
+    if ($("locationStatus")) {
+      $("locationStatus").textContent =
+        "Your location will only be requested when you enable this.";
+    }
 
     return;
   }
 
-  $("locationStatus").textContent =
-    "Requesting your current location...";
+  if ($("locationStatus")) {
+    $("locationStatus").textContent =
+      "Requesting your current location...";
+  }
 
   try {
 
     const location = await requestLiveLocation();
 
-    $("locationStatus").textContent =
-      `${location.label} · ±${location.accuracy}m`;
+    if ($("locationStatus")) {
+      $("locationStatus").textContent =
+        `${location.label} · ±${location.accuracy}m`;
+    }
 
   } catch (error) {
 
     $("attachLocation").checked = false;
 
-    $("locationStatus").textContent =
-      "Location could not be attached.";
+    if ($("locationStatus")) {
+      $("locationStatus").textContent =
+        "Location could not be attached.";
+    }
 
     toast(error.message, "error");
   }
@@ -845,6 +1314,8 @@ async function handleLocationToggle() {
 ============================================================ */
 
 function openComposer(type = "discussion") {
+
+  editingPostId = null;
 
   selectedPostType = type;
 
@@ -858,15 +1329,85 @@ function openComposer(type = "discussion") {
 
   updateComposerFields();
 
-  $("composerModal").classList.add("open");
+  if ($("composerModal")) {
+    $("composerModal").classList.add("open");
+  }
 
   document.body.classList.add("modal-open");
 
   setTimeout(() => {
 
-    if (type === "question" || type === "discussion") {
+    if (
+      (type === "question" ||
+        type === "discussion" ||
+        type === "property") &&
+      $("postTitle")
+    ) {
       $("postTitle").focus();
-    } else {
+    } else if ($("postContent")) {
+      $("postContent").focus();
+    }
+
+  }, 80);
+}
+
+
+function openEditComposer(post) {
+
+  if (!post || post.authorId !== currentUser?.uid) return;
+
+  editingPostId = post.id;
+
+  selectedPostType = post.type || "discussion";
+
+  document.querySelectorAll(".post-type-option").forEach(button => {
+
+    button.classList.toggle(
+      "active",
+      button.dataset.postType === selectedPostType
+    );
+  });
+
+  if ($("postTitle")) {
+    $("postTitle").value = post.title || "";
+  }
+
+  if ($("postContent")) {
+    $("postContent").value = post.content || "";
+  }
+
+  if ($("characterCount")) {
+    $("characterCount").textContent =
+      `${($("postContent")?.value || "").length} / 5000`;
+  }
+
+  if ($("propertySelect")) {
+    $("propertySelect").value = post.propertyId || "";
+  }
+
+  if ($("attachLocation")) {
+    $("attachLocation").checked = Boolean(post.location);
+  }
+
+  userLocation = post.location || null;
+
+  if ($("locationStatus")) {
+    $("locationStatus").textContent =
+      post.location?.label ||
+      "Existing location will be preserved unless changed.";
+  }
+
+  updateComposerFields();
+
+  if ($("composerModal")) {
+    $("composerModal").classList.add("open");
+  }
+
+  document.body.classList.add("modal-open");
+
+  setTimeout(() => {
+
+    if ($("postContent")) {
       $("postContent").focus();
     }
 
@@ -876,7 +1417,7 @@ function openComposer(type = "discussion") {
 
 function closeComposer() {
 
-  $("composerModal").classList.remove("open");
+  $("composerModal")?.classList.remove("open");
 
   document.body.classList.remove("modal-open");
 }
@@ -884,12 +1425,14 @@ function closeComposer() {
 
 function resetComposer() {
 
-  $("postForm").reset();
+  $("postForm")?.reset();
 
-  $("postTitle").value = "";
-  $("postContent").value = "";
+  if ($("postTitle")) $("postTitle").value = "";
+  if ($("postContent")) $("postContent").value = "";
 
-  $("characterCount").textContent = "0 / 5000";
+  if ($("characterCount")) {
+    $("characterCount").textContent = "0 / 5000";
+  }
 
   selectedImages.forEach(item => {
     URL.revokeObjectURL(item.preview);
@@ -901,10 +1444,13 @@ function resetComposer() {
 
   userLocation = null;
 
-  $("locationStatus").textContent =
-    "Your location will only be requested when you enable this.";
+  if ($("locationStatus")) {
+    $("locationStatus").textContent =
+      "Your location will only be requested when you enable this.";
+  }
 
   selectedPostType = "discussion";
+  editingPostId = null;
 
   document.querySelectorAll(".post-type-option").forEach(button => {
 
@@ -925,25 +1471,35 @@ function updateComposerFields() {
     selectedPostType === "question" ||
     selectedPostType === "property";
 
-  $("titleField").classList.toggle(
-    "hidden",
-    !titleRequired
-  );
+  if ($("titleField")) {
+    $("titleField").classList.toggle(
+      "hidden",
+      !titleRequired
+    );
+  }
 
-  $("postTitle").required = titleRequired;
+  if ($("postTitle")) {
+    $("postTitle").required = titleRequired;
+  }
 
-  $("propertyField").classList.toggle(
-    "show",
-    selectedPostType === "property"
-  );
+  if ($("propertyField")) {
+    $("propertyField").classList.toggle(
+      "show",
+      selectedPostType === "property"
+    );
+  }
 
   if (selectedPostType === "property") {
 
     if (!properties.length) {
 
-      $("propertyField").querySelector("select").innerHTML = `
-        <option value="">You have no properties available</option>
-      `;
+      const select = $("propertyField")?.querySelector("select");
+
+      if (select) {
+        select.innerHTML = `
+          <option value="">You have no properties available</option>
+        `;
+      }
 
     } else {
 
@@ -954,7 +1510,7 @@ function updateComposerFields() {
 
 
 /* ============================================================
-   CREATE POST
+   CREATE / EDIT POST
 ============================================================ */
 
 async function createPost(event) {
@@ -983,6 +1539,13 @@ async function createPost(event) {
     toast("Write something before publishing.", "error");
 
     $("postContent").focus();
+
+    return;
+  }
+
+  if (content.length > 5000) {
+
+    toast("Your post is limited to 5000 characters.", "error");
 
     return;
   }
@@ -1018,23 +1581,28 @@ async function createPost(event) {
   setButtonLoading(
     publishButton,
     true,
-    "Publishing"
+    editingPostId ? "Saving" : "Publishing"
   );
 
   try {
 
     let locationData = null;
 
-    if ($("attachLocation").checked) {
+    if ($("attachLocation")?.checked) {
 
       if (!userLocation) {
-
         locationData = await requestLiveLocation();
-
       } else {
-
         locationData = userLocation;
       }
+
+    } else if (editingPostId) {
+
+      const existing =
+        allPosts.find(post => post.id === editingPostId);
+
+      locationData =
+        existing?.location || null;
     }
 
     const uploadedImages = [];
@@ -1064,86 +1632,165 @@ async function createPost(event) {
       });
     }
 
-    const postPayload = {
 
-      type: selectedPostType,
+    if (editingPostId) {
 
-      title:
-        title ||
-        "",
+      const existing =
+        allPosts.find(post => post.id === editingPostId);
 
-      content,
+      if (!existing || existing.authorId !== currentUser.uid) {
+        throw new Error("You can only edit your own posts.");
+      }
 
-      authorId: currentUser.uid,
+      const updatePayload = {
 
-      authorName: displayName(),
+        type: selectedPostType,
 
-      authorRole: displayRole(),
+        title,
 
-      authorPhotoURL:
-        avatarURL(currentProfile) ||
-        currentUser.photoURL ||
-        "",
+        content,
 
-      imageCount: uploadedImages.length,
+        isQuestion:
+          selectedPostType === "question",
 
-      images: uploadedImages,
+        answered:
+          selectedPostType === "question"
+            ? Boolean(existing.answered)
+            : false,
 
-      likeCount: 0,
+        location: locationData,
 
-      commentCount: 0,
+        propertyId:
+          selectedProperty?.id ||
+          null,
 
-      shareCount: 0,
+        propertySnapshot:
+          selectedProperty
+            ? {
+                title:
+                  selectedProperty.title ||
+                  selectedProperty.name ||
+                  "",
+                price:
+                  selectedProperty.price ||
+                  selectedProperty.amount ||
+                  null,
+                address:
+                  selectedProperty.address ||
+                  selectedProperty.location ||
+                  "",
+                image:
+                  selectedProperty.image ||
+                  selectedProperty.coverImage ||
+                  selectedProperty.imageUrl ||
+                  selectedProperty.images?.[0] ||
+                  ""
+              }
+            : existing.propertySnapshot || null,
 
-      saveCount: 0,
+        updatedAt: serverTimestamp()
+      };
 
-      isQuestion:
-        selectedPostType === "question",
+      if (uploadedImages.length) {
 
-      answered: false,
+        updatePayload.images = [
+          ...(Array.isArray(existing.images) ? existing.images : []),
+          ...uploadedImages
+        ].slice(0, 8);
 
-      location: locationData,
+        updatePayload.imageCount =
+          updatePayload.images.length;
+      }
 
-      propertyId:
-        selectedProperty?.id ||
-        null,
+      await updateDoc(
+        doc(db, "communityPosts", editingPostId),
+        updatePayload
+      );
 
-      propertySnapshot:
-        selectedProperty
-          ? {
-              title:
-                selectedProperty.title ||
-                selectedProperty.name ||
-                "",
-              price:
-                selectedProperty.price ||
-                selectedProperty.amount ||
-                null,
-              address:
-                selectedProperty.address ||
-                selectedProperty.location ||
-                "",
-              image:
-                selectedProperty.image ||
-                selectedProperty.coverImage ||
-                selectedProperty.imageUrl ||
-                selectedProperty.images?.[0] ||
-                ""
-            }
-          : null,
+      toast("Post updated.");
 
-      createdAt: serverTimestamp(),
+    } else {
 
-      updatedAt: serverTimestamp()
-    };
+      const postPayload = {
 
-    const postRef = await addDoc(
-      collection(db, "communityPosts"),
-      postPayload
-    );
+        type: selectedPostType,
 
-    if (locationData) {
+        title: title || "",
 
+        content,
+
+        authorId: currentUser.uid,
+
+        authorName: displayName(),
+
+        authorRole: displayRole(),
+
+        authorPhotoURL:
+          avatarURL(currentProfile) ||
+          currentUser.photoURL ||
+          "",
+
+        imageCount: uploadedImages.length,
+
+        images: uploadedImages,
+
+        likeCount: 0,
+
+        commentCount: 0,
+
+        shareCount: 0,
+
+        saveCount: 0,
+
+        isQuestion:
+          selectedPostType === "question",
+
+        answered: false,
+
+        location: locationData,
+
+        propertyId:
+          selectedProperty?.id ||
+          null,
+
+        propertySnapshot:
+          selectedProperty
+            ? {
+                title:
+                  selectedProperty.title ||
+                  selectedProperty.name ||
+                  "",
+                price:
+                  selectedProperty.price ||
+                  selectedProperty.amount ||
+                  null,
+                address:
+                  selectedProperty.address ||
+                  selectedProperty.location ||
+                  "",
+                image:
+                  selectedProperty.image ||
+                  selectedProperty.coverImage ||
+                  selectedProperty.imageUrl ||
+                  selectedProperty.images?.[0] ||
+                  ""
+              }
+            : null,
+
+        createdAt: serverTimestamp(),
+
+        updatedAt: serverTimestamp()
+      };
+
+      await addDoc(
+        collection(db, "communityPosts"),
+        postPayload
+      );
+
+      toast("Your post is now live.");
+    }
+
+    if (locationData && $("sidebarLocationText")) {
       $("sidebarLocationText").textContent =
         locationData.label;
     }
@@ -1151,8 +1798,6 @@ async function createPost(event) {
     resetComposer();
 
     closeComposer();
-
-    toast("Your post is now live.");
 
     document.getElementById("communityFeed")
       ?.scrollIntoView({
@@ -1162,11 +1807,11 @@ async function createPost(event) {
 
   } catch (error) {
 
-    console.error("Create post error:", error);
+    console.error("Create/update post error:", error);
 
     toast(
       error?.message ||
-      "We could not publish your post. Please try again.",
+      "We could not save your post. Please try again.",
       "error"
     );
 
@@ -1202,10 +1847,11 @@ function normalizeCommunityPost(docSnap) {
     shareCount: Number.isFinite(Number(data.shareCount)) ? Number(data.shareCount) : 0,
     saveCount: Number.isFinite(Number(data.saveCount)) ? Number(data.saveCount) : 0,
     images: Array.isArray(data.images) ? data.images : [],
-    currentUserLiked: Boolean(data.currentUserLiked),
-    currentUserSaved: Boolean(data.currentUserSaved)
+    currentUserLiked: likedPostIds.has(docSnap.id),
+    currentUserSaved: savedPostIds.has(docSnap.id)
   };
 }
+
 
 function sortCommunityPosts(posts) {
 
@@ -1226,6 +1872,7 @@ function sortCommunityPosts(posts) {
     return bTime - aTime;
   });
 }
+
 
 function getFeedErrorMessage(error) {
 
@@ -1273,6 +1920,7 @@ function getFeedErrorMessage(error) {
   };
 }
 
+
 function renderFeedError(error) {
 
   const state = getFeedErrorMessage(error);
@@ -1312,6 +1960,7 @@ function renderFeedError(error) {
   });
 }
 
+
 function attachFeedSnapshot(queryRef, allowFallback = true) {
 
   feedUnsubscribe = onSnapshot(
@@ -1333,8 +1982,6 @@ function attachFeedSnapshot(queryRef, allowFallback = true) {
       const code = String(error?.code || "")
         .replace(/^firestore\//, "");
 
-      // A missing index must never permanently break the community UI.
-      // Fall back to a simple live collection query and sort locally.
       if (code === "failed-precondition" && allowFallback) {
 
         if (feedUnsubscribe) {
@@ -1355,6 +2002,7 @@ function attachFeedSnapshot(queryRef, allowFallback = true) {
     }
   );
 }
+
 
 function subscribeToFeed() {
 
@@ -1527,6 +2175,8 @@ function renderFeed() {
 
   const feed = $("communityFeed");
 
+  if (!feed) return;
+
   $("feedCount").textContent =
     `${filteredPosts.length} ${filteredPosts.length === 1 ? "post" : "posts"}`;
 
@@ -1604,11 +2254,10 @@ function renderPost(post) {
       : "role-client";
 
   const liked =
-    Boolean(post.currentUserLiked);
+    likedPostIds.has(post.id);
 
   const saved =
-    Boolean(post.currentUserSaved);
-
+    savedPostIds.has(post.id);
 
   const typeLabel =
     getPostTypeLabel(post.type);
@@ -1802,6 +2451,7 @@ function renderPost(post) {
 
             <div class="post-time">
               ${formatRelativeTime(post.createdAt)}
+              ${post.updatedAt && post.createdAt && post.updatedAt !== post.createdAt ? "" : ""}
             </div>
 
           </div>
@@ -1820,6 +2470,17 @@ function renderPost(post) {
         <div class="post-type">
           <i class="fas ${typeIcon}"></i>
           ${escapeHTML(typeLabel)}
+
+          ${
+            post.type === "question" && post.answered
+              ? `
+                <span class="ml-2 text-emerald-600">
+                  <i class="fas fa-circle-check"></i>
+                  Answered
+                </span>
+              `
+              : ""
+          }
         </div>
 
         ${
@@ -1861,6 +2522,8 @@ function renderPost(post) {
               type="button"
               data-action="like"
               data-post-id="${escapeHTML(post.id)}"
+              aria-pressed="${liked ? "true" : "false"}"
+              aria-label="${liked ? "Unlike post" : "Like post"}"
             >
               <i class="${liked ? "fas" : "far"} fa-heart"></i>
               <span>${formatNumber(post.likeCount || 0)}</span>
@@ -1871,6 +2534,7 @@ function renderPost(post) {
               type="button"
               data-action="comment"
               data-post-id="${escapeHTML(post.id)}"
+              aria-label="Open comments"
             >
               <i class="far fa-comment"></i>
               <span>${formatNumber(post.commentCount || 0)}</span>
@@ -1881,6 +2545,7 @@ function renderPost(post) {
               type="button"
               data-action="share"
               data-post-id="${escapeHTML(post.id)}"
+              aria-label="Share post"
             >
               <i class="fas fa-share"></i>
               <span>${formatNumber(post.shareCount || 0)}</span>
@@ -1893,7 +2558,8 @@ function renderPost(post) {
             type="button"
             data-action="save"
             data-post-id="${escapeHTML(post.id)}"
-            aria-label="Save post"
+            aria-label="${saved ? "Remove saved post" : "Save post"}"
+            aria-pressed="${saved ? "true" : "false"}"
           >
             <i class="${saved ? "fas" : "far"} fa-bookmark"></i>
           </button>
@@ -2004,6 +2670,32 @@ function bindPostActions() {
 
 
 /* ============================================================
+   LOCAL POST STATE
+============================================================ */
+
+function updateLocalPost(postId, updater) {
+
+  const index =
+    allPosts.findIndex(post => post.id === postId);
+
+  if (index === -1) return;
+
+  const updated =
+    updater({
+      ...allPosts[index]
+    });
+
+  allPosts[index] = {
+    ...updated,
+    currentUserLiked: likedPostIds.has(postId),
+    currentUserSaved: savedPostIds.has(postId)
+  };
+
+  applyFeedFilters();
+}
+
+
+/* ============================================================
    LIKE
 ============================================================ */
 
@@ -2018,6 +2710,48 @@ async function toggleLike(postId, button) {
     return;
   }
 
+  if (pendingPostActions.has(`like:${postId}`)) return;
+
+  pendingPostActions.add(`like:${postId}`);
+
+  button?.classList.add("is-busy");
+
+  const wasLiked =
+    likedPostIds.has(postId);
+
+  const nextLiked =
+    !wasLiked;
+
+  const post =
+    allPosts.find(item => item.id === postId);
+
+  const previousCount =
+    Number(post?.likeCount || 0);
+
+  const nextCount =
+    Math.max(
+      0,
+      previousCount + (nextLiked ? 1 : -1)
+    );
+
+  /*
+   * Optimistic state:
+   * the interface changes immediately, then Firestore confirms it.
+   */
+  if (nextLiked) {
+    likedPostIds.add(postId);
+  } else {
+    likedPostIds.delete(postId);
+  }
+
+  updateLocalPost(
+    postId,
+    current => ({
+      ...current,
+      likeCount: nextCount
+    })
+  );
+
   const reactionRef = doc(
     db,
     "communityPosts",
@@ -2025,6 +2759,9 @@ async function toggleLike(postId, button) {
     "reactions",
     currentUser.uid
   );
+
+  const postRef =
+    doc(db, "communityPosts", postId);
 
   try {
 
@@ -2035,9 +2772,6 @@ async function toggleLike(postId, button) {
         const reactionSnap =
           await transaction.get(reactionRef);
 
-        const postRef =
-          doc(db, "communityPosts", postId);
-
         const postSnap =
           await transaction.get(postRef);
 
@@ -2045,7 +2779,15 @@ async function toggleLike(postId, button) {
           throw new Error("This post no longer exists.");
         }
 
+        /*
+         * Use the database as the final source of truth.
+         * This prevents duplicate likes and handles race conditions.
+         */
         if (reactionSnap.exists()) {
+
+          if (!wasLiked) {
+            throw new Error("Reaction state changed. Please try again.");
+          }
 
           transaction.delete(reactionRef);
 
@@ -2059,10 +2801,15 @@ async function toggleLike(postId, button) {
 
         } else {
 
+          if (wasLiked) {
+            throw new Error("Reaction state changed. Please try again.");
+          }
+
           transaction.set(
             reactionRef,
             {
               userId: currentUser.uid,
+              postId,
               createdAt: serverTimestamp()
             }
           );
@@ -2078,14 +2825,61 @@ async function toggleLike(postId, button) {
       }
     );
 
+    /*
+     * Best-effort notification. The primary reaction must not fail
+     * simply because a notification write is restricted.
+     */
+    if (
+      nextLiked &&
+      post?.authorId &&
+      post.authorId !== currentUser.uid
+    ) {
+
+      await createNotification({
+        recipientId: post.authorId,
+        type: "post_like",
+        postId,
+        actorId: currentUser.uid,
+        actorName: displayName(),
+        actorPhotoURL:
+          avatarURL(currentProfile) ||
+          currentUser.photoURL ||
+          "",
+        message: `${displayName()} liked your post.`
+      });
+    }
+
   } catch (error) {
 
     console.error("Like error:", error);
+
+    /*
+     * Roll back the optimistic state.
+     */
+    if (wasLiked) {
+      likedPostIds.add(postId);
+    } else {
+      likedPostIds.delete(postId);
+    }
+
+    updateLocalPost(
+      postId,
+      current => ({
+        ...current,
+        likeCount: previousCount
+      })
+    );
 
     toast(
       error.message || "Could not update reaction.",
       "error"
     );
+
+  } finally {
+
+    pendingPostActions.delete(`like:${postId}`);
+
+    button?.classList.remove("is-busy");
   }
 }
 
@@ -2098,63 +2892,154 @@ async function toggleSave(postId, button) {
 
   if (!currentUser) return;
 
-  try {
+  if (!isOnline()) {
 
-    const ref = doc(
-      db,
-      "users",
-      currentUser.uid,
-      "savedPosts",
-      postId
+    toast("You are offline.", "error");
+
+    return;
+  }
+
+  if (pendingPostActions.has(`save:${postId}`)) return;
+
+  pendingPostActions.add(`save:${postId}`);
+
+  button?.classList.add("is-busy");
+
+  const wasSaved =
+    savedPostIds.has(postId);
+
+  const nextSaved =
+    !wasSaved;
+
+  const post =
+    allPosts.find(item => item.id === postId);
+
+  const previousCount =
+    Number(post?.saveCount || 0);
+
+  const nextCount =
+    Math.max(
+      0,
+      previousCount + (nextSaved ? 1 : -1)
     );
 
-    const snap = await getDoc(ref);
+  if (nextSaved) {
+    savedPostIds.add(postId);
+  } else {
+    savedPostIds.delete(postId);
+  }
 
-    const postRef =
-      doc(db, "communityPosts", postId);
+  updateLocalPost(
+    postId,
+    current => ({
+      ...current,
+      saveCount: nextCount
+    })
+  );
 
-    if (snap.exists()) {
+  const savedRef = doc(
+    db,
+    "users",
+    currentUser.uid,
+    "savedPosts",
+    postId
+  );
 
-      await deleteDoc(ref);
+  const postRef =
+    doc(db, "communityPosts", postId);
 
-      await updateDoc(
-        postRef,
-        {
-          saveCount: increment(-1)
+  try {
+
+    await runTransaction(
+      db,
+      async transaction => {
+
+        const savedSnap =
+          await transaction.get(savedRef);
+
+        const postSnap =
+          await transaction.get(postRef);
+
+        if (!postSnap.exists()) {
+          throw new Error("This post no longer exists.");
         }
-      );
 
-      toast("Removed from saved posts.", "info");
+        if (savedSnap.exists()) {
 
-    } else {
+          if (!wasSaved) {
+            throw new Error("Save state changed. Please try again.");
+          }
 
-      await setDoc(
-        ref,
-        {
-          postId,
-          savedAt: serverTimestamp()
+          transaction.delete(savedRef);
+
+          transaction.update(
+            postRef,
+            {
+              saveCount: increment(-1),
+              updatedAt: serverTimestamp()
+            }
+          );
+
+        } else {
+
+          if (wasSaved) {
+            throw new Error("Save state changed. Please try again.");
+          }
+
+          transaction.set(
+            savedRef,
+            {
+              postId,
+              savedAt: serverTimestamp()
+            }
+          );
+
+          transaction.update(
+            postRef,
+            {
+              saveCount: increment(1),
+              updatedAt: serverTimestamp()
+            }
+          );
         }
-      );
+      }
+    );
 
-      await updateDoc(
-        postRef,
-        {
-          saveCount: increment(1)
-        }
-      );
-
-      toast("Post saved.");
-
-    }
+    toast(
+      nextSaved
+        ? "Post saved."
+        : "Removed from saved posts.",
+      nextSaved ? "success" : "info"
+    );
 
   } catch (error) {
 
     console.error("Save error:", error);
 
+    if (wasSaved) {
+      savedPostIds.add(postId);
+    } else {
+      savedPostIds.delete(postId);
+    }
+
+    updateLocalPost(
+      postId,
+      current => ({
+        ...current,
+        saveCount: previousCount
+      })
+    );
+
     toast(
-      "Could not update saved posts.",
+      error.message || "Could not update saved posts.",
       "error"
     );
+
+  } finally {
+
+    pendingPostActions.delete(`save:${postId}`);
+
+    button?.classList.remove("is-busy");
   }
 }
 
@@ -2168,29 +3053,54 @@ async function sharePost(postId) {
   const url =
     `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(postId)}`;
 
+  const post =
+    allPosts.find(item => item.id === postId);
+
+  let shared = false;
+
   try {
 
     if (navigator.share) {
 
       await navigator.share({
-        title: "MoonLat Community",
-        text: "View this community post on MoonLat.",
+        title:
+          post?.title ||
+          "MoonLat Community",
+        text:
+          post?.content?.slice(0, 140) ||
+          "View this community post on MoonLat.",
         url
       });
+
+      shared = true;
 
     } else {
 
       await navigator.clipboard.writeText(url);
 
       toast("Community link copied.");
+
+      shared = true;
     }
 
-    await updateDoc(
-      doc(db, "communityPosts", postId),
-      {
-        shareCount: increment(1)
-      }
-    );
+    if (shared) {
+
+      await updateDoc(
+        doc(db, "communityPosts", postId),
+        {
+          shareCount: increment(1)
+        }
+      );
+
+      updateLocalPost(
+        postId,
+        current => ({
+          ...current,
+          shareCount:
+            Number(current.shareCount || 0) + 1
+        })
+      );
+    }
 
   } catch (error) {
 
@@ -2216,42 +3126,231 @@ async function sharePost(postId) {
 
 
 /* ============================================================
-   POST MENU
+   ACTION SHEET
 ============================================================ */
 
-async function openPostMenu(postId) {
+function ensureActionSheet() {
+
+  if ($("communityActionSheet")) {
+    return $("communityActionSheet");
+  }
+
+  const sheet = document.createElement("div");
+
+  sheet.id = "communityActionSheet";
+
+  sheet.className = "community-action-sheet";
+
+  sheet.innerHTML = `
+    <div class="community-action-panel">
+
+      <div class="community-action-header">
+        <div class="community-action-title">
+          Post actions
+        </div>
+
+        <div class="community-action-subtitle">
+          Choose an action for this community post.
+        </div>
+      </div>
+
+      <div id="communityActionItems"></div>
+
+      <button
+        type="button"
+        class="community-action-button community-action-cancel"
+        data-action-sheet="cancel"
+      >
+        Cancel
+      </button>
+
+    </div>
+  `;
+
+  document.body.appendChild(sheet);
+
+  sheet.addEventListener("click", event => {
+
+    if (event.target === sheet) {
+      closeActionSheet();
+      return;
+    }
+
+    const button =
+      event.target.closest("[data-action-sheet]");
+
+    if (!button) return;
+
+    const action =
+      button.dataset.actionSheet;
+
+    const postId =
+      button.dataset.postId;
+
+    closeActionSheet();
+
+    handleActionSheetAction(
+      action,
+      postId
+    );
+  });
+
+  return sheet;
+}
+
+
+function openPostMenu(postId) {
+
+  const post =
+    allPosts.find(item => item.id === postId);
+
+  if (!post || !currentUser) return;
+
+  const isOwner =
+    post.authorId === currentUser.uid;
+
+  const sheet =
+    ensureActionSheet();
+
+  const items =
+    $("communityActionItems");
+
+  items.innerHTML = `
+
+    <button
+      type="button"
+      class="community-action-button"
+      data-action-sheet="save"
+      data-post-id="${escapeHTML(postId)}"
+    >
+      <i class="${savedPostIds.has(postId) ? "fas" : "far"} fa-bookmark"></i>
+      <span>
+        ${savedPostIds.has(postId) ? "Remove from saved" : "Save post"}
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="community-action-button"
+      data-action-sheet="share"
+      data-post-id="${escapeHTML(postId)}"
+    >
+      <i class="fas fa-share"></i>
+      <span>Share post</span>
+    </button>
+
+    <button
+      type="button"
+      class="community-action-button"
+      data-action-sheet="copy"
+      data-post-id="${escapeHTML(postId)}"
+    >
+      <i class="fas fa-link"></i>
+      <span>Copy link</span>
+    </button>
+
+    ${
+      isOwner
+        ? `
+          <button
+            type="button"
+            class="community-action-button"
+            data-action-sheet="edit"
+            data-post-id="${escapeHTML(postId)}"
+          >
+            <i class="fas fa-pen"></i>
+            <span>Edit post</span>
+          </button>
+
+          <button
+            type="button"
+            class="community-action-button danger"
+            data-action-sheet="delete"
+            data-post-id="${escapeHTML(postId)}"
+          >
+            <i class="fas fa-trash"></i>
+            <span>Delete post</span>
+          </button>
+        `
+        : `
+          <button
+            type="button"
+            class="community-action-button"
+            data-action-sheet="report"
+            data-post-id="${escapeHTML(postId)}"
+          >
+            <i class="fas fa-flag"></i>
+            <span>Report post</span>
+          </button>
+        `
+    }
+  `;
+
+  sheet.classList.add("open");
+  document.body.classList.add("modal-open");
+}
+
+
+function closeActionSheet() {
+
+  $("communityActionSheet")?.classList.remove("open");
+
+  if (
+    !$("composerModal")?.classList.contains("open") &&
+    !$("commentsModal")?.classList.contains("open") &&
+    !$("reportModal")?.classList.contains("open") &&
+    !$("imageViewer")?.classList.contains("open") &&
+    !$("communityConfirm")?.classList.contains("open")
+  ) {
+    document.body.classList.remove("modal-open");
+  }
+}
+
+
+async function handleActionSheetAction(
+  action,
+  postId
+) {
 
   const post =
     allPosts.find(item => item.id === postId);
 
   if (!post) return;
 
-  const isOwner =
-    post.authorId === currentUser.uid;
+  if (action === "save") {
 
-  if (isOwner) {
-
-    const remove =
-      window.confirm(
-        "Delete this community post?"
+    const button =
+      document.querySelector(
+        `.post-card[data-post-id="${CSS.escape(postId)}"] [data-action="save"]`
       );
 
-    if (!remove) return;
+    await toggleSave(postId, button);
+
+    return;
+  }
+
+  if (action === "share") {
+
+    await sharePost(postId);
+
+    return;
+  }
+
+  if (action === "copy") {
+
+    const url =
+      `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(postId)}`;
 
     try {
 
-      await deleteDoc(
-        doc(db, "communityPosts", postId)
-      );
+      await navigator.clipboard.writeText(url);
 
-      toast("Post deleted.");
+      toast("Community link copied.");
 
-    } catch (error) {
-
-      console.error(error);
+    } catch {
 
       toast(
-        "Could not delete the post.",
+        "Could not copy the community link.",
         "error"
       );
     }
@@ -2259,18 +3358,241 @@ async function openPostMenu(postId) {
     return;
   }
 
-  const report =
-    window.confirm(
-      "Report this post to MoonLat moderation?"
+  if (action === "edit") {
+
+    if (post.authorId !== currentUser.uid) {
+      toast("You can only edit your own posts.", "error");
+      return;
+    }
+
+    openEditComposer(post);
+
+    return;
+  }
+
+  if (action === "delete") {
+
+    if (post.authorId !== currentUser.uid) {
+      toast("You can only delete your own posts.", "error");
+      return;
+    }
+
+    openConfirmation(
+      "Delete this post?",
+      "This will permanently remove the post and its community comments and reactions. This action cannot be undone.",
+      async () => {
+        await deleteCommunityPost(postId);
+      }
     );
 
-  if (!report) return;
+    return;
+  }
 
-  currentReportPostId = postId;
+  if (action === "report") {
 
-  $("reportModal").classList.add("open");
+    currentReportPostId = postId;
+
+    $("reportModal")?.classList.add("open");
+
+    document.body.classList.add("modal-open");
+  }
+}
+
+
+/* ============================================================
+   CONFIRMATION MODAL
+============================================================ */
+
+function ensureConfirmationModal() {
+
+  if ($("communityConfirm")) {
+    return $("communityConfirm");
+  }
+
+  const modal = document.createElement("div");
+
+  modal.id = "communityConfirm";
+
+  modal.className = "community-confirm";
+
+  modal.innerHTML = `
+    <div class="community-confirm-panel">
+
+      <h3 id="communityConfirmTitle">
+        Confirm action
+      </h3>
+
+      <p id="communityConfirmText">
+        Are you sure?
+      </p>
+
+      <div class="community-confirm-actions">
+
+        <button
+          type="button"
+          class="community-confirm-cancel"
+          id="communityConfirmCancel"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="community-confirm-danger"
+          id="communityConfirmProceed"
+        >
+          Continue
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  return modal;
+}
+
+
+function openConfirmation(
+  title,
+  text,
+  callback
+) {
+
+  const modal =
+    ensureConfirmationModal();
+
+  $("communityConfirmTitle").textContent =
+    title;
+
+  $("communityConfirmText").textContent =
+    text;
+
+  const proceed =
+    $("communityConfirmProceed");
+
+  const cancel =
+    $("communityConfirmCancel");
+
+  proceed.onclick = async () => {
+
+    proceed.disabled = true;
+
+    try {
+      await callback();
+      modal.classList.remove("open");
+      document.body.classList.remove("modal-open");
+    } finally {
+      proceed.disabled = false;
+    }
+  };
+
+  cancel.onclick = () => {
+
+    modal.classList.remove("open");
+
+    document.body.classList.remove("modal-open");
+  };
+
+  modal.classList.add("open");
 
   document.body.classList.add("modal-open");
+}
+
+
+/* ============================================================
+   POST DELETE
+============================================================ */
+
+async function deleteCollectionInBatches(
+  collectionRef,
+  maxBatchSize = 400
+) {
+
+  while (true) {
+
+    const snapshot =
+      await getDocs(
+        query(
+          collectionRef,
+          limit(maxBatchSize)
+        )
+      );
+
+    if (snapshot.empty) break;
+
+    const batch =
+      writeBatch(db);
+
+    snapshot.docs.forEach(docSnap => {
+      batch.delete(docSnap.ref);
+    });
+
+    await batch.commit();
+
+    if (snapshot.size < maxBatchSize) {
+      break;
+    }
+  }
+}
+
+
+async function deleteCommunityPost(postId) {
+
+  if (!currentUser) return;
+
+  const post =
+    allPosts.find(item => item.id === postId);
+
+  if (!post) return;
+
+  if (post.authorId !== currentUser.uid) {
+    throw new Error("You can only delete your own posts.");
+  }
+
+  try {
+
+    await deleteCollectionInBatches(
+      collection(
+        db,
+        "communityPosts",
+        postId,
+        "comments"
+      )
+    );
+
+    await deleteCollectionInBatches(
+      collection(
+        db,
+        "communityPosts",
+        postId,
+        "reactions"
+      )
+    );
+
+    await deleteDoc(
+      doc(db, "communityPosts", postId)
+    );
+
+    likedPostIds.delete(postId);
+    savedPostIds.delete(postId);
+
+    toast("Post deleted.");
+
+  } catch (error) {
+
+    console.error(
+      "Community post deletion error:",
+      error
+    );
+
+    toast(
+      error.message || "Could not delete the post.",
+      "error"
+    );
+  }
 }
 
 
@@ -2383,7 +3705,7 @@ function closeComments() {
 
   currentCommentsPostId = null;
 
-  $("commentsModal").classList.remove("open");
+  $("commentsModal")?.classList.remove("open");
 
   document.body.classList.remove("modal-open");
 }
@@ -2392,7 +3714,6 @@ function closeComments() {
 function subscribeToComments(postId) {
 
   if (commentsUnsubscribe) {
-
     commentsUnsubscribe();
   }
 
@@ -2404,7 +3725,7 @@ function subscribeToComments(postId) {
       "comments"
     ),
     orderBy("createdAt", "asc"),
-    limit(100)
+    limit(500)
   );
 
   commentsUnsubscribe = onSnapshot(
@@ -2469,54 +3790,255 @@ function renderComments(comments) {
     return;
   }
 
-  $("commentList").innerHTML =
-    comments.map(comment => {
+  const roots =
+    comments.filter(comment => !comment.parentId);
 
-      const initials =
-        getInitials(
-          comment.authorName || "User"
+  const replies =
+    comments.filter(comment => comment.parentId);
+
+  const commentById =
+    new Map(
+      comments.map(comment => [
+        comment.id,
+        comment
+      ])
+    );
+
+  $("commentList").innerHTML =
+    roots.map(comment => {
+
+      const childReplies =
+        replies.filter(
+          reply =>
+            reply.parentId === comment.id
         );
 
-      const avatar =
-        comment.authorPhotoURL || "";
+      return renderComment(
+        comment,
+        false,
+        childReplies,
+        commentById
+      );
 
-      return `
-        <div class="comment">
+    }).join("");
+}
 
-          <div class="user-avatar !w-8 !h-8 !rounded-[10px] !text-[8px]">
-            ${
-              avatar
-                ? `
-                  <img
-                    src="${escapeHTML(avatar)}"
-                    alt="${escapeHTML(comment.authorName || "User")}"
-                    loading="lazy"
-                  >
-                `
-                : escapeHTML(initials)
-            }
+
+function renderComment(
+  comment,
+  isReply = false,
+  replies = [],
+  commentById = new Map()
+) {
+
+  const initials =
+    getInitials(
+      comment.authorName || "User"
+    );
+
+  const avatar =
+    comment.authorPhotoURL || "";
+
+  const liked =
+    Boolean(
+      comment.likedBy?.includes?.(currentUser?.uid)
+    );
+
+  const isOwner =
+    comment.authorId === currentUser?.uid;
+
+  const accepted =
+    Boolean(comment.accepted);
+
+  return `
+    <div
+      class="comment-thread ${isReply ? "is-reply" : ""}"
+      data-comment-id="${escapeHTML(comment.id)}"
+    >
+
+      <div class="user-avatar !w-8 !h-8 !rounded-[10px] !text-[8px]">
+        ${
+          avatar
+            ? `
+              <img
+                src="${escapeHTML(avatar)}"
+                alt="${escapeHTML(comment.authorName || "User")}"
+                loading="lazy"
+              >
+            `
+            : escapeHTML(initials)
+        }
+      </div>
+
+      <div class="comment-shell">
+
+        <div class="comment-bubble ${accepted ? "accepted-answer" : ""}">
+
+          ${
+            accepted
+              ? `
+                <div class="accepted-answer-label">
+                  <i class="fas fa-circle-check"></i>
+                  Accepted answer
+                </div>
+              `
+              : ""
+          }
+
+          <div class="comment-author-row">
+
+            <span class="comment-author-name">
+              ${escapeHTML(comment.authorName || "Community member")}
+            </span>
+
+            <span class="comment-role">
+              ${escapeHTML(comment.authorRole || "member")}
+            </span>
+
           </div>
 
-          <div class="comment-content">
-
-            <div class="comment-author">
-              ${escapeHTML(comment.authorName || "Community member")}
-            </div>
-
-            <div class="comment-text">
-              ${escapeHTML(comment.text || "")}
-            </div>
-
-            <div class="comment-time">
-              ${formatRelativeTime(comment.createdAt)}
-            </div>
-
+          <div class="comment-text text-[12px] leading-[1.5] mt-1">
+            ${escapeHTML(comment.text || "")}
           </div>
 
         </div>
-      `;
 
-    }).join("");
+        <div class="comment-meta-row">
+
+          <span class="comment-edited">
+            ${formatRelativeTime(comment.createdAt)}
+            ${comment.edited ? " · edited" : ""}
+          </span>
+
+          <button
+            type="button"
+            class="comment-action ${liked ? "liked" : ""}"
+            data-comment-action="like"
+            data-comment-id="${escapeHTML(comment.id)}"
+          >
+            ${liked ? "Liked" : "Like"}
+            ${
+              Number(comment.likeCount || 0) > 0
+                ? ` ${formatNumber(comment.likeCount)}`
+                : ""
+            }
+          </button>
+
+          <button
+            type="button"
+            class="comment-action"
+            data-comment-action="reply"
+            data-comment-id="${escapeHTML(comment.id)}"
+          >
+            Reply
+          </button>
+
+          ${
+            isOwner
+              ? `
+                <button
+                  type="button"
+                  class="comment-action"
+                  data-comment-action="edit"
+                  data-comment-id="${escapeHTML(comment.id)}"
+                >
+                  Edit
+                </button>
+
+                <button
+                  type="button"
+                  class="comment-action"
+                  data-comment-action="delete"
+                  data-comment-id="${escapeHTML(comment.id)}"
+                >
+                  Delete
+                </button>
+              `
+              : `
+                <button
+                  type="button"
+                  class="comment-action"
+                  data-comment-action="report"
+                  data-comment-id="${escapeHTML(comment.id)}"
+                >
+                  Report
+                </button>
+              `
+          }
+
+          ${
+            currentCommentsPostId &&
+            allPosts.find(post => post.id === currentCommentsPostId)?.authorId === currentUser?.uid &&
+            allPosts.find(post => post.id === currentCommentsPostId)?.type === "question" &&
+            !isReply
+              ? `
+                <button
+                  type="button"
+                  class="comment-action"
+                  data-comment-action="${accepted ? "unaccept" : "accept"}"
+                  data-comment-id="${escapeHTML(comment.id)}"
+                >
+                  ${accepted ? "Unmark answer" : "Accept answer"}
+                </button>
+              `
+              : ""
+          }
+
+        </div>
+
+        <div
+          class="comment-inline-editor"
+          id="commentEditor-${escapeHTML(comment.id)}"
+        >
+          <textarea
+            maxlength="2000"
+            aria-label="Edit reply"
+          >${escapeHTML(comment.text || "")}</textarea>
+
+          <div class="comment-inline-editor-actions">
+
+            <button
+              type="button"
+              class="community-small-button secondary"
+              data-comment-action="cancel-edit"
+              data-comment-id="${escapeHTML(comment.id)}"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="community-small-button primary"
+              data-comment-action="save-edit"
+              data-comment-id="${escapeHTML(comment.id)}"
+            >
+              Save
+            </button>
+
+          </div>
+        </div>
+
+        ${
+          replies.length
+            ? `
+              <div class="comment-replies">
+                ${replies.map(reply =>
+                  renderComment(
+                    reply,
+                    true,
+                    [],
+                    commentById
+                  )
+                ).join("")}
+              </div>
+            `
+            : ""
+        }
+
+      </div>
+
+    </div>
+  `;
 }
 
 
@@ -2533,6 +4055,16 @@ async function submitComment(event) {
     input.value.trim();
 
   if (!text) return;
+
+  if (text.length > 2000) {
+
+    toast(
+      "Replies are limited to 2000 characters.",
+      "error"
+    );
+
+    return;
+  }
 
   const button =
     $("commentForm").querySelector(
@@ -2555,17 +4087,30 @@ async function submitComment(event) {
         "comments"
       );
 
+    const post =
+      allPosts.find(
+        item =>
+          item.id === currentCommentsPostId
+      );
+
     await addDoc(
       commentRef,
       {
         text,
         authorId: currentUser.uid,
         authorName: displayName(),
+        authorRole: displayRole(),
         authorPhotoURL:
           avatarURL(currentProfile) ||
           currentUser.photoURL ||
           "",
-        createdAt: serverTimestamp()
+        likeCount: 0,
+        replyCount: 0,
+        parentId: null,
+        accepted: false,
+        edited: false,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
       }
     );
 
@@ -2584,6 +4129,25 @@ async function submitComment(event) {
     input.value = "";
 
     toast("Reply added.");
+
+    if (
+      post?.authorId &&
+      post.authorId !== currentUser.uid
+    ) {
+
+      await createNotification({
+        recipientId: post.authorId,
+        type: "post_comment",
+        postId: currentCommentsPostId,
+        actorId: currentUser.uid,
+        actorName: displayName(),
+        actorPhotoURL:
+          avatarURL(currentProfile) ||
+          currentUser.photoURL ||
+          "",
+        message: `${displayName()} commented on your post.`
+      });
+    }
 
   } catch (error) {
 
@@ -2605,8 +4169,813 @@ async function submitComment(event) {
 
 
 /* ============================================================
+   COMMENT ACTIONS
+============================================================ */
+
+async function handleCommentAction(
+  action,
+  commentId
+) {
+
+  if (!currentCommentsPostId || !currentUser) {
+    return;
+  }
+
+  const commentElement =
+    document.querySelector(
+      `[data-comment-id="${CSS.escape(commentId)}"]`
+    );
+
+  const commentText =
+    commentElement?.querySelector(".comment-text")?.textContent || "";
+
+  const commentRef =
+    doc(
+      db,
+      "communityPosts",
+      currentCommentsPostId,
+      "comments",
+      commentId
+    );
+
+  if (action === "reply") {
+
+    const editor =
+      ensureReplyEditor(
+        commentId
+      );
+
+    editor.classList.add("open");
+
+    editor.querySelector("textarea")?.focus();
+
+    return;
+  }
+
+
+  if (action === "like") {
+
+    if (pendingCommentActions.has(`like:${commentId}`)) {
+      return;
+    }
+
+    pendingCommentActions.add(`like:${commentId}`);
+
+    try {
+
+      await runTransaction(
+        db,
+        async transaction => {
+
+          const snap =
+            await transaction.get(commentRef);
+
+          if (!snap.exists()) {
+            throw new Error("This reply no longer exists.");
+          }
+
+          const data =
+            snap.data();
+
+          const likedBy =
+            Array.isArray(data.likedBy)
+              ? data.likedBy
+              : [];
+
+          const alreadyLiked =
+            likedBy.includes(currentUser.uid);
+
+          const nextLikedBy =
+            alreadyLiked
+              ? likedBy.filter(
+                  id => id !== currentUser.uid
+                )
+              : [
+                  ...likedBy,
+                  currentUser.uid
+                ];
+
+          transaction.update(
+            commentRef,
+            {
+              likedBy: nextLikedBy,
+              likeCount:
+                Math.max(
+                  0,
+                  Number(data.likeCount || 0) +
+                    (alreadyLiked ? -1 : 1)
+                ),
+              updatedAt: serverTimestamp()
+            }
+          );
+        }
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Comment like error:",
+        error
+      );
+
+      toast(
+        error.message || "Could not update reply reaction.",
+        "error"
+      );
+
+    } finally {
+
+      pendingCommentActions.delete(`like:${commentId}`);
+    }
+
+    return;
+  }
+
+
+  if (action === "edit") {
+
+    if (!commentElement) return;
+
+    const editor =
+      commentElement.querySelector(
+        ".comment-inline-editor"
+      );
+
+    editor?.classList.add("open");
+
+    editor?.querySelector("textarea")?.focus();
+
+    return;
+  }
+
+
+  if (action === "cancel-edit") {
+
+    commentElement
+      ?.querySelector(".comment-inline-editor")
+      ?.classList.remove("open");
+
+    return;
+  }
+
+
+  if (action === "save-edit") {
+
+    const textarea =
+      commentElement?.querySelector(
+        ".comment-inline-editor textarea"
+      );
+
+    const text =
+      textarea?.value.trim();
+
+    if (!text) {
+      toast("Reply cannot be empty.", "error");
+      return;
+    }
+
+    if (text.length > 2000) {
+      toast("Replies are limited to 2000 characters.", "error");
+      return;
+    }
+
+    try {
+
+      const snap =
+        await getDoc(commentRef);
+
+      if (!snap.exists()) {
+        throw new Error("This reply no longer exists.");
+      }
+
+      if (snap.data().authorId !== currentUser.uid) {
+        throw new Error("You can only edit your own reply.");
+      }
+
+      await updateDoc(
+        commentRef,
+        {
+          text,
+          edited: true,
+          editedAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        }
+      );
+
+      toast("Reply updated.");
+
+    } catch (error) {
+
+      console.error(
+        "Comment edit error:",
+        error
+      );
+
+      toast(
+        error.message || "Could not update reply.",
+        "error"
+      );
+    }
+
+    return;
+  }
+
+
+  if (action === "delete") {
+
+    openConfirmation(
+      "Delete this reply?",
+      "This reply will be permanently removed from the conversation.",
+      async () => {
+        await deleteComment(commentId);
+      }
+    );
+
+    return;
+  }
+
+
+  if (action === "accept" || action === "unaccept") {
+
+    const post =
+      allPosts.find(
+        item =>
+          item.id === currentCommentsPostId
+      );
+
+    if (
+      !post ||
+      post.authorId !== currentUser.uid ||
+      post.type !== "question"
+    ) {
+      toast(
+        "Only the question author can manage accepted answers.",
+        "error"
+      );
+      return;
+    }
+
+    try {
+
+      await setAcceptedAnswer(
+        commentId,
+        action === "accept"
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Accepted answer error:",
+        error
+      );
+
+      toast(
+        error.message || "Could not update the accepted answer.",
+        "error"
+      );
+    }
+
+    return;
+  }
+
+
+  if (action === "report") {
+
+    await reportComment(
+      commentId,
+      commentText
+    );
+  }
+}
+
+
+function ensureReplyEditor(commentId) {
+
+  const existing =
+    document.getElementById(
+      `replyEditor-${commentId}`
+    );
+
+  if (existing) return existing;
+
+  const commentElement =
+    document.querySelector(
+      `[data-comment-id="${CSS.escape(commentId)}"]`
+    );
+
+  if (!commentElement) {
+    throw new Error("Reply target not found.");
+  }
+
+  const editor =
+    document.createElement("div");
+
+  editor.id =
+    `replyEditor-${commentId}`;
+
+  editor.className =
+    "comment-inline-editor";
+
+  editor.innerHTML = `
+    <textarea
+      maxlength="2000"
+      placeholder="Write a reply..."
+      aria-label="Write a reply"
+    ></textarea>
+
+    <div class="comment-inline-editor-actions">
+
+      <button
+        type="button"
+        class="community-small-button secondary"
+        data-reply-action="cancel"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="community-small-button primary"
+        data-reply-action="send"
+      >
+        Reply
+      </button>
+
+    </div>
+  `;
+
+  commentElement
+    .querySelector(".comment-shell")
+    ?.appendChild(editor);
+
+  editor.addEventListener(
+    "click",
+    async event => {
+
+      const button =
+        event.target.closest(
+          "[data-reply-action]"
+        );
+
+      if (!button) return;
+
+      const action =
+        button.dataset.replyAction;
+
+      if (action === "cancel") {
+        editor.classList.remove("open");
+        return;
+      }
+
+      const text =
+        editor.querySelector("textarea")
+          ?.value
+          .trim();
+
+      if (!text) {
+        toast("Write a reply first.", "error");
+        return;
+      }
+
+      if (text.length > 2000) {
+        toast("Replies are limited to 2000 characters.", "error");
+        return;
+      }
+
+      await createReply(
+        commentId,
+        text,
+        button
+      );
+    }
+  );
+
+  return editor;
+}
+
+
+async function createReply(
+  parentCommentId,
+  text,
+  button
+) {
+
+  if (!currentCommentsPostId || !currentUser) {
+    return;
+  }
+
+  const actionKey =
+    `reply:${parentCommentId}`;
+
+  if (pendingCommentActions.has(actionKey)) {
+    return;
+  }
+
+  pendingCommentActions.add(actionKey);
+
+  button.disabled = true;
+
+  try {
+
+    const commentsRef =
+      collection(
+        db,
+        "communityPosts",
+        currentCommentsPostId,
+        "comments"
+      );
+
+    const parentRef =
+      doc(
+        db,
+        "communityPosts",
+        currentCommentsPostId,
+        "comments",
+        parentCommentId
+      );
+
+    await addDoc(
+      commentsRef,
+      {
+        text,
+        authorId: currentUser.uid,
+        authorName: displayName(),
+        authorRole: displayRole(),
+        authorPhotoURL:
+          avatarURL(currentProfile) ||
+          currentUser.photoURL ||
+          "",
+        likeCount: 0,
+        replyCount: 0,
+        parentId: parentCommentId,
+        accepted: false,
+        edited: false,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      }
+    );
+
+    await updateDoc(
+      parentRef,
+      {
+        replyCount: increment(1),
+        updatedAt: serverTimestamp()
+      }
+    );
+
+    await updateDoc(
+      doc(
+        db,
+        "communityPosts",
+        currentCommentsPostId
+      ),
+      {
+        commentCount: increment(1),
+        updatedAt: serverTimestamp()
+      }
+    );
+
+    const editor =
+      document.getElementById(
+        `replyEditor-${parentCommentId}`
+      );
+
+    if (editor) {
+      editor.querySelector("textarea").value = "";
+      editor.classList.remove("open");
+    }
+
+    toast("Reply added.");
+
+    const parentSnap =
+      await getDoc(parentRef);
+
+    const parentData =
+      parentSnap.exists()
+        ? parentSnap.data()
+        : null;
+
+    if (
+      parentData?.authorId &&
+      parentData.authorId !== currentUser.uid
+    ) {
+
+      await createNotification({
+        recipientId: parentData.authorId,
+        type: "comment_reply",
+        postId: currentCommentsPostId,
+        commentId: parentCommentId,
+        actorId: currentUser.uid,
+        actorName: displayName(),
+        actorPhotoURL:
+          avatarURL(currentProfile) ||
+          currentUser.photoURL ||
+          "",
+        message: `${displayName()} replied to your comment.`
+      });
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Create reply error:",
+      error
+    );
+
+    toast(
+      error.message || "Could not add the reply.",
+      "error"
+    );
+
+  } finally {
+
+    pendingCommentActions.delete(actionKey);
+
+    button.disabled = false;
+  }
+}
+
+
+async function deleteComment(commentId) {
+
+  if (!currentCommentsPostId || !currentUser) {
+    return;
+  }
+
+  const commentRef =
+    doc(
+      db,
+      "communityPosts",
+      currentCommentsPostId,
+      "comments",
+      commentId
+    );
+
+  const snap =
+    await getDoc(commentRef);
+
+  if (!snap.exists()) {
+    throw new Error("This reply no longer exists.");
+  }
+
+  const data =
+    snap.data();
+
+  if (data.authorId !== currentUser.uid) {
+    throw new Error("You can only delete your own reply.");
+  }
+
+  const childReplies =
+    await getDocs(
+      query(
+        collection(
+          db,
+          "communityPosts",
+          currentCommentsPostId,
+          "comments"
+        ),
+        where("parentId", "==", commentId),
+        limit(100)
+      )
+    );
+
+  const batch =
+    writeBatch(db);
+
+  childReplies.docs.forEach(reply => {
+    batch.delete(reply.ref);
+  });
+
+  batch.delete(commentRef);
+
+  await batch.commit();
+
+  const removedCount =
+    1 + childReplies.size;
+
+  await updateDoc(
+    doc(
+      db,
+      "communityPosts",
+      currentCommentsPostId
+    ),
+    {
+      commentCount: increment(-removedCount),
+      updatedAt: serverTimestamp()
+    }
+  );
+
+  toast("Reply deleted.");
+}
+
+
+async function setAcceptedAnswer(
+  commentId,
+  accepted
+) {
+
+  if (!currentCommentsPostId || !currentUser) {
+    return;
+  }
+
+  const post =
+    allPosts.find(
+      item =>
+        item.id === currentCommentsPostId
+    );
+
+  if (
+    !post ||
+    post.authorId !== currentUser.uid ||
+    post.type !== "question"
+  ) {
+    throw new Error(
+      "Only the question author can manage accepted answers."
+    );
+  }
+
+  const commentsRef =
+    collection(
+      db,
+      "communityPosts",
+      currentCommentsPostId,
+      "comments"
+    );
+
+  const commentsSnap =
+    await getDocs(
+      query(
+        commentsRef,
+        limit(500)
+      )
+    );
+
+  const batch =
+    writeBatch(db);
+
+  commentsSnap.docs.forEach(commentSnap => {
+
+    const isTarget =
+      commentSnap.id === commentId;
+
+    batch.update(
+      commentSnap.ref,
+      {
+        accepted:
+          accepted && isTarget,
+        updatedAt: serverTimestamp()
+      }
+    );
+  });
+
+  batch.update(
+    doc(
+      db,
+      "communityPosts",
+      currentCommentsPostId
+    ),
+    {
+      answered: accepted,
+      updatedAt: serverTimestamp()
+    }
+  );
+
+  await batch.commit();
+
+  toast(
+    accepted
+      ? "Answer accepted."
+      : "Answer unmarked."
+  );
+
+  if (accepted) {
+
+    const commentSnap =
+      await getDoc(
+        doc(
+          db,
+          "communityPosts",
+          currentCommentsPostId,
+          "comments",
+          commentId
+        )
+      );
+
+    if (
+      commentSnap.exists() &&
+      commentSnap.data().authorId !== currentUser.uid
+    ) {
+
+      const recipientId =
+        commentSnap.data().authorId;
+
+      await createNotification({
+        recipientId,
+        type: "accepted_answer",
+        postId: currentCommentsPostId,
+        commentId,
+        actorId: currentUser.uid,
+        actorName: displayName(),
+        actorPhotoURL:
+          avatarURL(currentProfile) ||
+          currentUser.photoURL ||
+          "",
+        message: `${displayName()} accepted your answer.`
+      });
+    }
+  }
+}
+
+
+async function reportComment(
+  commentId,
+  commentText
+) {
+
+  if (!currentCommentsPostId || !currentUser) {
+    return;
+  }
+
+  const reason =
+    window.prompt(
+      "Why are you reporting this reply?\n\nExamples: spam, harassment, misleading information, abuse."
+    );
+
+  if (!reason?.trim()) {
+    return;
+  }
+
+  try {
+
+    await addDoc(
+      collection(db, "communityReports"),
+      {
+        type: "comment",
+        postId: currentCommentsPostId,
+        commentId,
+        reporterId: currentUser.uid,
+        reason: reason.trim(),
+        details: commentText.slice(0, 500),
+        status: "open",
+        createdAt: serverTimestamp()
+      }
+    );
+
+    toast("Reply reported to moderation.");
+
+  } catch (error) {
+
+    console.error(
+      "Comment report error:",
+      error
+    );
+
+    toast(
+      "Could not report this reply.",
+      "error"
+    );
+  }
+}
+
+
+/* ============================================================
    NOTIFICATIONS
 ============================================================ */
+
+async function createNotification(payload) {
+
+  if (!payload?.recipientId) return;
+
+  if (payload.recipientId === currentUser?.uid) {
+    return;
+  }
+
+  try {
+
+    await addDoc(
+      collection(db, "notifications"),
+      {
+        ...payload,
+        userId: payload.recipientId,
+        read: false,
+        createdAt: serverTimestamp()
+      }
+    );
+
+  } catch (error) {
+
+    /*
+     * Notification creation is intentionally best-effort.
+     * A blocked notification rule must never make the actual
+     * like/comment/answer action appear to have failed.
+     */
+    console.warn(
+      "Notification could not be created:",
+      error
+    );
+  }
+}
+
 
 function subscribeToNotifications() {
 
@@ -2618,10 +4987,6 @@ function subscribeToNotifications() {
 
   try {
 
-    // Keep this query single-field so the community page does not depend
-    // on a composite Firestore index just to render the notification dot.
-    // We filter unread notifications client-side after the authenticated
-    // user's notification documents have been securely returned.
     const q = query(
       collection(
         db,
@@ -2645,7 +5010,7 @@ function subscribeToNotifications() {
           );
 
           $("notificationDot")
-            .classList.toggle(
+            ?.classList.toggle(
               "hidden",
               !hasUnread
             );
@@ -2698,23 +5063,35 @@ function updateCommunityMetrics() {
     ).length;
 
 
-  $("communityPostCount").textContent =
-    formatNumber(posts);
+  if ($("communityPostCount")) {
+    $("communityPostCount").textContent =
+      formatNumber(posts);
+  }
 
-  $("communityPhotoCount").textContent =
-    formatNumber(photos);
+  if ($("communityPhotoCount")) {
+    $("communityPhotoCount").textContent =
+      formatNumber(photos);
+  }
 
-  $("sidePosts").textContent =
-    formatNumber(posts);
+  if ($("sidePosts")) {
+    $("sidePosts").textContent =
+      formatNumber(posts);
+  }
 
-  $("sideQuestions").textContent =
-    formatNumber(questions);
+  if ($("sideQuestions")) {
+    $("sideQuestions").textContent =
+      formatNumber(questions);
+  }
 
-  $("sideProperties").textContent =
-    formatNumber(propertiesCount);
+  if ($("sideProperties")) {
+    $("sideProperties").textContent =
+      formatNumber(propertiesCount);
+  }
 
-  $("sidePhotos").textContent =
-    formatNumber(photos);
+  if ($("sidePhotos")) {
+    $("sidePhotos").textContent =
+      formatNumber(photos);
+  }
 
 
   const uniqueMembers =
@@ -2724,8 +5101,10 @@ function updateCommunityMetrics() {
         .filter(Boolean)
     ).size;
 
-  $("communityMemberCount").textContent =
-    formatNumber(uniqueMembers);
+  if ($("communityMemberCount")) {
+    $("communityMemberCount").textContent =
+      formatNumber(uniqueMembers);
+  }
 }
 
 
@@ -2739,7 +5118,7 @@ function handleSearch(value) {
     value.trim();
 
   $("clearSearch")
-    .classList.toggle(
+    ?.classList.toggle(
       "hidden",
       !searchTerm
     );
@@ -2759,13 +5138,14 @@ async function toggleNearby() {
     nearbyMode = false;
 
     $("locationFilterButton")
-      .classList.remove("active");
+      ?.classList.remove("active");
 
-    $("locationFilterButton")
-      .innerHTML = `
+    if ($("locationFilterButton")) {
+      $("locationFilterButton").innerHTML = `
         <i class="fas fa-location-crosshairs"></i>
         <span>Nearby</span>
       `;
+    }
 
     applyFeedFilters();
 
@@ -2787,16 +5167,19 @@ async function toggleNearby() {
     nearbyMode = true;
 
     $("locationFilterButton")
-      .classList.add("active");
+      ?.classList.add("active");
 
-    $("locationFilterButton")
-      .innerHTML = `
+    if ($("locationFilterButton")) {
+      $("locationFilterButton").innerHTML = `
         <i class="fas fa-location-dot"></i>
         <span>Nearby</span>
       `;
+    }
 
-    $("sidebarLocationText").textContent =
-      location.label;
+    if ($("sidebarLocationText")) {
+      $("sidebarLocationText").textContent =
+        location.label;
+    }
 
     applyFeedFilters();
 
@@ -2881,377 +5264,403 @@ function handleDeepLink() {
    EVENTS
 ============================================================ */
 
-$("openComposer")
-  .addEventListener(
-    "click",
-    () => openComposer()
-  );
+function bindCommunityEvents() {
 
-
-$("mobileCreate")
-  .addEventListener(
-    "click",
-    () => openComposer()
-  );
-
-
-document
-  .querySelectorAll("[data-open-type]")
-  .forEach(button => {
-
-    button.addEventListener(
+  $("openComposer")
+    ?.addEventListener(
       "click",
-      () => {
-
-        openComposer(
-          button.dataset.openType
-        );
-      }
+      () => openComposer()
     );
-  });
 
 
-document
-  .querySelectorAll(".post-type-option")
-  .forEach(button => {
-
-    button.addEventListener(
+  $("mobileCreate")
+    ?.addEventListener(
       "click",
-      () => {
-
-        selectedPostType =
-          button.dataset.postType;
-
-        document
-          .querySelectorAll(".post-type-option")
-          .forEach(item => {
-
-            item.classList.toggle(
-              "active",
-              item === button
-            );
-          });
-
-        updateComposerFields();
-      }
+      () => openComposer()
     );
-  });
 
 
-$("closeComposer")
-  .addEventListener(
-    "click",
-    closeComposer
-  );
+  document
+    .querySelectorAll("[data-open-type]")
+    .forEach(button => {
 
+      button.addEventListener(
+        "click",
+        () => {
 
-$("cancelComposer")
-  .addEventListener(
-    "click",
-    () => {
-
-      resetComposer();
-
-      closeComposer();
-    }
-  );
-
-
-$("postForm")
-  .addEventListener(
-    "submit",
-    createPost
-  );
-
-
-$("postContent")
-  .addEventListener(
-    "input",
-    () => {
-
-      const length =
-        $("postContent").value.length;
-
-      $("characterCount").textContent =
-        `${length} / 5000`;
-    }
-  );
-
-
-$("chooseImages")
-  .addEventListener(
-    "click",
-    () => $("postImages").click()
-  );
-
-
-$("postImages")
-  .addEventListener(
-    "change",
-    event => {
-
-      handleImageSelection(
-        event.target.files
-      );
-
-      event.target.value = "";
-    }
-  );
-
-
-$("attachLocation")
-  .addEventListener(
-    "change",
-    handleLocationToggle
-  );
-
-
-document
-  .querySelectorAll(".category-btn")
-  .forEach(button => {
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        document
-          .querySelectorAll(".category-btn")
-          .forEach(item =>
-            item.classList.remove("active")
+          openComposer(
+            button.dataset.openType
           );
+        }
+      );
+    });
 
-        button.classList.add("active");
 
-        activeCategory =
-          button.dataset.category;
+  document
+    .querySelectorAll(".post-type-option")
+    .forEach(button => {
 
-        applyFeedFilters();
-      }
+      button.addEventListener(
+        "click",
+        () => {
+
+          selectedPostType =
+            button.dataset.postType;
+
+          document
+            .querySelectorAll(".post-type-option")
+            .forEach(item => {
+
+              item.classList.toggle(
+                "active",
+                item === button
+              );
+            });
+
+          updateComposerFields();
+        }
+      );
+    });
+
+
+  $("closeComposer")
+    ?.addEventListener(
+      "click",
+      closeComposer
     );
-  });
 
 
-document
-  .querySelectorAll(".feed-tab")
-  .forEach(button => {
-
-    button.addEventListener(
+  $("cancelComposer")
+    ?.addEventListener(
       "click",
       () => {
-
-        document
-          .querySelectorAll(".feed-tab")
-          .forEach(item =>
-            item.classList.remove("active")
-          );
-
-        button.classList.add("active");
-
-        activeSort =
-          button.dataset.sort;
-
-        applyFeedFilters();
-      }
-    );
-  });
-
-
-$("communitySearch")
-  .addEventListener(
-    "input",
-    event => {
-
-      handleSearch(
-        event.target.value
-      );
-    }
-  );
-
-
-$("clearSearch")
-  .addEventListener(
-    "click",
-    () => {
-
-      $("communitySearch").value = "";
-
-      handleSearch("");
-
-      $("communitySearch").focus();
-    }
-  );
-
-
-$("headerSearchButton")
-  .addEventListener(
-    "click",
-    () => {
-
-      $("communitySearch").focus();
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-    }
-  );
-
-
-$("mobileSearch")
-  .addEventListener(
-    "click",
-    () => {
-
-      $("communitySearch").focus();
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-    }
-  );
-
-
-$("locationFilterButton")
-  .addEventListener(
-    "click",
-    toggleNearby
-  );
-
-
-$("closeComments")
-  .addEventListener(
-    "click",
-    closeComments
-  );
-
-
-$("commentForm")
-  .addEventListener(
-    "submit",
-    submitComment
-  );
-
-
-$("closeImageViewer")
-  .addEventListener(
-    "click",
-    closeImageViewer
-  );
-
-
-$("notificationButton")
-  .addEventListener(
-    "click",
-    () => {
-
-      window.location.href =
-        "alert.html";
-    }
-  );
-
-
-$("mobileNotifications")
-  .addEventListener(
-    "click",
-    () => {
-
-      window.location.href =
-        "alert.html";
-    }
-  );
-
-
-$("closeReport")
-  .addEventListener(
-    "click",
-    () => {
-
-      $("reportModal")
-        .classList.remove("open");
-
-      document.body.classList.remove("modal-open");
-    }
-  );
-
-
-$("cancelReport")
-  .addEventListener(
-    "click",
-    () => {
-
-      $("reportModal")
-        .classList.remove("open");
-
-      document.body.classList.remove("modal-open");
-    }
-  );
-
-
-$("reportForm")
-  .addEventListener(
-    "submit",
-    submitReport
-  );
-
-
-$("composerModal")
-  .addEventListener(
-    "click",
-    event => {
-
-      if (event.target === $("composerModal")) {
 
         resetComposer();
 
         closeComposer();
       }
-    }
-  );
+    );
 
 
-$("commentsModal")
-  .addEventListener(
-    "click",
-    event => {
+  $("postForm")
+    ?.addEventListener(
+      "submit",
+      createPost
+    );
 
-      if (event.target === $("commentsModal")) {
-        closeComments();
+
+  $("postContent")
+    ?.addEventListener(
+      "input",
+      () => {
+
+        const length =
+          $("postContent").value.length;
+
+        $("characterCount").textContent =
+          `${length} / 5000`;
       }
-    }
-  );
+    );
 
 
-$("reportModal")
-  .addEventListener(
-    "click",
-    event => {
+  $("chooseImages")
+    ?.addEventListener(
+      "click",
+      () => $("postImages").click()
+    );
 
-      if (event.target === $("reportModal")) {
+
+  $("postImages")
+    ?.addEventListener(
+      "change",
+      event => {
+
+        handleImageSelection(
+          event.target.files
+        );
+
+        event.target.value = "";
+      }
+    );
+
+
+  $("attachLocation")
+    ?.addEventListener(
+      "change",
+      handleLocationToggle
+    );
+
+
+  document
+    .querySelectorAll(".category-btn")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          document
+            .querySelectorAll(".category-btn")
+            .forEach(item =>
+              item.classList.remove("active")
+            );
+
+          button.classList.add("active");
+
+          activeCategory =
+            button.dataset.category;
+
+          applyFeedFilters();
+        }
+      );
+    });
+
+
+  document
+    .querySelectorAll(".feed-tab")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          document
+            .querySelectorAll(".feed-tab")
+            .forEach(item =>
+              item.classList.remove("active")
+            );
+
+          button.classList.add("active");
+
+          activeSort =
+            button.dataset.sort;
+
+          applyFeedFilters();
+        }
+      );
+    });
+
+
+  $("communitySearch")
+    ?.addEventListener(
+      "input",
+      event => {
+
+        handleSearch(
+          event.target.value
+        );
+      }
+    );
+
+
+  $("clearSearch")
+    ?.addEventListener(
+      "click",
+      () => {
+
+        $("communitySearch").value = "";
+
+        handleSearch("");
+
+        $("communitySearch").focus();
+      }
+    );
+
+
+  $("headerSearchButton")
+    ?.addEventListener(
+      "click",
+      () => {
+
+        $("communitySearch")?.focus();
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      }
+    );
+
+
+  $("mobileSearch")
+    ?.addEventListener(
+      "click",
+      () => {
+
+        $("communitySearch")?.focus();
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      }
+    );
+
+
+  $("locationFilterButton")
+    ?.addEventListener(
+      "click",
+      toggleNearby
+    );
+
+
+  $("closeComments")
+    ?.addEventListener(
+      "click",
+      closeComments
+    );
+
+
+  $("commentForm")
+    ?.addEventListener(
+      "submit",
+      submitComment
+    );
+
+
+  $("commentList")
+    ?.addEventListener(
+      "click",
+      async event => {
+
+        const button =
+          event.target.closest(
+            "[data-comment-action]"
+          );
+
+        if (!button) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        await handleCommentAction(
+          button.dataset.commentAction,
+          button.dataset.commentId
+        );
+      }
+    );
+
+
+  $("closeImageViewer")
+    ?.addEventListener(
+      "click",
+      closeImageViewer
+    );
+
+
+  $("notificationButton")
+    ?.addEventListener(
+      "click",
+      () => {
+
+        window.location.href =
+          "alert.html";
+      }
+    );
+
+
+  $("mobileNotifications")
+    ?.addEventListener(
+      "click",
+      () => {
+
+        window.location.href =
+          "alert.html";
+      }
+    );
+
+
+  $("closeReport")
+    ?.addEventListener(
+      "click",
+      () => {
 
         $("reportModal")
-          .classList.remove("open");
+          ?.classList.remove("open");
 
         document.body.classList.remove("modal-open");
       }
-    }
-  );
+    );
 
 
-$("imageViewer")
-  .addEventListener(
-    "click",
-    event => {
+  $("cancelReport")
+    ?.addEventListener(
+      "click",
+      () => {
 
-      if (
-        event.target === $("imageViewer") ||
-        event.target === $("viewerImage")
-      ) {
+        $("reportModal")
+          ?.classList.remove("open");
 
-        closeImageViewer();
+        document.body.classList.remove("modal-open");
       }
-    }
-  );
+    );
+
+
+  $("reportForm")
+    ?.addEventListener(
+      "submit",
+      submitReport
+    );
+
+
+  $("composerModal")
+    ?.addEventListener(
+      "click",
+      event => {
+
+        if (event.target === $("composerModal")) {
+
+          resetComposer();
+
+          closeComposer();
+        }
+      }
+    );
+
+
+  $("commentsModal")
+    ?.addEventListener(
+      "click",
+      event => {
+
+        if (event.target === $("commentsModal")) {
+          closeComments();
+        }
+      }
+    );
+
+
+  $("reportModal")
+    ?.addEventListener(
+      "click",
+      event => {
+
+        if (event.target === $("reportModal")) {
+
+          $("reportModal")
+            .classList.remove("open");
+
+          document.body.classList.remove("modal-open");
+        }
+      }
+    );
+
+
+  $("imageViewer")
+    ?.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target === $("imageViewer") ||
+          event.target === $("viewerImage")
+        ) {
+
+          closeImageViewer();
+        }
+      }
+    );
+}
 
 
 document.addEventListener(
@@ -3260,7 +5669,18 @@ document.addEventListener(
 
     if (event.key !== "Escape") return;
 
-    if ($("composerModal").classList.contains("open")) {
+    if ($("communityActionSheet")?.classList.contains("open")) {
+      closeActionSheet();
+      return;
+    }
+
+    if ($("communityConfirm")?.classList.contains("open")) {
+      $("communityConfirm").classList.remove("open");
+      document.body.classList.remove("modal-open");
+      return;
+    }
+
+    if ($("composerModal")?.classList.contains("open")) {
 
       resetComposer();
 
@@ -3269,14 +5689,14 @@ document.addEventListener(
       return;
     }
 
-    if ($("commentsModal").classList.contains("open")) {
+    if ($("commentsModal")?.classList.contains("open")) {
 
       closeComments();
 
       return;
     }
 
-    if ($("reportModal").classList.contains("open")) {
+    if ($("reportModal")?.classList.contains("open")) {
 
       $("reportModal")
         .classList.remove("open");
@@ -3286,7 +5706,7 @@ document.addEventListener(
       return;
     }
 
-    if ($("imageViewer").classList.contains("open")) {
+    if ($("imageViewer")?.classList.contains("open")) {
 
       closeImageViewer();
     }
@@ -3297,6 +5717,9 @@ document.addEventListener(
 /* ============================================================
    AUTH INITIALIZATION
 ============================================================ */
+
+injectCommunityEnhancementStyles();
+bindCommunityEvents();
 
 onAuthStateChanged(
   auth,
@@ -3315,6 +5738,13 @@ onAuthStateChanged(
     try {
 
       await loadCurrentProfile(user);
+
+      /*
+       * Load user-specific state before the realtime feed starts.
+       * This guarantees the first rendered feed already knows which
+       * posts are liked/saved by the current user.
+       */
+      await loadUserInteractionState();
 
       await loadProperties();
 
@@ -3338,4 +5768,3 @@ onAuthStateChanged(
     }
   }
 );
-
