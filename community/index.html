@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,2651 +9,340 @@
 <title>Community — MoonLat</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-
 <link rel="preconnect" href="https://www.gstatic.com">
 <link rel="preconnect" href="https://api.cloudinary.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/index.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<!-- ============================================================
-     FIREBASE
-============================================================ -->
-<script>
-window.MOONLAT_FIREBASE_CONFIG = {
-  apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
-  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
-  projectId: "moonlat-estate-dashboard",
-  storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
-  messagingSenderId: "289878951289",
-  appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
-};
-</script>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-  import {
-    getAuth
-  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-  import {
-    getFirestore
-  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDcgh6KemWHQsi_3z4OUw7UVJHN2gpyq5I",
-    authDomain: "moonlat-furniture.firebaseapp.com",
-    projectId: "moonlat-furniture",
-    storageBucket: "moonlat-furniture.firebasestorage.app",
-    messagingSenderId: "648996451900",
-    appId: "1:648996451900:web:da360e2feb8d42ad4f7539"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  window.moonLatFirebase = {
-    app,
-    auth,
-    db,
-    firebaseConfig
-  };
-</script>
 
 <style>
 :root {
-  --navy: #0b1020;
-  --navy-2: #11182a;
-  --navy-3: #182238;
-  --gold: #d4af37;
-  --gold-soft: #f8f0d4;
-  --terracotta: #d86f55;
-  --terracotta-dark: #bd5c45;
-  --bg: #f5f7fb;
-  --card: #ffffff;
-  --text: #111827;
-  --muted: #64748b;
-  --soft: #94a3b8;
-  --line: #e5e9f0;
-  --success: #059669;
-  --danger: #dc2626;
-  --blue: #4f46e5;
-  --font: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  font-family: var(--font);
-  background:
-    radial-gradient(circle at 0 0, rgba(79, 70, 229, .035), transparent 30rem),
-    var(--bg);
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-
-body.modal-open {
-  overflow: hidden;
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-button,
-a {
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-button {
-  cursor: pointer;
-}
-
-img {
-  display: block;
-  max-width: 100%;
-}
-
-::selection {
-  background: rgba(216, 111, 85, .16);
-}
-
-.hidden {
-  display: none !important;
-}
-
-.safe-top {
-  padding-top: env(safe-area-inset-top);
-}
-
-.safe-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* ============================================================
-   APP SHELL
-   ============================================================ */
-
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 80;
-  background: rgba(11, 16, 32, .94);
-  border-bottom: 1px solid rgba(255,255,255,.08);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-
-.header-inner {
-  width: min(1400px, 100%);
-  margin: 0 auto;
-  min-height: 66px;
-  padding: 0 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #fff;
-  min-width: 0;
-}
-
-.brand-mark {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  color: #fff;
-  background: linear-gradient(135deg, #d4af37, #a77c19);
-  box-shadow: 0 8px 24px rgba(212,175,55,.16);
-}
-
-.brand-copy {
-  min-width: 0;
-}
-
-.brand-title {
-  font-size: 15px;
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -.02em;
-}
-
-.brand-subtitle {
-  color: rgba(255,255,255,.46);
-  font-size: 9px;
-  margin-top: 3px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.header-btn {
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 12px;
-  background: rgba(255,255,255,.055);
-  color: rgba(255,255,255,.82);
-  display: grid;
-  place-items: center;
-  transition: .2s ease;
-  position: relative;
-}
-
-.header-btn:hover {
-  background: rgba(255,255,255,.1);
-  color: #fff;
-  transform: translateY(-1px);
-}
-
-.header-notification-dot {
-  position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 7px;
-  height: 7px;
-  background: #ef4444;
-  border-radius: 50%;
-  border: 2px solid var(--navy);
-}
-
-.header-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(212,175,55,.5);
-  background: linear-gradient(135deg, #475569, #1e293b);
-  color: #fff;
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  font-weight: 800;
-  flex: 0 0 auto;
-}
-
-.header-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ============================================================
-   HERO
-   ============================================================ */
-
-.hero {
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 85% 15%, rgba(212,175,55,.15), transparent 25rem),
-    radial-gradient(circle at 10% 90%, rgba(216,111,85,.08), transparent 25rem),
-    linear-gradient(135deg, #0b1020 0%, #111a2d 58%, #151d31 100%);
-  color: #fff;
-}
-
-.hero-inner {
-  width: min(1400px, 100%);
-  margin: 0 auto;
-  padding: 28px 18px 30px;
-}
-
-.hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: #d4af37;
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .16em;
-  margin-bottom: 10px;
-}
-
-.hero-eyebrow span {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #d4af37;
-  box-shadow: 0 0 0 5px rgba(212,175,55,.08);
-}
-
-.hero-title {
-  margin: 0;
-  font-size: clamp(25px, 6vw, 42px);
-  line-height: 1.05;
-  letter-spacing: -.045em;
-  font-weight: 850;
-}
-
-.hero-title span {
-  color: var(--gold);
-}
-
-.hero-description {
-  max-width: 670px;
-  margin: 11px 0 0;
-  color: rgba(255,255,255,.62);
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.hero-tools {
-  margin-top: 22px;
-  display: flex;
-  gap: 9px;
-  flex-wrap: wrap;
-}
-
-.hero-search {
-  position: relative;
-  flex: 1 1 280px;
-  min-width: 0;
-}
-
-.hero-search input {
-  width: 100%;
-  height: 46px;
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 14px;
-  background: rgba(255,255,255,.075);
-  color: #fff;
-  padding: 0 44px 0 42px;
-  outline: none;
-  transition: .2s ease;
-}
-
-.hero-search input::placeholder {
-  color: rgba(255,255,255,.42);
-}
-
-.hero-search input:focus {
-  border-color: rgba(212,175,55,.65);
-  background: rgba(255,255,255,.1);
-  box-shadow: 0 0 0 4px rgba(212,175,55,.08);
-}
-
-.hero-search i {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: rgba(255,255,255,.45);
-  pointer-events: none;
-}
-
-.hero-search-clear {
-  position: absolute;
-  right: 8px;
-  top: 5px;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  color: rgba(255,255,255,.5);
-}
-
-.hero-search-clear:hover {
-  color: #fff;
-  background: rgba(255,255,255,.08);
-}
-
-.hero-location-btn {
-  height: 46px;
-  padding: 0 15px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.11);
-  background: rgba(255,255,255,.075);
-  color: rgba(255,255,255,.82);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  transition: .2s ease;
-}
-
-.hero-location-btn:hover {
-  background: rgba(255,255,255,.11);
-  color: #fff;
-}
-
-.hero-location-btn.active {
-  border-color: rgba(16,185,129,.5);
-  color: #6ee7b7;
-}
-
-.hero-metrics {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-top: 22px;
-}
-
-.hero-metric {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.hero-metric-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 9px;
-  display: grid;
-  place-items: center;
-  color: #d4af37;
-  background: rgba(212,175,55,.08);
-  border: 1px solid rgba(212,175,55,.1);
-}
-
-.hero-metric strong {
-  display: block;
-  font-size: 15px;
-  line-height: 1;
-}
-
-.hero-metric span {
-  display: block;
-  color: rgba(255,255,255,.42);
-  font-size: 9px;
-  margin-top: 4px;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-}
-
-/* ============================================================
-   CATEGORY NAV
-   ============================================================ */
-
-.category-bar {
-  position: sticky;
-  top: 66px;
-  z-index: 60;
-  background: rgba(255,255,255,.92);
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-.category-inner {
-  width: min(1400px, 100%);
-  margin: 0 auto;
-  padding: 10px 18px;
-  display: flex;
-  gap: 7px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.category-inner::-webkit-scrollbar {
-  display: none;
-}
-
-.category-btn {
-  flex: 0 0 auto;
-  height: 38px;
-  padding: 0 14px;
-  border: 1px solid transparent;
-  border-radius: 11px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 750;
-  white-space: nowrap;
-  transition: .2s ease;
-}
-
-.category-btn:hover {
-  color: var(--text);
-  background: #f7f8fb;
-}
-
-.category-btn.active {
-  color: #fff;
-  background: var(--terracotta);
-  box-shadow: 0 6px 18px rgba(216,111,85,.18);
-}
-
-/* ============================================================
-   LAYOUT
-   ============================================================ */
-
-.page {
-  width: min(1400px, 100%);
-  margin: 0 auto;
-  padding: 18px;
-}
-
-.community-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 20px;
-}
-
-@media (min-width: 1040px) {
-  .community-grid {
-    grid-template-columns: minmax(0, 1fr) 310px;
-    align-items: start;
-  }
-}
-
-.feed-column {
-  min-width: 0;
-}
-
-.sidebar {
-  display: none;
-  gap: 14px;
-  position: sticky;
-  top: 120px;
-}
-
-@media (min-width: 1040px) {
-  .sidebar {
-    display: grid;
-  }
-}
-
-/* ============================================================
-   SURFACES
-   ============================================================ */
-
-.surface {
-  background: rgba(255,255,255,.96);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  box-shadow:
-    0 1px 2px rgba(15,23,42,.02),
-    0 10px 30px rgba(15,23,42,.035);
-}
-
-/* ============================================================
-   COMPOSER
-   ============================================================ */
-
-.composer {
-  padding: 14px;
-  margin-bottom: 16px;
-}
-
-.composer-row {
-  display: flex;
-  gap: 11px;
-  align-items: center;
-}
-
-.user-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 13px;
-  overflow: hidden;
-  flex: 0 0 auto;
-  background: linear-gradient(135deg, #64748b, #334155);
-  color: #fff;
-  display: grid;
-  place-items: center;
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.user-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.composer-trigger {
-  min-width: 0;
-  flex: 1;
-  height: 44px;
-  border: 1px solid var(--line);
-  background: #f8fafc;
-  border-radius: 13px;
-  padding: 0 14px;
-  text-align: left;
-  color: #94a3b8;
-  font-size: 12px;
-  transition: .2s ease;
-}
-
-.composer-trigger:hover {
-  border-color: rgba(216,111,85,.35);
-  background: #fff;
-  color: var(--muted);
-}
-
-.composer-actions {
-  display: flex;
-  gap: 5px;
-  margin-top: 12px;
-  padding-top: 11px;
-  border-top: 1px solid #eef1f5;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.composer-actions::-webkit-scrollbar {
-  display: none;
-}
-
-.composer-action {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 750;
-  transition: .2s ease;
-}
-
-.composer-action:hover {
-  color: var(--terracotta);
-  background: #fff5f1;
-}
-
-/* ============================================================
-   FEED CONTROLS
-   ============================================================ */
-
-.feed-control {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.feed-tabs {
-  display: flex;
-  gap: 3px;
-  padding: 4px;
-  border-radius: 13px;
-  background: #eef1f6;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.feed-tabs::-webkit-scrollbar {
-  display: none;
-}
-
-.feed-tab {
-  flex: 0 0 auto;
-  border-radius: 9px;
-  padding: 7px 11px;
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 750;
-  white-space: nowrap;
-}
-
-.feed-tab.active {
-  color: var(--text);
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(15,23,42,.08);
-}
-
-.feed-count {
-  color: #94a3b8;
-  font-size: 10px;
-  font-weight: 650;
-  white-space: nowrap;
-}
-
-/* ============================================================
-   POST CARD
-   ============================================================ */
-
-.post-card {
-  position: relative;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  margin-bottom: 13px;
-  overflow: hidden;
-  box-shadow:
-    0 1px 2px rgba(15,23,42,.018),
-    0 8px 24px rgba(15,23,42,.025);
-  transition:
-    transform .2s ease,
-    box-shadow .2s ease,
-    border-color .2s ease;
-}
-
-.post-card:hover {
-  border-color: #dde2ea;
-  box-shadow:
-    0 2px 4px rgba(15,23,42,.025),
-    0 16px 34px rgba(15,23,42,.05);
-}
-
-.post-body {
-  padding: 15px;
-}
-
-.post-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.post-author {
-  flex: 1;
-  min-width: 0;
-}
-
-.post-author-line {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.post-author-name {
-  color: #111827;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.role-badge {
-  display: inline-flex;
-  align-items: center;
-  height: 19px;
-  padding: 0 7px;
-  border-radius: 6px;
-  font-size: 8px;
-  font-weight: 850;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-
-.role-agent {
-  color: #8b6b18;
-  background: #faf3d9;
-}
-
-.role-client {
-  color: #475569;
-  background: #eef2f7;
-}
-
-.post-time {
-  margin-top: 2px;
-  color: #94a3b8;
-  font-size: 9px;
-}
-
-.post-menu {
-  width: 32px;
-  height: 32px;
-  border-radius: 9px;
-  color: #94a3b8;
-}
-
-.post-menu:hover {
-  background: #f1f5f9;
-  color: #475569;
-}
-
-.post-type {
-  margin-top: 13px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--terracotta);
-  background: #fff5f1;
-  border-radius: 7px;
-  padding: 5px 8px;
-  font-size: 8px;
-  font-weight: 850;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-
-.post-title {
-  margin: 11px 0 6px;
-  color: #111827;
-  font-size: 17px;
-  line-height: 1.35;
-  font-weight: 800;
-  letter-spacing: -.025em;
-}
-
-.post-content {
-  color: #64748b;
-  font-size: 12px;
-  line-height: 1.75;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.post-location {
-  margin-top: 11px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  max-width: 100%;
-  padding: 6px 8px;
-  color: #047857;
-  background: #ecfdf5;
-  border: 1px solid #d1fae5;
-  border-radius: 8px;
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.post-location span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.post-images {
-  margin: 14px -15px -15px;
-  display: grid;
-  gap: 2px;
-  background: #f1f5f9;
-}
-
-.post-images.single {
-  grid-template-columns: 1fr;
-}
-
-.post-images.two {
-  grid-template-columns: 1fr 1fr;
-}
-
-.post-images.three {
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
-.post-images.multi {
-  grid-template-columns: 1.25fr .75fr;
-  grid-template-rows: 1fr 1fr;
-}
-
-.post-image {
-  position: relative;
-  overflow: hidden;
-  background: #e2e8f0;
-  min-height: 150px;
-}
-
-.post-images.single .post-image {
-  max-height: 460px;
-}
-
-.post-images.two .post-image,
-.post-images.three .post-image {
-  aspect-ratio: 1 / 1;
-}
-
-.post-images.multi .post-image:first-child {
-  grid-row: 1 / span 2;
-  min-height: 300px;
-}
-
-.post-images.multi .post-image:not(:first-child) {
-  min-height: 148px;
-}
-
-.post-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform .45s ease;
-}
-
-.post-image:hover img {
-  transform: scale(1.025);
-}
-
-.more-images {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: rgba(11,16,32,.45);
-  color: #fff;
-  font-size: 16px;
-  font-weight: 850;
-}
-
-.post-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4px;
-  padding-top: 12px;
-  margin-top: 12px;
-  border-top: 1px solid #eef1f5;
-}
-
-.post-actions-left {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.post-action {
-  height: 34px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 9px;
-  border-radius: 9px;
-  color: #64748b;
-  font-size: 10px;
-  font-weight: 750;
-  transition: .18s ease;
-}
-
-.post-action:hover {
-  background: #f8fafc;
-  color: #111827;
-}
-
-.post-action.liked {
-  color: var(--terracotta);
-  background: #fff5f1;
-}
-
-.post-action.saved {
-  color: #a77c19;
-  background: #fffaf0;
-}
-
-/* ============================================================
-   PROPERTY SHARE
-   ============================================================ */
-
-.property-share {
-  margin-top: 14px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  overflow: hidden;
-  background: #fbfcfe;
-}
-
-.property-share-image {
-  height: 190px;
-  overflow: hidden;
-  background: #e2e8f0;
-}
-
-.property-share-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.property-share-info {
-  padding: 12px;
-}
-
-.property-share-price {
-  font-size: 18px;
-  font-weight: 850;
-  color: #0f172a;
-}
-
-.property-share-title {
-  margin-top: 3px;
-  font-size: 12px;
-  font-weight: 750;
-  color: #334155;
-}
-
-.property-share-location {
-  display: flex;
-  gap: 5px;
-  margin-top: 5px;
-  color: #64748b;
-  font-size: 10px;
-}
-
-/* ============================================================
-   EMPTY / LOADING
-   ============================================================ */
-
-.feed-state {
-  padding: 48px 20px;
-  text-align: center;
-  border: 1px dashed #dce2ea;
-  border-radius: 18px;
-  background: rgba(255,255,255,.7);
-}
-
-.feed-state-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 12px;
-  display: grid;
-  place-items: center;
-  border-radius: 15px;
-  background: #f1f5f9;
-  color: #94a3b8;
-}
-
-.feed-state-title {
-  font-size: 13px;
-  font-weight: 800;
-  color: #334155;
-}
-
-.feed-state-text {
-  max-width: 360px;
-  margin: 5px auto 0;
-  color: #94a3b8;
-  font-size: 10px;
-  line-height: 1.6;
-}
-
-.spinner {
-  width: 30px;
-  height: 30px;
-  margin: 0 auto 12px;
-  border: 3px solid #e5e7eb;
-  border-top-color: var(--terracotta);
-  border-radius: 50%;
-  animation: spin .75s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* ============================================================
-   SIDEBAR WIDGETS
-   ============================================================ */
-
-.widget {
-  padding: 15px;
-}
-
-.widget-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.widget-title {
-  color: #111827;
-  font-size: 12px;
-  font-weight: 850;
-}
-
-.widget-link {
-  color: var(--terracotta);
-  font-size: 9px;
-  font-weight: 750;
-}
-
-.widget-empty {
-  color: #94a3b8;
-  font-size: 10px;
-  line-height: 1.6;
-  padding: 10px 0;
-}
-
-.nearby-box {
-  border-radius: 13px;
-  padding: 13px;
-  background:
-    radial-gradient(circle at 90% 10%, rgba(16,185,129,.13), transparent 8rem),
-    #f0fdf9;
-  border: 1px solid #d1fae5;
-}
-
-.nearby-box-title {
-  color: #065f46;
-  font-size: 11px;
-  font-weight: 850;
-}
-
-.nearby-box-text {
-  color: #047857;
-  font-size: 9px;
-  margin-top: 4px;
-  line-height: 1.55;
-}
-
-.widget-stat-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 7px;
-  margin-top: 10px;
-}
-
-.widget-stat {
-  padding: 10px;
-  background: #f8fafc;
-  border-radius: 11px;
-}
-
-.widget-stat strong {
-  display: block;
-  color: #111827;
-  font-size: 16px;
-  font-weight: 850;
-}
-
-.widget-stat span {
-  display: block;
-  color: #94a3b8;
-  font-size: 8px;
-  margin-top: 2px;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-
-/* ============================================================
-   MOBILE NAV
-   ============================================================ */
-
-.mobile-nav {
-  position: fixed;
-  z-index: 100;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  padding:
-    7px
-    8px
-    calc(7px + env(safe-area-inset-bottom));
-  background: rgba(11,16,32,.96);
-  border-top: 1px solid rgba(255,255,255,.08);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-
-.mobile-nav-inner {
-  width: min(680px, 100%);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  align-items: end;
-}
-
-.mobile-nav-item {
-  min-height: 45px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  color: rgba(255,255,255,.44);
-  border-radius: 12px;
-  font-size: 8px;
-  font-weight: 700;
-}
-
-.mobile-nav-item.active {
-  color: #d4af37;
-}
-
-.mobile-nav-item:hover {
-  color: #fff;
-}
-
-.mobile-nav-fab-wrap {
-  display: flex;
-  justify-content: center;
-}
-
-.mobile-nav-fab {
-  width: 50px;
-  height: 50px;
-  margin-top: -24px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #d86f55, #bd5c45);
-  color: #fff;
-  display: grid;
-  place-items: center;
-  border: 4px solid var(--navy);
-  box-shadow: 0 10px 25px rgba(216,111,85,.3);
-  transition: .2s ease;
-}
-
-.mobile-nav-fab:active {
-  transform: scale(.95);
-}
-
-/* ============================================================
-   MODAL
-   ============================================================ */
-
-.modal {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
-  background: rgba(7,10,18,.72);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.modal.open {
-  display: flex;
-}
-
-.modal-panel {
-  width: min(650px, 100%);
-  max-height: min(850px, calc(100dvh - 28px));
-  overflow: auto;
-  background: #fff;
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,.5);
-  box-shadow: 0 30px 100px rgba(0,0,0,.3);
-}
-
-.modal-header {
-  position: sticky;
-  top: 0;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 15px;
-  background: rgba(255,255,255,.94);
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(12px);
-}
-
-.modal-title {
-  font-size: 14px;
-  font-weight: 850;
-}
-
-.modal-close {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: #f1f5f9;
-  color: #64748b;
-}
-
-.modal-close:hover {
-  background: #e2e8f0;
-  color: #111827;
-}
-
-.modal-content {
-  padding: 15px;
-}
-
-/* ============================================================
-   COMPOSER MODAL
-   ============================================================ */
-
-.composer-author {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.composer-author-name {
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.composer-author-role {
-  margin-top: 2px;
-  color: #94a3b8;
-  font-size: 9px;
-}
-
-.post-type-selector {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 7px;
-  margin-bottom: 12px;
-}
-
-.post-type-option {
-  padding: 10px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  text-align: left;
-  background: #fafbfc;
-  color: #64748b;
-  transition: .2s ease;
-}
-
-.post-type-option strong {
-  display: block;
-  font-size: 10px;
-  color: #334155;
-}
-
-.post-type-option span {
-  display: block;
-  font-size: 8px;
-  margin-top: 3px;
-  line-height: 1.4;
-}
-
-.post-type-option.active {
-  border-color: rgba(216,111,85,.4);
-  background: #fff5f1;
-  color: var(--terracotta);
-}
-
-.post-type-option.active strong {
-  color: var(--terracotta-dark);
-}
-
-.field {
-  margin-bottom: 11px;
-}
-
-.field label {
-  display: block;
-  margin-bottom: 6px;
-  color: #475569;
-  font-size: 9px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-
-.field input,
-.field textarea,
-.field select {
-  width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #f8fafc;
-  color: #111827;
-  outline: none;
-  transition: .2s ease;
-}
-
-.field input {
-  height: 43px;
-  padding: 0 12px;
-  font-size: 12px;
-}
-
-.field textarea {
-  min-height: 130px;
-  resize: vertical;
-  padding: 11px 12px;
-  font-size: 12px;
-  line-height: 1.7;
-}
-
-.field select {
-  height: 43px;
-  padding: 0 12px;
-  font-size: 11px;
-}
-
-.field input:focus,
-.field textarea:focus,
-.field select:focus {
-  border-color: rgba(216,111,85,.5);
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(216,111,85,.07);
-}
-
-.location-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 11px 12px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #fafbfc;
-}
-
-.location-info {
-  min-width: 0;
-}
-
-.location-title {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: #334155;
-  font-size: 10px;
-  font-weight: 800;
-}
-
-.location-status {
-  margin-top: 3px;
-  color: #94a3b8;
-  font-size: 8px;
-  line-height: 1.4;
-}
-
-.toggle {
-  position: relative;
-  width: 42px;
-  height: 24px;
-  flex: 0 0 auto;
-}
-
-.toggle input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.toggle-track {
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  background: #cbd5e1;
-  transition: .2s ease;
-}
-
-.toggle-thumb {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  top: 3px;
-  left: 3px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(15,23,42,.2);
-  transition: .2s ease;
-}
-
-.toggle input:checked + .toggle-track {
-  background: #10b981;
-}
-
-.toggle input:checked + .toggle-track .toggle-thumb {
-  transform: translateX(18px);
-}
-
-.upload-box {
-  position: relative;
-  border: 1px dashed #cbd5e1;
-  border-radius: 13px;
-  padding: 14px;
-  background: #f8fafc;
-  text-align: center;
-  transition: .2s ease;
-}
-
-.upload-box:hover {
-  border-color: #d86f55;
-  background: #fffaf8;
-}
-
-.upload-box-icon {
-  width: 38px;
-  height: 38px;
-  margin: 0 auto 7px;
-  border-radius: 11px;
-  background: #fff0eb;
-  color: #d86f55;
-  display: grid;
-  place-items: center;
-}
-
-.upload-box-title {
-  color: #334155;
-  font-size: 10px;
-  font-weight: 800;
-}
-
-.upload-box-subtitle {
-  margin-top: 3px;
-  color: #94a3b8;
-  font-size: 8px;
-}
-
-.preview-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.preview-item {
-  position: relative;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 10px;
-  background: #e2e8f0;
-}
-
-.preview-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.preview-remove {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  width: 24px;
-  height: 24px;
-  border-radius: 8px;
-  background: rgba(0,0,0,.58);
-  color: #fff;
-  display: grid;
-  place-items: center;
-}
-
-.property-selector {
-  display: none;
-}
-
-.property-selector.show {
-  display: block;
-}
-
-.modal-footer {
-  position: sticky;
-  bottom: 0;
-  padding: 12px 15px;
-  background: rgba(255,255,255,.96);
-  border-top: 1px solid var(--line);
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-  backdrop-filter: blur(12px);
-}
-
-.btn {
-  height: 40px;
-  padding: 0 14px;
-  border-radius: 11px;
-  font-size: 10px;
-  font-weight: 800;
-  transition: .2s ease;
-}
-
-.btn-secondary {
-  background: #f1f5f9;
-  color: #475569;
-}
-
-.btn-secondary:hover {
-  background: #e2e8f0;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #d86f55, #bd5c45);
-  color: #fff;
-  box-shadow: 0 7px 18px rgba(216,111,85,.18);
-}
-
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgba(216,111,85,.24);
-}
-
-.btn-primary:disabled {
-  opacity: .55;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* ============================================================
-   COMMENTS MODAL
-   ============================================================ */
-
-.comment-list {
-  display: grid;
-  gap: 11px;
-}
-
-.comment {
-  display: flex;
-  gap: 9px;
-}
-
-.comment-content {
-  min-width: 0;
-  flex: 1;
-  background: #f8fafc;
-  border-radius: 12px;
-  padding: 9px 10px;
-}
-
-.comment-author {
-  font-size: 10px;
-  font-weight: 800;
-}
-
-.comment-text {
-  margin-top: 3px;
-  color: #64748b;
-  font-size: 10px;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.comment-time {
-  margin-top: 4px;
-  color: #94a3b8;
-  font-size: 8px;
-}
-
-.comment-form {
-  display: flex;
-  gap: 7px;
-  margin-top: 14px;
-}
-
-.comment-form input {
-  min-width: 0;
-  flex: 1;
-  height: 40px;
-  border: 1px solid var(--line);
-  border-radius: 11px;
-  background: #f8fafc;
-  padding: 0 11px;
-  font-size: 10px;
-  outline: none;
-}
-
-.comment-form input:focus {
-  border-color: rgba(216,111,85,.45);
-  background: #fff;
-}
-
-/* ============================================================
-   IMAGE VIEWER
-   ============================================================ */
-
-.image-viewer {
-  position: fixed;
-  inset: 0;
-  z-index: 250;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-  background: rgba(0,0,0,.94);
-}
-
-.image-viewer.open {
-  display: flex;
-}
-
-.image-viewer img {
-  max-width: 100%;
-  max-height: 82dvh;
-  object-fit: contain;
-  border-radius: 14px;
-  box-shadow: 0 25px 80px rgba(0,0,0,.45);
-}
-
-.image-viewer-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 42px;
-  height: 42px;
-  border-radius: 13px;
-  background: rgba(255,255,255,.1);
-  border: 1px solid rgba(255,255,255,.12);
-  color: #fff;
-}
-
-/* ============================================================
-   TOAST
-   ============================================================ */
-
-.toast-stack {
-  position: fixed;
-  right: 12px;
-  bottom: calc(74px + env(safe-area-inset-bottom));
-  z-index: 500;
-  width: min(360px, calc(100vw - 24px));
-  display: grid;
-  gap: 7px;
-  pointer-events: none;
-}
-
-.toast {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  padding: 11px;
-  border-radius: 13px;
-  color: #fff;
-  background: rgba(15,23,42,.94);
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 16px 40px rgba(0,0,0,.18);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  animation: toastIn .25s ease both;
-  pointer-events: auto;
-}
-
-.toast.success {
-  border-left: 3px solid #10b981;
-}
-
-.toast.error {
-  border-left: 3px solid #ef4444;
-}
-
-.toast.info {
-  border-left: 3px solid #60a5fa;
-}
-
-.toast-icon {
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  background: rgba(255,255,255,.08);
-}
-
-.toast-message {
-  min-width: 0;
-  flex: 1;
-  font-size: 10px;
-  line-height: 1.5;
-}
-
-.toast-close {
-  color: rgba(255,255,255,.45);
-}
-
-@keyframes toastIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px) scale(.98);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* ============================================================
-   NETWORK STATUS
-   ============================================================ */
-
-.network-banner {
-  position: fixed;
-  left: 50%;
-  bottom: calc(76px + env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  z-index: 450;
-  display: none;
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: #991b1b;
-  color: #fff;
-  font-size: 9px;
-  font-weight: 750;
-  box-shadow: 0 12px 30px rgba(0,0,0,.18);
-}
-
-.network-banner.show {
-  display: block;
-}
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-
-@media (min-width: 700px) {
-  .hero-inner {
-    padding-top: 38px;
-    padding-bottom: 40px;
-  }
-
-  .page {
-    padding-top: 22px;
-  }
-
-  .composer {
-    padding: 17px;
-  }
-
-  .post-body {
-    padding: 17px;
-  }
-
-  .post-images {
-    margin-left: -17px;
-    margin-right: -17px;
-    margin-bottom: -17px;
-  }
-
-  .mobile-nav {
-    display: none;
-  }
-
-  .toast-stack {
-    bottom: 20px;
-  }
-}
-
-@media (max-width: 699px) {
-  body {
-    padding-bottom: calc(69px + env(safe-area-inset-bottom));
-  }
-
-  .header-inner {
-    min-height: 62px;
-  }
-
-  .category-bar {
-    top: 62px;
-  }
-
-  .brand-subtitle {
-    display: none;
-  }
-
-  .header-avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 11px;
-  }
-
-  .header-btn {
-    width: 38px;
-    height: 38px;
-  }
-
-  .page {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
-  }
-}
+  --navy:#0b1020;
+  --navy-2:#11182a;
+  --gold:#d4af37;
+  --terracotta:#d86f55;
+  --terracotta-dark:#bd5c45;
+  --bg:#f3f5f9;
+  --card:#fff;
+  --soft-card:#f8fafc;
+  --text:#111827;
+  --muted:#64748b;
+  --soft:#94a3b8;
+  --line:#e5e9f0;
+  --line-strong:#d8dee8;
+  --success:#059669;
+  --danger:#dc2626;
+  --font:"Inter",-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+}
+*,:before,:after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:radial-gradient(circle at 0 0,rgba(79,70,229,.028),transparent 30rem),var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body.modal-open{overflow:hidden}
+button,input,textarea,select{font:inherit}button,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}button{cursor:pointer}img{display:block;max-width:100%}::selection{background:rgba(216,111,85,.16)}
+.hidden{display:none!important}.safe-top{padding-top:env(safe-area-inset-top)}.safe-bottom{padding-bottom:env(safe-area-inset-bottom)}
+.btn{height:40px;padding:0 14px;border:0;border-radius:11px;font-size:10px;font-weight:800;transition:.2s ease}.btn-secondary{background:#f1f5f9;color:#475569}.btn-secondary:hover{background:#e2e8f0}.btn-primary{background:linear-gradient(135deg,#d86f55,#bd5c45);color:#fff;box-shadow:0 7px 18px rgba(216,111,85,.18)}.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(216,111,85,.24)}.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+
+/* APP SHELL */
+.app-header{position:sticky;top:0;z-index:80;background:rgba(11,16,32,.94);border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.header-inner{width:min(1400px,100%);margin:0 auto;min-height:66px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{display:flex;align-items:center;gap:10px;color:#fff;min-width:0;text-decoration:none}.brand-mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#d4af37,#a77c19);box-shadow:0 8px 24px rgba(212,175,55,.16);flex:0 0 auto}.brand-title{font-size:15px;font-weight:800;line-height:1.1;letter-spacing:-.02em}.brand-subtitle{color:rgba(255,255,255,.46);font-size:9px;margin-top:3px;letter-spacing:.12em;text-transform:uppercase}.header-actions{display:flex;align-items:center;gap:8px}.header-btn{width:40px;height:40px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.055);color:rgba(255,255,255,.82);display:grid;place-items:center;transition:.2s ease;position:relative}.header-btn:hover{background:rgba(255,255,255,.1);color:#fff;transform:translateY(-1px)}.header-notification-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:2px solid var(--navy)}.header-avatar{width:40px;height:40px;border-radius:12px;overflow:hidden;border:1px solid rgba(212,175,55,.5);background:linear-gradient(135deg,#475569,#1e293b);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;flex:0 0 auto;text-decoration:none}.header-avatar img,.user-avatar img,.comment-avatar img,.mini-avatar img{width:100%;height:100%;object-fit:cover}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;background:radial-gradient(circle at 85% 15%,rgba(212,175,55,.15),transparent 25rem),radial-gradient(circle at 10% 90%,rgba(216,111,85,.08),transparent 25rem),linear-gradient(135deg,#0b1020 0%,#111a2d 58%,#151d31 100%);color:#fff}.hero-inner{width:min(1400px,100%);margin:0 auto;padding:28px 18px 30px}.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;color:#d4af37;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.16em;margin-bottom:10px}.hero-eyebrow span{width:6px;height:6px;border-radius:50%;background:#d4af37;box-shadow:0 0 0 5px rgba(212,175,55,.08)}.hero-title{margin:0;font-size:clamp(25px,6vw,42px);line-height:1.05;letter-spacing:-.045em;font-weight:850}.hero-title span{color:var(--gold)}.hero-description{max-width:670px;margin:11px 0 0;color:rgba(255,255,255,.62);font-size:13px;line-height:1.7}.hero-tools{margin-top:22px;display:flex;gap:9px;flex-wrap:wrap}.hero-search{position:relative;flex:1 1 280px;min-width:0}.hero-search input{width:100%;height:46px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.075);color:#fff;padding:0 44px 0 42px;outline:0;transition:.2s ease}.hero-search input::placeholder{color:rgba(255,255,255,.42)}.hero-search input:focus{border-color:rgba(212,175,55,.65);background:rgba(255,255,255,.1);box-shadow:0 0 0 4px rgba(212,175,55,.08)}.hero-search>i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.45);pointer-events:none}.hero-search-clear{position:absolute;right:8px;top:5px;width:36px;height:36px;border:0;border-radius:10px;color:rgba(255,255,255,.5);background:transparent}.hero-search-clear:hover{color:#fff;background:rgba(255,255,255,.08)}.hero-location-btn{height:46px;padding:0 15px;border-radius:14px;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.075);color:rgba(255,255,255,.82);display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;transition:.2s ease}.hero-location-btn:hover{background:rgba(255,255,255,.11);color:#fff}.hero-location-btn.active{border-color:rgba(16,185,129,.5);color:#6ee7b7}.hero-metrics{display:flex;gap:20px;flex-wrap:wrap;margin-top:22px}.hero-metric{display:flex;align-items:center;gap:8px}.hero-metric-icon{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;color:#d4af37;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.1)}.hero-metric strong{display:block;font-size:15px;line-height:1}.hero-metric span{display:block;color:rgba(255,255,255,.42);font-size:9px;margin-top:4px;text-transform:uppercase;letter-spacing:.1em}
+
+/* CATEGORY */
+.category-bar{position:sticky;top:66px;z-index:60;background:rgba(255,255,255,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.category-inner{width:min(1400px,100%);margin:0 auto;padding:10px 18px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none}.category-inner::-webkit-scrollbar{display:none}.category-btn{flex:0 0 auto;height:38px;padding:0 14px;border:1px solid transparent;border-radius:11px;background:transparent;color:var(--muted);font-size:11px;font-weight:750;white-space:nowrap;transition:.2s ease}.category-btn:hover{color:var(--text);background:#f7f8fb}.category-btn.active{color:#fff;background:var(--terracotta);box-shadow:0 6px 18px rgba(216,111,85,.18)}
+
+/* LAYOUT */
+.page{width:min(1400px,100%);margin:0 auto;padding:18px}.community-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}@media (min-width:1040px){.community-grid{grid-template-columns:minmax(0,1fr) 310px;align-items:start}.sidebar{display:grid!important}}.feed-column{min-width:0}.sidebar{display:none;gap:14px;position:sticky;top:120px}.surface{background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:18px;box-shadow:0 1px 2px rgba(15,23,42,.02),0 10px 30px rgba(15,23,42,.035)}
+
+/* COMPOSER */
+.composer{padding:14px;margin-bottom:16px}.composer-row{display:flex;gap:11px;align-items:center}.user-avatar{width:42px;height:42px;border-radius:13px;overflow:hidden;flex:0 0 auto;background:linear-gradient(135deg,#64748b,#334155);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;text-decoration:none}.composer-trigger{min-width:0;flex:1;height:44px;border:1px solid var(--line);background:#f8fafc;border-radius:13px;padding:0 14px;text-align:left;color:#94a3b8;font-size:12px;transition:.2s ease}.composer-trigger:hover{border-color:rgba(216,111,85,.35);background:#fff;color:var(--muted)}.composer-actions{display:flex;gap:5px;margin-top:12px;padding-top:11px;border-top:1px solid #eef1f5;overflow-x:auto;scrollbar-width:none}.composer-actions::-webkit-scrollbar{display:none}.composer-action{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border:0;border-radius:10px;color:var(--muted);background:transparent;font-size:10px;font-weight:750}.composer-action:hover{color:var(--terracotta);background:#fff5f1}
+
+/* FEED CONTROLS */
+.feed-control{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.feed-tabs{display:flex;gap:3px;padding:4px;border-radius:13px;background:#eef1f6;overflow-x:auto;scrollbar-width:none}.feed-tabs::-webkit-scrollbar{display:none}.feed-tab{flex:0 0 auto;border:0;border-radius:9px;padding:7px 11px;color:var(--muted);background:transparent;font-size:10px;font-weight:750;white-space:nowrap}.feed-tab.active{color:var(--text);background:#fff;box-shadow:0 1px 3px rgba(15,23,42,.08)}.feed-count{color:#94a3b8;font-size:10px;font-weight:650;white-space:nowrap}
+
+/* POSTS */
+.post-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:20px;margin-bottom:14px;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.018),0 8px 24px rgba(15,23,42,.025);transition:.2s ease}.post-card:hover{border-color:#dbe1ea;box-shadow:0 2px 4px rgba(15,23,42,.025),0 16px 34px rgba(15,23,42,.05)}.post-topline{height:4px;background:linear-gradient(90deg,#d86f55,#d4af37)}.post-card.type-question .post-topline{background:linear-gradient(90deg,#4f46e5,#818cf8)}.post-card.type-property .post-topline{background:linear-gradient(90deg,#d4af37,#e7c85c)}.post-card.type-photo .post-topline{background:linear-gradient(90deg,#0891b2,#38bdf8)}.post-card.type-market .post-topline{background:linear-gradient(90deg,#059669,#34d399)}.post-card.type-investment .post-topline{background:linear-gradient(90deg,#7c3aed,#a78bfa)}.post-card.type-advice .post-topline{background:linear-gradient(90deg,#ea580c,#fb923c)}.post-body{padding:15px}.post-header{display:flex;align-items:flex-start;gap:10px}.post-author{flex:1;min-width:0}.post-author-line{display:flex;align-items:center;flex-wrap:wrap;gap:6px}.post-author-link{color:inherit;text-decoration:none}.post-author-name{color:#111827;font-size:12px;font-weight:800}.post-author-name:hover{color:var(--terracotta)}.role-badge{display:inline-flex;align-items:center;height:19px;padding:0 7px;border-radius:6px;font-size:8px;font-weight:850;text-transform:uppercase;letter-spacing:.08em}.role-agent{color:#8b6b18;background:#faf3d9}.role-client{color:#475569;background:#eef2f7}.role-admin{color:#6d28d9;background:#f3e8ff}.post-meta{margin-top:3px;display:flex;align-items:center;flex-wrap:wrap;gap:5px;color:#94a3b8;font-size:9px}.post-meta-dot{width:3px;height:3px;background:#cbd5e1;border-radius:50%}.post-menu{width:32px;height:32px;border:0;border-radius:9px;color:#94a3b8;background:transparent}.post-menu:hover{background:#f1f5f9;color:#475569}.post-type{margin-top:13px;display:inline-flex;align-items:center;gap:6px;border-radius:8px;padding:6px 9px;font-size:8px;font-weight:850;text-transform:uppercase;letter-spacing:.08em}.post-type.discussion{color:var(--terracotta);background:#fff5f1;border:1px solid #fde5de}.post-type.question{color:#4338ca;background:#eef2ff;border:1px solid #e0e7ff}.post-type.property{color:#8b6b18;background:#fffaf0;border:1px solid #f7edcc}.post-type.photo{color:#0e7490;background:#ecfeff;border:1px solid #cffafe}.post-type.market{color:#047857;background:#ecfdf5;border:1px solid #d1fae5}.post-type.investment{color:#6d28d9;background:#f5f3ff;border:1px solid #ede9fe}.post-type.advice{color:#c2410c;background:#fff7ed;border:1px solid #ffedd5}.post-title{margin:11px 0 6px;color:#111827;font-size:17px;line-height:1.35;font-weight:800;letter-spacing:-.025em}.post-content{color:#526176;font-size:12px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}.post-location{margin-top:11px;display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:6px 8px;color:#047857;background:#ecfdf5;border:1px solid #d1fae5;border-radius:8px;font-size:9px;font-weight:700}.post-location span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.post-images{margin:14px 0 0;display:grid;gap:2px;background:#f1f5f9}.post-images.single{grid-template-columns:1fr}.post-images.two{grid-template-columns:1fr 1fr}.post-images.three{grid-template-columns:1fr 1fr 1fr}.post-images.multi{grid-template-columns:1.25fr .75fr;grid-template-rows:1fr 1fr}.post-image{position:relative;overflow:hidden;background:#e2e8f0;min-height:150px;border:0;padding:0}.post-images.single .post-image{max-height:520px}.post-images.two .post-image,.post-images.three .post-image{aspect-ratio:1}.post-images.multi .post-image:first-child{grid-row:1/span 2;min-height:300px}.post-images.multi .post-image:not(:first-child){min-height:148px}.post-image img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease}.post-image:hover img{transform:scale(1.025)}.more-images{position:absolute;inset:0;display:grid;place-items:center;background:rgba(11,16,32,.45);color:#fff;font-size:16px;font-weight:850}
+
+/* PROPERTY */
+.property-share{margin-top:14px;border:1px solid var(--line);border-radius:15px;overflow:hidden;background:#fbfcfe;transition:.2s ease;cursor:pointer}.property-share:hover{border-color:#cfd7e3;transform:translateY(-1px)}.property-share-image{height:190px;overflow:hidden;background:#e2e8f0}.property-share-image img{width:100%;height:100%;object-fit:cover}.property-share-info{padding:12px}.property-share-price{font-size:18px;font-weight:850;color:#0f172a}.property-share-title{margin-top:3px;font-size:12px;font-weight:750;color:#334155}.property-share-location{display:flex;gap:5px;margin-top:5px;color:#64748b;font-size:10px}
+
+/* CONVERSATION PREVIEW */
+.post-conversation-preview{margin-top:14px;border:1px solid #e7ebf1;border-radius:14px;background:#f8fafc;overflow:hidden}.preview-header{padding:9px 11px;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #e9edf2}.preview-title{color:#475569;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.08em}.preview-link{border:0;color:var(--terracotta);background:transparent;font-size:9px;font-weight:800}.preview-comments{padding:9px 11px;display:grid;gap:7px}.preview-comment{display:flex;gap:8px;align-items:flex-start}.mini-avatar{width:26px;height:26px;border-radius:9px;overflow:hidden;flex:0 0 auto;background:#dbe2eb;color:#475569;display:grid;place-items:center;font-size:7px;font-weight:850;text-decoration:none}.preview-comment-body{min-width:0;flex:1}.preview-comment-line{color:#334155;font-size:9px;line-height:1.5}.preview-comment-line strong{font-weight:850}.preview-comment-text{color:#64748b}.preview-comment-meta{margin-top:2px;color:#94a3b8;font-size:8px}
+
+/* ENGAGEMENT */
+.post-actions{display:flex;align-items:center;justify-content:space-between;gap:4px;padding-top:12px;margin-top:12px;border-top:1px solid #eef1f5}.post-actions-left{display:flex;align-items:center;gap:2px}.post-action{min-width:42px;height:34px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 9px;border:0;border-radius:9px;color:#64748b;background:transparent;font-size:10px;font-weight:750;transition:.18s ease}.post-action:hover{background:#f8fafc;color:#111827}.post-action.liked{color:var(--terracotta);background:#fff5f1}.post-action.saved{color:#a77c19;background:#fffaf0}.post-action:active{transform:scale(.96)}.post-action.just-updated{animation:interactionPop .25s ease}@keyframes interactionPop{0%{transform:scale(.96)}55%{transform:scale(1.08)}100%{transform:scale(1)}}
+
+/* FEED STATES */
+.feed-state{padding:48px 20px;text-align:center;border:1px dashed #dce2ea;border-radius:18px;background:rgba(255,255,255,.7)}.feed-state-icon{width:48px;height:48px;margin:0 auto 12px;display:grid;place-items:center;border-radius:15px;background:#f1f5f9;color:#94a3b8}.feed-state-title{font-size:13px;font-weight:800;color:#334155}.feed-state-text{max-width:360px;margin:5px auto 0;color:#94a3b8;font-size:10px;line-height:1.6}.spinner{width:30px;height:30px;margin:0 auto 12px;border:3px solid #e5e7eb;border-top-color:var(--terracotta);border-radius:50%;animation:spin .75s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SIDEBAR */
+.widget{padding:15px}.widget-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.widget-title{color:#111827;font-size:12px;font-weight:850}.nearby-box{border-radius:13px;padding:13px;background:radial-gradient(circle at 90% 10%,rgba(16,185,129,.13),transparent 8rem),#f0fdf9;border:1px solid #d1fae5}.nearby-box-title{color:#065f46;font-size:11px;font-weight:850}.nearby-box-text{color:#047857;font-size:9px;margin-top:4px;line-height:1.55}.widget-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.widget-stat{padding:10px;background:#f8fafc;border-radius:11px}.widget-stat strong{display:block;color:#111827;font-size:16px;font-weight:850}.widget-stat span{display:block;color:#94a3b8;font-size:8px;margin-top:2px;text-transform:uppercase;letter-spacing:.08em}.widget-empty{color:#94a3b8;font-size:10px;line-height:1.6;padding:10px 0}
+
+/* MOBILE NAV */
+.mobile-nav{position:fixed;z-index:100;left:0;right:0;bottom:0;display:flex;padding:7px 8px calc(7px + env(safe-area-inset-bottom));background:rgba(11,16,32,.96);border-top:1px solid rgba(255,255,255,.08);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.mobile-nav-inner{width:min(680px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end}.mobile-nav-item{min-height:45px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:rgba(255,255,255,.44);border:0;background:transparent;border-radius:12px;font-size:8px;font-weight:700;text-decoration:none}.mobile-nav-item.active{color:#d4af37}.mobile-nav-item:hover{color:#fff}.mobile-nav-fab-wrap{display:flex;justify-content:center}.mobile-nav-fab{width:50px;height:50px;margin-top:-24px;border-radius:16px;background:linear-gradient(135deg,#d86f55,#bd5c45);color:#fff;display:grid;place-items:center;border:4px solid var(--navy);box-shadow:0 10px 25px rgba(216,111,85,.3);transition:.2s ease}.mobile-nav-fab:active{transform:scale(.95)}
+
+/* MODAL */
+.modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(7,10,18,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.modal.open{display:flex}.modal-panel{width:min(700px,100%);max-height:min(850px,calc(100dvh - 28px));overflow:auto;background:#fff;border-radius:20px;border:1px solid rgba(255,255,255,.5);box-shadow:0 30px 100px rgba(0,0,0,.3)}.modal-header{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:14px 15px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}.modal-title{font-size:14px;font-weight:850}.modal-close{width:34px;height:34px;border:0;border-radius:10px;background:#f1f5f9;color:#64748b}.modal-close:hover{background:#e2e8f0;color:#111827}.modal-content{padding:15px}.composer-author{display:flex;align-items:center;gap:10px;margin-bottom:15px}.composer-author-name{font-size:12px;font-weight:800}.composer-author-role{margin-top:2px;color:#94a3b8;font-size:9px}.post-type-selector{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:12px}.post-type-option{padding:10px;border:1px solid var(--line);border-radius:12px;text-align:left;background:#fafbfc;color:#64748b;transition:.2s ease}.post-type-option strong{display:block;font-size:10px;color:#334155}.post-type-option span{display:block;font-size:8px;margin-top:3px;line-height:1.4}.post-type-option.active{border-color:rgba(216,111,85,.4);background:#fff5f1;color:var(--terracotta)}.post-type-option.active strong{color:var(--terracotta-dark)}.field{margin-bottom:11px}.field label{display:block;margin-bottom:6px;color:#475569;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:12px;background:#f8fafc;color:#111827;outline:0;transition:.2s ease}.field input{height:43px;padding:0 12px;font-size:12px}.field textarea{min-height:130px;resize:vertical;padding:11px 12px;font-size:12px;line-height:1.7}.field select{height:43px;padding:0 12px;font-size:11px}.field input:focus,.field textarea:focus,.field select:focus{border-color:rgba(216,111,85,.5);background:#fff;box-shadow:0 0 0 4px rgba(216,111,85,.07)}.location-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fafbfc}.location-info{min-width:0}.location-title{display:flex;align-items:center;gap:7px;color:#334155;font-size:10px;font-weight:800}.location-status{margin-top:3px;color:#94a3b8;font-size:8px;line-height:1.4}.toggle{position:relative;width:42px;height:24px;flex:0 0 auto}.toggle input{position:absolute;opacity:0;pointer-events:none}.toggle-track{position:absolute;inset:0;border-radius:999px;background:#cbd5e1;transition:.2s ease}.toggle-thumb{position:absolute;width:18px;height:18px;top:3px;left:3px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(15,23,42,.2);transition:.2s ease}.toggle input:checked+.toggle-track{background:#10b981}.toggle input:checked+.toggle-track .toggle-thumb{transform:translateX(18px)}.upload-box{position:relative;border:1px dashed #cbd5e1;border-radius:13px;padding:14px;background:#f8fafc;text-align:center}.upload-box:hover{border-color:#d86f55;background:#fffaf8}.upload-box-icon{width:38px;height:38px;margin:0 auto 7px;border-radius:11px;background:#fff0eb;color:#d86f55;display:grid;place-items:center}.upload-box-title{color:#334155;font-size:10px;font-weight:800}.upload-box-subtitle{margin-top:3px;color:#94a3b8;font-size:8px}.preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.preview-item{position:relative;aspect-ratio:1;overflow:hidden;border-radius:10px;background:#e2e8f0}.preview-remove{position:absolute;top:5px;right:5px;width:24px;height:24px;border:0;border-radius:8px;background:rgba(0,0,0,.58);color:#fff;display:grid;place-items:center}.property-selector{display:none}.property-selector.show{display:block}.modal-footer{position:sticky;bottom:0;padding:12px 15px;background:rgba(255,255,255,.96);border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;backdrop-filter:blur(12px)}
+
+/* COMMENTS */
+.conversation-modal .modal-panel{width:min(740px,100%)}.conversation-context{margin-bottom:12px;border:1px solid #e7ebf1;border-radius:15px;background:linear-gradient(180deg,#fbfcfe,#f7f9fc);overflow:hidden}.conversation-context-header{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #e7ebf1}.conversation-context-label{color:#94a3b8;font-size:8px;font-weight:850;text-transform:uppercase;letter-spacing:.1em}.conversation-context-body{padding:11px 12px}.conversation-context-title{color:#111827;font-size:13px;font-weight:800;line-height:1.4}.conversation-context-text{margin-top:4px;color:#64748b;font-size:10px;line-height:1.6}.comments-scroll{display:grid;gap:10px;max-height:55dvh;overflow:auto;padding:2px 2px 4px}.comment{display:flex;gap:9px;align-items:flex-start}.comment.reply{margin-left:34px}.comment-bubble{min-width:0;flex:1;background:#f8fafc;border:1px solid #e7ebf1;border-radius:14px;padding:10px;position:relative}.comment.reply .comment-bubble{background:#f3f6fa;border-color:#e1e7ef}.comment-bubble:before{content:"";position:absolute;left:-6px;top:14px;width:10px;height:10px;background:inherit;border-left:1px solid #e7ebf1;border-bottom:1px solid #e7ebf1;transform:rotate(45deg)}.comment.reply .comment-bubble:before{border-color:#e1e7ef}.comment-avatar{flex:0 0 auto;width:32px;height:32px;border-radius:10px;overflow:hidden;background:#dbe2eb;color:#475569;display:grid;place-items:center;font-size:8px;font-weight:850;text-decoration:none}.comment-author-line{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.comment-author-link{color:#1e293b;font-size:10px;font-weight:850;text-decoration:none}.comment-author-link:hover{color:var(--terracotta)}.comment-role{display:inline-flex;align-items:center;height:17px;padding:0 6px;border-radius:5px;color:#64748b;background:#e9eef5;font-size:7px;font-weight:850;text-transform:uppercase;letter-spacing:.06em}.comment-more{margin-left:auto;width:28px;height:28px;border:0;border-radius:8px;color:#94a3b8;background:transparent}.comment-more:hover{color:#334155;background:#eef2f7}.comment-text{margin-top:5px;color:#526176;font-size:10px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.comment-meta{margin-top:7px;display:flex;align-items:center;flex-wrap:wrap;gap:4px}.comment-action{height:25px;padding:0 7px;border:0;border-radius:7px;background:transparent;color:#64748b;font-size:8px;font-weight:800}.comment-action:hover{color:#111827;background:#edf2f7}.comment-action.liked{color:var(--terracotta);background:#fff2ee}.comment-replies{display:grid;gap:8px;margin-top:7px}.comment-thread-wrap{position:relative}.comment-thread-wrap.has-replies:before{content:"";position:absolute;left:18px;top:43px;bottom:8px;width:1px;background:#dbe2ea}.reply-composer{display:none;margin-top:8px;gap:7px}.reply-composer.show{display:flex}.reply-composer input{min-width:0;flex:1;height:37px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:0 10px;font-size:9px;outline:0}.reply-composer input:focus{border-color:rgba(216,111,85,.45);box-shadow:0 0 0 4px rgba(216,111,85,.07)}.conversation-composer{margin-top:12px;padding-top:12px;border-top:1px solid #e7ebf1;display:flex;gap:8px;align-items:flex-end}.conversation-input{min-width:0;flex:1;min-height:42px;max-height:110px;resize:vertical;border:1px solid var(--line);border-radius:12px;background:#f8fafc;padding:10px 11px;font-size:10px;line-height:1.5;outline:0}.conversation-input:focus{border-color:rgba(216,111,85,.45);background:#fff;box-shadow:0 0 0 4px rgba(216,111,85,.07)}
+
+/* ACTION SHEET */
+.sheet{position:fixed;inset:0;z-index:400;display:none;align-items:flex-end;justify-content:center;background:rgba(7,10,18,.56);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}.sheet.open{display:flex}.sheet-panel{width:min(560px,100%);padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -20px 70px rgba(0,0,0,.25);animation:sheetIn .22s ease both}@keyframes sheetIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}.sheet-handle{width:38px;height:4px;margin:4px auto 10px;border-radius:999px;background:#d5dbe4}.sheet-title{padding:4px 8px 8px;color:#94a3b8;font-size:8px;font-weight:850;text-transform:uppercase;letter-spacing:.1em}.sheet-option{width:100%;min-height:44px;display:flex;align-items:center;gap:10px;padding:0 11px;border:0;border-radius:11px;background:transparent;color:#334155;text-align:left;font-size:11px;font-weight:700}.sheet-option:hover{background:#f8fafc}.sheet-option.danger{color:#dc2626}.sheet-option i{width:18px;text-align:center}
+
+/* REPORT / IMAGE / TOAST / NETWORK */
+.report-panel{width:min(520px,100%)}.report-note{padding:11px 12px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:9px;line-height:1.55;margin-bottom:12px}.image-viewer{position:fixed;inset:0;z-index:250;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.94)}.image-viewer.open{display:flex}.image-viewer img{max-width:100%;max-height:82dvh;object-fit:contain;border-radius:14px;box-shadow:0 25px 80px rgba(0,0,0,.45)}.image-viewer-close{position:absolute;top:16px;right:16px;width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);color:#fff}.toast-stack{position:fixed;right:12px;bottom:calc(74px + env(safe-area-inset-bottom));z-index:500;width:min(360px,calc(100vw - 24px));display:grid;gap:7px;pointer-events:none}.toast{display:flex;align-items:flex-start;gap:9px;padding:11px;border-radius:13px;color:#fff;background:rgba(15,23,42,.94);border:1px solid rgba(255,255,255,.08);box-shadow:0 16px 40px rgba(0,0,0,.18);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);animation:toastIn .25s ease both;pointer-events:auto}.toast.success{border-left:3px solid #10b981}.toast.error{border-left:3px solid #ef4444}.toast.info{border-left:3px solid #60a5fa}.toast-icon{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex:0 0 auto;background:rgba(255,255,255,.08)}.toast-message{min-width:0;flex:1;font-size:10px;line-height:1.5}.toast-close{color:rgba(255,255,255,.45);border:0;background:transparent}@keyframes toastIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}.network-banner{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:450;display:none;padding:8px 12px;border-radius:10px;background:#991b1b;color:#fff;font-size:9px;font-weight:750;box-shadow:0 12px 30px rgba(0,0,0,.18)}.network-banner.show{display:block}
+
+@media (min-width:700px){.hero-inner{padding-top:38px;padding-bottom:40px}.page{padding-top:22px}.composer{padding:17px}.post-body{padding:17px}.mobile-nav{display:none}.toast-stack{bottom:20px}}
+@media (max-width:699px){body{padding-bottom:calc(69px + env(safe-area-inset-bottom))}.header-inner{min-height:62px}.category-bar{top:62px}.brand-subtitle{display:none}.header-avatar,.header-btn{width:38px;height:38px}.header-avatar{border-radius:11px}.page{padding-left:10px;padding-right:10px}.post-card{border-radius:18px}.post-body{padding:14px}.conversation-modal{align-items:flex-end;padding:0}.conversation-modal .modal-panel{width:100%;max-height:calc(100dvh - 8px);border-radius:20px 20px 0 0}.comments-scroll{max-height:54dvh}}
+@media (max-width:460px){.post-action{min-width:38px;padding:0 7px}.post-action .label{display:none}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
-
 <body>
-
-<!-- ============================================================
-     HEADER
-============================================================ -->
 
 <header class="app-header safe-top">
   <div class="header-inner">
-
     <a href="index.html" class="brand" aria-label="Back to MoonLat dashboard">
-      <div class="brand-mark">
-        <i class="fas fa-house-chimney"></i>
-      </div>
-
-      <div class="brand-copy">
-        <div class="brand-title">MoonLat</div>
-        <div class="brand-subtitle">Community Network</div>
-      </div>
+      <div class="brand-mark"><i class="fas fa-house-chimney"></i></div>
+      <div class="brand-copy"><div class="brand-title">MoonLat</div><div class="brand-subtitle">Community Network</div></div>
     </a>
-
     <div class="header-actions">
-
-      <button
-        id="headerSearchButton"
-        class="header-btn"
-        type="button"
-        aria-label="Search community"
-      >
-        <i class="fas fa-search text-xs"></i>
-      </button>
-
-      <button
-        id="notificationButton"
-        class="header-btn"
-        type="button"
-        aria-label="Notifications"
-      >
-        <i class="far fa-bell text-sm"></i>
-        <span id="notificationDot" class="header-notification-dot hidden"></span>
-      </button>
-
-      <a href="profile.html" id="headerAvatar" class="header-avatar" aria-label="Your profile">
-        U
-      </a>
-
+      <button id="headerSearchButton" class="header-btn" type="button" aria-label="Search community"><i class="fas fa-search text-xs"></i></button>
+      <button id="notificationButton" class="header-btn" type="button" aria-label="Notifications"><i class="far fa-bell text-sm"></i><span id="notificationDot" class="header-notification-dot hidden"></span></button>
+      <a href="profile.html" id="headerAvatar" class="header-avatar" aria-label="Your profile">U</a>
     </div>
   </div>
 </header>
 
-<!-- ============================================================
-     HERO
-============================================================ -->
-
 <section class="hero">
   <div class="hero-inner">
-
-    <div class="hero-eyebrow">
-      <span></span>
-      MoonLat Community
-    </div>
-
-    <h1 class="hero-title">
-      Real people. Real property.<br>
-      <span>Real conversations.</span>
-    </h1>
-
-    <p class="hero-description">
-      Ask questions, share property discoveries, upload local updates and connect with the people shaping your real estate market.
-    </p>
-
+    <div class="hero-eyebrow"><span></span>MoonLat Community</div>
+    <h1 class="hero-title">Real people. Real property.<br><span>Real conversations.</span></h1>
+    <p class="hero-description">Ask questions, share property discoveries, upload local updates and connect with the people shaping your real estate market.</p>
     <div class="hero-tools">
-
       <div class="hero-search">
         <i class="fas fa-search text-xs"></i>
-
-        <input
-          id="communitySearch"
-          type="search"
-          autocomplete="off"
-          placeholder="Search the community..."
-          aria-label="Search community"
-        >
-
-        <button
-          id="clearSearch"
-          class="hero-search-clear hidden"
-          type="button"
-          aria-label="Clear search"
-        >
-          <i class="fas fa-xmark text-xs"></i>
-        </button>
+        <input id="communitySearch" type="search" autocomplete="off" placeholder="Search the community..." aria-label="Search community">
+        <button id="clearSearch" class="hero-search-clear hidden" type="button" aria-label="Clear search"><i class="fas fa-xmark text-xs"></i></button>
       </div>
-
-      <button id="locationFilterButton" class="hero-location-btn" type="button">
-        <i class="fas fa-location-crosshairs"></i>
-        <span>Nearby</span>
-      </button>
-
+      <button id="locationFilterButton" class="hero-location-btn" type="button"><i class="fas fa-location-crosshairs"></i><span>Nearby</span></button>
     </div>
-
     <div class="hero-metrics">
-
-      <div class="hero-metric">
-        <div class="hero-metric-icon">
-          <i class="fas fa-comments text-[10px]"></i>
-        </div>
-        <div>
-          <strong id="communityPostCount">0</strong>
-          <span>Posts</span>
-        </div>
-      </div>
-
-      <div class="hero-metric">
-        <div class="hero-metric-icon">
-          <i class="fas fa-image text-[10px]"></i>
-        </div>
-        <div>
-          <strong id="communityPhotoCount">0</strong>
-          <span>Photos</span>
-        </div>
-      </div>
-
-      <div class="hero-metric">
-        <div class="hero-metric-icon">
-          <i class="fas fa-circle-nodes text-[10px]"></i>
-        </div>
-        <div>
-          <strong id="communityMemberCount">0</strong>
-          <span>Members</span>
-        </div>
-      </div>
-
+      <div class="hero-metric"><div class="hero-metric-icon"><i class="fas fa-comments text-[10px]"></i></div><div><strong id="communityPostCount">0</strong><span>Posts</span></div></div>
+      <div class="hero-metric"><div class="hero-metric-icon"><i class="fas fa-image text-[10px]"></i></div><div><strong id="communityPhotoCount">0</strong><span>Photos</span></div></div>
+      <div class="hero-metric"><div class="hero-metric-icon"><i class="fas fa-circle-nodes text-[10px]"></i></div><div><strong id="communityMemberCount">0</strong><span>Members</span></div></div>
     </div>
-
   </div>
 </section>
 
-<!-- ============================================================
-     CATEGORIES
-============================================================ -->
-
 <nav class="category-bar" aria-label="Community categories">
   <div class="category-inner">
-
-    <button class="category-btn active" data-category="all">
-      All
-    </button>
-
-    <button class="category-btn" data-category="question">
-      Questions
-    </button>
-
-    <button class="category-btn" data-category="discussion">
-      Discussions
-    </button>
-
-    <button class="category-btn" data-category="property">
-      Properties
-    </button>
-
-    <button class="category-btn" data-category="photo">
-      Local Photos
-    </button>
-
-    <button class="category-btn" data-category="market">
-      Market
-    </button>
-
-    <button class="category-btn" data-category="investment">
-      Investment
-    </button>
-
-    <button class="category-btn" data-category="advice">
-      Advice
-    </button>
-
+    <button class="category-btn active" data-category="all">All</button><button class="category-btn" data-category="question">Questions</button><button class="category-btn" data-category="discussion">Discussions</button><button class="category-btn" data-category="property">Properties</button><button class="category-btn" data-category="photo">Local Photos</button><button class="category-btn" data-category="market">Market</button><button class="category-btn" data-category="investment">Investment</button><button class="category-btn" data-category="advice">Advice</button>
   </div>
 </nav>
-
-<!-- ============================================================
-     PAGE
-============================================================ -->
 
 <main class="page">
-
   <div class="community-grid">
-
-    <!-- ========================================================
-         FEED
-    ========================================================= -->
-
     <section class="feed-column">
-
-      <!-- Composer -->
       <div class="surface composer">
-
         <div class="composer-row">
-
-          <div id="composerAvatar" class="user-avatar">
-            U
-          </div>
-
-          <button id="openComposer" class="composer-trigger" type="button">
-            Share something with the community...
-          </button>
-
+          <a id="composerAvatar" class="user-avatar" href="profile.html" aria-label="Your profile">U</a>
+          <button id="openComposer" class="composer-trigger" type="button">Share something with the community...</button>
         </div>
-
         <div class="composer-actions">
-
-          <button class="composer-action" data-open-type="property" type="button">
-            <i class="fas fa-building"></i>
-            Property
-          </button>
-
-          <button class="composer-action" data-open-type="question" type="button">
-            <i class="fas fa-circle-question"></i>
-            Question
-          </button>
-
-          <button class="composer-action" data-open-type="photo" type="button">
-            <i class="fas fa-camera"></i>
-            Photo
-          </button>
-
-          <button class="composer-action" data-open-type="discussion" type="button">
-            <i class="fas fa-message"></i>
-            Discussion
-          </button>
-
+          <button class="composer-action" data-open-type="property" type="button"><i class="fas fa-building"></i> Property</button>
+          <button class="composer-action" data-open-type="question" type="button"><i class="fas fa-circle-question"></i> Question</button>
+          <button class="composer-action" data-open-type="photo" type="button"><i class="fas fa-camera"></i> Photo</button>
+          <button class="composer-action" data-open-type="discussion" type="button"><i class="fas fa-message"></i> Discussion</button>
         </div>
-
       </div>
 
-      <!-- Feed controls -->
       <div class="feed-control">
-
-        <div class="feed-tabs">
-
-          <button class="feed-tab active" data-sort="latest" type="button">
-            Latest
-          </button>
-
-          <button class="feed-tab" data-sort="popular" type="button">
-            Popular
-          </button>
-
-          <button class="feed-tab" data-sort="unanswered" type="button">
-            Unanswered
-          </button>
-
-        </div>
-
-        <div id="feedCount" class="feed-count">
-          0 posts
-        </div>
-
+        <div class="feed-tabs"><button class="feed-tab active" data-sort="latest" type="button">Latest</button><button class="feed-tab" data-sort="popular" type="button">Popular</button><button class="feed-tab" data-sort="unanswered" type="button">Unanswered</button></div>
+        <div id="feedCount" class="feed-count">0 posts</div>
       </div>
 
-      <!-- Feed -->
-      <div id="communityFeed">
-
-        <div class="feed-state">
-          <div class="spinner"></div>
-          <div class="feed-state-title">Loading community</div>
-          <div class="feed-state-text">
-            Connecting to the live MoonLat community feed...
-          </div>
-        </div>
-
-      </div>
-
+      <div id="communityFeed"><div class="feed-state"><div class="spinner"></div><div class="feed-state-title">Loading community</div><div class="feed-state-text">Connecting to the live MoonLat community feed...</div></div></div>
     </section>
 
-    <!-- ========================================================
-         SIDEBAR
-    ========================================================= -->
-
     <aside class="sidebar">
-
-      <div class="surface widget">
-
-        <div class="widget-heading">
-          <div class="widget-title">Community pulse</div>
-        </div>
-
-        <div class="widget-stat-grid">
-
-          <div class="widget-stat">
-            <strong id="sidePosts">0</strong>
-            <span>Posts</span>
-          </div>
-
-          <div class="widget-stat">
-            <strong id="sideQuestions">0</strong>
-            <span>Questions</span>
-          </div>
-
-          <div class="widget-stat">
-            <strong id="sideProperties">0</strong>
-            <span>Properties</span>
-          </div>
-
-          <div class="widget-stat">
-            <strong id="sidePhotos">0</strong>
-            <span>Photos</span>
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="surface widget">
-
-        <div class="widget-heading">
-          <div class="widget-title">Your location</div>
-        </div>
-
-        <div class="nearby-box">
-
-          <div class="nearby-box-title">
-            <i class="fas fa-location-dot mr-1"></i>
-            Local discovery
-          </div>
-
-          <div id="sidebarLocationText" class="nearby-box-text">
-            Your live location is not attached.
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="surface widget">
-
-        <div class="widget-heading">
-          <div class="widget-title">Community workflow</div>
-        </div>
-
-        <div class="widget-empty">
-          <strong class="text-slate-700">Share</strong> something useful.<br>
-          <strong class="text-slate-700">Discover</strong> local activity.<br>
-          <strong class="text-slate-700">Respond</strong> to people.<br>
-          <strong class="text-slate-700">Connect</strong> with your market.
-        </div>
-
-      </div>
-
+      <div class="surface widget"><div class="widget-heading"><div class="widget-title">Community pulse</div></div><div class="widget-stat-grid"><div class="widget-stat"><strong id="sidePosts">0</strong><span>Posts</span></div><div class="widget-stat"><strong id="sideQuestions">0</strong><span>Questions</span></div><div class="widget-stat"><strong id="sideProperties">0</strong><span>Properties</span></div><div class="widget-stat"><strong id="sidePhotos">0</strong><span>Photos</span></div></div></div>
+      <div class="surface widget"><div class="widget-heading"><div class="widget-title">Your location</div></div><div class="nearby-box"><div class="nearby-box-title"><i class="fas fa-location-dot mr-1"></i>Local discovery</div><div id="sidebarLocationText" class="nearby-box-text">Your live location is not attached.</div></div></div>
+      <div class="surface widget"><div class="widget-heading"><div class="widget-title">Community workflow</div></div><div class="widget-empty"><strong class="text-slate-700">Share</strong> something useful.<br><strong class="text-slate-700">Discover</strong> local activity.<br><strong class="text-slate-700">Respond</strong> to people.<br><strong class="text-slate-700">Connect</strong> with your market.</div></div>
     </aside>
-
   </div>
-
 </main>
 
-<!-- ============================================================
-     MOBILE NAVIGATION
-============================================================ -->
-
 <nav class="mobile-nav safe-bottom">
-
   <div class="mobile-nav-inner">
-
-    <a href="index.html" class="mobile-nav-item">
-      <i class="fas fa-house text-sm"></i>
-      <span>Dashboard</span>
-    </a>
-
-    <button id="mobileSearch" class="mobile-nav-item" type="button">
-      <i class="fas fa-magnifying-glass text-sm"></i>
-      <span>Search</span>
-    </button>
-
-    <div class="mobile-nav-fab-wrap">
-      <button id="mobileCreate" class="mobile-nav-fab" type="button" aria-label="Create post">
-        <i class="fas fa-plus"></i>
-      </button>
-    </div>
-
-    <button id="mobileNotifications" class="mobile-nav-item" type="button">
-      <i class="far fa-bell text-sm"></i>
-      <span>Alerts</span>
-    </button>
-
-    <a href="profile.html" class="mobile-nav-item">
-      <i class="far fa-user text-sm"></i>
-      <span>Profile</span>
-    </a>
-
+    <a href="index.html" class="mobile-nav-item active"><i class="fas fa-house text-sm"></i><span>Dashboard</span></a>
+    <button id="mobileSearch" class="mobile-nav-item" type="button"><i class="fas fa-magnifying-glass text-sm"></i><span>Search</span></button>
+    <div class="mobile-nav-fab-wrap"><button id="mobileCreate" class="mobile-nav-fab" type="button" aria-label="Create post"><i class="fas fa-plus"></i></button></div>
+    <button id="mobileNotifications" class="mobile-nav-item" type="button"><i class="far fa-bell text-sm"></i><span>Alerts</span></button>
+    <a href="profile.html" class="mobile-nav-item"><i class="far fa-user text-sm"></i><span>Profile</span></a>
   </div>
-
 </nav>
 
-<!-- ============================================================
-     CREATE POST MODAL
-============================================================ -->
-
 <div id="composerModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="composerModalTitle">
-
   <div class="modal-panel">
-
-    <div class="modal-header">
-      <div id="composerModalTitle" class="modal-title">
-        Create a community post
-      </div>
-
-      <button id="closeComposer" class="modal-close" type="button" aria-label="Close">
-        <i class="fas fa-xmark"></i>
-      </button>
-    </div>
-
+    <div class="modal-header"><div id="composerModalTitle" class="modal-title">Create a community post</div><button id="closeComposer" class="modal-close" type="button" aria-label="Close"><i class="fas fa-xmark"></i></button></div>
     <form id="postForm">
-
       <div class="modal-content">
-
-        <div class="composer-author">
-
-          <div id="modalAuthorAvatar" class="user-avatar">
-            U
-          </div>
-
-          <div>
-            <div id="modalAuthorName" class="composer-author-name">
-              User
-            </div>
-            <div id="modalAuthorRole" class="composer-author-role">
-              Community member
-            </div>
-          </div>
-
-        </div>
-
+        <div class="composer-author"><a id="modalAuthorAvatar" class="user-avatar" href="profile.html" aria-label="Your profile">U</a><div><div id="modalAuthorName" class="composer-author-name">User</div><div id="modalAuthorRole" class="composer-author-role">Community member</div></div></div>
         <div class="post-type-selector">
-
-          <button type="button" class="post-type-option active" data-post-type="discussion">
-            <strong>
-              <i class="fas fa-message mr-1"></i>
-              Discussion
-            </strong>
-            <span>Start a conversation.</span>
-          </button>
-
-          <button type="button" class="post-type-option" data-post-type="question">
-            <strong>
-              <i class="fas fa-circle-question mr-1"></i>
-              Question
-            </strong>
-            <span>Ask the community.</span>
-          </button>
-
-          <button type="button" class="post-type-option" data-post-type="property">
-            <strong>
-              <i class="fas fa-building mr-1"></i>
-              Property
-            </strong>
-            <span>Share a real property.</span>
-          </button>
-
-          <button type="button" class="post-type-option" data-post-type="photo">
-            <strong>
-              <i class="fas fa-camera mr-1"></i>
-              Local Photo
-            </strong>
-            <span>Share something you see.</span>
-          </button>
-
+          <button type="button" class="post-type-option active" data-post-type="discussion"><strong><i class="fas fa-message mr-1"></i>Discussion</strong><span>Start a conversation.</span></button>
+          <button type="button" class="post-type-option" data-post-type="question"><strong><i class="fas fa-circle-question mr-1"></i>Question</strong><span>Ask the community.</span></button>
+          <button type="button" class="post-type-option" data-post-type="property"><strong><i class="fas fa-building mr-1"></i>Property</strong><span>Share a real property.</span></button>
+          <button type="button" class="post-type-option" data-post-type="photo"><strong><i class="fas fa-camera mr-1"></i>Local Photo</strong><span>Share something you see.</span></button>
         </div>
-
-        <div id="titleField" class="field">
-          <label for="postTitle">Title</label>
-          <input
-            id="postTitle"
-            type="text"
-            maxlength="180"
-            autocomplete="off"
-            placeholder="Give your post a clear title"
-          >
-        </div>
-
-        <div class="field">
-
-          <label for="postContent">Message</label>
-
-          <textarea
-            id="postContent"
-            maxlength="5000"
-            placeholder="Write something useful to the community..."
-            required
-          ></textarea>
-
-          <div class="flex justify-between mt-1.5">
-            <span class="text-[8px] text-slate-400">
-              Be clear, useful and respectful.
-            </span>
-
-            <span id="characterCount" class="text-[8px] text-slate-400">
-              0 / 5000
-            </span>
-          </div>
-
-        </div>
-
-        <div id="propertyField" class="field property-selector">
-
-          <label for="propertySelect">Attach property</label>
-
-          <select id="propertySelect">
-            <option value="">Choose one of your properties</option>
-          </select>
-
-        </div>
-
-        <div class="field">
-
-          <label>Media</label>
-
-          <div id="uploadBox" class="upload-box">
-
-            <input
-              id="postImages"
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              multiple
-              hidden
-            >
-
-            <button id="chooseImages" type="button">
-              <div class="upload-box-icon">
-                <i class="fas fa-cloud-arrow-up text-xs"></i>
-              </div>
-
-              <div class="upload-box-title">
-                Add photos
-              </div>
-
-              <div class="upload-box-subtitle">
-                JPG, PNG, WEBP or GIF · Up to 8 images
-              </div>
-            </button>
-
-          </div>
-
-          <div id="imagePreviewGrid" class="preview-grid hidden"></div>
-
-        </div>
-
-        <div class="field">
-
-          <div class="location-toggle">
-
-            <div class="location-info">
-
-              <div class="location-title">
-                <i class="fas fa-location-crosshairs text-emerald-600"></i>
-                Attach live location
-              </div>
-
-              <div id="locationStatus" class="location-status">
-                Your location will only be requested when you enable this.
-              </div>
-
-            </div>
-
-            <label class="toggle">
-              <input id="attachLocation" type="checkbox">
-              <span class="toggle-track">
-                <span class="toggle-thumb"></span>
-              </span>
-            </label>
-
-          </div>
-
-        </div>
-
+        <div id="titleField" class="field"><label for="postTitle">Title</label><input id="postTitle" type="text" maxlength="180" autocomplete="off" placeholder="Give your post a clear title"></div>
+        <div class="field"><label for="postContent">Message</label><textarea id="postContent" maxlength="5000" placeholder="Write something useful to the community..." required></textarea><div class="flex justify-between mt-1.5"><span class="text-[8px] text-slate-400">Be clear, useful and respectful.</span><span id="characterCount" class="text-[8px] text-slate-400">0 / 5000</span></div></div>
+        <div id="propertyField" class="field property-selector"><label for="propertySelect">Attach property</label><select id="propertySelect"><option value="">Choose one of your properties</option></select></div>
+        <div class="field"><label>Media</label><div id="uploadBox" class="upload-box"><input id="postImages" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden><button id="chooseImages" type="button"><div class="upload-box-icon"><i class="fas fa-cloud-arrow-up text-xs"></i></div><div class="upload-box-title">Add photos</div><div class="upload-box-subtitle">JPG, PNG, WEBP or GIF · Up to 8 images</div></button></div><div id="imagePreviewGrid" class="preview-grid hidden"></div></div>
+        <div class="field"><div class="location-toggle"><div class="location-info"><div class="location-title"><i class="fas fa-location-crosshairs text-emerald-600"></i>Attach live location</div><div id="locationStatus" class="location-status">Your location will only be requested when you enable this.</div></div><label class="toggle"><input id="attachLocation" type="checkbox"><span class="toggle-track"><span class="toggle-thumb"></span></span></label></div></div>
       </div>
-
-      <div class="modal-footer">
-
-        <button id="cancelComposer" class="btn btn-secondary" type="button">
-          Cancel
-        </button>
-
-        <button id="publishPost" class="btn btn-primary" type="submit">
-          <i class="fas fa-paper-plane mr-1"></i>
-          Publish
-        </button>
-
-      </div>
-
+      <div class="modal-footer"><button id="cancelComposer" class="btn btn-secondary" type="button">Cancel</button><button id="publishPost" class="btn btn-primary" type="submit"><i class="fas fa-paper-plane mr-1"></i>Publish</button></div>
     </form>
-
   </div>
-
 </div>
 
-<!-- ============================================================
-     COMMENTS MODAL
-============================================================ -->
-
-<div id="commentsModal" class="modal" role="dialog" aria-modal="true">
-
+<div id="commentsModal" class="modal conversation-modal" role="dialog" aria-modal="true" aria-labelledby="commentsTitle">
   <div class="modal-panel">
-
-    <div class="modal-header">
-
-      <div>
-        <div class="modal-title">Conversation</div>
-        <div id="commentsPostTitle" class="text-[8px] text-slate-400 mt-1 truncate max-w-[280px]"></div>
-      </div>
-
-      <button id="closeComments" class="modal-close" type="button">
-        <i class="fas fa-xmark"></i>
-      </button>
-
-    </div>
-
+    <div class="modal-header"><div><div id="commentsTitle" class="modal-title">Conversation</div><div id="commentsPostTitle" class="text-[8px] text-slate-400 mt-1 truncate max-w-[300px]">Community conversation</div></div><button id="closeComments" class="modal-close" type="button" aria-label="Close conversation"><i class="fas fa-xmark"></i></button></div>
     <div class="modal-content">
-
-      <div id="commentList" class="comment-list">
-
-        <div class="feed-state">
-          <div class="spinner"></div>
-          <div class="feed-state-title">Loading conversation</div>
-        </div>
-
-      </div>
-
-      <form id="commentForm" class="comment-form">
-
-        <input
-          id="commentInput"
-          type="text"
-          maxlength="1000"
-          placeholder="Write a reply..."
-          autocomplete="off"
-          required
-        >
-
-        <button class="btn btn-primary" type="submit">
-          <i class="fas fa-paper-plane"></i>
-        </button>
-
-      </form>
-
+      <div id="conversationContext" class="conversation-context hidden"></div>
+      <div class="comments-scroll" id="commentList"><div class="feed-state"><div class="spinner"></div><div class="feed-state-title">Loading conversation</div></div></div>
+      <form id="commentForm" class="conversation-composer"><a id="commentComposerAvatar" class="user-avatar !w-9 !h-9 !rounded-[11px]" href="profile.html" aria-label="Your profile">U</a><textarea id="commentInput" class="conversation-input" maxlength="1000" placeholder="Write a comment..." autocomplete="off" required></textarea><button class="btn btn-primary" type="submit" aria-label="Send comment"><i class="fas fa-paper-plane"></i></button></form>
     </div>
-
   </div>
-
 </div>
 
-<!-- ============================================================
-     IMAGE VIEWER
-============================================================ -->
-
-<div id="imageViewer" class="image-viewer">
-
-  <button id="closeImageViewer" class="image-viewer-close" type="button">
-    <i class="fas fa-xmark"></i>
-  </button>
-
-  <img id="viewerImage" src="" alt="Community image">
-
-</div>
-
-<!-- ============================================================
-     REPORT MODAL
-============================================================ -->
-
-<div id="reportModal" class="modal" role="dialog" aria-modal="true">
-
-  <div class="modal-panel">
-
-    <div class="modal-header">
-
-      <div class="modal-title">
-        Report post
-      </div>
-
-      <button id="closeReport" class="modal-close" type="button">
-        <i class="fas fa-xmark"></i>
-      </button>
-
-    </div>
-
-    <form id="reportForm">
-
-      <div class="modal-content">
-
-        <div class="field">
-
-          <label for="reportReason">
-            Reason
-          </label>
-
-          <select id="reportReason" required>
-
-            <option value="">
-              Select a reason
-            </option>
-
-            <option value="spam">
-              Spam
-            </option>
-
-            <option value="scam">
-              Scam or suspicious activity
-            </option>
-
-            <option value="harassment">
-              Harassment
-            </option>
-
-            <option value="misinformation">
-              Misleading information
-            </option>
-
-            <option value="inappropriate">
-              Inappropriate content
-            </option>
-
-            <option value="other">
-              Other
-            </option>
-
-          </select>
-
-        </div>
-
-        <div class="field">
-
-          <label for="reportDetails">
-            Additional details
-          </label>
-
-          <textarea
-            id="reportDetails"
-            maxlength="1000"
-            placeholder="Tell us what is wrong..."
-          ></textarea>
-
-        </div>
-
-      </div>
-
-      <div class="modal-footer">
-
-        <button id="cancelReport" class="btn btn-secondary" type="button">
-          Cancel
-        </button>
-
-        <button class="btn btn-primary" type="submit">
-          Submit report
-        </button>
-
-      </div>
-
-    </form>
-
+<div id="reportModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="reportTitle">
+  <div class="modal-panel report-panel">
+    <div class="modal-header"><div id="reportTitle" class="modal-title">Report content</div><button id="closeReport" class="modal-close" type="button" aria-label="Close report"><i class="fas fa-xmark"></i></button></div>
+    <form id="reportForm"><div class="modal-content"><div class="report-note">Reports are reviewed by MoonLat moderation. Do not submit private information or passwords.</div><div class="field"><label for="reportTargetType">Content</label><select id="reportTargetType" required><option value="post">Post</option><option value="comment">Comment</option></select></div><div class="field"><label for="reportReason">Reason</label><select id="reportReason" required><option value="">Select a reason</option><option value="spam">Spam</option><option value="scam">Scam or suspicious activity</option><option value="harassment">Harassment</option><option value="misinformation">Misleading information</option><option value="inappropriate">Inappropriate content</option><option value="other">Other</option></select></div><div class="field"><label for="reportDetails">Additional details</label><textarea id="reportDetails" maxlength="1000" placeholder="Tell us what is wrong..."></textarea></div></div><div class="modal-footer"><button id="cancelReport" class="btn btn-secondary" type="button">Cancel</button><button class="btn btn-primary" type="submit">Submit report</button></div></form>
   </div>
-
 </div>
 
-<!-- ============================================================
-     TOAST
-============================================================ -->
+<div id="actionSheet" class="sheet" aria-hidden="true"><div class="sheet-panel" role="menu"><div class="sheet-handle"></div><div id="sheetTitle" class="sheet-title">Options</div><div id="sheetOptions"></div></div></div>
+<div id="imageViewer" class="image-viewer"><button id="closeImageViewer" class="image-viewer-close" type="button" aria-label="Close image"><i class="fas fa-xmark"></i></button><img id="viewerImage" src="" alt="Community image"></div>
+<div id="toastStack" class="toast-stack"></div><div id="networkBanner" class="network-banner">You are offline. Some community actions are unavailable.</div>
 
-<div id="toastStack" class="toast-stack"></div>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import {getFirestore,collection,doc,addDoc,setDoc,getDoc,getDocs,deleteDoc,query,where,orderBy,limit,onSnapshot,serverTimestamp,updateDoc,increment,runTransaction} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-<div id="networkBanner" class="network-banner">
-  You are offline. Some community actions are unavailable.
-</div>
+const firebaseConfig={apiKey:"AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",authDomain:"moonlat-estate-dashboard.firebaseapp.com",projectId:"moonlat-estate-dashboard",storageBucket:"moonlat-estate-dashboard.firebasestorage.app",messagingSenderId:"289878951289",appId:"1:289878951289:web:18db63e3ab8f071b811ba8"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const CLOUDINARY_CLOUD_NAME="dxdbn6xwy",CLOUDINARY_UPLOAD_PRESET="geefox_unsigned",CLOUDINARY_UPLOAD_URL=`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
+let currentUser=null,currentProfile=null,allPosts=[],filteredPosts=[],properties=[];
+let activeCategory="all",activeSort="latest",searchTerm="",nearbyMode=false,selectedPostType="discussion",selectedImages=[];
+let currentCommentsPostId=null,currentReportTarget=null,currentSheetTarget=null,feedUnsubscribe=null,commentsUnsubscribe=null,notificationUnsubscribe=null,userLocation=null,editingCommentId=null;
+const reactionState=new Map(),saveState=new Map(),commentReactionState=new Map(),pendingActions=new Set(),replyDrafts=new Map();
+const $=id=>document.getElementById(id);
 
-<script src="community.js"></script>
+function escapeHTML(value=""){return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function getInitials(name=""){const p=name.trim().split(/\s+/).filter(Boolean);return p.length?p.slice(0,2).map(x=>x[0]).join("").toUpperCase():"U"}
+function displayName(){return currentProfile?.displayName||currentProfile?.name||currentUser?.displayName||currentUser?.email?.split("@")[0]||"User"}
+function displayRole(){return String(currentProfile?.role||currentUser?.role||"client").toLowerCase()}
+function avatarURL(profile={}){return profile.photoURL||profile.photoUrl||profile.avatar||profile.profileImage||profile.image||""}
+function profileURL(uid){return uid?`profile.html?id=${encodeURIComponent(uid)}`:"profile.html"}
+function formatRelativeTime(ts){if(!ts)return"Just now";const d=typeof ts?.toDate==="function"?ts.toDate():ts instanceof Date?ts:new Date(ts);if(Number.isNaN(d.getTime()))return"Recently";const s=Math.floor((Date.now()-d.getTime())/1000);if(s<10)return"Just now";if(s<60)return`${s}s ago`;const m=Math.floor(s/60);if(m<60)return`${m}m ago`;const h=Math.floor(m/60);if(h<24)return`${h}h ago`;const days=Math.floor(h/24);if(days<7)return`${days}d ago`;return d.toLocaleDateString(undefined,{day:"numeric",month:"short",year:d.getFullYear()!==new Date().getFullYear()?"numeric":undefined})}
+function formatNumber(n=0){const v=Number(n)||0;if(v>=1e6)return`${(v/1e6).toFixed(v>=1e7?0:1)}M`;if(v>=1e3)return`${(v/1e3).toFixed(v>=1e4?0:1)}k`;return String(v)}
+function getPostTypeLabel(t){return({discussion:"Discussion",question:"Question",property:"Property",photo:"Local Photo",market:"Market",investment:"Investment",advice:"Advice"}[t]||"Community")}
+function getPostTypeIcon(t){return({discussion:"fa-message",question:"fa-circle-question",property:"fa-building",photo:"fa-camera",market:"fa-chart-line",investment:"fa-chart-pie",advice:"fa-lightbulb"}[t]||"fa-message")}
+function typeClass(t){return["discussion","question","property","photo","market","investment","advice"].includes(t)?t:"discussion"}
+function actionKey(type,id){return`${type}:${id}`}
+function toast(message,type="success"){const stack=$("toastStack"),item=document.createElement("div");item.className=`toast ${type}`;const icon=type==="success"?"fa-check":type==="error"?"fa-exclamation":"fa-info";item.innerHTML=`<div class="toast-icon"><i class="fas ${icon} text-[9px]"></i></div><div class="toast-message">${escapeHTML(message)}</div><button class="toast-close" type="button"><i class="fas fa-xmark text-[10px]"></i></button>`;stack.appendChild(item);const rm=()=>{item.style.opacity="0";item.style.transform="translateY(5px)";setTimeout(()=>item.remove(),180)};item.querySelector(".toast-close").addEventListener("click",rm);setTimeout(rm,4000)}
+function setButtonLoading(btn,loading,label="Please wait"){if(!btn)return;if(loading){btn.dataset.originalLabel=btn.innerHTML;btn.disabled=true;btn.innerHTML=`<i class="fas fa-spinner fa-spin mr-1"></i>${escapeHTML(label)}`}else{btn.disabled=false;if(btn.dataset.originalLabel){btn.innerHTML=btn.dataset.originalLabel;delete btn.dataset.originalLabel}}}
+function animateAction(btn){if(!btn)return;btn.classList.remove("just-updated");void btn.offsetWidth;btn.classList.add("just-updated")}
+function buildAvatarHTML({userId="",name="User",avatar="",className="user-avatar"}={}){return`<a class="${escapeHTML(className)}" href="${escapeHTML(profileURL(userId))}" data-profile-link="${escapeHTML(userId)}" aria-label="${escapeHTML(name)} profile">${avatar?`<img src="${escapeHTML(avatar)}" alt="${escapeHTML(name)}" loading="lazy">`:escapeHTML(getInitials(name))}</a>`}
+function updateNetworkState(){$("networkBanner").classList.toggle("show",!navigator.onLine)}
+window.addEventListener("online",updateNetworkState);window.addEventListener("offline",updateNetworkState);updateNetworkState();
+function openModal(id){$(id).classList.add("open");document.body.classList.add("modal-open")}
+function closeModal(id){$(id).classList.remove("open");if(!document.querySelector(".modal.open,.sheet.open,.image-viewer.open"))document.body.classList.remove("modal-open")}
 
+async function loadCurrentProfile(user){try{const snap=await getDoc(doc(db,"users",user.uid));currentProfile=snap.exists()?{id:snap.id,...snap.data()}:{id:user.uid,displayName:user.displayName||user.email?.split("@")[0]||"User",role:"client",photoURL:user.photoURL||""}}catch(e){console.error(e);currentProfile={id:user.uid,displayName:user.displayName||user.email?.split("@")[0]||"User",role:"client",photoURL:user.photoURL||""}}updateIdentityUI()}
+function updateIdentityUI(){const name=displayName(),avatar=avatarURL(currentProfile);["composerAvatar","modalAuthorAvatar","commentComposerAvatar"].forEach(id=>{const el=$(id);if(!el)return;el.href=profileURL(currentUser?.uid);el.innerHTML=avatar?`<img src="${escapeHTML(avatar)}" alt="${escapeHTML(name)}">`:escapeHTML(getInitials(name))});const h=$("headerAvatar");h.href=profileURL(currentUser?.uid);h.innerHTML=avatar?`<img src="${escapeHTML(avatar)}" alt="${escapeHTML(name)}">`:escapeHTML(getInitials(name));$("modalAuthorName").textContent=name;$("modalAuthorRole").textContent=displayRole()==="agent"?"Verified agent":displayRole()==="admin"?"Administrator":"Community member"}
+async function loadProperties(){if(!currentUser)return;try{const snap=await getDocs(query(collection(db,"properties"),where("ownerId","==",currentUser.uid),limit(100)));properties=snap.docs.map(d=>({id:d.id,...d.data()}));populatePropertySelector()}catch(e){console.error(e);properties=[]}}
+function populatePropertySelector(){const s=$("propertySelect");s.innerHTML=`<option value="">Choose one of your properties</option>`;properties.forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=p.title||p.name||p.address||"Untitled property";s.appendChild(o)})}
+function getSelectedProperty(){return properties.find(p=>p.id===$("propertySelect").value)||null}
+function validateImage(file){if(!["image/jpeg","image/png","image/webp","image/gif"].includes(file.type))throw new Error(`${file.name}: unsupported image format.`);if(file.size>10*1024*1024)throw new Error(`${file.name}: image must be 10MB or smaller.`)}
+async function uploadImage(file,onProgress){validateImage(file);const fd=new FormData();fd.append("file",file);fd.append("upload_preset",CLOUDINARY_UPLOAD_PRESET);fd.append("folder","moonlat_community");return new Promise((resolve,reject)=>{const x=new XMLHttpRequest();x.open("POST",CLOUDINARY_UPLOAD_URL,true);x.upload.addEventListener("progress",e=>{if(e.lengthComputable&&onProgress)onProgress(Math.round(e.loaded/e.total*100))});x.addEventListener("load",()=>{if(x.status>=200&&x.status<300){try{resolve(JSON.parse(x.responseText))}catch{reject(new Error("Invalid upload response."))}}else{let msg="Image upload failed.";try{const r=JSON.parse(x.responseText);if(r?.error?.message)msg=r.error.message}catch{}reject(new Error(msg))}});x.addEventListener("error",()=>reject(new Error("Network error while uploading image.")));x.send(fd)})}
+function renderImagePreviews(){const g=$("imagePreviewGrid");g.innerHTML="";if(!selectedImages.length){g.classList.add("hidden");return}g.classList.remove("hidden");selectedImages.forEach((item,i)=>{const w=document.createElement("div");w.className="preview-item";w.innerHTML=`<img src="${item.preview}" alt="${escapeHTML(item.file.name)}"><button class="preview-remove" type="button"><i class="fas fa-xmark text-[9px]"></i></button>`;w.querySelector("button").addEventListener("click",()=>{URL.revokeObjectURL(item.preview);selectedImages.splice(i,1);renderImagePreviews()});g.appendChild(w)})}
+function handleImageSelection(files){const inc=Array.from(files||[]);if(!inc.length)return;if(selectedImages.length+inc.length>8){toast("You can attach up to 8 images per post.","error");return}try{inc.forEach(file=>{validateImage(file);selectedImages.push({file,preview:URL.createObjectURL(file)})});renderImagePreviews()}catch(e){toast(e.message,"error")}}
+async function reverseGeocode(lat,lon){try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=18&addressdetails=1`,{headers:{Accept:"application/json"}});if(!r.ok)throw new Error("Location lookup failed.");const d=await r.json();return d.display_name||null}catch(e){console.warn(e);return null}}
+async function requestLiveLocation(){if(!navigator.geolocation)throw new Error("Location services are not supported by this browser.");return new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(async p=>{const latitude=Number(p.coords.latitude.toFixed(6)),longitude=Number(p.coords.longitude.toFixed(6)),accuracy=Math.round(p.coords.accuracy||0),label=await reverseGeocode(latitude,longitude);const loc={latitude,longitude,accuracy,label:label||`${latitude}, ${longitude}`,capturedAt:new Date().toISOString()};userLocation=loc;resolve(loc)},e=>reject(new Error(e.code===e.PERMISSION_DENIED?"Location permission was denied.":e.code===e.POSITION_UNAVAILABLE?"Your location is currently unavailable.":e.code===e.TIMEOUT?"Location request timed out.":"Unable to determine your location.")),{enableHighAccuracy:true,timeout:15000,maximumAge:60000}))}
+async function handleLocationToggle(){if(!$("attachLocation").checked){userLocation=null;$("locationStatus").textContent="Your location will only be requested when you enable this.";return}$("locationStatus").textContent="Requesting your current location...";try{const l=await requestLiveLocation();$("locationStatus").textContent=`${l.label} · ±${l.accuracy}m`}catch(e){$("attachLocation").checked=false;$("locationStatus").textContent="Location could not be attached.";toast(e.message,"error")}}
+
+function openComposer(type="discussion"){selectedPostType=type;document.querySelectorAll(".post-type-option").forEach(b=>b.classList.toggle("active",b.dataset.postType===type));updateComposerFields();openModal("composerModal");setTimeout(()=>$(type==="question"||type==="discussion"?"postTitle":"postContent").focus(),80)}
+function closeComposer(){closeModal("composerModal")}
+function resetComposer(){$("postForm").reset();$("postTitle").value="";$("postContent").value="";$("characterCount").textContent="0 / 5000";selectedImages.forEach(i=>URL.revokeObjectURL(i.preview));selectedImages=[];renderImagePreviews();userLocation=null;$("locationStatus").textContent="Your location will only be requested when you enable this.";selectedPostType="discussion";document.querySelectorAll(".post-type-option").forEach(b=>b.classList.toggle("active",b.dataset.postType==="discussion"));updateComposerFields()}
+function updateComposerFields(){const req=["discussion","question","property"].includes(selectedPostType);$("titleField").classList.toggle("hidden",!req);$("postTitle").required=req;$("propertyField").classList.toggle("show",selectedPostType==="property");if(selectedPostType==="property")populatePropertySelector()}
+async function createPost(e){e.preventDefault();if(!currentUser){toast("Your session is no longer active.","error");return}if(!navigator.onLine){toast("You are offline. Please reconnect before publishing.","error");return}const content=$("postContent").value.trim(),title=$("postTitle").value.trim();if(!content){toast("Write something before publishing.","error");$("postContent").focus();return}if(["discussion","question","property"].includes(selectedPostType)&&!title){toast("Add a title to your post.","error");return}const selectedProperty=getSelectedProperty();if(selectedPostType==="property"&&!selectedProperty){toast("Choose one of your properties.","error");return}const btn=$("publishPost");setButtonLoading(btn,true,"Publishing");try{const loc=$("attachLocation").checked?(userLocation||await requestLiveLocation()):null,images=[];for(const item of selectedImages){const r=await uploadImage(item.file);images.push({url:r.secure_url,publicId:r.public_id,width:r.width||null,height:r.height||null,format:r.format||item.file.type,size:item.file.size,filename:item.file.name})}await addDoc(collection(db,"communityPosts"),{type:selectedPostType,title:title||"",content,authorId:currentUser.uid,authorName:displayName(),authorRole:displayRole(),authorPhotoURL:avatarURL(currentProfile)||currentUser.photoURL||"",imageCount:images.length,images,likeCount:0,commentCount:0,shareCount:0,saveCount:0,isQuestion:selectedPostType==="question",answered:false,location:loc,propertyId:selectedProperty?.id||null,propertySnapshot:selectedProperty?{title:selectedProperty.title||selectedProperty.name||"",price:selectedProperty.price||selectedProperty.amount||null,address:selectedProperty.address||selectedProperty.location||"",image:selectedProperty.image||selectedProperty.coverImage||selectedProperty.imageUrl||selectedProperty.images?.[0]||""}:null,previewComments:[],createdAt:serverTimestamp(),updatedAt:serverTimestamp()});if(loc)$("sidebarLocationText").textContent=loc.label;resetComposer();closeComposer();toast("Your post is now live.");$("communityFeed")?.scrollIntoView({behavior:"smooth",block:"start"})}catch(e){console.error(e);toast(e?.message||"We could not publish your post. Please try again.","error")}finally{setButtonLoading(btn,false)}}
+
+function normalizePost(d){const x=d.data()||{};return{id:d.id,...x,type:x.type||"discussion",title:typeof x.title==="string"?x.title:"",content:typeof x.content==="string"?x.content:"",authorId:x.authorId||"",authorName:x.authorName||"Community member",authorRole:x.authorRole||"client",authorPhotoURL:x.authorPhotoURL||"",likeCount:Number(x.likeCount)||0,commentCount:Number(x.commentCount)||0,shareCount:Number(x.shareCount)||0,saveCount:Number(x.saveCount)||0,images:Array.isArray(x.images)?x.images:[],previewComments:Array.isArray(x.previewComments)?x.previewComments:[]}}
+function postMillis(p){return p?.createdAt?.toMillis?p.createdAt.toMillis():p?.createdAt?.seconds?Number(p.createdAt.seconds)*1000:0}
+function sortPosts(p){return[...p].sort((a,b)=>postMillis(b)-postMillis(a))}
+async function hydratePostState(posts){if(!currentUser)return;await Promise.all(posts.map(async p=>{try{const[r,s]=await Promise.all([getDoc(doc(db,"communityPosts",p.id,"reactions",currentUser.uid)),getDoc(doc(db,"users",currentUser.uid,"savedPosts",p.id))]);reactionState.set(p.id,r.exists());saveState.set(p.id,s.exists())}catch(e){console.warn("State hydration failed",p.id,e)}}))}
+function subscribeToFeed(){if(!currentUser)return;if(feedUnsubscribe){feedUnsubscribe();feedUnsubscribe=null}const q=query(collection(db,"communityPosts"),orderBy("createdAt","desc"),limit(100));feedUnsubscribe=onSnapshot(q,async snap=>{allPosts=sortPosts(snap.docs.map(normalizePost));await hydratePostState(allPosts);updateMetrics();applyFilters()},err=>{const code=String(err?.code||"").replace(/^firestore\//,"");if(code==="failed-precondition"){if(feedUnsubscribe)feedUnsubscribe();feedUnsubscribe=onSnapshot(query(collection(db,"communityPosts"),limit(100)),async snap=>{allPosts=sortPosts(snap.docs.map(normalizePost));await hydratePostState(allPosts);updateMetrics();applyFilters()},renderFeedError);return}renderFeedError(err)})}
+function renderFeedError(err){$("communityFeed").innerHTML=`<div class="feed-state"><div class="feed-state-icon"><i class="fas fa-triangle-exclamation"></i></div><div class="feed-state-title">Community feed unavailable</div><div class="feed-state-text">${escapeHTML(err?.code||"Check your connection and Firestore access.")}</div><button id="retryFeed" class="btn btn-primary mt-4" type="button">Retry</button></div>`;$("retryFeed")?.addEventListener("click",subscribeToFeed)}
+function applyFilters(){let r=[...allPosts];if(activeCategory!=="all")r=r.filter(p=>p.type===activeCategory);if(searchTerm){const q=searchTerm.toLowerCase();r=r.filter(p=>[p.title,p.content,p.authorName,p.authorRole,p.propertySnapshot?.title,p.propertySnapshot?.address,p.location?.label].filter(Boolean).join(" ").toLowerCase().includes(q))}if(nearbyMode&&userLocation)r=r.filter(p=>{if(!p.location)return false;return calculateDistanceKm(userLocation.latitude,userLocation.longitude,Number(p.location.latitude),Number(p.location.longitude))<=25});if(activeSort==="popular")r.sort((a,b)=>(b.likeCount+b.commentCount*2+b.shareCount*2+b.saveCount)-(a.likeCount+a.commentCount*2+a.shareCount*2+a.saveCount));else if(activeSort==="unanswered")r=r.filter(p=>p.type==="question"&&!p.answered);filteredPosts=r;renderFeed()}
+function calculateDistanceKm(a,b,c,d){const R=6371,dl=(c-a)*Math.PI/180,dn=(d-b)*Math.PI/180,A=Math.sin(dl/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dn/2)**2;return R*2*Math.atan2(Math.sqrt(A),Math.sqrt(1-A))}
+
+function renderFeed(){const f=$("communityFeed");$("feedCount").textContent=`${filteredPosts.length} ${filteredPosts.length===1?"post":"posts"}`;if(!filteredPosts.length){f.innerHTML=`<div class="feed-state"><div class="feed-state-icon"><i class="fas fa-comments"></i></div><div class="feed-state-title">Nothing here yet</div><div class="feed-state-text">Start a useful conversation and make the community more active.</div><button id="emptyCreatePost" class="btn btn-primary mt-4" type="button"><i class="fas fa-plus mr-1"></i>Start a post</button></div>`;$("emptyCreatePost").addEventListener("click",()=>openComposer("discussion"));return}f.innerHTML=filteredPosts.map(renderPost).join("");bindPostActions()}
+function renderPost(p){const liked=reactionState.get(p.id)===true,saved=saveState.get(p.id)===true,type=typeClass(p.type),role=String(p.authorRole||"client").toLowerCase(),roleClass=role==="agent"?"role-agent":role==="admin"?"role-admin":"role-client";const images=(Array.isArray(p.images)?p.images:[]).filter(x=>x?.url);let imageHTML="";if(images.length){const layout=images.length===1?"single":images.length===2?"two":images.length===3?"three":"multi";imageHTML=`<div class="post-images ${layout}">${images.slice(0,4).map((im,i)=>`<button class="post-image" type="button" data-image-url="${escapeHTML(im.url)}"><img src="${escapeHTML(im.url)}" alt="${escapeHTML(im.filename||"Community image")}" loading="lazy">${i===3&&images.length>4?`<div class="more-images">+${images.length-4}</div>`:""}</button>`).join("")}</div>`}let propertyHTML="";if(p.propertyId&&p.propertySnapshot){const pr=p.propertySnapshot;propertyHTML=`<div class="property-share" data-property-id="${escapeHTML(p.propertyId)}">${pr.image?`<div class="property-share-image"><img src="${escapeHTML(pr.image)}" alt="${escapeHTML(pr.title||"Property")}" loading="lazy"></div>`:""}<div class="property-share-info">${pr.price?`<div class="property-share-price">${escapeHTML(String(pr.price))}</div>`:""}<div class="property-share-title">${escapeHTML(pr.title||"Property")}</div>${pr.address?`<div class="property-share-location"><i class="fas fa-location-dot"></i>${escapeHTML(pr.address)}</div>`:""}</div></div>`}const previews=(p.previewComments||[]).slice(-2);const previewHTML=previews.length?`<div class="post-conversation-preview"><div class="preview-header"><div class="preview-title">Conversation</div><button class="preview-link" type="button" data-action="comment" data-post-id="${escapeHTML(p.id)}">View conversation</button></div><div class="preview-comments">${previews.map(c=>`<div class="preview-comment">${buildAvatarHTML({userId:c.authorId,name:c.authorName||"User",avatar:c.authorPhotoURL||"",className:"mini-avatar"})}<div class="preview-comment-body"><div class="preview-comment-line"><strong>${escapeHTML(c.authorName||"Community member")}</strong> <span class="preview-comment-text">${escapeHTML(c.text||"")}</span></div><div class="preview-comment-meta">${formatRelativeTime(c.createdAt)}</div></div></div>`).join("")}</div></div>`:"";return`<article class="post-card type-${escapeHTML(type)}" data-post-id="${escapeHTML(p.id)}"><div class="post-topline"></div><div class="post-body"><div class="post-header">${buildAvatarHTML({userId:p.authorId,name:p.authorName,avatar:p.authorPhotoURL})}<div class="post-author"><div class="post-author-line"><a class="post-author-link" href="${escapeHTML(profileURL(p.authorId))}"><span class="post-author-name">${escapeHTML(p.authorName)}</span></a><span class="role-badge ${roleClass}">${escapeHTML(role)}</span></div><div class="post-meta"><span>${formatRelativeTime(p.createdAt)}</span>${p.location?.label?'<span class="post-meta-dot"></span><span>Local</span>':''}</div></div><button class="post-menu" type="button" data-action="menu" data-post-id="${escapeHTML(p.id)}"><i class="fas fa-ellipsis"></i></button></div><div class="post-type ${type}"><i class="fas ${getPostTypeIcon(p.type)}"></i>${escapeHTML(getPostTypeLabel(p.type))}</div>${p.title?`<h2 class="post-title">${escapeHTML(p.title)}</h2>`:""}${p.content?`<div class="post-content">${escapeHTML(p.content)}</div>`:""}${p.location?`<div class="post-location"><i class="fas fa-location-dot text-[9px]"></i><span>${escapeHTML(p.location.label||`${p.location.latitude}, ${p.location.longitude}`)}</span></div>`:""}${propertyHTML}${imageHTML}${previewHTML}<div class="post-actions"><div class="post-actions-left"><button class="post-action ${liked?"liked":""}" type="button" data-action="like" data-post-id="${escapeHTML(p.id)}" aria-pressed="${liked}"><i class="${liked?"fas":"far"} fa-heart"></i><span class="count">${formatNumber(p.likeCount)}</span><span class="label">Like</span></button><button class="post-action" type="button" data-action="comment" data-post-id="${escapeHTML(p.id)}"><i class="far fa-comment"></i><span class="count">${formatNumber(p.commentCount)}</span><span class="label">Comment</span></button><button class="post-action" type="button" data-action="share" data-post-id="${escapeHTML(p.id)}"><i class="fas fa-share"></i><span class="count">${formatNumber(p.shareCount)}</span><span class="label">Share</span></button></div><button class="post-action ${saved?"saved":""}" type="button" data-action="save" data-post-id="${escapeHTML(p.id)}" aria-pressed="${saved}"><i class="${saved?"fas":"far"} fa-bookmark"></i><span class="label">Save</span></button></div></div></article>`}
+function bindPostActions(){document.querySelectorAll("[data-action]").forEach(b=>b.addEventListener("click",async e=>{e.stopPropagation();const a=b.dataset.action,id=b.dataset.postId;if(a==="like")await toggleLike(id);else if(a==="comment")openComments(id);else if(a==="share")await sharePost(id);else if(a==="save")await toggleSave(id);else if(a==="menu")openPostMenu(id)}));document.querySelectorAll("[data-image-url]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();openImageViewer(b.dataset.imageUrl)}));document.querySelectorAll(".property-share").forEach(el=>el.addEventListener("click",e=>{e.stopPropagation();if(el.dataset.propertyId)window.location.href=`property.html?id=${encodeURIComponent(el.dataset.propertyId)}`}))}
+
+async function toggleLike(id){if(!currentUser)return;const key=actionKey("like",id);if(pendingActions.has(key))return;pendingActions.add(key);const post=allPosts.find(p=>p.id===id),prevLiked=reactionState.get(id)===true,prevCount=post?.likeCount||0,next=!prevLiked;reactionState.set(id,next);if(post)post.likeCount=Math.max(0,prevCount+(next?1:-1));renderFeed();try{const reactionRef=doc(db,"communityPosts",id,"reactions",currentUser.uid),postRef=doc(db,"communityPosts",id);await runTransaction(db,async tx=>{const [r,p]=await Promise.all([tx.get(reactionRef),tx.get(postRef)]);if(!p.exists())throw new Error("This post no longer exists.");if(r.exists()===next)return;if(next){tx.set(reactionRef,{userId:currentUser.uid,createdAt:serverTimestamp()});tx.update(postRef,{likeCount:increment(1),updatedAt:serverTimestamp()})}else{tx.delete(reactionRef);tx.update(postRef,{likeCount:increment(-1),updatedAt:serverTimestamp()})}});animateAction(document.querySelector(`[data-action="like"][data-post-id="${CSS.escape(id)}"]`))}catch(e){reactionState.set(id,prevLiked);if(post)post.likeCount=prevCount;renderFeed();toast(e.message||"Could not update reaction.","error")}finally{pendingActions.delete(key)}}
+async function toggleSave(id){if(!currentUser)return;const key=actionKey("save",id);if(pendingActions.has(key))return;pendingActions.add(key);const post=allPosts.find(p=>p.id===id),prev=saveState.get(id)===true,prevCount=post?.saveCount||0,next=!prev;saveState.set(id,next);if(post)post.saveCount=Math.max(0,prevCount+(next?1:-1));renderFeed();try{const ref=doc(db,"users",currentUser.uid,"savedPosts",id);if(next)await setDoc(ref,{postId:id,userId:currentUser.uid,savedAt:serverTimestamp()});else await deleteDoc(ref);await updateDoc(doc(db,"communityPosts",id),{saveCount:increment(next?1:-1),updatedAt:serverTimestamp()});toast(next?"Post saved.":"Removed from saved posts.",next?"success":"info")}catch(e){saveState.set(id,prev);if(post)post.saveCount=prevCount;renderFeed();toast("Could not update saved posts.","error")}finally{pendingActions.delete(key)}}
+async function sharePost(id){const url=`${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(id)}`;try{if(navigator.share)await navigator.share({title:"MoonLat Community",text:"View this community post on MoonLat.",url});else{await navigator.clipboard.writeText(url);toast("Community link copied.")}const p=allPosts.find(x=>x.id===id);if(p)p.shareCount=(p.shareCount||0)+1;await updateDoc(doc(db,"communityPosts",id),{shareCount:increment(1),updatedAt:serverTimestamp()});renderFeed()}catch(e){if(e?.name==="AbortError")return;try{await navigator.clipboard.writeText(url);toast("Community link copied.")}catch{toast("Could not share this post.","error")}}}
+
+function openPostMenu(id){const p=allPosts.find(x=>x.id===id);if(!p)return;currentSheetTarget={type:"post",id};const own=p.authorId===currentUser?.uid,admin=displayRole()==="admin";$("sheetTitle").textContent="Post options";$("sheetOptions").innerHTML=`<button class="sheet-option" data-sheet-action="save" type="button"><i class="${saveState.get(id)?"fas":"far"} fa-bookmark"></i>${saveState.get(id)?"Remove saved post":"Save post"}</button>${own||admin?`<button class="sheet-option danger" data-sheet-action="delete-post" type="button"><i class="fas fa-trash"></i>Delete post</button>`:`<button class="sheet-option danger" data-sheet-action="report-post" type="button"><i class="fas fa-flag"></i>Report post</button><button class="sheet-option" data-sheet-action="hide-post" type="button"><i class="fas fa-eye-slash"></i>Hide this post</button>`}<button class="sheet-option" data-sheet-action="cancel" type="button"><i class="fas fa-xmark"></i>Cancel</button>`;openActionSheet()}
+function openActionSheet(){$("actionSheet").classList.add("open");$("actionSheet").setAttribute("aria-hidden","false");document.body.classList.add("modal-open")}
+function closeActionSheet(){$("actionSheet").classList.remove("open");$("actionSheet").setAttribute("aria-hidden","true");if(!document.querySelector(".modal.open,.sheet.open,.image-viewer.open"))document.body.classList.remove("modal-open")}
+async function handleSheetAction(a){const t=currentSheetTarget;closeActionSheet();if(!t)return;if(t.type==="post"){if(a==="save")return toggleSave(t.id);if(a==="delete-post")return deletePost(t.id);if(a==="report-post")return openReport("post",t.id);if(a==="hide-post"){allPosts=allPosts.filter(p=>p.id!==t.id);applyFilters();toast("Post hidden from this feed.","info")}}else if(t.type==="comment"){if(a==="delete-comment")return deleteComment(t.postId,t.id);if(a==="report-comment")return openReport("comment",t.id,t.postId);if(a==="edit-comment")return beginEditComment(t.id)}}
+async function deletePost(id){const p=allPosts.find(x=>x.id===id);if(!p||(![p.authorId,currentUser?.uid].includes(currentUser?.uid)&&displayRole()!=="admin")){}const own=p?.authorId===currentUser?.uid;if(!own&&displayRole()!=="admin"){toast("You do not have permission to delete this post.","error");return}if(!confirm("Delete this post? This action cannot be undone."))return;try{await deleteDoc(doc(db,"communityPosts",id));reactionState.delete(id);saveState.delete(id);toast("Post deleted.")}catch(e){console.error(e);toast("Could not delete the post.","error")}}
+
+function openComments(id){currentCommentsPostId=id;const p=allPosts.find(x=>x.id===id);$("commentsPostTitle").textContent=p?.title||"Community conversation";renderConversationContext(p);openModal("commentsModal");subscribeToComments(id)}
+function renderConversationContext(p){const b=$("conversationContext");if(!p){b.classList.add("hidden");b.innerHTML="";return}b.classList.remove("hidden");b.innerHTML=`<div class="conversation-context-header"><div class="conversation-context-label">${escapeHTML(getPostTypeLabel(p.type))}</div><div class="text-[9px] text-slate-400">${formatNumber(p.commentCount)} ${p.commentCount===1?"reply":"replies"}</div></div><div class="conversation-context-body">${p.title?`<div class="conversation-context-title">${escapeHTML(p.title)}</div>`:""}${p.content?`<div class="conversation-context-text">${escapeHTML(p.content)}</div>`:""}</div>`}
+function closeComments(){if(commentsUnsubscribe){commentsUnsubscribe();commentsUnsubscribe=null}currentCommentsPostId=null;replyDrafts.clear();editingCommentId=null;closeModal("commentsModal")}
+function subscribeToComments(id){if(commentsUnsubscribe){commentsUnsubscribe();commentsUnsubscribe=null}const q=query(collection(db,"communityPosts",id,"comments"),orderBy("createdAt","asc"),limit(150));commentsUnsubscribe=onSnapshot(q,snap=>{const comments=snap.docs.map(d=>({id:d.id,...d.data()}));hydrateCommentStates(id,comments).then(()=>renderComments(comments))},err=>{$("commentList").innerHTML=`<div class="feed-state"><div class="feed-state-icon"><i class="fas fa-triangle-exclamation"></i></div><div class="feed-state-title">Comments unavailable</div><div class="feed-state-text">${escapeHTML(err?.code||"Check Firestore access.")}</div><button id="retryComments" class="btn btn-primary mt-4" type="button">Retry</button></div>`;$("retryComments")?.addEventListener("click",()=>subscribeToComments(id))})}
+async function hydrateCommentStates(postId,comments){if(!currentUser)return;await Promise.all(comments.map(async c=>{try{const s=await getDoc(doc(db,"communityPosts",postId,"comments",c.id,"reactions",currentUser.uid));commentReactionState.set(`${postId}:${c.id}`,s.exists())}catch(e){console.warn(e)}}))}
+function commentTime(c){return c?.createdAt?.toMillis?c.createdAt.toMillis():c?.createdAt?.seconds?Number(c.createdAt.seconds)*1000:0}
+function renderComments(comments){const roots=comments.filter(c=>!c.parentId);const byParent=new Map();comments.forEach(c=>{const p=c.parentId||null;if(!byParent.has(p))byParent.set(p,[]);byParent.get(p).push(c)});byParent.forEach(v=>v.sort((a,b)=>commentTime(a)-commentTime(b)));if(!comments.length){$("commentList").innerHTML=`<div class="feed-state"><div class="feed-state-icon"><i class="far fa-comment"></i></div><div class="feed-state-title">No replies yet</div><div class="feed-state-text">Be the first person to add something useful to this conversation.</div></div>`;return}$("commentList").innerHTML=roots.map(c=>renderComment(c,byParent,0)).join("");bindCommentActions()}
+function renderComment(c,byParent,depth){const liked=commentReactionState.get(`${currentCommentsPostId}:${c.id}`)===true,replies=byParent.get(c.id)||[],role=String(c.authorRole||"client").toLowerCase(),owner=c.authorId===currentUser?.uid,admin=displayRole()==="admin";return`<div class="comment ${c.parentId?"reply":""}" data-comment-id="${escapeHTML(c.id)}">${buildAvatarHTML({userId:c.authorId,name:c.authorName||"Community member",avatar:c.authorPhotoURL||"",className:"comment-avatar"})}<div class="comment-bubble"><div class="comment-author-line"><a class="comment-author-link" href="${escapeHTML(profileURL(c.authorId))}">${escapeHTML(c.authorName||"Community member")}</a><span class="comment-role">${escapeHTML(role)}</span><button class="comment-more" type="button" data-comment-action="menu" data-comment-id="${escapeHTML(c.id)}"><i class="fas fa-ellipsis"></i></button></div><div class="comment-text">${escapeHTML(c.text||"")}${c.updatedAt?` <span class="text-[8px] text-slate-400">edited</span>`:""}</div><div class="comment-meta"><span class="text-[8px] text-slate-400">${formatRelativeTime(c.createdAt)}</span><button class="comment-action ${liked?"liked":""}" type="button" data-comment-action="like" data-comment-id="${escapeHTML(c.id)}"><i class="${liked?"fas":"far"} fa-heart mr-1"></i>${formatNumber(c.likeCount||0)}</button><button class="comment-action" type="button" data-comment-action="reply" data-comment-id="${escapeHTML(c.id)}"><i class="far fa-comment mr-1"></i>Reply</button>${replies.length?`<span class="text-[8px] text-slate-400">${replies.length} ${replies.length===1?"reply":"replies"}</span>`:""}</div>${replyDrafts.has(c.id)?`<div class="reply-composer show"><input data-reply-input="${escapeHTML(c.id)}" maxlength="1000" value="${escapeHTML(replyDrafts.get(c.id)||"")}" placeholder="Write a reply..."><button class="btn btn-primary !h-[37px] !px-3" type="button" data-reply-submit="${escapeHTML(c.id)}"><i class="fas fa-paper-plane text-[9px]"></i></button></div>`:""}${replies.length&&depth<3?`<div class="comment-thread-wrap has-replies"><div class="comment-replies">${replies.map(x=>renderComment(x,byParent,depth+1)).join("")}</div></div>`:""}</div></div>`}
+function bindCommentActions(){document.querySelectorAll("[data-comment-action]").forEach(b=>b.addEventListener("click",async e=>{e.stopPropagation();const a=b.dataset.commentAction,id=b.dataset.commentId;if(a==="like")return toggleCommentLike(id);if(a==="reply"){replyDrafts.has(id)?replyDrafts.delete(id):replyDrafts.set(id,"");return refreshCommentsView()}if(a==="menu")return openCommentMenu(id)}));document.querySelectorAll("[data-reply-input]").forEach(i=>{i.addEventListener("input",()=>replyDrafts.set(i.dataset.replyInput,i.value));i.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();document.querySelector(`[data-reply-submit="${CSS.escape(i.dataset.replyInput)}"]`)?.click()}})});document.querySelectorAll("[data-reply-submit]").forEach(b=>b.addEventListener("click",()=>submitReply(b.dataset.replySubmit)))}
+async function refreshCommentsView(){if(!currentCommentsPostId)return;const snap=await getDocs(query(collection(db,"communityPosts",currentCommentsPostId,"comments"),orderBy("createdAt","asc"),limit(150)));const comments=snap.docs.map(d=>({id:d.id,...d.data()}));await hydrateCommentStates(currentCommentsPostId,comments);renderComments(comments)}
+async function submitReply(parentId){if(!currentCommentsPostId||!currentUser)return;const input=document.querySelector(`[data-reply-input="${CSS.escape(parentId)}"]`),text=input?.value.trim()||"";if(!text){toast("Write a reply first.","error");return}const key=actionKey("reply",parentId);if(pendingActions.has(key))return;pendingActions.add(key);try{await addDoc(collection(db,"communityPosts",currentCommentsPostId,"comments"),{text,parentId,authorId:currentUser.uid,authorName:displayName(),authorRole:displayRole(),authorPhotoURL:avatarURL(currentProfile)||currentUser.photoURL||"",likeCount:0,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});await updateDoc(doc(db,"communityPosts",currentCommentsPostId),{commentCount:increment(1),updatedAt:serverTimestamp()});replyDrafts.delete(parentId);toast("Reply added.")}catch(e){console.error(e);toast("Could not add your reply.","error")}finally{pendingActions.delete(key)}}
+async function submitComment(e){e.preventDefault();if(!currentCommentsPostId||!currentUser)return;const input=$("commentInput"),text=input.value.trim();if(!text)return;const btn=$("commentForm").querySelector("button[type=submit]");setButtonLoading(btn,true,editingCommentId?"Saving":"Sending");try{if(editingCommentId){await updateDoc(doc(db,"communityPosts",currentCommentsPostId,"comments",editingCommentId),{text,updatedAt:serverTimestamp()});editingCommentId=null;input.value="";toast("Comment updated.");return}await addDoc(collection(db,"communityPosts",currentCommentsPostId,"comments"),{text,parentId:null,authorId:currentUser.uid,authorName:displayName(),authorRole:displayRole(),authorPhotoURL:avatarURL(currentProfile)||currentUser.photoURL||"",likeCount:0,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});await updateDoc(doc(db,"communityPosts",currentCommentsPostId),{commentCount:increment(1),updatedAt:serverTimestamp()});input.value="";toast("Comment added.")}catch(e){console.error(e);toast(e.message||"Could not save your comment.","error")}finally{setButtonLoading(btn,false)}}
+async function toggleCommentLike(id){if(!currentUser||!currentCommentsPostId)return;const key=actionKey("comment-like",id);if(pendingActions.has(key))return;pendingActions.add(key);try{const r=doc(db,"communityPosts",currentCommentsPostId,"comments",id,"reactions",currentUser.uid),c=doc(db,"communityPosts",currentCommentsPostId,"comments",id);await runTransaction(db,async tx=>{const [rs,cs]=await Promise.all([tx.get(r),tx.get(c)]);if(!cs.exists())throw new Error("This comment no longer exists.");if(rs.exists()){tx.delete(r);tx.update(c,{likeCount:increment(-1),updatedAt:serverTimestamp()});commentReactionState.set(`${currentCommentsPostId}:${id}`,false)}else{tx.set(r,{userId:currentUser.uid,createdAt:serverTimestamp()});tx.update(c,{likeCount:increment(1),updatedAt:serverTimestamp()});commentReactionState.set(`${currentCommentsPostId}:${id}`,true)}});await refreshCommentsView()}catch(e){console.error(e);toast("Could not update comment reaction.","error")}finally{pendingActions.delete(key)}}
+async function openCommentMenu(id){const snap=await getDoc(doc(db,"communityPosts",currentCommentsPostId,"comments",id));if(!snap.exists())return;const c=snap.data(),owner=c.authorId===currentUser?.uid,admin=displayRole()==="admin";currentSheetTarget={type:"comment",id,postId:currentCommentsPostId};$("sheetTitle").textContent="Comment options";$("sheetOptions").innerHTML=`${owner?`<button class="sheet-option" data-sheet-action="edit-comment" type="button"><i class="fas fa-pen"></i>Edit comment</button>`:""}${owner||admin?`<button class="sheet-option danger" data-sheet-action="delete-comment" type="button"><i class="fas fa-trash"></i>Delete comment</button>`:`<button class="sheet-option danger" data-sheet-action="report-comment" type="button"><i class="fas fa-flag"></i>Report comment</button>`}<button class="sheet-option" data-sheet-action="cancel" type="button"><i class="fas fa-xmark"></i>Cancel</button>`;openActionSheet()}
+async function beginEditComment(id){const snap=await getDoc(doc(db,"communityPosts",currentCommentsPostId,"comments",id));if(!snap.exists())return;const c=snap.data();if(c.authorId!==currentUser?.uid){toast("You can only edit your own comment.","error");return}editingCommentId=id;$("commentInput").value=c.text||"";$("commentInput").focus();toast("Edit mode enabled. Submit to save.","info")}
+async function deleteComment(postId,id){const snap=await getDoc(doc(db,"communityPosts",postId,"comments",id));if(!snap.exists())return;const c=snap.data();if(c.authorId!==currentUser?.uid&&displayRole()!=="admin"){toast("You do not have permission to delete this comment.","error");return}if(!confirm("Delete this comment? This action cannot be undone."))return;try{await deleteDoc(doc(db,"communityPosts",postId,"comments",id));await updateDoc(doc(db,"communityPosts",postId),{commentCount:increment(-1),updatedAt:serverTimestamp()});toast("Comment deleted.")}catch(e){console.error(e);toast("Could not delete this comment.","error")}}
+
+function openReport(type,id,postId=null){currentReportTarget={type,id,postId};$("reportTargetType").value=type;openModal("reportModal")}
+function closeReport(){$("reportForm").reset();currentReportTarget=null;closeModal("reportModal")}
+async function submitReport(e){e.preventDefault();if(!currentReportTarget||!currentUser)return;const reason=$("reportReason").value,details=$("reportDetails").value.trim();if(!reason){toast("Choose a report reason.","error");return}const btn=$("reportForm").querySelector("button[type=submit]");setButtonLoading(btn,true,"Submitting");try{await addDoc(collection(db,"communityReports"),{targetType:currentReportTarget.type,targetId:currentReportTarget.id,postId:currentReportTarget.postId||null,reporterId:currentUser.uid,reason,details,status:"open",createdAt:serverTimestamp()});toast("Report submitted to moderation.");closeReport()}catch(e){console.error(e);toast("Could not submit the report.","error")}finally{setButtonLoading(btn,false)}}
+
+function updateMetrics(){const posts=allPosts.length,photos=allPosts.filter(p=>p.images?.length).length,questions=allPosts.filter(p=>p.type==="question").length,props=allPosts.filter(p=>p.propertyId).length,members=new Set(allPosts.map(p=>p.authorId).filter(Boolean)).size;$("communityPostCount").textContent=formatNumber(posts);$("communityPhotoCount").textContent=formatNumber(photos);$("communityMemberCount").textContent=formatNumber(members);$("sidePosts").textContent=formatNumber(posts);$("sideQuestions").textContent=formatNumber(questions);$("sideProperties").textContent=formatNumber(props);$("sidePhotos").textContent=formatNumber(photos)}
+function handleSearch(v){searchTerm=v.trim();$("clearSearch").classList.toggle("hidden",!searchTerm);applyFilters()}
+async function toggleNearby(){if(nearbyMode){nearbyMode=false;$("locationFilterButton").classList.remove("active");$("locationFilterButton").innerHTML='<i class="fas fa-location-crosshairs"></i><span>Nearby</span>';applyFilters();return}try{toast("Requesting your location...","info");const l=await requestLiveLocation();userLocation=l;nearbyMode=true;$("locationFilterButton").classList.add("active");$("locationFilterButton").innerHTML='<i class="fas fa-location-dot"></i><span>Nearby</span>';$("sidebarLocationText").textContent=l.label;applyFilters();toast("Nearby community posts enabled.")}catch(e){toast(e.message,"error")}}
+function openImageViewer(url){if(!url)return;$("viewerImage").src=url;$("imageViewer").classList.add("open");document.body.classList.add("modal-open")}
+function closeImageViewer(){$("imageViewer").classList.remove("open");$("viewerImage").src="";if(!document.querySelector(".modal.open,.sheet.open"))document.body.classList.remove("modal-open")}
+function handleDeepLink(){const id=new URLSearchParams(location.search).get("post");if(!id)return;setTimeout(()=>{if(allPosts.some(p=>p.id===id))openComments(id)},900)}
+function subscribeNotifications(){if(!currentUser)return;if(notificationUnsubscribe)notificationUnsubscribe();notificationUnsubscribe=onSnapshot(query(collection(db,"notifications"),where("userId","==",currentUser.uid),limit(50)),s=>$("notificationDot").classList.toggle("hidden",!s.docs.some(d=>d.data()?.read!==true)),e=>console.warn(e))}
+
+$("openComposer").addEventListener("click",()=>openComposer());$("mobileCreate").addEventListener("click",()=>openComposer());document.querySelectorAll("[data-open-type]").forEach(b=>b.addEventListener("click",()=>openComposer(b.dataset.openType)));document.querySelectorAll(".post-type-option").forEach(b=>b.addEventListener("click",()=>{selectedPostType=b.dataset.postType;document.querySelectorAll(".post-type-option").forEach(x=>x.classList.toggle("active",x===b));updateComposerFields()}));$("closeComposer").addEventListener("click",()=>{resetComposer();closeComposer()});$("cancelComposer").addEventListener("click",()=>{resetComposer();closeComposer()});$("postForm").addEventListener("submit",createPost);$("postContent").addEventListener("input",()=>$("characterCount").textContent=`${$("postContent").value.length} / 5000`);$("chooseImages").addEventListener("click",()=>$("postImages").click());$("postImages").addEventListener("change",e=>{handleImageSelection(e.target.files);e.target.value=""});$("attachLocation").addEventListener("change",handleLocationToggle);
+document.querySelectorAll(".category-btn").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".category-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");activeCategory=b.dataset.category;applyFilters()}));document.querySelectorAll(".feed-tab").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".feed-tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");activeSort=b.dataset.sort;applyFilters()}));$("communitySearch").addEventListener("input",e=>handleSearch(e.target.value));$("clearSearch").addEventListener("click",()=>{$("communitySearch").value="";handleSearch("");$("communitySearch").focus()});$("headerSearchButton").addEventListener("click",()=>{$("communitySearch").focus();scrollTo({top:0,behavior:"smooth"})});$("mobileSearch").addEventListener("click",()=>{$("communitySearch").focus();scrollTo({top:0,behavior:"smooth"})});$("locationFilterButton").addEventListener("click",toggleNearby);$("closeComments").addEventListener("click",closeComments);$("commentForm").addEventListener("submit",submitComment);$("closeImageViewer").addEventListener("click",closeImageViewer);$("notificationButton").addEventListener("click",()=>location.href="alert.html");$("mobileNotifications").addEventListener("click",()=>location.href="alert.html");$("closeReport").addEventListener("click",closeReport);$("cancelReport").addEventListener("click",closeReport);$("reportForm").addEventListener("submit",submitReport);
+$("composerModal").addEventListener("click",e=>{if(e.target===$("composerModal")){resetComposer();closeComposer()}});$("commentsModal").addEventListener("click",e=>{if(e.target===$("commentsModal"))closeComments()});$("reportModal").addEventListener("click",e=>{if(e.target===$("reportModal"))closeReport()});$("imageViewer").addEventListener("click",e=>{if(e.target===$("imageViewer"))closeImageViewer()});$("actionSheet").addEventListener("click",e=>{if(e.target===$("actionSheet"))closeActionSheet()});$("sheetOptions").addEventListener("click",async e=>{const b=e.target.closest("[data-sheet-action]");if(b)await handleSheetAction(b.dataset.sheetAction)});document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if($("composerModal").classList.contains("open")){resetComposer();return closeComposer()}if($("commentsModal").classList.contains("open"))return closeComments();if($("reportModal").classList.contains("open"))return closeReport();if($("actionSheet").classList.contains("open"))return closeActionSheet();if($("imageViewer").classList.contains("open"))closeImageViewer()});
+window.addEventListener("beforeunload",()=>{selectedImages.forEach(i=>{try{URL.revokeObjectURL(i.preview)}catch{}});feedUnsubscribe?.();commentsUnsubscribe?.();notificationUnsubscribe?.()});
+
+onAuthStateChanged(auth,async user=>{if(!user){location.href="../dashboard/sign-in.html";return}currentUser=user;try{await loadCurrentProfile(user);await loadProperties();subscribeToFeed();subscribeNotifications();handleDeepLink()}catch(e){console.error(e);toast("Some community features could not be initialized.","error")}});
+</script>
 </body>
 </html>
