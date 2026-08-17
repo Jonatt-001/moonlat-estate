@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<meta name="color-scheme" content="light">
+<meta name="description" content="MoonLat notifications and community activity center.">
+<title>Notifications — MoonLat Community</title>
+
+<script>
+window.MOONLAT_FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+    authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+    projectId: "moonlat-estate-dashboard",
+    storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+    messagingSenderId: "289878951289",
+    appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+</script>
+
+<style>
+:root{
+    --navy:#0b1020;
+    --navy-2:#11182a;
+    --navy-3:#182238;
+    --gold:#d4af37;
+    --gold-dark:#a77c19;
+    --gold-soft:#faf3d9;
+    --terracotta:#d86f55;
+    --terracotta-dark:#bd5c45;
+    --terracotta-soft:#fff5f1;
+    --bg:#f5f7fb;
+    --card:#fff;
+    --text:#111827;
+    --muted:#64748b;
+    --soft:#94a3b8;
+    --line:#e5e9f0;
+    --green:#059669;
+    --green-soft:#ecfdf5;
+    --red:#dc2626;
+    --red-soft:#fff1f2;
+    --blue:#4f46e5;
+    --blue-soft:#eef2ff;
+    --amber:#d97706;
+    --amber-soft:#fffbeb;
+    --font:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:var(--font);
+    background:
+        radial-gradient(circle at 0 0,rgba(79,70,229,.035),transparent 30rem),
+        var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility
+}
+body.locked{overflow:hidden}
+button,a,input{font:inherit;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.hidden{display:none!important}
+.safe-top{padding-top:env(safe-area-inset-top)}
+.safe-bottom{padding-bottom:env(safe-area-inset-bottom)}
+
+.app-header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(11,16,32,.94);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px)
+}
+.header-inner{
+    width:min(1180px,100%);
+    min-height:66px;
+    margin:auto;
+    padding:0 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px
+}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;min-width:0}
+.brand-mark{
+    width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff;
+    box-shadow:0 8px 24px rgba(212,175,55,.16)
+}
+.brand-title{font-size:15px;font-weight:800;line-height:1.1}
+.brand-subtitle{
+    color:rgba(255,255,255,.45);
+    font-size:9px;
+    margin-top:3px;
+    text-transform:uppercase;
+    letter-spacing:.12em
+}
+.header-actions{display:flex;align-items:center;gap:8px}
+.header-btn{
+    position:relative;
+    width:40px;height:40px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:12px;
+    background:rgba(255,255,255,.055);
+    color:rgba(255,255,255,.82);
+    display:grid;place-items:center
+}
+.header-avatar{
+    width:40px;height:40px;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid rgba(212,175,55,.5);
+    background:linear-gradient(135deg,#475569,#1e293b);
+    color:#fff;
+    display:grid;place-items:center;
+    font-size:12px;font-weight:800
+}
+.header-avatar img{width:100%;height:100%;object-fit:cover}
+.notification-dot{
+    position:absolute;
+    right:7px;top:7px;
+    width:7px;height:7px;
+    border-radius:50%;
+    border:2px solid var(--navy);
+    background:#ef4444
+}
+
+.hero{
+    color:#fff;
+    background:
+        radial-gradient(circle at 85% 15%,rgba(212,175,55,.16),transparent 24rem),
+        radial-gradient(circle at 10% 100%,rgba(216,111,85,.09),transparent 24rem),
+        linear-gradient(135deg,#0b1020 0%,#111a2d 58%,#151d31 100%)
+}
+.hero-inner{
+    width:min(1180px,100%);
+    margin:auto;
+    padding:28px 18px 30px
+}
+.eyebrow{
+    color:rgba(255,255,255,.43);
+    font-size:9px;
+    font-weight:850;
+    text-transform:uppercase;
+    letter-spacing:.16em
+}
+.hero-row{
+    margin-top:7px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:15px
+}
+.hero-title{
+    margin:0;
+    font-size:clamp(28px,7vw,42px);
+    line-height:1.02;
+    font-weight:850;
+    letter-spacing:-.05em
+}
+.hero-description{
+    max-width:650px;
+    margin:10px 0 0;
+    color:rgba(255,255,255,.55);
+    font-size:12px;
+    line-height:1.7
+}
+.hero-stat{
+    flex:0 0 auto;
+    min-width:120px;
+    padding:13px 14px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:16px;
+    background:rgba(255,255,255,.055)
+}
+.hero-stat strong{display:block;font-size:22px;line-height:1;font-weight:850}
+.hero-stat span{
+    display:block;
+    margin-top:5px;
+    color:rgba(255,255,255,.4);
+    font-size:8px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.1em
+}
+
+.page{width:min(1180px,100%);margin:auto;padding:18px}
+.toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
+    flex-wrap:wrap
+}
+.tabs{
+    display:flex;
+    gap:4px;
+    padding:4px;
+    border-radius:13px;
+    background:#eef1f6;
+    overflow:auto;
+    scrollbar-width:none
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+    height:35px;
+    padding:0 11px;
+    border:0;
+    border-radius:9px;
+    background:transparent;
+    color:var(--muted);
+    font-size:9px;
+    font-weight:800;
+    white-space:nowrap
+}
+.tab.active{
+    background:#fff;
+    color:var(--text);
+    box-shadow:0 1px 3px rgba(15,23,42,.08)
+}
+.toolbar-actions{display:flex;gap:6px}
+.tool-btn{
+    height:35px;
+    padding:0 10px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#fff;
+    color:#64748b;
+    font-size:9px;
+    font-weight:800
+}
+.tool-btn:hover{background:#f8fafc;color:#111827}
+
+.notification-list{display:grid;gap:10px}
+.notification-card{
+    position:relative;
+    display:flex;
+    gap:12px;
+    padding:14px;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:#fff;
+    box-shadow:0 1px 2px rgba(15,23,42,.018),0 8px 24px rgba(15,23,42,.025);
+    transition:.18s ease
+}
+.notification-card:hover{
+    border-color:#dce2ea;
+    box-shadow:0 2px 4px rgba(15,23,42,.025),0 14px 32px rgba(15,23,42,.05)
+}
+.notification-card.unread{
+    border-color:#e8dcc7;
+    background:linear-gradient(135deg,#fffdf8,#fff)
+}
+.notification-card.unread::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:12px;
+    bottom:12px;
+    width:3px;
+    border-radius:0 3px 3px 0;
+    background:var(--terracotta)
+}
+.actor-avatar{
+    width:44px;height:44px;
+    flex:0 0 44px;
+    border-radius:14px;
+    overflow:hidden;
+    background:linear-gradient(135deg,#64748b,#334155);
+    color:#fff;
+    display:grid;
+    place-items:center;
+    font-size:11px;font-weight:850
+}
+.actor-avatar img{width:100%;height:100%;object-fit:cover}
+.notification-main{min-width:0;flex:1}
+.notification-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px
+}
+.notification-text{
+    margin:0;
+    color:#253047;
+    font-size:11px;
+    line-height:1.58;
+    overflow-wrap:anywhere
+}
+.notification-text strong{color:#111827;font-weight:850}
+.notification-time{
+    flex:0 0 auto;
+    color:#a0a8b5;
+    font-size:8px;
+    white-space:nowrap
+}
+.notification-preview{
+    margin-top:8px;
+    padding:9px 10px;
+    border-left:2px solid #e7eaf0;
+    background:#f8fafc;
+    border-radius:0 9px 9px 0;
+    color:#64748b;
+    font-size:9px;
+    line-height:1.55;
+    overflow-wrap:anywhere
+}
+.notification-actions{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    margin-top:9px;
+    flex-wrap:wrap
+}
+.notification-action{
+    height:28px;
+    padding:0 8px;
+    border:0;
+    border-radius:8px;
+    background:#f8fafc;
+    color:#64748b;
+    font-size:8px;
+    font-weight:800
+}
+.notification-action:hover{background:#eef2f7;color:#111827}
+.notification-action.primary{background:var(--terracotta-soft);color:var(--terracotta-dark)}
+.unread-marker{
+    width:7px;height:7px;
+    margin-top:5px;
+    flex:0 0 7px;
+    border-radius:50%;
+    background:var(--terracotta)
+}
+
+.group-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:5px 0 2px;
+    color:#94a3b8;
+    font-size:8px;
+    font-weight:850;
+    text-transform:uppercase;
+    letter-spacing:.13em
+}
+.group-label::after{
+    content:"";
+    height:1px;
+    flex:1;
+    background:#e8ebef
+}
+
+.empty{
+    padding:52px 20px;
+    text-align:center;
+    border:1px dashed #dce2ea;
+    border-radius:18px;
+    background:rgba(255,255,255,.72)
+}
+.empty-icon{
+    width:52px;height:52px;
+    margin:0 auto 12px;
+    border-radius:16px;
+    display:grid;
+    place-items:center;
+    background:#f1f5f9;
+    color:#94a3b8
+}
+.empty-title{font-size:14px;font-weight:850;color:#334155}
+.empty-text{
+    max-width:390px;
+    margin:6px auto 0;
+    color:#94a3b8;
+    font-size:10px;
+    line-height:1.6
+}
+
+.loading{
+    padding:42px;
+    display:grid;
+    place-items:center;
+    gap:10px;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:#fff
+}
+.spinner{
+    width:27px;height:27px;
+    border:3px solid #e5e7eb;
+    border-top-color:var(--terracotta);
+    border-radius:50%;
+    animation:spin .75s linear infinite
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:200;
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    padding:12px;
+    background:rgba(2,6,23,.62);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px)
+}
+.modal.open{display:flex}
+.modal-card{
+    width:min(560px,100%);
+    max-height:calc(100dvh - 24px);
+    overflow:auto;
+    border-radius:22px;
+    background:#fff;
+    box-shadow:0 30px 80px rgba(0,0,0,.25)
+}
+.modal-head{
+    position:sticky;
+    top:0;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px;
+    border-bottom:1px solid var(--line);
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(12px)
+}
+.modal-title{font-size:14px;font-weight:850}
+.modal-close{width:34px;height:34px;border:0;border-radius:10px;background:#f1f5f9;color:#64748b}
+.modal-body{padding:15px}
+.modal-footer{
+    position:sticky;
+    bottom:0;
+    padding:12px 15px;
+    border-top:1px solid var(--line);
+    background:rgba(255,255,255,.96);
+    display:flex;
+    justify-content:flex-end;
+    gap:7px
+}
+.btn{
+    height:39px;
+    padding:0 13px;
+    border:0;
+    border-radius:11px;
+    font-size:9px;
+    font-weight:800
+}
+.btn-secondary{background:#f1f5f9;color:#475569}
+.btn-primary{background:var(--terracotta);color:#fff}
+
+.toast-stack{
+    position:fixed;
+    left:12px;
+    right:12px;
+    bottom:14px;
+    z-index:500;
+    display:grid;
+    gap:8px;
+    pointer-events:none
+}
+.toast{
+    width:min(420px,100%);
+    margin:auto;
+    padding:11px 12px;
+    border-radius:12px;
+    color:#fff;
+    background:#111827;
+    box-shadow:0 15px 38px rgba(0,0,0,.2);
+    font-size:9px;
+    font-weight:700;
+    pointer-events:auto
+}
+.toast.success{background:#065f46}
+.toast.error{background:#991b1b}
+.toast.info{background:#1e3a8a}
+
+@media(min-width:700px){
+    .header-inner{padding:0 24px}
+    .hero-inner{padding:36px 24px}
+    .page{padding:24px}
+    .modal{align-items:center}
+    .toast-stack{left:auto;right:22px;bottom:22px;width:390px}
+}
+@media(max-width:600px){
+    .brand-subtitle{display:none}
+    .header-btn,.header-avatar{width:38px;height:38px}
+    .hero-row{align-items:flex-start;flex-direction:column}
+    .hero-stat{width:100%;min-width:0}
+}
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+<header class="app-header safe-top">
+    <div class="header-inner">
+        <a href="index.html" class="brand">
+            <div class="brand-mark"><i class="fas fa-house-chimney"></i></div>
+            <div>
+                <div class="brand-title">MoonLat</div>
+                <div class="brand-subtitle">Community Network</div>
+            </div>
+        </a>
+
+        <div class="header-actions">
+            <a href="index.html" class="header-btn" aria-label="Community">
+                <i class="fas fa-comments text-xs"></i>
+            </a>
+
+            <button id="headerNotifications" class="header-btn" type="button" aria-label="Notifications">
+                <i class="fas fa-bell"></i>
+            </button>
+
+            <a href="profile.html" id="headerAvatar" class="header-avatar" aria-label="Profile">U</a>
+        </div>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-inner">
+        <div class="eyebrow">MoonLat activity center</div>
+
+        <div class="hero-row">
+            <div>
+                <h1 class="hero-title">Notifications</h1>
+                <p class="hero-description">
+                    Keep track of likes, replies, mentions, property activity and important MoonLat account updates in one place.
+                </p>
+            </div>
+
+            <div class="hero-stat">
+                <strong id="heroUnread">0</strong>
+                <span>Unread</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<main class="page">
+
+    <div class="toolbar">
+        <div class="tabs" role="tablist" aria-label="Notification filters">
+            <button class="tab active" data-filter="all" type="button">All</button>
+            <button class="tab" data-filter="unread" type="button">Unread</button>
+            <button class="tab" data-filter="mentions" type="button">Mentions</button>
+            <button class="tab" data-filter="community" type="button">Community</button>
+            <button class="tab" data-filter="system" type="button">System</button>
+        </div>
+
+        <div class="toolbar-actions">
+            <button id="markAllRead" class="tool-btn" type="button">
+                <i class="fas fa-check-double"></i>
+                Mark all read
+            </button>
+
+            <button id="refreshNotifications" class="tool-btn" type="button" aria-label="Refresh">
+                <i class="fas fa-rotate"></i>
+            </button>
+        </div>
+    </div>
+
+    <section id="notificationList" class="notification-list">
+        <div class="loading">
+            <div class="spinner"></div>
+            <div style="font-size:10px;font-weight:800;color:#334155">Loading notifications</div>
+        </div>
+    </section>
+
+</main>
+
+<div id="notificationDetailModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+        <div class="modal-head">
+            <div class="modal-title">Notification details</div>
+            <button id="closeDetail" class="modal-close" type="button" aria-label="Close">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+
+        <div id="detailBody" class="modal-body"></div>
+
+        <div class="modal-footer">
+            <button id="closeDetailButton" class="btn btn-secondary" type="button">Close</button>
+            <button id="openDetailTarget" class="btn btn-primary" type="button">Open</button>
+        </div>
+    </div>
+</div>
+
+<div id="toastStack" class="toast-stack"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+    getAuth,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    limit,
+    orderBy,
+    onSnapshot,
+    doc,
+    updateDoc,
+    writeBatch,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const app = initializeApp(window.MOONLAT_FIREBASE_CONFIG);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let notifications = [];
+let activeFilter = "all";
+let notificationUnsubscribe = null;
+let selectedNotification = null;
+
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value = "") {
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+function getInitials(name = "") {
+    const parts = String(name).trim().split(/\s+/).filter(Boolean);
+    return parts.length
+        ? parts.slice(0,2).map(part => part[0]).join("").toUpperCase()
+        : "U";
+}
+
+function toDate(value) {
+    if (!value) return null;
+    if (typeof value?.toDate === "function") return value.toDate();
+    if (value?.seconds) return new Date(Number(value.seconds) * 1000);
+
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function relativeTime(value) {
+    const date = toDate(value);
+    if (!date) return "Recently";
+
+    const seconds = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
+
+    if (seconds < 10) return "Just now";
+    if (seconds < 60) return `${seconds}s ago`;
+
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days}d ago`;
+
+    return date.toLocaleDateString(undefined,{
+        day:"numeric",
+        month:"short",
+        year:date.getFullYear() !== new Date().getFullYear() ? "numeric" : undefined
+    });
+}
+
+function roleLabel(role) {
+    const value = String(role || "client").toLowerCase();
+    const map = {
+        agent:"Agent",
+        admin:"Administrator",
+        buyer:"Buyer",
+        client:"Community member"
+    };
+    return map[value] || "Community member";
+}
+
+function notificationType(type = "") {
+    const value = String(type).toLowerCase();
+
+    if (["like","post_like","comment_like"].includes(value)) return "like";
+    if (["comment","reply","post_comment","comment_reply"].includes(value)) return "comment";
+    if (["mention","mentioned"].includes(value)) return "mention";
+    if (["follow","connection","followed"].includes(value)) return "connection";
+    if (["property","property_view","property_inquiry"].includes(value)) return "property";
+    if (["moderation","report","warning"].includes(value)) return "moderation";
+    if (["system","announcement","account"].includes(value)) return "system";
+
+    return value || "system";
+}
+
+function typeLabel(type) {
+    const labels = {
+        like:"Engagement",
+        comment:"Conversation",
+        mention:"Mention",
+        connection:"Connection",
+        property:"Property",
+        moderation:"Moderation",
+        system:"System"
+    };
+    return labels[notificationType(type)] || "Notification";
+}
+
+function typeIcon(type) {
+    const icons = {
+        like:"fa-heart",
+        comment:"fa-comment",
+        mention:"fa-at",
+        connection:"fa-user-plus",
+        property:"fa-building",
+        moderation:"fa-shield-halved",
+        system:"fa-circle-info"
+    };
+    return icons[notificationType(type)] || "fa-bell";
+}
+
+function notificationCategory(type) {
+    const normalized = notificationType(type);
+
+    if (["system","moderation"].includes(normalized)) return "system";
+    if (normalized === "mention") return "mentions";
+    return "community";
+}
+
+function formatNotificationText(item) {
+    const actor = item.actorName || item.senderName || item.fromName || "Someone";
+    const type = notificationType(item.type);
+
+    if (item.message) {
+        return {
+            html: item.messageIsTrustedHTML
+                ? item.message
+                : escapeHTML(item.message),
+            actor
+        };
+    }
+
+    switch(type){
+        case "like":
+            return { html:`<strong>${escapeHTML(actor)}</strong> liked your post.`, actor };
+        case "comment":
+            return { html:`<strong>${escapeHTML(actor)}</strong> replied to your community post.`, actor };
+        case "mention":
+            return { html:`<strong>${escapeHTML(actor)}</strong> mentioned you in a community conversation.`, actor };
+        case "connection":
+            return { html:`<strong>${escapeHTML(actor)}</strong> connected with you on MoonLat.`, actor };
+        case "property":
+            return { html:`<strong>${escapeHTML(actor)}</strong> interacted with your property activity.`, actor };
+        case "moderation":
+            return { html:`MoonLat has an important moderation update for your account or content.`, actor };
+        default:
+            return { html:`MoonLat has a new account update for you.`, actor };
+    }
+}
+
+function getActorAvatar(item) {
+    return (
+        item.actorPhotoURL ||
+        item.senderPhotoURL ||
+        item.fromPhotoURL ||
+        item.actorAvatar ||
+        ""
+    );
+}
+
+function buildTargetURL(item) {
+    const base = window.location.origin;
+
+    if (item.targetUrl) {
+        if (/^https?:\/\//i.test(item.targetUrl)) return item.targetUrl;
+        return new URL(item.targetUrl, base).href;
+    }
+
+    if (item.postId) {
+        return `${window.location.pathname.replace(/[^/]*$/, "")}index.html?post=${encodeURIComponent(item.postId)}`;
+    }
+
+    if (item.commentId && item.postId) {
+        return `${window.location.pathname.replace(/[^/]*$/, "")}index.html?post=${encodeURIComponent(item.postId)}&comment=${encodeURIComponent(item.commentId)}`;
+    }
+
+    if (item.propertyId) {
+        return `property.html?id=${encodeURIComponent(item.propertyId)}`;
+    }
+
+    if (item.actorId) {
+        return `profile.html?id=${encodeURIComponent(item.actorId)}`;
+    }
+
+    return "";
+}
+
+function sortNotifications(items) {
+    return [...items].sort((a,b) => {
+        const ta = toDate(a.createdAt)?.getTime() || 0;
+        const tb = toDate(b.createdAt)?.getTime() || 0;
+        return tb - ta;
+    });
+}
+
+function matchesFilter(item) {
+    if (activeFilter === "all") return true;
+    if (activeFilter === "unread") return item.read !== true;
+    if (activeFilter === "mentions") return notificationCategory(item.type) === "mentions";
+    if (activeFilter === "community") return notificationCategory(item.type) === "community";
+    if (activeFilter === "system") return notificationCategory(item.type) === "system";
+    return true;
+}
+
+function groupLabel(dateValue) {
+    const date = toDate(dateValue);
+    if (!date) return "Earlier";
+
+    const now = new Date();
+    const dateStart = new Date(date.getFullYear(),date.getMonth(),date.getDate());
+    const nowStart = new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    const diff = Math.round((nowStart - dateStart) / 86400000);
+
+    if (diff === 0) return "Today";
+    if (diff === 1) return "Yesterday";
+    if (diff < 7) return "This week";
+    return date.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+}
+
+function renderAvatar(item) {
+    const name = item.actorName || item.senderName || item.fromName || "MoonLat";
+    const avatar = getActorAvatar(item);
+
+    return avatar
+        ? `<img src="${escapeHTML(avatar)}" alt="${escapeHTML(name)}">`
+        : escapeHTML(getInitials(name));
+}
+
+function renderNotification(item) {
+    const type = notificationType(item.type);
+    const text = formatNotificationText(item);
+    const target = buildTargetURL(item);
+    const preview = item.previewText || item.commentText || item.postTitle || item.contentPreview || "";
+    const unread = item.read !== true;
+
+    return `
+        <article class="notification-card ${unread ? "unread" : ""}" data-notification-id="${escapeHTML(item.id)}">
+
+            <div class="actor-avatar">
+                ${renderAvatar(item)}
+            </div>
+
+            <div class="notification-main">
+
+                <div class="notification-top">
+                    <p class="notification-text">
+                        ${text.html}
+                    </p>
+
+                    <time class="notification-time">
+                        ${escapeHTML(relativeTime(item.createdAt))}
+                    </time>
+                </div>
+
+                ${preview ? `
+                    <div class="notification-preview">
+                        ${escapeHTML(String(preview).slice(0,220))}
+                    </div>
+                ` : ""}
+
+                <div class="notification-actions">
+                    ${
+                        target
+                            ? `<button class="notification-action primary" type="button" data-action="open" data-id="${escapeHTML(item.id)}">
+                                <i class="fas ${typeIcon(type)}"></i>
+                                ${type === "system" || type === "moderation" ? "Review" : "Open"}
+                               </button>`
+                            : ""
+                    }
+
+                    ${
+                        unread
+                            ? `<button class="notification-action" type="button" data-action="read" data-id="${escapeHTML(item.id)}">
+                                <i class="fas fa-check"></i>
+                                Mark read
+                               </button>`
+                            : ""
+                    }
+
+                    <button class="notification-action" type="button" data-action="details" data-id="${escapeHTML(item.id)}">
+                        <i class="fas fa-ellipsis"></i>
+                        Details
+                    </button>
+                </div>
+            </div>
+
+            ${unread ? `<span class="unread-marker" aria-label="Unread"></span>` : ""}
+        </article>
+    `;
+}
+
+function renderNotifications() {
+    const list = $("notificationList");
+    const items = sortNotifications(notifications).filter(matchesFilter);
+
+    const unreadCount = notifications.filter(item => item.read !== true).length;
+    $("heroUnread").textContent = String(unreadCount);
+
+    if (!items.length) {
+        const isUnread = activeFilter === "unread";
+
+        list.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">
+                    <i class="fas ${isUnread ? "fa-check-circle" : "fa-bell-slash"}"></i>
+                </div>
+                <div class="empty-title">
+                    ${isUnread ? "You're all caught up" : "No notifications yet"}
+                </div>
+                <div class="empty-text">
+                    ${
+                        isUnread
+                            ? "New activity will appear here when someone interacts with your content or account."
+                            : "MoonLat will keep your community, property and account activity organized here."
+                    }
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    let html = "";
+    let previousGroup = "";
+
+    items.forEach(item => {
+        const group = groupLabel(item.createdAt);
+
+        if (group !== previousGroup) {
+            html += `<div class="group-label">${escapeHTML(group)}</div>`;
+            previousGroup = group;
+        }
+
+        html += renderNotification(item);
+    });
+
+    list.innerHTML = html;
+}
+
+async function markRead(id) {
+    if (!currentUser) return;
+
+    const item = notifications.find(notification => notification.id === id);
+
+    if (!item || item.read === true) return;
+
+    try {
+        await updateDoc(
+            doc(db,"notifications",id),
+            { read:true }
+        );
+    } catch(error) {
+        console.error("Mark notification read error:",error);
+        toast("Could not mark the notification as read.","error");
+    }
+}
+
+async function markAllRead() {
+    if (!currentUser) return;
+
+    const unread = notifications.filter(item => item.read !== true);
+
+    if (!unread.length) {
+        toast("You're already caught up.","info");
+        return;
+    }
+
+    const button = $("markAllRead");
+    button.disabled = true;
+
+    try {
+        const batch = writeBatch(db);
+
+        unread.forEach(item => {
+            batch.update(
+                doc(db,"notifications",item.id),
+                { read:true }
+            );
+        });
+
+        await batch.commit();
+
+        toast("All notifications marked as read.");
+    } catch(error) {
+        console.error("Mark all read error:",error);
+        toast("Could not update all notifications.","error");
+    } finally {
+        button.disabled = false;
+    }
+}
+
+function openDetails(item) {
+    selectedNotification = item;
+
+    const type = notificationType(item.type);
+    const text = formatNotificationText(item);
+    const target = buildTargetURL(item);
+
+    $("detailBody").innerHTML = `
+        <div style="display:grid;gap:12px">
+            <div style="display:flex;align-items:center;gap:9px">
+                <div style="width:39px;height:39px;border-radius:12px;background:#f1f5f9;color:#64748b;display:grid;place-items:center">
+                    <i class="fas ${typeIcon(type)}"></i>
+                </div>
+                <div>
+                    <div style="font-size:11px;font-weight:850;color:#111827">${escapeHTML(typeLabel(type))}</div>
+                    <div style="margin-top:3px;color:#94a3b8;font-size:8px">${escapeHTML(relativeTime(item.createdAt))}</div>
+                </div>
+            </div>
+
+            <div style="padding:12px;border:1px solid #e6eaf0;border-radius:13px;background:#f8fafc;color:#334155;font-size:10px;line-height:1.65">
+                ${text.html}
+            </div>
+
+            ${
+                item.previewText || item.commentText || item.postTitle
+                    ? `<div style="padding:11px;border-left:2px solid #dce2ea;background:#fafbfc;color:#64748b;font-size:9px;line-height:1.6">
+                        ${escapeHTML(item.previewText || item.commentText || item.postTitle)}
+                       </div>`
+                    : ""
+            }
+
+            <div style="font-size:8px;color:#94a3b8">
+                ${escapeHTML(item.id)}
+            </div>
+        </div>
+    `;
+
+    $("openDetailTarget").classList.toggle("hidden", !target);
+    $("notificationDetailModal").classList.add("open");
+    $("notificationDetailModal").setAttribute("aria-hidden","false");
+    document.body.classList.add("locked");
+}
+
+function closeDetails() {
+    $("notificationDetailModal").classList.remove("open");
+    $("notificationDetailModal").setAttribute("aria-hidden","true");
+    document.body.classList.remove("locked");
+    selectedNotification = null;
+}
+
+async function openNotification(item) {
+    await markRead(item.id);
+
+    const target = buildTargetURL(item);
+
+    if (!target) {
+        openDetails(item);
+        return;
+    }
+
+    if (/^https?:\/\//i.test(target)) {
+        window.location.href = target;
+        return;
+    }
+
+    window.location.href = target;
+}
+
+function bindNotificationActions() {
+    document.querySelectorAll("[data-action]").forEach(button => {
+        button.addEventListener("click", async event => {
+            event.stopPropagation();
+
+            const id = button.dataset.id;
+            const action = button.dataset.action;
+            const item = notifications.find(notification => notification.id === id);
+
+            if (!item) return;
+
+            if (action === "read") {
+                await markRead(id);
+                return;
+            }
+
+            if (action === "open") {
+                await openNotification(item);
+                return;
+            }
+
+            if (action === "details") {
+                if (item.read !== true) {
+                    await markRead(id);
+                }
+                openDetails(item);
+            }
+        });
+    });
+
+    document.querySelectorAll(".notification-card").forEach(card => {
+        card.addEventListener("click", async event => {
+            if (event.target.closest("button")) return;
+
+            const item = notifications.find(notification => notification.id === card.dataset.notificationId);
+
+            if (item) {
+                await openNotification(item);
+            }
+        });
+    });
+}
+
+function subscribeToNotifications() {
+    if (notificationUnsubscribe) {
+        notificationUnsubscribe();
+        notificationUnsubscribe = null;
+    }
+
+    const q = query(
+        collection(db,"notifications"),
+        where("userId","==",currentUser.uid),
+        limit(100)
+    );
+
+    notificationUnsubscribe = onSnapshot(
+        q,
+        snapshot => {
+            notifications = snapshot.docs.map(item => ({
+                id:item.id,
+                ...item.data()
+            }));
+
+            notifications = sortNotifications(notifications);
+            renderNotifications();
+            bindNotificationActions();
+
+            const unread = notifications.filter(item => item.read !== true).length;
+
+            if (unread) {
+                $("headerNotifications").innerHTML = `
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-dot"></span>
+                `;
+            } else {
+                $("headerNotifications").innerHTML = `<i class="far fa-bell"></i>`;
+            }
+        },
+        error => {
+            console.error("Notification subscription error:",error);
+            $("notificationList").innerHTML = `
+                <div class="empty">
+                    <div class="empty-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                    <div class="empty-title">Notifications unavailable</div>
+                    <div class="empty-text">
+                        MoonLat could not load your notification inbox. Check the Firestore notifications read rule and your connection.
+                    </div>
+                </div>
+            `;
+        }
+    );
+}
+
+async function refreshNotifications() {
+    if (!currentUser) return;
+
+    const button = $("refreshNotifications");
+    button.disabled = true;
+    button.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
+
+    try {
+        const q = query(
+            collection(db,"notifications"),
+            where("userId","==",currentUser.uid),
+            limit(100)
+        );
+
+        const snapshot = await getDocs(q);
+
+        notifications = sortNotifications(
+            snapshot.docs.map(item => ({
+                id:item.id,
+                ...item.data()
+            }))
+        );
+
+        renderNotifications();
+        bindNotificationActions();
+        toast("Notifications refreshed.","info");
+    } catch(error) {
+        console.error("Notification refresh error:",error);
+        toast("Could not refresh notifications.","error");
+    } finally {
+        button.disabled = false;
+        button.innerHTML = `<i class="fas fa-rotate"></i>`;
+    }
+}
+
+document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click",() => {
+        document.querySelectorAll(".tab").forEach(item => item.classList.remove("active"));
+        tab.classList.add("active");
+        activeFilter = tab.dataset.filter;
+        renderNotifications();
+        bindNotificationActions();
+    });
+});
+
+$("markAllRead").addEventListener("click",markAllRead);
+$("refreshNotifications").addEventListener("click",refreshNotifications);
+
+$("headerNotifications").addEventListener("click",() => {
+    window.scrollTo({top:0,behavior:"smooth"});
+});
+
+$("closeDetail").addEventListener("click",closeDetails);
+$("closeDetailButton").addEventListener("click",closeDetails);
+
+$("notificationDetailModal").addEventListener("click",event => {
+    if (event.target === $("notificationDetailModal")) {
+        closeDetails();
+    }
+});
+
+$("openDetailTarget").addEventListener("click",async() => {
+    if (selectedNotification) {
+        await openNotification(selectedNotification);
+    }
+});
+
+document.addEventListener("keydown",event => {
+    if (event.key === "Escape" && $("notificationDetailModal").classList.contains("open")) {
+        closeDetails();
+    }
+});
+
+onAuthStateChanged(auth,async user => {
+    currentUser = user;
+
+    if (!user) {
+        window.location.href = "../dashboard/sign-in.html";
+        return;
+    }
+
+    subscribeToNotifications();
+});
+</script>
+</body>
+</html>
