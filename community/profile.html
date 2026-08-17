@@ -5,850 +5,1357 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0b1020">
 <meta name="color-scheme" content="light">
-<meta name="description" content="MoonLat Community profile. View profile, activity and community posts.">
+<meta name="description" content="MoonLat community member profile, professional identity and community activity.">
 <title>Profile — MoonLat Community</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://www.gstatic.com">
-<link rel="preconnect" href="https://api.cloudinary.com">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/index.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script>
+window.MOONLAT_FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+    authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+    projectId: "moonlat-estate-dashboard",
+    storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+    messagingSenderId: "289878951289",
+    appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+</script>
+
 <style>
-:root{--navy:#0b1020;--navy-2:#11182a;--gold:#d4af37;--gold-dark:#a77c19;--gold-soft:#faf3d9;--terracotta:#d86f55;--terracotta-dark:#bd5c45;--terracotta-soft:#fff5f1;--bg:#f5f7fb;--card:#fff;--text:#111827;--muted:#64748b;--soft:#94a3b8;--line:#e5e9f0;--success:#059669;--danger:#dc2626;--font:"Inter",-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;font-family:var(--font);background:radial-gradient(circle at 0 0,rgba(79,70,229,.035),transparent 30rem),var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}body.modal-open{overflow:hidden}button,input,textarea,select{font:inherit}button,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}button{cursor:pointer}img{display:block;max-width:100%}a{color:inherit;text-decoration:none}.hidden{display:none!important}.safe-top{padding-top:env(safe-area-inset-top)}
-.app-header{position:sticky;top:0;z-index:100;background:rgba(11,16,32,.94);border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-.header-inner{width:min(1400px,100%);margin:auto;min-height:66px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{display:flex;align-items:center;gap:10px;color:#fff}.brand-mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--gold-dark));box-shadow:0 8px 24px rgba(212,175,55,.16)}.brand-title{font-size:15px;font-weight:800}.brand-subtitle{color:rgba(255,255,255,.46);font-size:9px;margin-top:3px;letter-spacing:.12em;text-transform:uppercase}.header-actions{display:flex;gap:8px;align-items:center}.header-btn,.header-avatar{width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.055);color:#fff;display:grid;place-items:center}.header-avatar{overflow:hidden;border-color:rgba(212,175,55,.5);font-size:12px;font-weight:800}.header-avatar img{width:100%;height:100%;object-fit:cover}
-.profile-hero{position:relative;overflow:hidden;color:#fff;background:radial-gradient(circle at 85% 15%,rgba(212,175,55,.16),transparent 24rem),radial-gradient(circle at 10% 100%,rgba(216,111,85,.09),transparent 24rem),linear-gradient(135deg,#0b1020 0%,#111a2d 58%,#151d31 100%)}.profile-hero-inner{width:min(1100px,100%);margin:auto;padding:28px 18px 34px}.profile-breadcrumb{display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.48);font-size:9px;font-weight:750;text-transform:uppercase;letter-spacing:.13em;margin-bottom:20px}.profile-main{display:flex;align-items:flex-end;gap:17px}.profile-avatar-wrap{position:relative;flex:0 0 auto}.profile-avatar{width:92px;height:92px;border-radius:28px;overflow:hidden;border:3px solid rgba(255,255,255,.12);background:linear-gradient(135deg,#64748b,#1e293b);display:grid;place-items:center;color:#fff;font-size:25px;font-weight:850;box-shadow:0 16px 40px rgba(0,0,0,.24)}.profile-avatar img{width:100%;height:100%;object-fit:cover}.profile-online{position:absolute;right:-1px;bottom:-1px;width:19px;height:19px;border-radius:50%;background:#10b981;border:4px solid #111a2d}.profile-copy{min-width:0;padding-bottom:3px}.profile-name-row{display:flex;align-items:center;flex-wrap:wrap;gap:7px}.profile-name{margin:0;color:#fff;font-size:clamp(25px,7vw,38px);line-height:1.05;font-weight:850;letter-spacing:-.045em;overflow-wrap:anywhere}.profile-verified{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;color:#fff;background:#3b82f6;font-size:9px}.profile-role{display:flex;align-items:center;gap:7px;margin-top:7px;color:rgba(255,255,255,.58);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}.profile-role-dot{width:6px;height:6px;border-radius:50%;background:var(--gold)}.profile-email{margin-top:5px;color:rgba(255,255,255,.4);font-size:10px;overflow-wrap:anywhere}.profile-actions{margin-left:auto;display:flex;gap:8px}.profile-action{height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.07);color:rgba(255,255,255,.86);display:inline-flex;align-items:center;justify-content:center;gap:7px;font-size:10px;font-weight:800}.profile-action.primary{color:#16120a;border-color:transparent;background:linear-gradient(135deg,#e0c052,#c79d28)}
-.profile-stats{margin-top:26px;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,255,255,.08);padding-top:17px}.profile-stat strong{display:block;color:#fff;font-size:18px}.profile-stat span{display:block;margin-top:5px;color:rgba(255,255,255,.38);font-size:8px;font-weight:750;text-transform:uppercase;letter-spacing:.1em}.profile-stat+.profile-stat{padding-left:16px;border-left:1px solid rgba(255,255,255,.08)}
-.page{width:min(1100px,100%);margin:auto;padding:18px}.profile-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}.surface{background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:18px;box-shadow:0 1px 2px rgba(15,23,42,.02),0 10px 30px rgba(15,23,42,.035)}.card{padding:16px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.section-title{margin:0;font-size:13px;font-weight:850}.section-kicker{color:#94a3b8;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}
-.about-text{color:#64748b;font-size:12px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}.about-empty{color:#a1aab8;font-size:11px}.profile-details{margin-top:16px;display:grid;gap:10px}.detail{display:flex;gap:10px}.detail-icon{width:32px;height:32px;flex:0 0 auto;display:grid;place-items:center;border-radius:10px;color:var(--terracotta);background:var(--terracotta-soft);font-size:10px}.detail-copy{min-width:0}.detail-label{display:block;color:#94a3b8;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.1em}.detail-value{display:block;margin-top:3px;color:#334155;font-size:10px;overflow-wrap:anywhere}.detail-value.link{color:#4f46e5}
-.post-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;margin-bottom:12px;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.018),0 8px 24px rgba(15,23,42,.025)}.post-topline{height:4px;background:linear-gradient(90deg,#d86f55,#d4af37)}.post-body{padding:15px}.post-header{display:flex;align-items:flex-start;gap:10px}.post-avatar{width:42px;height:42px;flex:0 0 auto;border-radius:13px;overflow:hidden;background:linear-gradient(135deg,#64748b,#334155);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800}.post-avatar img{width:100%;height:100%;object-fit:cover}.post-author{min-width:0;flex:1}.post-author-name{font-size:12px;font-weight:800;color:#111827}.post-time{margin-top:3px;color:#94a3b8;font-size:9px}.post-type{display:inline-flex;align-items:center;gap:6px;margin-top:13px;color:var(--terracotta);background:var(--terracotta-soft);border-radius:7px;padding:5px 8px;font-size:8px;font-weight:850;text-transform:uppercase;letter-spacing:.08em}.post-title{margin:11px 0 6px;font-size:17px;line-height:1.35;font-weight:800;letter-spacing:-.025em}.post-content{color:#64748b;font-size:12px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}.post-images{margin:14px -15px -15px;display:grid;gap:2px;background:#f1f5f9}.post-images.single{grid-template-columns:1fr}.post-images.two{grid-template-columns:1fr 1fr}.post-images.multi{grid-template-columns:1.25fr .75fr;grid-template-rows:1fr 1fr}.post-image{position:relative;overflow:hidden;background:#e2e8f0;min-height:150px}.post-images.single .post-image{max-height:460px}.post-images.two .post-image{aspect-ratio:1}.post-images.multi .post-image:first-child{grid-row:1 / span 2;min-height:300px}.post-images.multi .post-image:not(:first-child){min-height:148px}.post-image img{width:100%;height:100%;object-fit:cover}.post-actions{display:flex;align-items:center;gap:4px;padding-top:12px;margin-top:12px;border-top:1px solid #eef1f5}.post-action{height:32px;padding:0 8px;border:0;background:transparent;border-radius:9px;color:#64748b;font-size:9px;font-weight:750}.feed-state{padding:48px 20px;text-align:center;border:1px dashed #dce2ea;border-radius:18px;background:rgba(255,255,255,.7)}.feed-state-icon{width:48px;height:48px;margin:0 auto 12px;display:grid;place-items:center;border-radius:15px;background:#f1f5f9;color:#94a3b8}.feed-state-title{font-size:13px;font-weight:800;color:#334155}.feed-state-text{max-width:360px;margin:5px auto 0;color:#94a3b8;font-size:10px;line-height:1.6}
-.sidebar{display:grid;gap:14px;align-content:start;position:sticky;top:84px}.sidebar-card{padding:15px}.sidebar-title{margin:0 0 12px;font-size:11px;font-weight:850}.sidebar-stat{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f2f5}.sidebar-stat:last-child{border-bottom:0;padding-bottom:0}.sidebar-stat:first-child{padding-top:0}.sidebar-stat span{color:#64748b;font-size:10px}.sidebar-stat strong{color:#172033;font-size:11px}
-.sync-state{display:flex;align-items:center;gap:7px;color:#64748b;font-size:9px;font-weight:700}.sync-dot{width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 0 4px rgba(16,185,129,.08)}.sync-dot.syncing{background:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.08)}.sync-dot.error{background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.08)}
-.modal-backdrop{position:fixed;inset:0;z-index:200;display:none;align-items:flex-end;justify-content:center;padding:12px;background:rgba(2,6,23,.62);backdrop-filter:blur(8px)}.modal-backdrop.open{display:flex}.modal{width:min(560px,100%);max-height:calc(100dvh - 24px);overflow:auto;border-radius:22px;background:#fff;box-shadow:0 30px 80px rgba(0,0,0,.25)}.modal-head{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.94);backdrop-filter:blur(12px)}.modal-title{margin:0;font-size:14px;font-weight:850}.modal-close{width:34px;height:34px;border:0;border-radius:10px;background:#f1f5f9;color:#64748b}.modal-body{padding:16px}.form-grid{display:grid;gap:13px}.field{display:grid;gap:6px}.field label{color:#475569;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.09em}.field input,.field textarea{width:100%;border:1px solid #dfe5ec;border-radius:12px;background:#f8fafc;color:#111827;outline:none;padding:11px 12px;font-size:11px}.field input{height:43px}.field textarea{min-height:105px;resize:vertical;line-height:1.6}.field input:focus,.field textarea:focus{background:#fff;border-color:rgba(216,111,85,.55);box-shadow:0 0 0 4px rgba(216,111,85,.08)}.modal-footer{position:sticky;bottom:0;display:flex;justify-content:flex-end;gap:8px;padding:13px 16px;background:rgba(255,255,255,.96);border-top:1px solid var(--line)}.modal-btn{height:40px;padding:0 14px;border-radius:11px;border:0;font-size:10px;font-weight:800}.modal-btn.secondary{color:#475569;background:#f1f5f9}.modal-btn.primary{color:#fff;background:var(--terracotta)}.modal-btn:disabled{opacity:.55;cursor:not-allowed}
-.avatar-upload{display:flex;align-items:center;gap:12px;padding:11px;border:1px solid #e6eaf0;border-radius:14px;background:#fafbfc}.avatar-preview{width:48px;height:48px;overflow:hidden;border-radius:14px;display:grid;place-items:center;color:#fff;font-size:12px;font-weight:850;background:linear-gradient(135deg,#64748b,#334155)}.avatar-preview img{width:100%;height:100%;object-fit:cover}.upload-btn{height:36px;padding:0 11px;border-radius:9px;color:#475569;background:#fff;border:1px solid #e0e5eb;font-size:9px;font-weight:800;display:grid;place-items:center}.toast-container{position:fixed;left:14px;right:14px;bottom:14px;z-index:400;display:grid;gap:8px;pointer-events:none}.toast{width:min(420px,100%);margin:auto;display:flex;align-items:center;gap:10px;padding:12px 13px;border-radius:13px;color:#fff;background:#111827;box-shadow:0 14px 34px rgba(15,23,42,.2);font-size:10px;font-weight:700;pointer-events:auto}.toast.success{background:#065f46}.toast.error{background:#991b1b}.toast.info{background:#1e3a8a}
-@media (min-width:900px){.profile-grid{grid-template-columns:minmax(0,1fr) 300px}.modal-backdrop{align-items:center}}@media (max-width:700px){.brand-subtitle{display:none}.header-inner{min-height:62px;padding:0 14px}.header-btn,.header-avatar{width:38px;height:38px}.profile-hero-inner{padding:22px 14px 26px}.profile-main{align-items:flex-start;flex-wrap:wrap}.profile-copy{flex:1 1 calc(100% - 110px)}.profile-actions{width:100%;margin-left:0;padding-top:2px}.profile-action{flex:1}.profile-stats{margin-top:21px}.page{padding:14px}.sidebar{position:static}.profile-avatar{width:82px;height:82px;border-radius:24px}}
+:root{
+    --navy:#0b1020;
+    --navy-2:#11182a;
+    --gold:#d4af37;
+    --gold-dark:#a77c19;
+    --terracotta:#d86f55;
+    --terracotta-dark:#bd5c45;
+    --terracotta-soft:#fff5f1;
+    --bg:#f5f7fb;
+    --card:#fff;
+    --text:#111827;
+    --muted:#64748b;
+    --soft:#94a3b8;
+    --line:#e5e9f0;
+    --green:#059669;
+    --blue:#4f46e5;
+    --font:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;font-family:var(--font);background:radial-gradient(circle at 0 0,rgba(79,70,229,.035),transparent 30rem),var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+button,a,input,textarea,select{-webkit-tap-highlight-color:transparent}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.hidden{display:none!important}
+.safe-top{padding-top:env(safe-area-inset-top)}
+.modal-open{overflow:hidden}
+
+.app-header{
+    position:sticky;top:0;z-index:100;
+    background:rgba(11,16,32,.94);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px)
+}
+.header-inner{
+    width:min(1180px,100%);margin:auto;min-height:66px;padding:0 18px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px
+}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;min-width:0}
+.brand-mark{
+    width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+    color:#fff;background:linear-gradient(135deg,var(--gold),var(--gold-dark))
+}
+.brand-title{font-size:15px;font-weight:800;line-height:1.1}
+.brand-subtitle{margin-top:3px;color:rgba(255,255,255,.45);font-size:9px;text-transform:uppercase;letter-spacing:.12em}
+.header-actions{display:flex;align-items:center;gap:8px}
+.header-btn{
+    width:40px;height:40px;border:1px solid rgba(255,255,255,.08);border-radius:12px;
+    background:rgba(255,255,255,.055);color:#fff;display:grid;place-items:center
+}
+.header-avatar{
+    width:40px;height:40px;border-radius:12px;overflow:hidden;
+    border:1px solid rgba(212,175,55,.5);background:linear-gradient(135deg,#475569,#1e293b);
+    color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800
+}
+.header-avatar img{width:100%;height:100%;object-fit:cover}
+
+.profile-hero{
+    position:relative;overflow:hidden;color:#fff;
+    background:
+        radial-gradient(circle at 87% 10%,rgba(212,175,55,.16),transparent 25rem),
+        radial-gradient(circle at 7% 100%,rgba(216,111,85,.1),transparent 25rem),
+        linear-gradient(135deg,#0b1020 0%,#111a2d 58%,#151d31 100%)
+}
+.profile-hero-inner{width:min(1180px,100%);margin:auto;padding:26px 18px 30px}
+.profile-breadcrumb{
+    display:flex;align-items:center;gap:7px;margin-bottom:20px;
+    color:rgba(255,255,255,.48);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.13em
+}
+.profile-main{display:flex;align-items:flex-end;gap:16px}
+.profile-avatar-wrap{position:relative;flex:0 0 auto}
+.profile-avatar{
+    width:94px;height:94px;border-radius:28px;overflow:hidden;
+    border:3px solid rgba(255,255,255,.14);background:linear-gradient(135deg,#64748b,#1e293b);
+    display:grid;place-items:center;color:#fff;font-size:25px;font-weight:850;
+    box-shadow:0 16px 40px rgba(0,0,0,.24)
+}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-online{
+    position:absolute;right:-1px;bottom:-1px;width:20px;height:20px;border-radius:50%;
+    background:#10b981;border:4px solid #111a2d
+}
+.profile-copy{min-width:0;padding-bottom:3px}
+.profile-name-row{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+.profile-name{margin:0;color:#fff;font-size:clamp(25px,7vw,39px);line-height:1.05;font-weight:850;letter-spacing:-.045em}
+.verified{
+    width:20px;height:20px;border-radius:50%;display:grid;place-items:center;
+    background:#3b82f6;color:#fff;font-size:9px
+}
+.role-badge{
+    display:inline-flex;align-items:center;gap:6px;margin-top:8px;
+    border-radius:999px;padding:6px 9px;font-size:8px;font-weight:850;text-transform:uppercase;letter-spacing:.09em
+}
+.role-agent{background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.2);color:#f4db81}
+.role-admin{background:rgba(79,70,229,.18);border:1px solid rgba(129,140,248,.25);color:#c7d2fe}
+.role-client,.role-buyer,.role-member{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.76)}
+.profile-email{margin-top:7px;color:rgba(255,255,255,.43);font-size:10px;overflow-wrap:anywhere}
+.profile-actions{margin-left:auto;display:flex;gap:8px}
+.profile-action{
+    height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.07);color:rgba(255,255,255,.86);display:inline-flex;align-items:center;justify-content:center;gap:7px;
+    font-size:10px;font-weight:800
+}
+.profile-action.primary{color:#16120a;background:linear-gradient(135deg,#e0c052,#c79d28);border-color:transparent}
+
+.profile-stats{
+    margin-top:25px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);
+    display:grid;grid-template-columns:repeat(3,1fr)
+}
+.profile-stat strong{display:block;color:#fff;font-size:18px;line-height:1;font-weight:850}
+.profile-stat span{display:block;margin-top:5px;color:rgba(255,255,255,.38);font-size:8px;font-weight:750;text-transform:uppercase;letter-spacing:.1em}
+.profile-stat+.profile-stat{padding-left:16px;border-left:1px solid rgba(255,255,255,.08)}
+
+.page{width:min(1180px,100%);margin:auto;padding:18px}
+.profile-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.content-column{min-width:0}
+.sidebar{display:grid;gap:14px;align-content:start}
+@media(min-width:960px){
+    .profile-grid{grid-template-columns:minmax(0,1fr) 320px;align-items:start}
+    .sidebar{position:sticky;top:84px}
+}
+
+.surface{
+    background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:18px;
+    box-shadow:0 1px 2px rgba(15,23,42,.02),0 10px 30px rgba(15,23,42,.035)
+}
+.card{padding:16px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.section-kicker{color:#94a3b8;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}
+.section-title{margin:4px 0 0;font-size:14px;font-weight:850}
+.about-text{color:#64748b;font-size:12px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
+.about-empty{color:#a1aab8;font-size:11px;line-height:1.6}
+.profile-details{margin-top:16px;display:grid;gap:10px}
+.detail{display:flex;align-items:flex-start;gap:10px}
+.detail-icon{
+    width:34px;height:34px;flex:0 0 34px;border-radius:10px;display:grid;place-items:center;
+    background:var(--terracotta-soft);color:var(--terracotta);font-size:11px
+}
+.detail-copy{min-width:0}
+.detail-label{display:block;color:#94a3b8;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
+.detail-value{display:block;margin-top:3px;color:#334155;font-size:10px;line-height:1.5;overflow-wrap:anywhere}
+.detail-value.muted{color:#a1aab8}
+.detail-value.link{color:#4f46e5}
+
+.professional-card{
+    margin-top:16px;border-radius:16px;border:1px solid #efe6bd;
+    background:linear-gradient(135deg,#fffdf5,#fffaf0)
+}
+.professional-card-inner{padding:15px}
+.pro-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.pro-label{font-size:8px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:#9c7c1f}
+.pro-title{margin:4px 0 0;font-size:14px;font-weight:850;color:#302713}
+.pro-grid{display:grid;gap:11px;margin-top:13px}
+@media(min-width:700px){.pro-grid{grid-template-columns:1fr 1fr}}
+.pro-box{padding:11px;border:1px solid rgba(167,124,25,.12);border-radius:12px;background:rgba(255,255,255,.58)}
+.pro-box-title{font-size:8px;font-weight:850;text-transform:uppercase;letter-spacing:.08em;color:#9c7c1f}
+.pro-box-text{margin-top:4px;font-size:10px;line-height:1.55;color:#5c4d2b}
+.tag-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{padding:5px 8px;border-radius:8px;background:#f5edd0;border:1px solid #eadfb6;color:#786021;font-size:8px;font-weight:800}
+
+.post-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;margin-bottom:12px;overflow:hidden}
+.post-topline{height:4px;background:linear-gradient(90deg,var(--terracotta),var(--gold))}
+.post-body{padding:15px}
+.post-header{display:flex;align-items:flex-start;gap:10px}
+.post-avatar{
+    width:42px;height:42px;flex:0 0 auto;border-radius:13px;overflow:hidden;
+    background:linear-gradient(135deg,#64748b,#334155);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800
+}
+.post-avatar img{width:100%;height:100%;object-fit:cover}
+.post-author{min-width:0;flex:1}
+.post-author-name{font-size:12px;font-weight:800;color:#111827}
+.post-time{margin-top:3px;color:#94a3b8;font-size:9px}
+.post-role-mini{display:inline-flex;align-items:center;padding:5px 7px;border-radius:7px;background:#eef2f7;color:#475569;font-size:7px;font-weight:850;text-transform:uppercase;letter-spacing:.07em}
+.post-role-mini.agent{background:#faf3d9;color:#8b6b18}
+.post-title{margin:11px 0 6px;font-size:16px;line-height:1.35;font-weight:800;letter-spacing:-.025em}
+.post-content{color:#64748b;font-size:12px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
+.post-images{margin:14px -15px -15px;display:grid;gap:2px;background:#f1f5f9}
+.post-images.single{grid-template-columns:1fr}
+.post-images.two{grid-template-columns:1fr 1fr}
+.post-images.three{grid-template-columns:1fr 1fr 1fr}
+.post-images.multi{grid-template-columns:1.25fr .75fr;grid-template-rows:1fr 1fr}
+.post-image{overflow:hidden;background:#e2e8f0;min-height:150px}
+.post-images.single .post-image{max-height:460px}
+.post-images.two .post-image,.post-images.three .post-image{aspect-ratio:1}
+.post-images.multi .post-image:first-child{grid-row:1/span 2;min-height:300px}
+.post-images.multi .post-image:not(:first-child){min-height:148px}
+.post-image img{width:100%;height:100%;object-fit:cover}
+.post-actions{display:flex;align-items:center;gap:4px;padding-top:12px;margin-top:12px;border-top:1px solid #eef1f5;flex-wrap:wrap}
+.post-action{height:32px;padding:0 8px;border-radius:9px;background:#f8fafc;color:#64748b;font-size:9px;font-weight:750}
+
+.sidebar-card{padding:15px}
+.sidebar-title{margin:0 0 12px;font-size:11px;font-weight:850;color:#172033}
+.sidebar-stat{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f2f5}
+.sidebar-stat:last-child{border-bottom:0;padding-bottom:0}
+.sidebar-stat:first-child{padding-top:0}
+.sidebar-stat span{color:#64748b;font-size:10px}
+.sidebar-stat strong{color:#172033;font-size:10px;font-weight:850}
+.info-box{padding:13px;border-radius:13px;background:#f8fafc;border:1px solid #eef1f5}
+.info-box-title{font-size:10px;font-weight:850;color:#334155}
+.info-box-text{margin-top:4px;color:#94a3b8;font-size:9px;line-height:1.55}
+
+.sync-state{display:flex;align-items:center;gap:7px;color:#64748b;font-size:9px;font-weight:700}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 0 4px rgba(16,185,129,.08)}
+.sync-dot.syncing{background:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.08)}
+.sync-dot.error{background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.08)}
+
+.feed-state{padding:44px 20px;text-align:center;border:1px dashed #dce2ea;border-radius:18px;background:rgba(255,255,255,.7)}
+.feed-state-icon{width:48px;height:48px;margin:0 auto 12px;display:grid;place-items:center;border-radius:15px;background:#f1f5f9;color:#94a3b8}
+.feed-state-title{font-size:13px;font-weight:800;color:#334155}
+.feed-state-text{max-width:360px;margin:5px auto 0;color:#94a3b8;font-size:10px;line-height:1.6}
+
+.modal{
+    position:fixed;inset:0;z-index:200;display:none;align-items:flex-end;justify-content:center;
+    padding:12px;background:rgba(2,6,23,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
+}
+.modal.open{display:flex}
+.modal-card{width:min(560px,100%);max-height:calc(100dvh - 24px);overflow:auto;border-radius:22px;background:#fff;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.modal-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.94);backdrop-filter:blur(12px)}
+.modal-title{font-size:14px;font-weight:850}
+.modal-close{width:34px;height:34px;border:0;border-radius:10px;background:#f1f5f9;color:#64748b}
+.modal-body{padding:16px}
+.form-grid{display:grid;gap:12px}
+.field{display:grid;gap:6px}
+.field label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:#475569}
+.field input,.field textarea{
+    width:100%;border:1px solid #dfe5ec;border-radius:12px;background:#f8fafc;color:#111827;outline:none;padding:11px 12px;font-size:11px
+}
+.field input{height:43px}
+.field textarea{min-height:110px;resize:vertical;line-height:1.6}
+.field input:focus,.field textarea:focus{background:#fff;border-color:rgba(216,111,85,.55);box-shadow:0 0 0 4px rgba(216,111,85,.08)}
+.modal-footer{position:sticky;bottom:0;display:flex;justify-content:flex-end;gap:8px;padding:13px 16px;background:rgba(255,255,255,.96);border-top:1px solid var(--line)}
+.btn{height:40px;padding:0 14px;border:0;border-radius:11px;font-size:10px;font-weight:800}
+.btn-secondary{background:#f1f5f9;color:#475569}
+.btn-primary{background:var(--terracotta);color:#fff}
+
+.toast-stack{position:fixed;left:12px;right:12px;bottom:14px;z-index:500;display:grid;gap:8px;pointer-events:none}
+.toast{width:min(420px,100%);margin:auto;padding:12px 13px;border-radius:13px;background:#111827;color:#fff;box-shadow:0 14px 34px rgba(0,0,0,.2);font-size:10px;pointer-events:auto}
+.toast.success{background:#065f46}.toast.error{background:#991b1b}.toast.info{background:#1e3a8a}
+
+@media(min-width:700px){
+    .header-inner{padding:0 24px}
+    .profile-hero-inner{padding:32px 24px 35px}
+    .page{padding:22px 24px}
+    .profile-avatar{width:104px;height:104px}
+    .toast-stack{left:auto;right:22px;bottom:22px;width:380px}
+    .modal{align-items:center}
+}
+@media(max-width:700px){
+    .header-inner{min-height:62px;padding:0 14px}
+    .brand-subtitle{display:none}
+    .header-btn,.header-avatar{width:38px;height:38px}
+    .profile-hero-inner{padding:22px 14px 26px}
+    .profile-main{align-items:flex-start;flex-wrap:wrap}
+    .profile-copy{flex:1 1 calc(100% - 110px)}
+    .profile-actions{width:100%;margin-left:0}
+    .profile-action{flex:1}
+    .page{padding:14px}
+}
 </style>
 </head>
+
 <body>
 
 <header class="app-header safe-top">
-  <div class="header-inner">
-    <a href="index.html" class="brand" aria-label="Back to MoonLat Community">
-      <div class="brand-mark"><i class="fas fa-house-chimney"></i></div>
-      <div>
-        <div class="brand-title">MoonLat</div>
-        <div class="brand-subtitle">Community Network</div>
-      </div>
-    </a>
+    <div class="header-inner">
+        <a href="index.html" class="brand">
+            <div class="brand-mark"><i class="fas fa-house-chimney"></i></div>
+            <div>
+                <div class="brand-title">MoonLat</div>
+                <div class="brand-subtitle">Community Network</div>
+            </div>
+        </a>
 
-    <div class="header-actions">
-      <a href="index.html" class="header-btn" aria-label="Community"><i class="fas fa-comments text-xs"></i></a>
-      <button id="notificationButton" class="header-btn" type="button" aria-label="Notifications">
-        <i class="far fa-bell text-sm"></i>
-        <span id="notificationDot" class="header-notification-dot hidden"></span>
-      </button>
-      <a href="profile.html" id="headerAvatar" class="header-avatar" aria-label="Profile">U</a>
+        <div class="header-actions">
+            <a href="index.html" class="header-btn" aria-label="Community">
+                <i class="fas fa-comments text-xs"></i>
+            </a>
+
+            <button id="notificationButton" class="header-btn" type="button" aria-label="Notifications">
+                <i class="far fa-bell text-sm"></i>
+            </button>
+
+            <a href="profile.html" id="headerAvatar" class="header-avatar" aria-label="Your profile">U</a>
+        </div>
     </div>
-  </div>
 </header>
 
 <section class="profile-hero">
-  <div class="profile-hero-inner">
-    <div class="profile-breadcrumb">
-      <a href="index.html"><i class="fas fa-arrow-left"></i> Community</a>
-      <i class="fas fa-chevron-right text-[7px]"></i>
-      <span>Profile</span>
-    </div>
+    <div class="profile-hero-inner">
 
-    <div class="profile-main">
-      <div class="profile-avatar-wrap">
-        <div id="profileAvatar" class="profile-avatar"><span id="profileInitials">U</span></div>
-        <span id="profileOnline" class="profile-online"></span>
-      </div>
-
-      <div class="profile-copy">
-        <div class="profile-name-row">
-          <h1 id="profileName" class="profile-name">Loading...</h1>
-          <span id="verifiedBadge" class="profile-verified hidden"><i class="fas fa-check"></i></span>
+        <div class="profile-breadcrumb">
+            <a href="index.html"><i class="fas fa-arrow-left"></i> Community</a>
+            <i class="fas fa-chevron-right text-[7px]"></i>
+            <span>Profile</span>
         </div>
-        <div class="profile-role"><span class="profile-role-dot"></span><span id="profileRole">Community member</span></div>
-        <div id="profileEmail" class="profile-email">Loading profile...</div>
-      </div>
 
-      <div class="profile-actions">
-        <button id="editProfileButton" class="profile-action primary" type="button">
-          <i class="fas fa-pen"></i> Edit profile
-        </button>
-        <a href="index.html" class="profile-action"><i class="fas fa-plus"></i> Community</a>
-      </div>
-    </div>
+        <div class="profile-main">
 
-    <div class="profile-stats">
-      <div class="profile-stat"><strong id="statPosts">0</strong><span>Posts</span></div>
-      <div class="profile-stat"><strong id="statComments">0</strong><span>Replies</span></div>
-      <div class="profile-stat"><strong id="statLikes">0</strong><span>Likes received</span></div>
+            <div class="profile-avatar-wrap">
+                <div id="profileAvatar" class="profile-avatar">U</div>
+                <span class="profile-online"></span>
+            </div>
+
+            <div class="profile-copy">
+                <div class="profile-name-row">
+                    <h1 id="profileName" class="profile-name">Loading...</h1>
+                    <span id="verifiedBadge" class="verified hidden"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div id="roleBadge" class="role-badge role-member">
+                    <i class="fas fa-user"></i>
+                    <span id="profileRole">Community member</span>
+                </div>
+
+                <div id="profileEmail" class="profile-email">Loading profile...</div>
+            </div>
+
+            <div class="profile-actions">
+                <button id="editProfileButton" class="profile-action primary hidden" type="button">
+                    <i class="fas fa-pen"></i>
+                    Edit profile
+                </button>
+
+                <a href="index.html" class="profile-action">
+                    <i class="fas fa-comments"></i>
+                    Community
+                </a>
+            </div>
+        </div>
+
+        <div class="profile-stats">
+            <div class="profile-stat"><strong id="statPosts">0</strong><span>Posts</span></div>
+            <div class="profile-stat"><strong id="statComments">0</strong><span>Replies</span></div>
+            <div class="profile-stat"><strong id="statLikes">0</strong><span>Likes received</span></div>
+        </div>
     </div>
-  </div>
 </section>
 
 <main class="page">
-  <div class="profile-grid">
-    <section>
-      <section class="surface card">
-        <div class="section-head">
-          <div>
-            <div class="section-kicker">Profile</div>
-            <h2 class="section-title">About</h2>
-          </div>
-          <div class="sync-state">
-            <span id="syncDot" class="sync-dot syncing"></span>
-            <span id="syncText">Syncing</span>
-          </div>
-        </div>
-        <div id="aboutText" class="about-text">Loading profile information...</div>
-        <div id="profileDetails" class="profile-details"></div>
-      </section>
+    <div class="profile-grid">
 
-      <section class="surface card" style="margin-top:16px;">
-        <div class="section-head">
-          <div>
-            <div class="section-kicker">Community</div>
-            <h2 class="section-title">Recent activity</h2>
-          </div>
-          <span id="activityCount" class="section-kicker">0 posts</span>
-        </div>
-        <div id="postsContainer">
-          <div class="feed-state">
-            <div class="feed-state-icon"><i class="fas fa-spinner fa-spin"></i></div>
-            <div class="feed-state-title">Loading activity</div>
-            <div class="feed-state-text">Syncing this profile with the MoonLat community.</div>
-          </div>
-        </div>
-      </section>
-    </section>
+        <section class="content-column">
 
-    <aside class="sidebar">
-      <section class="surface sidebar-card">
-        <h3 class="sidebar-title">Community activity</h3>
-        <div class="sidebar-stat"><span>Posts</span><strong id="sidePosts">0</strong></div>
-        <div class="sidebar-stat"><span>Replies</span><strong id="sideComments">0</strong></div>
-        <div class="sidebar-stat"><span>Likes received</span><strong id="sideLikes">0</strong></div>
-      </section>
-      <section class="surface sidebar-card">
-        <h3 class="sidebar-title">Account</h3>
-        <div class="sidebar-stat"><span>Role</span><strong id="sideRole">Member</strong></div>
-        <div class="sidebar-stat"><span>Member since</span><strong id="sideJoined">—</strong></div>
-        <div class="sidebar-stat"><span>Status</span><strong id="sideStatus">Active</strong></div>
-      </section>
-    </aside>
-  </div>
+            <section class="surface card">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Identity</div>
+                        <h2 class="section-title">About this member</h2>
+                    </div>
+
+                    <div class="sync-state">
+                        <span id="syncDot" class="sync-dot syncing"></span>
+                        <span id="syncText">Syncing</span>
+                    </div>
+                </div>
+
+                <div id="aboutText" class="about-text">Loading profile information...</div>
+                <div id="profileDetails" class="profile-details"></div>
+            </section>
+
+            <section id="professionalSection" class="professional-card hidden">
+                <div class="professional-card-inner">
+                    <div class="pro-head">
+                        <div>
+                            <div class="pro-label">Professional profile</div>
+                            <div class="pro-title">MoonLat Agent</div>
+                        </div>
+                        <i class="fas fa-building-columns" style="color:#b08a26"></i>
+                    </div>
+
+                    <div class="pro-grid">
+                        <div class="pro-box">
+                            <div class="pro-box-title">Business / agency</div>
+                            <div id="professionalBusiness" class="pro-box-text">—</div>
+                        </div>
+
+                        <div class="pro-box">
+                            <div class="pro-box-title">Primary location</div>
+                            <div id="professionalPrimary" class="pro-box-text">—</div>
+                        </div>
+
+                        <div class="pro-box" style="grid-column:1/-1">
+                            <div class="pro-box-title">Professional bio</div>
+                            <div id="professionalBio" class="pro-box-text">—</div>
+                        </div>
+
+                        <div class="pro-box">
+                            <div class="pro-box-title">Service areas</div>
+                            <div id="professionalAreas" class="tag-list"></div>
+                        </div>
+
+                        <div class="pro-box">
+                            <div class="pro-box-title">Availability</div>
+                            <div id="professionalAvailability" class="pro-box-text">—</div>
+                        </div>
+
+                        <div class="pro-box" style="grid-column:1/-1">
+                            <div class="pro-box-title">Professional contact</div>
+                            <div id="professionalContact" class="pro-box-text">—</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="surface card" style="margin-top:16px">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Community</div>
+                        <h2 class="section-title">Recent activity</h2>
+                    </div>
+                    <span id="activityCount" class="section-kicker">0 posts</span>
+                </div>
+
+                <div id="postsContainer">
+                    <div class="feed-state">
+                        <div class="feed-state-icon"><i class="fas fa-spinner fa-spin"></i></div>
+                        <div class="feed-state-title">Loading activity</div>
+                        <div class="feed-state-text">Synchronizing this account with the MoonLat community.</div>
+                    </div>
+                </div>
+            </section>
+
+        </section>
+
+        <aside class="sidebar">
+            <section class="surface sidebar-card">
+                <h3 class="sidebar-title">Community activity</h3>
+                <div class="sidebar-stat"><span>Posts</span><strong id="sidePosts">0</strong></div>
+                <div class="sidebar-stat"><span>Replies</span><strong id="sideComments">0</strong></div>
+                <div class="sidebar-stat"><span>Likes received</span><strong id="sideLikes">0</strong></div>
+            </section>
+
+            <section class="surface sidebar-card">
+                <h3 class="sidebar-title">Account</h3>
+                <div class="sidebar-stat"><span>Role</span><strong id="sideRole">Member</strong></div>
+                <div class="sidebar-stat"><span>Member since</span><strong id="sideJoined">—</strong></div>
+                <div class="sidebar-stat"><span>Status</span><strong id="sideStatus">Active</strong></div>
+            </section>
+
+            <section id="agentSidebarCard" class="surface sidebar-card hidden">
+                <h3 class="sidebar-title">Professional account</h3>
+                <div class="info-box">
+                    <div class="info-box-title">Verified MoonLat role</div>
+                    <div class="info-box-text">
+                        Professional details shown here are synchronized from the same <code>users/{uid}</code> record used by the Agent Workspace settings.
+                    </div>
+                </div>
+            </section>
+
+            <section class="surface sidebar-card">
+                <h3 class="sidebar-title">Profile integrity</h3>
+                <div id="integrityText" class="info-box-text">
+                    Live account profile.
+                </div>
+            </section>
+        </aside>
+
+    </div>
 </main>
 
-<div id="editModal" class="modal-backdrop" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
-    <div class="modal-head">
-      <h2 id="editModalTitle" class="modal-title">Edit profile</h2>
-      <button id="closeEditModal" class="modal-close" type="button" aria-label="Close"><i class="fas fa-xmark"></i></button>
-    </div>
-
-    <form id="profileForm">
-      <div class="modal-body">
-        <div class="form-grid">
-          <div class="avatar-upload">
-            <div id="modalAvatarPreview" class="avatar-preview">U</div>
-            <div style="min-width:0;flex:1">
-              <div style="color:#334155;font-size:10px;font-weight:800">Profile photo</div>
-              <div style="color:#94a3b8;font-size:9px;margin-top:3px">Stored in Cloudinary and synced to Firestore.</div>
-            </div>
-            <label for="avatarInput" class="upload-btn">Change</label>
-            <input id="avatarInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden">
-          </div>
-
-          <div class="field">
-            <label for="displayNameInput">Display name</label>
-            <input id="displayNameInput" type="text" maxlength="80" autocomplete="name" required>
-          </div>
-
-          <div class="field">
-            <label for="bioInput">Bio</label>
-            <textarea id="bioInput" maxlength="500" placeholder="Tell the community a little about yourself..."></textarea>
-          </div>
-
-          <div class="field">
-            <label for="locationInput">Location</label>
-            <input id="locationInput" type="text" maxlength="120" autocomplete="address-level2" placeholder="e.g. Lagos, Nigeria">
-          </div>
-
-          <div class="field">
-            <label for="websiteInput">Website</label>
-            <input id="websiteInput" type="url" maxlength="240" inputmode="url" placeholder="https://example.com">
-          </div>
+<div id="editModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+        <div class="modal-head">
+            <div class="modal-title">Edit community profile</div>
+            <button id="closeEditModal" class="modal-close" type="button"><i class="fas fa-xmark"></i></button>
         </div>
-      </div>
 
-      <div class="modal-footer">
-        <button id="cancelEdit" class="modal-btn secondary" type="button">Cancel</button>
-        <button id="saveProfileButton" class="modal-btn primary" type="submit">Save changes</button>
-      </div>
-    </form>
-  </div>
+        <form id="profileForm">
+            <div class="modal-body">
+                <div class="form-grid">
+
+                    <div class="field">
+                        <label for="displayNameInput">Name</label>
+                        <input id="displayNameInput" type="text" maxlength="120" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="bioInput">Community bio</label>
+                        <textarea id="bioInput" maxlength="700" placeholder="Tell the community about yourself..."></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label for="locationInput">Location</label>
+                        <input id="locationInput" type="text" maxlength="120" placeholder="e.g. Lagos, Nigeria">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="cancelEdit" class="btn btn-secondary" type="button">Cancel</button>
+                <button id="saveProfileButton" class="btn btn-primary" type="submit">Save changes</button>
+            </div>
+        </form>
+    </div>
 </div>
 
-<div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+<div id="toastStack" class="toast-stack"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
 import {
-  getAuth,
-  onAuthStateChanged,
-  updateProfile as updateAuthProfile
+    getAuth,
+    onAuthStateChanged,
+    updateProfile as updateAuthProfile
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
 import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  collection,
-  query,
-  where,
-  orderBy,
-  limit,
-  onSnapshot,
-  getDocs,
-  serverTimestamp
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    collection,
+    query,
+    where,
+    orderBy,
+    limit,
+    onSnapshot,
+    getDocs
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
-  authDomain: "moonlat-estate-dashboard.firebaseapp.com",
-  projectId: "moonlat-estate-dashboard",
-  storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
-  messagingSenderId: "289878951289",
-  appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
-};
-
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(window.MOONLAT_FIREBASE_CONFIG);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const CLOUDINARY_CLOUD_NAME = "dxdbn6xwy";
-const CLOUDINARY_UPLOAD_PRESET = "geefox_unsigned";
-const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
-
 let currentUser = null;
 let viewedUserId = null;
-let profileData = null;
+let profile = null;
 let profileUnsubscribe = null;
 let postsUnsubscribe = null;
 let notificationUnsubscribe = null;
-let pendingAvatarFile = null;
-let pendingAvatarPreview = null;
 
 const $ = id => document.getElementById(id);
 
 function escapeHTML(value = "") {
-  return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 function getInitials(name = "") {
-  const parts = String(name).trim().split(/\\s+/).filter(Boolean);
-  return parts.length ? parts.slice(0,2).map(v => v[0]).join("").toUpperCase() : "U";
+    const parts = String(name).trim().split(/\s+/).filter(Boolean);
+    return parts.length
+        ? parts.slice(0, 2).map(part => part.charAt(0)).join("").toUpperCase()
+        : "U";
 }
 
 function avatarURL(data = {}) {
-  return data.photoURL || data.photoUrl || data.avatar || data.profileImage || data.image || "";
+    return (
+        data.photoURL ||
+        data.profileImage ||
+        data.photoUrl ||
+        data.avatar ||
+        data.profilePhoto ||
+        ""
+    );
 }
 
-function displayRole(data = {}) {
-  return String(data.role || "client").toLowerCase();
+function normalizeRole(role) {
+    const value = String(role || "client").trim().toLowerCase();
+    if (["agent","broker","realtor","property-agent"].includes(value)) return "agent";
+    if (["admin","administrator","super-admin","superadmin"].includes(value)) return "admin";
+    if (["buyer"].includes(value)) return "buyer";
+    if (["member","user","client","customer"].includes(value)) return "client";
+    return value || "client";
 }
 
 function roleLabel(role) {
-  const labels = { agent:"Agent", admin:"Administrator", broker:"Broker", owner:"Property owner", client:"Community member", buyer:"Buyer", seller:"Seller" };
-  return labels[role] || role.replace(/[-_]/g," ").replace(/\\b\\w/g, x => x.toUpperCase());
-}
-
-function formatRelativeTime(timestamp) {
-  if (!timestamp) return "Recently";
-  const date = typeof timestamp?.toDate === "function" ? timestamp.toDate() : new Date(timestamp);
-  if (Number.isNaN(date.getTime())) return "Recently";
-  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (seconds < 60) return "Just now";
-  const minutes = Math.floor(seconds/60);
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes/60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours/24);
-  if (days < 7) return `${days}d ago`;
-  return date.toLocaleDateString(undefined,{day:"numeric",month:"short",year:date.getFullYear() !== new Date().getFullYear() ? "numeric" : undefined});
-}
-
-function formatNumber(v=0) {
-  const n = Number(v)||0;
-  if (n >= 1000000) return `${(n/1000000).toFixed(n>=10000000?0:1)}M`;
-  if (n >= 1000) return `${(n/1000).toFixed(n>=10000?0:1)}k`;
-  return String(n);
+    const map = {
+        agent: "Agent",
+        admin: "Administrator",
+        buyer: "Buyer",
+        client: "Community member"
+    };
+    return map[normalizeRole(role)] || String(role || "Community member")
+        .replace(/[-_]+/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
 }
 
 function toDate(value) {
-  if (!value) return null;
-  if (typeof value.toDate === "function") return value.toDate();
-  if (value.seconds) return new Date(Number(value.seconds)*1000);
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? null : d;
+    if (!value) return null;
+    if (typeof value?.toDate === "function") return value.toDate();
+    if (value?.seconds) return new Date(Number(value.seconds) * 1000);
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
 }
 
-function showToast(message, type="success") {
-  const el = document.createElement("div");
-  el.className = `toast ${type}`;
-  el.innerHTML = `<i class="fas ${type==="error"?"fa-circle-exclamation":type==="info"?"fa-circle-info":"fa-circle-check"}"></i><span>${escapeHTML(message)}</span>`;
-  $("toastContainer").appendChild(el);
-  setTimeout(() => el.remove(), 3800);
+function relativeTime(value) {
+    const date = toDate(value);
+    if (!date) return "Recently";
+
+    const seconds = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
+    if (seconds < 10) return "Just now";
+    if (seconds < 60) return `${seconds}s ago`;
+
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days}d ago`;
+
+    return date.toLocaleDateString(undefined, {
+        day: "numeric",
+        month: "short",
+        year: date.getFullYear() !== new Date().getFullYear() ? "numeric" : undefined
+    });
+}
+
+function formatNumber(value = 0) {
+    const n = Number(value) || 0;
+    if (n >= 1000000) return `${(n / 1000000).toFixed(n >= 10000000 ? 0 : 1)}M`;
+    if (n >= 1000) return `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k`;
+    return String(n);
+}
+
+function toast(message, type = "success") {
+    const item = document.createElement("div");
+    item.className = `toast ${type}`;
+    item.textContent = message;
+    $("toastStack").appendChild(item);
+    setTimeout(() => item.remove(), 3600);
 }
 
 function setSync(state, text) {
-  $("syncDot").className = `sync-dot ${state === "syncing" ? "syncing" : state === "error" ? "error" : ""}`;
-  $("syncText").textContent = text;
+    $("syncDot").className = `sync-dot ${state === "syncing" ? "syncing" : state === "error" ? "error" : ""}`;
+    $("syncText").textContent = text;
 }
 
 function isOwnProfile() {
-  return !!currentUser && currentUser.uid === viewedUserId;
+    return currentUser?.uid === viewedUserId;
 }
 
-function setElementVisible(id, visible) {
-  $(id).classList.toggle("hidden", !visible);
+function normalizeAvailability(source) {
+    const days = [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"
+    ];
+
+    const result = {};
+
+    days.forEach(day => {
+        const item = source?.[day] || {};
+        result[day] = {
+            active: Boolean(item.active),
+            start: item.start || "",
+            end: item.end || ""
+        };
+    });
+
+    return result;
 }
 
-function renderAvatar(target, data) {
-  const name = data.displayName || data.name || "User";
-  const avatar = avatarURL(data);
-  if (avatar) {
-    target.innerHTML = `<img src="${escapeHTML(avatar)}" alt="${escapeHTML(name)}">`;
-  } else {
-    target.innerHTML = `<span>${escapeHTML(getInitials(name))}</span>`;
-  }
+function normalizeProfile(raw = {}, uid) {
+    const role = normalizeRole(raw.role);
+
+    return {
+        ...raw,
+        uid,
+        role,
+
+        name:
+            raw.name ||
+            raw.fullName ||
+            raw.displayName ||
+            currentUser?.displayName ||
+            "User",
+
+        email:
+            raw.email ||
+            (isOwnProfile() ? currentUser?.email : "") ||
+            "",
+
+        photoURL: avatarURL(raw) || (isOwnProfile() ? currentUser?.photoURL || "" : ""),
+
+        bio:
+            raw.bio ||
+            raw.about ||
+            raw.description ||
+            "",
+
+        location:
+            raw.location ||
+            raw.city ||
+            raw.address ||
+            raw.serviceAreas?.primary ||
+            "",
+
+        verified:
+            Boolean(
+                raw.verified ||
+                raw.isVerified ||
+                raw.emailVerified
+            ),
+
+        businessName:
+            raw.businessName ||
+            raw.companyName ||
+            "",
+
+        professionalBio:
+            raw.professionalBio ||
+            "",
+
+        phone:
+            raw.phone ||
+            "",
+
+        whatsapp:
+            raw.whatsapp ||
+            "",
+
+        serviceAreas:
+            raw.serviceAreas || {
+                primary: "",
+                states: [],
+                cities: []
+            },
+
+        availability:
+            normalizeAvailability(raw.availability),
+
+        updatedAt: raw.updatedAt || null,
+
+        createdAt:
+            raw.createdAt ||
+            raw.joinedAt ||
+            (isOwnProfile() ? currentUser?.metadata?.creationTime : null),
+
+        isActive:
+            raw.isActive !== false &&
+            raw.disabled !== true
+    };
 }
 
-function buildProfileData(userSnapData, authUser) {
-  const base = userSnapData && typeof userSnapData === "object" ? userSnapData : {};
-  return {
-    id: viewedUserId,
-    ...base,
-    displayName: base.displayName || base.name || authUser?.displayName || authUser?.email?.split("@")[0] || "User",
-    email: base.email || authUser?.email || "",
-    photoURL: avatarURL(base) || authUser?.photoURL || "",
-    role: base.role || "client",
-    bio: base.bio || base.about || base.description || "",
-    location: base.location || base.city || "",
-    website: base.website || base.websiteUrl || "",
-    verified: Boolean(base.verified || base.isVerified || base.emailVerified || authUser?.emailVerified),
-    createdAt: base.createdAt || base.joinedAt || authUser?.metadata?.creationTime || null
-  };
+function renderAvatar(element, data) {
+    const name = data.name || "User";
+    const avatar = avatarURL(data);
+
+    element.innerHTML = avatar
+        ? `<img src="${escapeHTML(avatar)}" alt="${escapeHTML(name)} profile photo">`
+        : escapeHTML(getInitials(name));
+}
+
+function renderRole(data) {
+    const role = normalizeRole(data.role);
+
+    const badge = $("roleBadge");
+    badge.className = `role-badge role-${role}`;
+
+    let icon = "fa-user";
+    if (role === "agent") icon = "fa-building-user";
+    if (role === "admin") icon = "fa-shield-halved";
+    if (role === "buyer") icon = "fa-user-check";
+
+    badge.innerHTML = `<i class="fas ${icon}"></i><span id="profileRole">${escapeHTML(roleLabel(role))}</span>`;
+
+    $("verifiedBadge").classList.toggle("hidden", !data.verified);
+}
+
+function renderHeaderAndHero(data) {
+    $("profileName").textContent = data.name;
+    $("profileEmail").textContent = data.email || "MoonLat community member";
+    renderRole(data);
+    renderAvatar($("profileAvatar"), data);
+    renderAvatar($("headerAvatar"), data);
+
+    $("editProfileButton").classList.toggle("hidden", !isOwnProfile());
+}
+
+function renderAbout(data) {
+    const bio = String(data.bio || data.professionalBio || "").trim();
+
+    $("aboutText").innerHTML = bio
+        ? escapeHTML(bio)
+        : `<div class="about-empty">This member has not added a community biography yet.</div>`;
+
+    const details = [];
+
+    if (data.location) {
+        details.push(`
+            <div class="detail">
+                <div class="detail-icon"><i class="fas fa-location-dot"></i></div>
+                <div class="detail-copy">
+                    <span class="detail-label">Location</span>
+                    <span class="detail-value">${escapeHTML(data.location)}</span>
+                </div>
+            </div>
+        `);
+    }
+
+    if (data.email) {
+        details.push(`
+            <div class="detail">
+                <div class="detail-icon"><i class="fas fa-envelope"></i></div>
+                <div class="detail-copy">
+                    <span class="detail-label">Email</span>
+                    <a class="detail-value link" href="mailto:${escapeHTML(data.email)}">${escapeHTML(data.email)}</a>
+                </div>
+            </div>
+        `);
+    }
+
+    if (data.createdAt) {
+        const date = toDate(data.createdAt);
+        if (date) {
+            details.push(`
+                <div class="detail">
+                    <div class="detail-icon"><i class="fas fa-calendar"></i></div>
+                    <div class="detail-copy">
+                        <span class="detail-label">Member since</span>
+                        <span class="detail-value">${escapeHTML(date.toLocaleDateString(undefined,{month:"long",year:"numeric"}))}</span>
+                    </div>
+                </div>
+            `);
+        }
+    }
+
+    $("profileDetails").innerHTML = details.join("");
+}
+
+function formatAvailability(data) {
+    const availability = normalizeAvailability(data);
+    const order = ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"];
+    const active = order.filter(day => availability[day].active && availability[day].start && availability[day].end);
+
+    if (!active.length) return "Availability not provided.";
+
+    const first = active[0];
+    const days = active.map(day => day.slice(0,3).toUpperCase());
+
+    return `${days.join(", ")} · ${formatTime(availability[first].start)}–${formatTime(availability[first].end)}`;
+}
+
+function formatTime(value) {
+    if (!value || !value.includes(":")) return value || "";
+    const [h,m] = value.split(":").map(Number);
+    if (Number.isNaN(h) || Number.isNaN(m)) return value;
+    const suffix = h >= 12 ? "PM" : "AM";
+    const hour = h % 12 || 12;
+    return `${hour}:${String(m).padStart(2,"0")} ${suffix}`;
+}
+
+function renderProfessionalAgent(data) {
+    const isAgent = normalizeRole(data.role) === "agent";
+    $("professionalSection").classList.toggle("hidden", !isAgent);
+    $("agentSidebarCard").classList.toggle("hidden", !isAgent);
+
+    if (!isAgent) {
+        $("integrityText").textContent = "Standard community profile synchronized from the account record.";
+        return;
+    }
+
+    $("professionalBusiness").textContent = data.businessName || "Not provided";
+    $("professionalPrimary").textContent = data.serviceAreas?.primary || data.location || "Not provided";
+    $("professionalBio").textContent = data.professionalBio || "No professional bio provided yet.";
+    $("professionalContact").textContent = [
+        data.phone ? `Phone: ${data.phone}` : "",
+        data.whatsapp ? `WhatsApp: ${data.whatsapp}` : ""
+    ].filter(Boolean).join(" · ") || "Professional contact details are not publicly provided.";
+
+    const tags = [
+        ...(Array.isArray(data.serviceAreas?.states) ? data.serviceAreas.states : []),
+        ...(Array.isArray(data.serviceAreas?.cities) ? data.serviceAreas.cities : [])
+    ];
+
+    $("professionalAreas").innerHTML = tags.length
+        ? tags.map(tag => `<span class="tag">${escapeHTML(tag)}</span>`).join("")
+        : `<span class="pro-box-text">No service areas provided.</span>`;
+
+    $("professionalAvailability").textContent = formatAvailability(data.availability);
+
+    $("integrityText").textContent =
+        "Professional identity is synchronized from the same users/{uid} account record used by the Agent Workspace settings.";
+}
+
+function renderSidebar(data) {
+    const role = normalizeRole(data.role);
+    $("sideRole").textContent = roleLabel(role);
+    $("sideStatus").textContent = data.isActive ? "Active" : "Inactive";
+
+    const joined = toDate(data.createdAt);
+    $("sideJoined").textContent = joined
+        ? joined.toLocaleDateString(undefined,{month:"short",year:"numeric"})
+        : "—";
 }
 
 function renderProfile(data) {
-  profileData = data;
+    profile = data;
+    renderHeaderAndHero(data);
+    renderAbout(data);
+    renderProfessionalAgent(data);
+    renderSidebar(data);
 
-  const name = data.displayName;
-  const role = displayRole(data);
-  const avatar = avatarURL(data);
-
-  $("profileName").textContent = name;
-  $("profileRole").textContent = roleLabel(role);
-  $("profileEmail").textContent = data.email || "MoonLat community member";
-  $("verifiedBadge").classList.toggle("hidden", !data.verified);
-
-  renderAvatar($("profileAvatar"), data);
-  renderAvatar($("modalAvatarPreview"), data);
-  renderAvatar($("headerAvatar"), data);
-
-  const about = data.bio.trim();
-  $("aboutText").innerHTML = about
-    ? escapeHTML(about)
-    : `<div class="about-empty">This member has not added a biography yet.</div>`;
-
-  const details = [];
-  if (data.location) {
-    details.push(`<div class="detail"><div class="detail-icon"><i class="fas fa-location-dot"></i></div><div class="detail-copy"><span class="detail-label">Location</span><span class="detail-value">${escapeHTML(data.location)}</span></div></div>`);
-  }
-  if (data.website) {
-    const safeWebsite = /^https?:\\/\\//i.test(data.website) ? data.website : `https://${data.website}`;
-    details.push(`<div class="detail"><div class="detail-icon"><i class="fas fa-globe"></i></div><div class="detail-copy"><span class="detail-label">Website</span><a class="detail-value link" href="${escapeHTML(safeWebsite)}" target="_blank" rel="noopener noreferrer">${escapeHTML(data.website)}</a></div></div>`);
-  }
-  if (data.email) {
-    details.push(`<div class="detail"><div class="detail-icon"><i class="fas fa-envelope"></i></div><div class="detail-copy"><span class="detail-label">Email</span><a class="detail-value link" href="mailto:${escapeHTML(data.email)}">${escapeHTML(data.email)}</a></div></div>`);
-  }
-  $("profileDetails").innerHTML = details.join("") || "";
-
-  const created = toDate(data.createdAt);
-  $("sideRole").textContent = roleLabel(role);
-  $("sideJoined").textContent = created ? created.toLocaleDateString(undefined,{month:"short",year:"numeric"}) : "—";
-  $("sideStatus").textContent = data.disabled ? "Restricted" : "Active";
-
-  $("editProfileButton").classList.toggle("hidden", !isOwnProfile());
-  $("profileOnline").classList.toggle("hidden", false);
-}
-
-async function getProfileDoc(uid) {
-  const snap = await getDoc(doc(db, "users", uid));
-  return snap.exists() ? snap.data() : {};
-}
-
-async function hydrateAuthUserIntoProfile() {
-  if (!viewedUserId) return;
-  const isOwner = isOwnProfile();
-
-  if (isOwner) {
-    const base = await getProfileDoc(viewedUserId);
-    renderProfile(buildProfileData(base, currentUser));
-  } else {
-    const base = await getProfileDoc(viewedUserId);
-    renderProfile(buildProfileData(base, null));
-  }
-}
-
-function subscribeToProfileDoc() {
-  if (!viewedUserId) return;
-
-  if (profileUnsubscribe) profileUnsubscribe();
-
-  profileUnsubscribe = onSnapshot(
-    doc(db, "users", viewedUserId),
-    snapshot => {
-      const data = snapshot.exists() ? snapshot.data() : {};
-      renderProfile(buildProfileData(data, isOwnProfile() ? currentUser : null));
-      setSync("ok", "Live");
-    },
-    error => {
-      console.error("Profile sync error:", error);
-      setSync("error", "Sync error");
+    if (isOwnProfile()) {
+        $("integrityText").textContent =
+            normalizeRole(data.role) === "agent"
+                ? "Your professional profile is synchronized with your Agent Workspace account."
+                : "Your community profile is synchronized with your MoonLat account.";
     }
-  );
-}
-
-function getPostImages(post) {
-  if (Array.isArray(post.images)) return post.images.filter(x => x?.url);
-  return [];
 }
 
 function renderPost(post) {
-  const images = getPostImages(post);
-  const layout = images.length === 1 ? "single" : images.length === 2 ? "two" : "multi";
-  const role = String(post.authorRole || profileData?.role || "client").toLowerCase();
+    const images = Array.isArray(post.images)
+        ? post.images.filter(image => image?.url)
+        : [];
 
-  const imagesHTML = images.length ? `
-    <div class="post-images ${layout}">
-      ${images.slice(0,4).map(image => `
-        <div class="post-image"><img src="${escapeHTML(image.url)}" alt="${escapeHTML(image.filename || "Community image")}" loading="lazy"></div>
-      `).join("")}
-    </div>
-  ` : "";
+    const layout =
+        images.length === 1 ? "single" :
+        images.length === 2 ? "two" :
+        images.length === 3 ? "three" :
+        "multi";
 
-  return `
-    <article class="post-card">
-      <div class="post-topline"></div>
-      <div class="post-body">
-        <div class="post-header">
-          <div class="post-avatar">
-            ${post.authorPhotoURL ? `<img src="${escapeHTML(post.authorPhotoURL)}" alt="${escapeHTML(post.authorName || "User")}">` : escapeHTML(getInitials(post.authorName || "User"))}
-          </div>
-          <div class="post-author">
-            <div class="post-author-name">${escapeHTML(post.authorName || "Community member")}</div>
-            <div class="post-time">${formatRelativeTime(post.createdAt)}</div>
-          </div>
-          ${post.type ? `<span class="role-badge role-${escapeHTML(role)}">${escapeHTML(post.type)}</span>` : ""}
-        </div>
-        ${post.title ? `<div class="post-title">${escapeHTML(post.title)}</div>` : ""}
-        ${post.content ? `<div class="post-content">${escapeHTML(post.content)}</div>` : ""}
-        ${post.location?.label ? `<div class="post-type"><i class="fas fa-location-dot"></i>${escapeHTML(post.location.label)}</div>` : ""}
-        ${imagesHTML}
-        <div class="post-actions">
-          <span class="post-action"><i class="far fa-heart"></i>${formatNumber(post.likeCount||0)} Likes</span>
-          <span class="post-action"><i class="far fa-comment"></i>${formatNumber(post.commentCount||0)} Comments</span>
-          <span class="post-action"><i class="fas fa-share"></i>${formatNumber(post.shareCount||0)} Shares</span>
-        </div>
-      </div>
-    </article>
-  `;
+    const role = normalizeRole(post.authorRole);
+
+    const imagesHTML = images.length
+        ? `<div class="post-images ${layout}">
+            ${images.slice(0,4).map(image => `
+                <div class="post-image">
+                    <img src="${escapeHTML(image.url)}" alt="${escapeHTML(image.filename || "Community image")}" loading="lazy">
+                </div>
+            `).join("")}
+           </div>`
+        : "";
+
+    return `
+        <article class="post-card">
+            <div class="post-topline"></div>
+
+            <div class="post-body">
+                <div class="post-header">
+                    <div class="post-avatar">
+                        ${
+                            post.authorPhotoURL
+                                ? `<img src="${escapeHTML(post.authorPhotoURL)}" alt="${escapeHTML(post.authorName || "User")}">`
+                                : escapeHTML(getInitials(post.authorName || "User"))
+                        }
+                    </div>
+
+                    <div class="post-author">
+                        <div class="post-author-name">${escapeHTML(post.authorName || "Community member")}</div>
+                        <div class="post-time">${escapeHTML(relativeTime(post.createdAt))}</div>
+                    </div>
+
+                    <span class="post-role-mini ${role === "agent" ? "agent" : ""}">
+                        ${escapeHTML(roleLabel(role))}
+                    </span>
+                </div>
+
+                ${post.title ? `<div class="post-title">${escapeHTML(post.title)}</div>` : ""}
+                ${post.content ? `<div class="post-content">${escapeHTML(post.content)}</div>` : ""}
+
+                ${post.location?.label ? `
+                    <div class="post-action" style="margin-top:11px">
+                        <i class="fas fa-location-dot"></i>
+                        ${escapeHTML(post.location.label)}
+                    </div>
+                ` : ""}
+
+                ${imagesHTML}
+
+                <div class="post-actions">
+                    <span class="post-action"><i class="far fa-heart"></i> ${formatNumber(post.likeCount || 0)}</span>
+                    <span class="post-action"><i class="far fa-comment"></i> ${formatNumber(post.commentCount || 0)}</span>
+                    <span class="post-action"><i class="fas fa-share"></i> ${formatNumber(post.shareCount || 0)}</span>
+                </div>
+            </div>
+        </article>
+    `;
 }
 
-async function countCommentsAndLikes(postDocs) {
-  let comments = 0;
-  let likes = 0;
+async function countPostInteractions(posts) {
+    let replies = 0;
+    let likes = 0;
 
-  await Promise.all(postDocs.map(async post => {
-    likes += Number(post.likeCount || 0);
+    await Promise.all(posts.map(async post => {
+        likes += Number(post.likeCount || 0);
 
-    try {
-      const snap = await getDocs(
-        query(
-          collection(db, "communityPosts", post.id, "comments"),
-          limit(300)
-        )
-      );
-      comments += snap.size;
-    } catch (error) {
-      console.warn("Comment count fallback failed:", error);
-    }
-  }));
+        try {
+            const q = query(
+                collection(db, "communityPosts", post.id, "comments"),
+                limit(300)
+            );
+            const snap = await getDocs(q);
+            replies += snap.size;
+        } catch (error) {
+            console.warn("Reply count unavailable for post:", post.id, error);
+        }
+    }));
 
-  return { comments, likes };
+    return { replies, likes };
 }
 
-async function subscribeToUserPosts() {
-  if (!viewedUserId) return;
+function paintPostStats(posts, replies, likes) {
+    $("activityCount").textContent = `${posts.length} ${posts.length === 1 ? "post" : "posts"}`;
+    $("statPosts").textContent = formatNumber(posts.length);
+    $("statComments").textContent = formatNumber(replies);
+    $("statLikes").textContent = formatNumber(likes);
+    $("sidePosts").textContent = formatNumber(posts.length);
+    $("sideComments").textContent = formatNumber(replies);
+    $("sideLikes").textContent = formatNumber(likes);
+}
 
-  if (postsUnsubscribe) postsUnsubscribe();
-
-  const q = query(
-    collection(db, "communityPosts"),
-    where("authorId", "==", viewedUserId),
-    orderBy("createdAt", "desc"),
-    limit(50)
-  );
-
-  postsUnsubscribe = onSnapshot(
-    q,
-    async snapshot => {
-      const posts = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
-
-      $("activityCount").textContent = `${posts.length} ${posts.length === 1 ? "post" : "posts"}`;
-      $("statPosts").textContent = formatNumber(posts.length);
-      $("sidePosts").textContent = formatNumber(posts.length);
-
-      if (!posts.length) {
-        $("postsContainer").innerHTML = `
-          <div class="feed-state">
-            <div class="feed-state-icon"><i class="fas fa-message"></i></div>
-            <div class="feed-state-title">No community posts yet</div>
-            <div class="feed-state-text">Activity from this profile will appear here as they participate in the MoonLat community.</div>
-          </div>
-        `;
-        $("statComments").textContent = "0";
-        $("statLikes").textContent = "0";
-        $("sideComments").textContent = "0";
-        $("sideLikes").textContent = "0";
-        return;
-      }
-
-      $("postsContainer").innerHTML = posts.map(renderPost).join("");
-
-      const totals = await countCommentsAndLikes(posts);
-      $("statComments").textContent = formatNumber(totals.comments);
-      $("statLikes").textContent = formatNumber(totals.likes);
-      $("sideComments").textContent = formatNumber(totals.comments);
-      $("sideLikes").textContent = formatNumber(totals.likes);
-    },
-    error => {
-      console.error("Posts sync error:", error);
-
-      if (error?.code === "failed-precondition") {
-        subscribeToUserPostsFallback();
-        return;
-      }
-
-      $("postsContainer").innerHTML = `
+function renderPostsError(message) {
+    $("postsContainer").innerHTML = `
         <div class="feed-state">
-          <div class="feed-state-icon"><i class="fas fa-triangle-exclamation"></i></div>
-          <div class="feed-state-title">Activity unavailable</div>
-          <div class="feed-state-text">MoonLat could not load this profile's community activity.</div>
+            <div class="feed-state-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="feed-state-title">Activity unavailable</div>
+            <div class="feed-state-text">${escapeHTML(message)}</div>
         </div>
-      `;
-    }
-  );
+    `;
 }
 
-function subscribeToUserPostsFallback() {
-  if (postsUnsubscribe) postsUnsubscribe();
+function subscribeToPosts() {
+    if (postsUnsubscribe) postsUnsubscribe();
 
-  const q = query(
-    collection(db, "communityPosts"),
-    where("authorId", "==", viewedUserId),
-    limit(50)
-  );
+    const q = query(
+        collection(db, "communityPosts"),
+        where("authorId", "==", viewedUserId),
+        orderBy("createdAt", "desc"),
+        limit(50)
+    );
 
-  postsUnsubscribe = onSnapshot(
-    q,
-    async snapshot => {
-      const posts = snapshot.docs
-        .map(d => ({id:d.id, ...d.data()}))
-        .sort((a,b) => {
-          const ta = toDate(a.createdAt)?.getTime() || 0;
-          const tb = toDate(b.createdAt)?.getTime() || 0;
-          return tb - ta;
-        });
+    postsUnsubscribe = onSnapshot(
+        q,
+        async snapshot => {
+            const posts = snapshot.docs.map(item => ({
+                id: item.id,
+                ...item.data()
+            }));
 
-      $("activityCount").textContent = `${posts.length} ${posts.length === 1 ? "post" : "posts"}`;
-      $("statPosts").textContent = formatNumber(posts.length);
-      $("sidePosts").textContent = formatNumber(posts.length);
+            if (!posts.length) {
+                paintPostStats([], 0, 0);
+                $("postsContainer").innerHTML = `
+                    <div class="feed-state">
+                        <div class="feed-state-icon"><i class="fas fa-message"></i></div>
+                        <div class="feed-state-title">No community posts yet</div>
+                        <div class="feed-state-text">Activity from this profile will appear here as they participate in the MoonLat community.</div>
+                    </div>
+                `;
+                return;
+            }
 
-      if (!posts.length) {
-        $("postsContainer").innerHTML = `<div class="feed-state"><div class="feed-state-icon"><i class="fas fa-message"></i></div><div class="feed-state-title">No community posts yet</div><div class="feed-state-text">Activity from this profile will appear here as they participate in the MoonLat community.</div></div>`;
-        return;
-      }
+            $("postsContainer").innerHTML = posts.map(renderPost).join("");
 
-      $("postsContainer").innerHTML = posts.map(renderPost).join("");
-      const totals = await countCommentsAndLikes(posts);
-      $("statComments").textContent = formatNumber(totals.comments);
-      $("statLikes").textContent = formatNumber(totals.likes);
-      $("sideComments").textContent = formatNumber(totals.comments);
-      $("sideLikes").textContent = formatNumber(totals.likes);
-    },
-    error => {
-      console.error("Fallback posts error:", error);
-      $("postsContainer").innerHTML = `<div class="feed-state"><div class="feed-state-icon"><i class="fas fa-triangle-exclamation"></i></div><div class="feed-state-title">Activity unavailable</div><div class="feed-state-text">MoonLat could not load this profile's posts.</div></div>`;
+            const totals = await countPostInteractions(posts);
+            paintPostStats(posts, totals.replies, totals.likes);
+        },
+        error => {
+            console.error("Post subscription error:", error);
+
+            if (error?.code === "failed-precondition") {
+                subscribeToPostsFallback();
+                return;
+            }
+
+            renderPostsError("MoonLat could not load this profile's community activity.");
+        }
+    );
+}
+
+function subscribeToPostsFallback() {
+    if (postsUnsubscribe) postsUnsubscribe();
+
+    const q = query(
+        collection(db, "communityPosts"),
+        where("authorId", "==", viewedUserId),
+        limit(50)
+    );
+
+    postsUnsubscribe = onSnapshot(
+        q,
+        async snapshot => {
+            const posts = snapshot.docs
+                .map(item => ({ id:item.id, ...item.data() }))
+                .sort((a,b) => {
+                    const aTime = toDate(a.createdAt)?.getTime() || 0;
+                    const bTime = toDate(b.createdAt)?.getTime() || 0;
+                    return bTime - aTime;
+                });
+
+            if (!posts.length) {
+                paintPostStats([], 0, 0);
+                $("postsContainer").innerHTML = `
+                    <div class="feed-state">
+                        <div class="feed-state-icon"><i class="fas fa-message"></i></div>
+                        <div class="feed-state-title">No community posts yet</div>
+                        <div class="feed-state-text">Activity from this profile will appear here as they participate in the MoonLat community.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            $("postsContainer").innerHTML = posts.map(renderPost).join("");
+
+            const totals = await countPostInteractions(posts);
+            paintPostStats(posts, totals.replies, totals.likes);
+        },
+        error => {
+            console.error("Fallback post subscription error:", error);
+            renderPostsError("MoonLat could not load this profile's community activity.");
+        }
+    );
+}
+
+async function loadProfileOnce() {
+    const snap = await getDoc(doc(db, "users", viewedUserId));
+
+    if (!snap.exists()) {
+        if (isOwnProfile()) {
+            profile = normalizeProfile({}, viewedUserId);
+            renderProfile(profile);
+            return;
+        }
+
+        throw new Error("This profile does not exist.");
     }
-  );
+
+    profile = normalizeProfile(snap.data(), viewedUserId);
+    renderProfile(profile);
+}
+
+function subscribeToProfile() {
+    if (profileUnsubscribe) profileUnsubscribe();
+
+    profileUnsubscribe = onSnapshot(
+        doc(db, "users", viewedUserId),
+        snapshot => {
+            if (!snapshot.exists()) {
+                if (!isOwnProfile()) {
+                    renderProfileError("This profile is no longer available.");
+                    return;
+                }
+
+                profile = normalizeProfile({}, viewedUserId);
+            } else {
+                profile = normalizeProfile(snapshot.data(), viewedUserId);
+            }
+
+            renderProfile(profile);
+            setSync("live", "Live");
+        },
+        error => {
+            console.error("Profile listener error:", error);
+            setSync("error", "Sync error");
+        }
+    );
+}
+
+function renderProfileError(message) {
+    $("profileName").textContent = "Profile unavailable";
+    $("profileRole").textContent = "Community member";
+    $("profileEmail").textContent = "";
+    $("aboutText").innerHTML = `<div class="about-empty">${escapeHTML(message)}</div>`;
+    $("profileDetails").innerHTML = "";
+    $("professionalSection").classList.add("hidden");
+    $("agentSidebarCard").classList.add("hidden");
+    setSync("error", "Unavailable");
+    renderPostsError(message);
 }
 
 function openEditModal() {
-  if (!isOwnProfile() || !profileData) return;
+    if (!isOwnProfile() || !profile) return;
 
-  $("displayNameInput").value = profileData.displayName || "";
-  $("bioInput").value = profileData.bio || "";
-  $("locationInput").value = profileData.location || "";
-  $("websiteInput").value = profileData.website || "";
+    $("displayNameInput").value = profile.name || "";
+    $("bioInput").value = profile.bio || "";
+    $("locationInput").value = profile.location || "";
 
-  pendingAvatarFile = null;
-
-  if (pendingAvatarPreview) {
-    URL.revokeObjectURL(pendingAvatarPreview);
-    pendingAvatarPreview = null;
-  }
-
-  renderAvatar($("modalAvatarPreview"), profileData);
-
-  $("editModal").classList.add("open");
-  $("editModal").setAttribute("aria-hidden","false");
-  document.body.classList.add("modal-open");
+    $("editModal").classList.add("open");
+    $("editModal").setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
 }
 
 function closeEditModal() {
-  $("editModal").classList.remove("open");
-  $("editModal").setAttribute("aria-hidden","true");
-  document.body.classList.remove("modal-open");
-  pendingAvatarFile = null;
-
-  if (pendingAvatarPreview) {
-    URL.revokeObjectURL(pendingAvatarPreview);
-    pendingAvatarPreview = null;
-  }
+    $("editModal").classList.remove("open");
+    $("editModal").setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
 }
 
-function validateImage(file) {
-  const allowed = ["image/jpeg","image/png","image/webp","image/gif"];
-  if (!allowed.includes(file.type)) throw new Error("Unsupported image format.");
-  if (file.size > 10*1024*1024) throw new Error("Profile photo must be 10MB or smaller.");
-}
+async function saveCommunityProfile(event) {
+    event.preventDefault();
 
-async function uploadAvatar(file) {
-  validateImage(file);
-  const form = new FormData();
-  form.append("file", file);
-  form.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-  form.append("folder", "moonlat_profiles");
+    if (!currentUser || !isOwnProfile()) return;
 
-  const response = await fetch(CLOUDINARY_UPLOAD_URL, {
-    method: "POST",
-    body: form
-  });
+    const button = $("saveProfileButton");
+    const name = $("displayNameInput").value.trim();
+    const bio = $("bioInput").value.trim();
+    const location = $("locationInput").value.trim();
 
-  const data = await response.json();
-
-  if (!response.ok || !data.secure_url) {
-    throw new Error(data?.error?.message || "Profile photo upload failed.");
-  }
-
-  return data.secure_url;
-}
-
-async function saveProfile(event) {
-  event.preventDefault();
-
-  if (!currentUser || !isOwnProfile()) return;
-
-  const button = $("saveProfileButton");
-  const original = button.innerHTML;
-
-  const displayName = $("displayNameInput").value.trim();
-  const bio = $("bioInput").value.trim();
-  const location = $("locationInput").value.trim();
-  const websiteRaw = $("websiteInput").value.trim();
-
-  if (!displayName) {
-    showToast("Enter your display name.", "error");
-    return;
-  }
-
-  if (websiteRaw && !/^https?:\\/\\//i.test(websiteRaw)) {
-    showToast("Website should start with http:// or https://.", "error");
-    return;
-  }
-
-  button.disabled = true;
-  button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Saving...`;
-  setSync("syncing","Saving");
-
-  try {
-    let photoURL = avatarURL(profileData);
-
-    if (pendingAvatarFile) {
-      photoURL = await uploadAvatar(pendingAvatarFile);
+    if (!name) {
+        toast("Enter your name.", "error");
+        return;
     }
 
-    const userRef = doc(db, "users", currentUser.uid);
+    button.disabled = true;
+    button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Saving`;
 
-    await setDoc(
-      userRef,
-      {
-        displayName,
-        name: displayName,
-        bio,
-        location,
-        website: websiteRaw,
-        photoURL,
-        updatedAt: serverTimestamp()
-      },
-      { merge: true }
-    );
+    setSync("syncing", "Saving");
 
     try {
-      await updateAuthProfile(currentUser, {
-        displayName,
-        photoURL
-      });
-    } catch (authError) {
-      console.warn("Auth profile update failed:", authError);
+        /*
+         * Important:
+         * Community edits write to the SAME users/{uid} document used by
+         * the Agent/Client account system. We do not create another profile.
+         */
+        await setDoc(
+            doc(db, "users", currentUser.uid),
+            {
+                name,
+                displayName: name,
+                bio,
+                location,
+                updatedAt: new Date()
+            },
+            { merge: true }
+        );
+
+        try {
+            await updateAuthProfile(currentUser, {
+                displayName: name
+            });
+        } catch (authError) {
+            console.warn("Auth profile update failed:", authError);
+        }
+
+        closeEditModal();
+        toast("Profile updated successfully.");
+        setSync("live", "Live");
+    } catch (error) {
+        console.error("Profile update error:", error);
+        toast(error?.message || "Could not update your profile.", "error");
+        setSync("error", "Save failed");
+    } finally {
+        button.disabled = false;
+        button.innerHTML = "Save changes";
     }
-
-    profileData = {
-      ...profileData,
-      displayName,
-      name: displayName,
-      bio,
-      location,
-      website: websiteRaw,
-      photoURL
-    };
-
-    renderProfile(profileData);
-    setSync("ok","Saved");
-    closeEditModal();
-    showToast("Profile updated successfully.");
-  } catch (error) {
-    console.error("Profile save error:", error);
-    setSync("error","Save failed");
-    showToast(error?.message || "Could not update your profile.", "error");
-  } finally {
-    button.disabled = false;
-    button.innerHTML = original;
-  }
 }
 
 function subscribeToNotifications() {
-  if (!currentUser) return;
-  if (notificationUnsubscribe) notificationUnsubscribe();
+    if (!currentUser) return;
+    if (notificationUnsubscribe) notificationUnsubscribe();
 
-  const q = query(collection(db,"notifications"), where("userId","==",currentUser.uid), limit(50));
+    const q = query(
+        collection(db, "notifications"),
+        where("userId", "==", currentUser.uid),
+        limit(50)
+    );
 
-  notificationUnsubscribe = onSnapshot(q, snapshot => {
-    const unread = snapshot.docs.some(docSnap => docSnap.data()?.read !== true);
-    $("notificationDot").classList.toggle("hidden", !unread);
-  }, error => {
-    console.warn("Notification listener unavailable:", error);
-  });
-}
-
-function getViewedUserId() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("id");
-}
-
-function cleanup() {
-  if (profileUnsubscribe) profileUnsubscribe();
-  if (postsUnsubscribe) postsUnsubscribe();
-  if (notificationUnsubscribe) notificationUnsubscribe();
-  if (pendingAvatarPreview) URL.revokeObjectURL(pendingAvatarPreview);
+    notificationUnsubscribe = onSnapshot(
+        q,
+        snapshot => {
+            const unread = snapshot.docs.some(item => item.data()?.read !== true);
+            $("notificationButton").innerHTML = unread
+                ? `<i class="fas fa-bell text-sm"></i><span style="position:absolute"></span>`
+                : `<i class="far fa-bell text-sm"></i>`;
+        },
+        error => console.warn("Notification listener unavailable:", error)
+    );
 }
 
 $("editProfileButton").addEventListener("click", openEditModal);
 $("closeEditModal").addEventListener("click", closeEditModal);
 $("cancelEdit").addEventListener("click", closeEditModal);
-$("profileForm").addEventListener("submit", saveProfile);
-
-$("avatarInput").addEventListener("change", event => {
-  const file = event.target.files?.[0];
-  if (!file) return;
-
-  try {
-    validateImage(file);
-    pendingAvatarFile = file;
-
-    if (pendingAvatarPreview) URL.revokeObjectURL(pendingAvatarPreview);
-    pendingAvatarPreview = URL.createObjectURL(file);
-
-    $("modalAvatarPreview").innerHTML = `<img src="${pendingAvatarPreview}" alt="Selected profile photo">`;
-  } catch (error) {
-    event.target.value = "";
-    showToast(error.message, "error");
-  }
-});
+$("profileForm").addEventListener("submit", saveCommunityProfile);
 
 $("editModal").addEventListener("click", event => {
-  if (event.target === $("editModal")) closeEditModal();
+    if (event.target === $("editModal")) closeEditModal();
 });
 
 $("notificationButton").addEventListener("click", () => {
-  window.location.href = "alert.html";
+    window.location.href = "alert.html";
 });
 
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape" && $("editModal").classList.contains("open")) {
-    closeEditModal();
-  }
+    if (event.key === "Escape" && $("editModal").classList.contains("open")) {
+        closeEditModal();
+    }
 });
 
-window.addEventListener("beforeunload", cleanup);
+window.addEventListener("beforeunload", () => {
+    profileUnsubscribe?.();
+    postsUnsubscribe?.();
+    notificationUnsubscribe?.();
+});
 
 onAuthStateChanged(auth, async user => {
-  currentUser = user;
+    currentUser = user;
 
-  if (!user) {
-    window.location.href = "../dashboard/sign-in.html";
-    return;
-  }
+    if (!user) {
+        window.location.href = "../dashboard/sign-in.html";
+        return;
+    }
 
-  viewedUserId = getViewedUserId() || user.uid;
+    const params = new URLSearchParams(window.location.search);
+    viewedUserId = params.get("id") || user.uid;
 
-  try {
-    setSync("syncing","Syncing");
+    try {
+        setSync("syncing", "Loading");
 
-    await hydrateAuthUserIntoProfile();
-    subscribeToProfileDoc();
-    await subscribeToUserPosts();
-    subscribeToNotifications();
+        /*
+         * Initial read guarantees the first paint comes from Firestore.
+         * The live listener then keeps the page synchronized.
+         */
+        await loadProfileOnce();
+        subscribeToProfile();
+        subscribeToPosts();
 
-    setSync("ok","Live");
-  } catch (error) {
-    console.error("Profile initialization error:", error);
-    setSync("error","Unavailable");
+        if (isOwnProfile()) {
+            subscribeToNotifications();
+        }
 
-    $("postsContainer").innerHTML = `
-      <div class="feed-state">
-        <div class="feed-state-icon"><i class="fas fa-triangle-exclamation"></i></div>
-        <div class="feed-state-title">Profile could not load</div>
-        <div class="feed-state-text">MoonLat could not synchronize this profile with the current account.</div>
-      </div>
-    `;
-  }
+        setSync("live", "Live");
+    } catch (error) {
+        console.error("Profile initialization failed:", error);
+
+        if (error?.message === "This profile does not exist.") {
+            renderProfileError("This MoonLat profile could not be found.");
+        } else {
+            renderProfileError("MoonLat could not synchronize this profile.");
+        }
+    }
 });
 </script>
+
 </body>
 </html>
