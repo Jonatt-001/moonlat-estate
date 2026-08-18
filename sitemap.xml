@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <!-- MoonLat Homepage -->
+    <url>
+        <loc>https://moonlat.top/</loc>
+        <lastmod>2026-08-18</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- All Properties -->
+    <url>
+        <loc>https://moonlat.top/properties.html</loc>
+        <lastmod>2026-08-18</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.95</priority>
+    </url>
+
+    <!-- Property Detail -->
+    <url>
+        <loc>https://moonlat.top/property-detail.html</loc>
+        <lastmod>2026-08-18</lastmod>
+        <changefreq>hourly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+</urlset>
