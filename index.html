@@ -1,15 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>MoonLat | Discover Vetted Properties Across Nigeria</title>
+
 <meta name="description" content="Discover verified apartments, houses, shortlets and commercial properties across Nigeria's trusted real estate marketplace.">
 <meta name="theme-color" content="#09063d">
-
-
 
 <meta name="robots" content="index,follow">
 
@@ -39,181 +38,512 @@
 <!-- App Theme -->
 <meta name="apple-mobile-web-app-title" content="MoonLat">
 <meta name="application-name" content="MoonLat">
+
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+<!-- Styles -->
 <link rel="stylesheet" href="home.css">
 <link rel="stylesheet" href="credit.css">
 <link rel="stylesheet" href="newsletter.css">
 
 <style>
-
-
-
-
-
 </style>
 </head>
 
 <body>
 
-<!-- DRAWER -->
+<!-- ============================================================
+     DRAWER
+============================================================ -->
+
 <div class="drawer-overlay"></div>
+
 <aside class="app-drawer">
+
     <div class="drawer-header">
         <button class="drawer-close" aria-label="Close Menu">✕</button>
+
         <div class="drawer-title">
             <h2>Menu</h2>
-            <p>Discover verified homes, apartments, shortlets and commercial properties across Nigeria.</p>
+            <p>
+                Discover verified homes, apartments, shortlets and
+                commercial properties across Nigeria.
+            </p>
         </div>
     </div>
 
     <div class="drawer-card">
-        <a href="dashboard/sign-in.html" class="drawer-item drawer-primary" id="drawerAuthLink">
+
+        <a
+            href="dashboard/sign-in.html"
+            class="drawer-item drawer-primary"
+            id="drawerAuthLink"
+        >
+
             <div class="drawer-icon">
                 <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-7 8a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path
+                        d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-7 8a7 7 0 0 1 14 0"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
                 </svg>
             </div>
+
             <div>
-                <strong id="drawerAuthTitle">Login / Sign Up</strong>
-                <span id="drawerAuthSubtitle">Access your saved properties</span>
+                <strong id="drawerAuthTitle">
+                    Login / Sign Up
+                </strong>
+
+                <span id="drawerAuthSubtitle">
+                    Access your saved properties
+                </span>
             </div>
+
             <span class="drawer-arrow">›</span>
+
         </a>
+
     </div>
 
+
+    <!-- Browse -->
     <div class="drawer-section">
+
         <h4>Browse Properties</h4>
+
         <a href="properties.html" class="drawer-link">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M5 3h14v18H5V3Zm4 4h2m-2 4h2m4-4h2m-2 4h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>All Properties</span>
+            <span>
+                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M5 3h14v18H5V3Zm4 4h2m-2 4h2m4-4h2m-2 4h2"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                </svg>
+                All Properties
+            </span>
             <span>›</span>
         </a>
+
         <a href="properties.html?type=Apartment" class="drawer-link">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M3 11L12 4l9 7v10H3V11Z" stroke="currentColor" stroke-width="2"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="2"/></svg>Apartments</span>
+            <span>
+                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M3 11L12 4l9 7v10H3V11Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M9 21v-6h6v6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+                Apartments
+            </span>
             <span>›</span>
         </a>
+
         <a href="properties.html?type=House" class="drawer-link">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M3 11L12 4l9 7v10H3V11Z" stroke="currentColor" stroke-width="2"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="2"/></svg>Houses</span>
+            <span>
+                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M3 11L12 4l9 7v10H3V11Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M9 21v-6h6v6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+                Houses
+            </span>
             <span>›</span>
         </a>
+
         <a href="properties.html?type=Shortlet" class="drawer-link">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M4 10h16M6 6h12a2 2 0 0 1 2 2v8H4V8a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2"/><path d="M7 16v2m10-2v2" stroke="currentColor" stroke-width="2"/></svg>Shortlets</span>
+            <span>
+                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M4 10h16M6 6h12a2 2 0 0 1 2 2v8H4V8a2 2 0 0 1 2-2Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M7 16v2m10-2v2"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+                Shortlets
+            </span>
             <span>›</span>
         </a>
+
         <a href="properties.html?type=Commercial" class="drawer-link">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M4 21V5h10v16M14 9h6v12" stroke="currentColor" stroke-width="2"/></svg>Commercial</span>
+            <span>
+                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M4 21V5h10v16M14 9h6v12"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+                Commercial
+            </span>
             <span>›</span>
         </a>
+
     </div>
 
+
+    <!-- Quick Access -->
     <div class="drawer-section">
+
         <h4>Quick Access</h4>
-        <a href="#" class="drawer-link" onclick="requireAuth(event, 'saved properties')">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M6 3h12v18l-6-4-6 4V3Z" stroke="currentColor" stroke-width="2"/></svg>Saved Properties</span>
+
+        <a
+            href="#"
+            class="drawer-link"
+            onclick="requireAuth(event, 'saved properties')"
+        >
+            <span>
+                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M6 3h12v18l-6-4-6 4V3Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+                Saved Properties
+            </span>
             <span>›</span>
         </a>
-        <a href="#" class="drawer-link" onclick="requireAuth(event, 'property alerts')">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3a5 5 0 0 1 5 5v4l2 3H5l2-3V8a5 5 0 0 1 5-5Z" stroke="currentColor" stroke-width="2"/><path d="M10 19a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="2"/></svg>Property Alerts</span>
+
+        <a
+            href="#"
+            class="drawer-link"
+            onclick="requireAuth(event, 'property alerts')"
+        >
+            <span>
+                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M12 3a5 5 0 0 1 5 5v4l2 3H5l2-3V8a5 5 0 0 1 5-5Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M10 19a2 2 0 0 0 4 0"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+                Property Alerts
+            </span>
             <span>›</span>
         </a>
+
         <a href="properties.html" class="drawer-link">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-5 7-11a7 7 0 1 0-14 0c0 6 7 11 7 11Z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg>Find Agents</span>
+            <span>
+                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M12 21s7-5 7-11a7 7 0 1 0-14 0c0 6 7 11 7 11Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <circle
+                        cx="12"
+                        cy="10"
+                        r="2.5"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+                Find Agents
+            </span>
             <span>›</span>
         </a>
+
     </div>
 
+
+    <!-- Resources -->
     <div class="drawer-section">
+
         <h4>Resources</h4>
+
         <details>
-            <summary><span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z" stroke="currentColor" stroke-width="2"/></svg>Company</span></summary>
+
+            <summary>
+                <span>
+                    <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        />
+                    </svg>
+                    Company
+                </span>
+            </summary>
+
             <a href="#">About MoonLat</a>
             <a href="#">Advertise With Us</a>
             <a href="#">Our Partners</a>
             <a href="#">Careers</a>
+
         </details>
+
+
         <details>
-            <summary><span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 17v.01M12 14c0-3 3-3 3-6a3 3 0 1 0-6 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Help & Support</span></summary>
+
+            <summary>
+                <span>
+                    <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="9"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        />
+                        <path
+                            d="M12 17v.01M12 14c0-3 3-3 3-6a3 3 0 1 0-6 0"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                        />
+                    </svg>
+                    Help & Support
+                </span>
+            </summary>
+
             <a href="#">Help Centre</a>
             <a href="#">Contact Support</a>
             <a href="#">Privacy Policy</a>
             <a href="#">Terms & Conditions</a>
+
         </details>
+
     </div>
 
+
+    <!-- Social -->
     <div class="drawer-section">
+
         <h4>Follow MoonLat</h4>
+
         <div class="drawer-socials">
-            <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7h2.3l.4-3h-2.7V9.2c0-.9.2-1.5 1.5-1.5H16V5c-.5-.1-1.4-.2-2.3-.2-2.4 0-3.9 1.4-3.9 4V11H7v3h2.8v7h3.7z"/></svg></a>
-            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
-            <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.3L6.7 21H3.6l7.3-8.4L1 3h6.2l4.4 5.8L18.9 3z"/></svg></a>
-            <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a1.75 1.75 0 1 1 0 3.5 1.75 1.75 0 0 1 0-3.5ZM3.5 8h3v12h-3V8Zm5 0h2.9v1.7h.1c.4-.8 1.5-1.7 3.2-1.7 3.4 0 4 2.2 4 5.1V20h-3v-6c0-1.4 0-3.2-2-3.2s-2.3 1.5-2.3 3V20h-3V8z"/></svg></a>
+
+            <a href="#" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M13.5 21v-7h2.3l.4-3h-2.7V9.2c0-.9.2-1.5 1.5-1.5H16V5c-.5-.1-1.4-.2-2.3-.2-2.4 0-3.9 1.4-3.9 4V11H7v3h2.8v7h3.7z"/>
+                </svg>
+            </a>
+
+            <a href="#" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+                </svg>
+            </a>
+
+            <a href="#" aria-label="X">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.3L6.7 21H3.6l7.3-8.4L1 3h6.2l4.4 5.8L18.9 3z"/>
+                </svg>
+            </a>
+
+            <a href="#" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M4.98 3.5a1.75 1.75 0 1 1 0 3.5 1.75 1.75 0 0 1 0-3.5ZM3.5 8h3v12h-3V8Zm5 0h2.9v1.7h.1c.4-.8 1.5-1.7 3.2-1.7 3.4 0 4 2.2 4 5.1V20h-3v-6c0-1.4 0-3.2-2-3.2s-2.3 1.5-2.3 3V20h-3V8z"/>
+                </svg>
+            </a>
+
         </div>
+
     </div>
+
 
     <div class="drawer-footer">
-        <div><strong>MoonLat</strong><br><small>Version 2.0.0</small></div>
-        <div style="text-align:right"><small>© 2026</small><br><small>All Rights Reserved</small></div>
-    </div>
-</aside>
 
-<!-- HEADER -->
-<header class="header">
-    <div class="container header__container">
-        <a href="index.html" class="logo">
-            <img src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png" alt="MoonLat Logo">
-        </a>
-        <button class="menu-btn" aria-label="Open navigation">
-            <span></span><span></span><span></span>
-        </button>
-    </div>
-</header>
-
-<main>
-<!-- HERO -->
-<section class="hero">
-    <div class="hero__overlay"></div>
-    <img class="hero__image" src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=2000&q=80" alt="Luxury modern residential apartment">
-    <div class="container hero__content">
-        <div class="hero__text">
-            <h1>Find Verified<br> Properties Across </br>Nigeria</h1>
-            <p>Discover trusted apartments, houses, shortlets and commercial spaces on Nigeria's reliable real estate marketplace.</p>
+        <div>
+            <strong>MoonLat</strong>
+            <br>
+            <small>Version 2.0.0</small>
         </div>
 
+        <div style="text-align:right">
+            <small>© 2026</small>
+            <br>
+            <small>All Rights Reserved</small>
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+
+<header class="header">
+
+    <div class="container header__container">
+
+        <a href="index.html" class="logo">
+            <img
+                src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png"
+                alt="MoonLat Logo"
+            >
+        </a>
+
+        <button
+            class="menu-btn"
+            aria-label="Open navigation"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+    </div>
+
+</header>
+
+
+<main>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+
+<section class="hero">
+
+    <div class="hero__overlay"></div>
+
+    <img
+        class="hero__image"
+        src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=2000&q=80"
+        alt="Luxury modern residential apartment"
+    >
+
+    <div class="container hero__content">
+
+        <div class="hero__text">
+
+            <h1>
+                Find Verified<br>
+                Properties Across Nigeria
+            </h1>
+
+            <p>
+                Discover trusted apartments, houses, shortlets and
+                commercial spaces on Nigeria's reliable real estate marketplace.
+            </p>
+
+        </div>
+
+
         <form class="search-card" id="searchForm">
+
             <div class="search-card__field">
+
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24">
-                    <path d="M12 21s7-5.373 7-11a7 7 0 10-14 0c0 5.627 7 11 7 11z" stroke="currentColor" stroke-width="2"/>
-                    <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/>
+                    <path
+                        d="M12 21s7-5.373 7-11a7 7 0 10-14 0c0 5.627 7 11 7 11z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <circle
+                        cx="12"
+                        cy="10"
+                        r="2.5"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
                 </svg>
-                <input type="text" name="location" id="searchLocation" placeholder="City, State or Area" autocomplete="off">
+
+                <input
+                    type="text"
+                    name="location"
+                    id="searchLocation"
+                    placeholder="City, State or Area"
+                    autocomplete="off"
+                >
+
             </div>
+
+
             <div class="search-card__field">
+
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
-                    <path d="M12 7v10M9 9.5c0-1 1.2-2 3-2s3 1 3 2-1 2-3 2-3 1-3 2 1.2 2 3 2 3-1 3-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="9"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M12 7v10M9 9.5c0-1 1.2-2 3-2s3 1 3 2-1 2-3 2-3 1-3 2 1.2 2 3 2 3-1 3-2"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
                 </svg>
+
                 <label>
+
                     <span>Budget</span>
+
                     <select name="price" id="searchPrice">
+
                         <option value="">Any Price</option>
                         <option value="0-500000">Under ₦500K</option>
                         <option value="500000-1000000">₦500K - ₦1M</option>
                         <option value="1000000-3000000">₦1M - ₦3M</option>
                         <option value="3000000-10000000">₦3M - ₦10M</option>
                         <option value="10000000-999999999">₦10M+</option>
+
                     </select>
+
                 </label>
+
             </div>
+
+
             <div class="search-card__field">
+
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24">
-                    <path d="M4 10.5L12 4l8 6.5V20H4V10.5z" stroke="currentColor" stroke-width="2"/>
-                    <path d="M9 20v-6h6v6" stroke="currentColor" stroke-width="2"/>
+                    <path
+                        d="M4 10.5L12 4l8 6.5V20H4V10.5z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M9 20v-6h6v6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
                 </svg>
+
                 <label>
+
                     <span>Property</span>
+
                     <select name="type" id="searchType">
+
                         <option value="">Any Type</option>
                         <option>Apartment</option>
                         <option>House</option>
@@ -222,348 +552,1065 @@
                         <option>Office</option>
                         <option>Commercial</option>
                         <option>Land</option>
+
                     </select>
+
                 </label>
+
             </div>
-            <button type="submit" class="search-button" id="searchBtn">
+
+
+            <button
+                type="submit"
+                class="search-button"
+                id="searchBtn"
+            >
+
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24">
-                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
-                    <path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <circle
+                        cx="11"
+                        cy="11"
+                        r="7"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M20 20L16.5 16.5"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
                 </svg>
+
                 <span>Search</span>
+
             </button>
+
         </form>
+
     </div>
+
 </section>
 
-<!-- AUDIENCE -->
+
+<!-- ============================================================
+     AUDIENCE
+============================================================ -->
+
 <section class="audience">
+
     <div class="container">
+
         <div class="section-heading">
-            <h2>Reach More Property Seekers with MoonLat</h2>
-            <p>List your apartments, houses, shortlets and commercial properties where thousands of Nigerians search every day.</p>
+
+            <h2>
+                Reach More Property Seekers with MoonLat
+            </h2>
+
+            <p>
+                List your apartments, houses, shortlets and commercial
+                properties where thousands of Nigerians search every day.
+            </p>
+
         </div>
+
+
         <div class="stat-card stat-card--people">
+
             <div class="guest-stack">
+
                 <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80" alt="User">
+
                 <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=80" alt="User">
-                <img class="featured" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&q=80" alt="User">
+
+                <img
+                    class="featured"
+                    src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&q=80"
+                    alt="User"
+                >
+
                 <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&q=80" alt="User">
+
                 <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&q=80" alt="User">
+
             </div>
+
             <h3>Verified Buyers & Renters</h3>
-            <p>Connect with serious property seekers.</p>
+
+            <p>
+                Connect with serious property seekers.
+            </p>
+
         </div>
+
+
         <div class="stat-card">
-            <h3 id="totalListingsCount">Loading...</h3>
-            <p>Rent, buy, sell and advertise properties across Nigeria.</p>
+
+            <h3 id="totalListingsCount">
+                Loading...
+            </h3>
+
+            <p>
+                Rent, buy, sell and advertise properties across Nigeria.
+            </p>
+
         </div>
-        <div class="section-note">Verified listings. Trusted agents. Secure property discovery—all in one marketplace.</div>
+
+
+        <div class="section-note">
+            Verified listings. Trusted agents. Secure property discovery—all in one marketplace.
+        </div>
+
     </div>
+
 </section>
 
-<!-- FEATURED PROPERTIES -->
+
+<!-- ============================================================
+     FEATURED
+============================================================ -->
+
 <section class="featured-properties" id="featured">
+
     <div class="container">
+
         <div class="featured-header">
-            <span class="featured-tag">Verified Listings</span>
-            <h2>Explore Premium Properties Across Nigeria</h2>
-            <p>Browse verified apartments, houses, shortlets and commercial spaces from trusted property owners and agents.</p>
+
+            <span class="featured-tag">
+                Verified Listings
+            </span>
+
+            <h2>
+                Explore Premium Properties Across Nigeria
+            </h2>
+
+            <p>
+                Browse verified apartments, houses, shortlets and commercial
+                spaces from trusted property owners and agents.
+            </p>
+
         </div>
-        <div class="featured-indicator" id="featuredIndicator">
+
+
+        <div
+            class="featured-indicator"
+            id="featuredIndicator"
+        >
             <button class="active"></button>
             <button></button>
             <button></button>
         </div>
-        <div class="property-slider" id="featuredSlider">
-            <!-- Skeleton loaders -->
+
+
+        <div
+            class="property-slider"
+            id="featuredSlider"
+        >
+
             <div class="skeleton skeleton-card"></div>
             <div class="skeleton skeleton-card"></div>
             <div class="skeleton skeleton-card"></div>
+
         </div>
-        
-        <!-- View All Featured -->
+
+
         <div class="view-all-wrapper">
-            <a href="properties.html?featured=true" class="view-all-btn">
-                <span>View All Featured Properties</span>
+
+            <a
+                href="properties.html?featured=true"
+                class="view-all-btn"
+            >
+
+                <span>
+                    View All Featured Properties
+                </span>
+
                 <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path
+                        d="M9 18l6-6-6-6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
                 </svg>
+
             </a>
+
         </div>
+
     </div>
+
 </section>
 
-<!-- FIND PROPERTY -->
+
+<!-- ============================================================
+     FIND PROPERTY
+============================================================ -->
+
 <section class="find-property">
-    <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1800&q=80" alt="Modern Property" class="find-property__image">
+
+    <img
+        src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1800&q=80"
+        alt="Modern Property"
+        class="find-property__image"
+    >
+
     <div class="find-property__overlay"></div>
+
     <div class="container">
+
         <div class="find-property__content">
-            <h2>Find your preferred<br>property in <strong>3 clicks</strong><br><span>not months</span></h2>
-            <p>Exact Locations. Real Developers. Verified Agents.</p>
-            <div class="property-tabs" role="tablist">
-                <button class="tab-btn active" type="button" data-category="all">All</button>
-                <button class="tab-btn" type="button" data-category="residential">Residential</button>
-                <button class="tab-btn" type="button" data-category="commercial">Commercial</button>
-                <button class="tab-btn" type="button" data-category="shortlet">Shortlet</button>
+
+            <h2>
+                Find your preferred<br>
+                property in <strong>3 clicks</strong><br>
+                <span>not months</span>
+            </h2>
+
+            <p>
+                Exact Locations. Real Developers. Verified Agents.
+            </p>
+
+
+            <div
+                class="property-tabs"
+                role="tablist"
+            >
+
+                <button
+                    class="tab-btn active"
+                    type="button"
+                    data-category="all"
+                >
+                    All
+                </button>
+
+                <button
+                    class="tab-btn"
+                    type="button"
+                    data-category="residential"
+                >
+                    Residential
+                </button>
+
+                <button
+                    class="tab-btn"
+                    type="button"
+                    data-category="commercial"
+                >
+                    Commercial
+                </button>
+
+                <button
+                    class="tab-btn"
+                    type="button"
+                    data-category="shortlet"
+                >
+                    Shortlet
+                </button>
+
             </div>
+
         </div>
+
     </div>
+
 </section>
 
-<!-- PROPERTY GRID -->
-<section class="property-grid-section" id="propertyGrid">
+
+<!-- ============================================================
+     PROPERTY GRID
+============================================================ -->
+
+<section
+    class="property-grid-section"
+    id="propertyGrid"
+>
+
     <div class="container">
-        <!-- Search Active Banner -->
-        <div class="search-active-banner" id="searchBanner">
+
+        <div
+            class="search-active-banner"
+            id="searchBanner"
+        >
+
             <div class="banner-info">
+
                 <svg viewBox="0 0 24 24" fill="none">
-                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
-                    <path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <circle
+                        cx="11"
+                        cy="11"
+                        r="7"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M20 20L16.5 16.5"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
                 </svg>
-                <span id="bannerText">Showing filtered results</span>
+
+                <span id="bannerText">
+                    Showing filtered results
+                </span>
+
             </div>
+
+
             <div class="banner-actions">
-                <button class="banner-btn banner-btn-secondary" onclick="clearHomepageFilters()">Clear Filters</button>
-                <a href="properties.html" class="banner-btn banner-btn-primary" id="bannerViewAll">View All Results</a>
+
+                <button
+                    class="banner-btn banner-btn-secondary"
+                    onclick="clearHomepageFilters()"
+                >
+                    Clear Filters
+                </button>
+
+                <a
+                    href="properties.html"
+                    class="banner-btn banner-btn-primary"
+                    id="bannerViewAll"
+                >
+                    View All Results
+                </a>
+
             </div>
+
         </div>
-        
-        <div class="property-row" id="propertyRow1">
+
+
+        <div
+            class="property-row"
+            id="propertyRow1"
+        >
+
             <div class="skeleton skeleton-card"></div>
             <div class="skeleton skeleton-card"></div>
             <div class="skeleton skeleton-card"></div>
+
         </div>
-        <div class="property-row" id="propertyRow2">
+
+
+        <div
+            class="property-row"
+            id="propertyRow2"
+        >
+
             <div class="skeleton skeleton-card"></div>
             <div class="skeleton skeleton-card"></div>
             <div class="skeleton skeleton-card"></div>
+
         </div>
-        
-        <!-- View All Grid -->
-        <div class="view-all-wrapper" id="gridViewAllWrapper">
-            <p style="font-size:0.9rem;color:#6b7280;margin-bottom:14px;">Want to see more? Browse our full collection of verified properties.</p>
-            <a href="properties.html" class="view-all-btn" id="gridViewAllBtn">
-                <span>Browse All Properties</span>
+
+
+        <div
+            class="view-all-wrapper"
+            id="gridViewAllWrapper"
+        >
+
+            <p style="font-size:0.9rem;color:#6b7280;margin-bottom:14px;">
+                Want to see more? Browse our full collection of verified properties.
+            </p>
+
+            <a
+                href="properties.html"
+                class="view-all-btn"
+                id="gridViewAllBtn"
+            >
+
+                <span>
+                    Browse All Properties
+                </span>
+
                 <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path
+                        d="M9 18l6-6-6-6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
                 </svg>
+
             </a>
+
         </div>
+
     </div>
+
 </section>
 
-<!-- COMMERCIAL CTA -->
+
+<!-- ============================================================
+     COMMERCIAL CTA
+============================================================ -->
+
 <section class="commercial-cta">
+
     <div class="container">
+
         <div class="commercial-card">
+
             <div class="commercial-pattern"></div>
+
             <div class="commercial-icon">
+
                 <svg viewBox="0 0 64 64" fill="none">
-                    <circle cx="32" cy="14" r="6" stroke="currentColor" stroke-width="3"/>
-                    <circle cx="18" cy="22" r="5" stroke="currentColor" stroke-width="3"/>
-                    <circle cx="46" cy="22" r="5" stroke="currentColor" stroke-width="3"/>
-                    <path d="M24 58c0-6 4-10 8-10s8 4 8 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                    <path d="M8 54c0-5 4-9 9-9s9 4 9 9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                    <path d="M38 54c0-5 4-9 9-9s9 4 9 9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+
+                    <circle
+                        cx="32"
+                        cy="14"
+                        r="6"
+                        stroke="currentColor"
+                        stroke-width="3"
+                    />
+
+                    <circle
+                        cx="18"
+                        cy="22"
+                        r="5"
+                        stroke="currentColor"
+                        stroke-width="3"
+                    />
+
+                    <circle
+                        cx="46"
+                        cy="22"
+                        r="5"
+                        stroke="currentColor"
+                        stroke-width="3"
+                    />
+
+                    <path
+                        d="M24 58c0-6 4-10 8-10s8 4 8 10"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                    />
+
+                    <path
+                        d="M8 54c0-5 4-9 9-9s9 4 9 9"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                    />
+
+                    <path
+                        d="M38 54c0-5 4-9 9-9s9 4 9 9"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                    />
+
                 </svg>
+
             </div>
-            <h2>Access the largest commercial property audience</h2>
-            <p>moonlat.topmercial gives you access to Nigeria's largest audience of agents, developers, landlords, investors and businesses looking for commercial spaces.</p>
-            <a href="dashboard/sign-up.html" class="commercial-btn">Advertise with us</a>
-            <h3>Trusted by leading commercial real estate brands</h3>
+
+
+            <h2>
+                Access the largest commercial property audience
+            </h2>
+
+            <p>
+                MoonLat gives you access to Nigeria's largest audience of
+                agents, developers, landlords, investors and businesses
+                looking for commercial spaces.
+            </p>
+
+
+            <!-- UPDATED SIGN-UP ROUTE -->
+            <a
+                href="dashboard/sign-up.html"
+                class="commercial-btn"
+            >
+                Advertise with us
+            </a>
+
+
+            <h3>
+                Trusted by leading commercial real estate brands
+            </h3>
+
+
             <div class="commercial-logos">
+
                 <span>Prime</span>
                 <span>Landmark</span>
                 <span>Savills</span>
                 <span>Knight Frank</span>
                 <span>PropertyPro</span>
+
             </div>
+
         </div>
+
     </div>
+
 </section>
+
 </main>
 
-<!-- FOOTER -->
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+
 <footer class="footer">
+
     <div class="footer-container">
+
         <div class="footer-top">
-            <img src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png" alt="MoonLat Logo" class="footer-logo">
-            <p class="footer-text">Join thousands of Nigerians discovering verified homes, apartments, shortlets and commercial properties. Get exclusive listings and market insights delivered to your inbox.</p>
-            <form class="footer-newsletter" id="newsletterForm">
-                <input type="email" id="newsletterEmail" placeholder="Enter your email address" required>
-                <button type="submit" id="newsletterBtn">Subscribe</button>
+
+            <img
+                src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png"
+                alt="MoonLat Logo"
+                class="footer-logo"
+            >
+
+            <p class="footer-text">
+                Join thousands of Nigerians discovering verified homes,
+                apartments, shortlets and commercial properties. Get
+                exclusive listings and market insights delivered to your inbox.
+            </p>
+
+
+            <form
+                class="footer-newsletter"
+                id="newsletterForm"
+            >
+
+                <input
+                    type="email"
+                    id="newsletterEmail"
+                    placeholder="Enter your email address"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    id="newsletterBtn"
+                >
+                    Subscribe
+                </button>
+
             </form>
+
+
             <div class="footer-socials">
-                <a href="#" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none"><path d="M20 12A8 8 0 1 0 5.1 16.1L4 20l4-1.1A8 8 0 1 0 20 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.4 9.2c.2-.5.4-.5.7-.5h.6c.2 0 .4.1.5.4l.6 1.4c.1.3.1.5-.1.7l-.5.6c.4.8 1 1.4 1.8 1.8l.6-.5c.2-.2.4-.2.7-.1l1.4.6c.3.1.4.3.4.5v.6c0 .3 0 .5-.5.7-.4.2-.9.3-1.4.2-2-.4-4.1-2.4-4.5-4.5-.1-.5 0-1 .2-1.4Z" fill="currentColor"/></svg></a>
-                <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.2L6.7 21H3.6l7.3-8.3L1 3h6.2l4.4 5.8L18.9 3Z"/></svg></a>
-                <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7h2.3l.4-3h-2.7V9.1c0-.9.2-1.5 1.5-1.5H16V5c-.5-.1-1.4-.2-2.3-.2-2.3 0-3.9 1.4-3.9 4V11H7v3h2.8v7h3.7Z"/></svg></a>
-                <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor"/></svg></a>
+
+                <a href="#" aria-label="WhatsApp">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M20 12A8 8 0 1 0 5.1 16.1L4 20l4-1.1A8 8 0 1 0 20 12Z"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                        <path
+                            d="M9.4 9.2c.2-.5.4-.5.7-.5h.6c.2 0 .4.1.5.4l.6 1.4c.1.3.1.5-.1.7l-.5.6c.4.8 1 1.4 1.8 1.8l.6-.5c.2-.2.4-.2.7-.1l1.4.6c.3.1.4.3.4.5v.6c0 .3 0 .5-.5.7-.4.2-.9.3-1.4.2-2-.4-4.1-2.4-4.5-4.5-.1-.5 0-1 .2-1.4Z"
+                            fill="currentColor"
+                        />
+                    </svg>
+                </a>
+
+                <a href="#" aria-label="X">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.2L6.7 21H3.6l7.3-8.3L1 3h6.2l4.4 5.8L18.9 3Z"/>
+                    </svg>
+                </a>
+
+                <a href="#" aria-label="Facebook">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M13.5 21v-7h2.3l.4-3h-2.7V9.1c0-.9.2-1.5 1.5-1.5H16V5c-.5-.1-1.4-.2-2.3-.2-2.3 0-3.9 1.4-3.9 4V11H7v3h2.8v7h3.7Z"/>
+                    </svg>
+                </a>
+
+                <a href="#" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <rect
+                            x="3"
+                            y="3"
+                            width="18"
+                            height="18"
+                            rx="5"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        />
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="4"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        />
+                        <circle
+                            cx="17.4"
+                            cy="6.6"
+                            r="1"
+                            fill="currentColor"
+                        />
+                    </svg>
+                </a>
+
             </div>
+
         </div>
+
+
         <div class="footer-links">
+
             <div class="footer-column">
+
                 <h4>Properties</h4>
-                <a href="properties.html?type=Apartment">Apartments</a>
-                <a href="properties.html?type=House">Houses</a>
-                <a href="properties.html?type=Shortlet">Shortlets</a>
-                <a href="properties.html?type=Commercial">Commercial</a>
+
+                <a href="properties.html?type=Apartment">
+                    Apartments
+                </a>
+
+                <a href="properties.html?type=House">
+                    Houses
+                </a>
+
+                <a href="properties.html?type=Shortlet">
+                    Shortlets
+                </a>
+
+                <a href="properties.html?type=Commercial">
+                    Commercial
+                </a>
+
             </div>
+
+
             <div class="footer-column">
+
                 <h4>Company</h4>
+
                 <a href="#">About Us</a>
                 <a href="#">Advertise</a>
                 <a href="#">Partners</a>
                 <a href="#">Blog</a>
                 <a href="#">Contact</a>
+
             </div>
+
+
             <div class="footer-column">
+
                 <h4>Support</h4>
+
                 <a href="#">Help Center</a>
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Service</a>
                 <a href="#">Cookies</a>
+
             </div>
+
         </div>
+
+
         <div class="footer-divider"></div>
+
+
         <div class="footer-bottom">
+
             <div class="footer-bottom-links">
+
                 <a href="#">Terms</a>
                 <a href="#">Privacy</a>
                 <a href="#">Cookies</a>
                 <a href="#">Sitemap</a>
+
             </div>
-            <p>© 2026 MoonLat. All rights reserved.</p>
+
+            <p>
+                © 2026 MoonLat. All rights reserved.
+            </p>
+
         </div>
-        
-        <!-- FOOTER CREDIT - KAALI NG -->
+
+
+        <!-- FOOTER CREDIT -->
         <div class="footer-credit">
+
             <div class="credit-content">
-                <span class="credit-label">Built by</span>
-                <a href="https://kaali.space/" class="credit-logo" title="KAALI NG - Crafting Digital Excellence">
+
+                <span class="credit-label">
+                    Built by
+                </span>
+
+                <a
+                    href="https://kaali.space"
+                    class="credit-logo"
+                    title="KAALI NG - Crafting Digital Excellence"
+                >
+
                     <span class="logo-icon">
+
                         <svg viewBox="0 0 24 24" fill="none">
-                            <path d="M12 2L2 7v10l10 5 10-5V7L12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                            <path d="M12 22V12M2 7l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                            <circle cx="12" cy="12" r="2" fill="currentColor"/>
+
+                            <path
+                                d="M12 2L2 7v10l10 5 10-5V7L12 2z"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linejoin="round"
+                            />
+
+                            <path
+                                d="M12 22V12M2 7l10 5 10-5"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linejoin="round"
+                            />
+
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="2"
+                                fill="currentColor"
+                            />
+
                         </svg>
+
                     </span>
+
+
                     <span class="logo-text">
-                        <span class="logo-kaali">KAALI</span>
-                        <span class="logo-ng">NG</span>
+
+                        <span class="logo-kaali">
+                            KAALI
+                        </span>
+
+                        <span class="logo-ng">
+                            NG
+                        </span>
+
                     </span>
+
                 </a>
+
             </div>
 
         </div>
+
     </div>
+
 </footer>
 
 
+<!-- ============================================================
+     TOAST
+============================================================ -->
 
-
-<!-- TOAST -->
 <div class="toast" id="toast">
-    <div class="toast-icon"><i class="fas fa-check"></i></div>
-    <div class="toast-content">
-        <div class="toast-title" id="toastTitle">Success</div>
-        <div class="toast-message" id="toastMessage">Action completed</div>
+
+    <div class="toast-icon">
+        <i class="fas fa-check"></i>
     </div>
+
+    <div class="toast-content">
+
+        <div
+            class="toast-title"
+            id="toastTitle"
+        >
+            Success
+        </div>
+
+        <div
+            class="toast-message"
+            id="toastMessage"
+        >
+            Action completed
+        </div>
+
+    </div>
+
 </div>
 
 
-<!-- NEWSLETTER MODAL -->
-<div class="modal-overlay" id="newsletterModal">
+<!-- ============================================================
+     NEWSLETTER MODAL
+============================================================ -->
+
+<div
+    class="modal-overlay"
+    id="newsletterModal"
+>
+
     <div class="modal-container">
-        <button class="modal-close" onclick="closeNewsletterModal()">✕</button>
-        
-        <!-- Loading State -->
-        <div class="modal-loading-content" id="modalLoading" style="display: none;">
+
+        <button
+            class="modal-close"
+            onclick="closeNewsletterModal()"
+        >
+            ✕
+        </button>
+
+
+        <!-- Loading -->
+        <div
+            class="modal-loading-content"
+            id="modalLoading"
+            style="display:none;"
+        >
+
             <div class="loading-icon">
                 <div class="loading-spinner"></div>
             </div>
-            <h2>Subscribing...</h2>
-            <p>Please wait while we process your subscription</p>
-            
-            <div class="progress-timeline">
-                <div class="progress-step" id="step1">
-                    <div class="progress-step-icon">1</div>
-                    <div class="progress-step-text">Validating email address</div>
-                </div>
-                <div class="progress-step" id="step2">
-                    <div class="progress-step-icon">2</div>
-                    <div class="progress-step-text">Checking existing subscriptions</div>
-                </div>
-                <div class="progress-step" id="step3">
-                    <div class="progress-step-icon">3</div>
-                    <div class="progress-step-text">Adding to newsletter database</div>
-                </div>
-                <div class="progress-step" id="step4">
-                    <div class="progress-step-icon">4</div>
-                    <div class="progress-step-text">Confirming subscription</div>
-                </div>
-            </div>
-        </div>
-        
-<!-- Success State -->
-<div class="modal-success-content" id="modalSuccess" style="display: none;">
-    <div class="success-header">
-        <!-- Decorative layers -->
-        <div class="grid-pattern"></div>
-        <div class="noise-overlay"></div>
-        <div class="blob-1"></div>
-        <div class="blob-2"></div>
-        <div class="shimmer"></div>
-        <div class="confetti-container" id="confettiContainer"></div>
-        
-        <div class="success-icon"></div>
-        <h2>Congratulations!</h2>
-        <p>You're now subscribed</p>
-    </div>
-    <div class="success-body">
-        <div class="success-stats">
-            <div class="stat-stars">★★★★★</div>
-            <div class="stat-number">90,000+</div>
-            <div class="stat-label">Happy Subscribers</div>
-        </div>
-        <p class="success-message">
-            Welcome to the MoonLat community! You'll now receive exclusive listings, market insights, and verified property updates directly to your inbox.
-        </p>
-        <button class="btn-continue" onclick="closeNewsletterModal()">Continue</button>
-    </div>
-</div>
 
-        
-        <!-- Error State -->
-        <div class="modal-error-content" id="modalError" style="display: none;">
-            <div class="error-icon">✕</div>
-            <h2>Subscription Failed</h2>
-            <p>We couldn't complete your subscription at this time.</p>
-            <div class="error-details" id="errorDetails">
+            <h2>Subscribing...</h2>
+
+            <p>
+                Please wait while we process your subscription
+            </p>
+
+
+            <div class="progress-timeline">
+
+                <div
+                    class="progress-step"
+                    id="step1"
+                >
+                    <div class="progress-step-icon">
+                        1
+                    </div>
+                    <div class="progress-step-text">
+                        Validating email address
+                    </div>
+                </div>
+
+                <div
+                    class="progress-step"
+                    id="step2"
+                >
+                    <div class="progress-step-icon">
+                        2
+                    </div>
+                    <div class="progress-step-text">
+                        Checking existing subscriptions
+                    </div>
+                </div>
+
+                <div
+                    class="progress-step"
+                    id="step3"
+                >
+                    <div class="progress-step-icon">
+                        3
+                    </div>
+                    <div class="progress-step-text">
+                        Adding to newsletter database
+                    </div>
+                </div>
+
+                <div
+                    class="progress-step"
+                    id="step4"
+                >
+                    <div class="progress-step-icon">
+                        4
+                    </div>
+                    <div class="progress-step-text">
+                        Confirming subscription
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Success -->
+        <div
+            class="modal-success-content"
+            id="modalSuccess"
+            style="display:none;"
+        >
+
+            <div class="success-header">
+
+                <div class="grid-pattern"></div>
+                <div class="noise-overlay"></div>
+                <div class="blob-1"></div>
+                <div class="blob-2"></div>
+                <div class="shimmer"></div>
+
+                <div
+                    class="confetti-container"
+                    id="confettiContainer"
+                ></div>
+
+                <div class="success-icon"></div>
+
+                <h2>
+                    Congratulations!
+                </h2>
+
+                <p>
+                    You're now subscribed
+                </p>
+
+            </div>
+
+
+            <div class="success-body">
+
+                <div class="success-stats">
+
+                    <div class="stat-stars">
+                        ★★★★★
+                    </div>
+
+                    <div class="stat-number">
+                        90,000+
+                    </div>
+
+                    <div class="stat-label">
+                        Happy Subscribers
+                    </div>
+
+                </div>
+
+
+                <p class="success-message">
+                    Welcome to the MoonLat community! You'll now receive
+                    exclusive listings, market insights, and verified
+                    property updates directly to your inbox.
+                </p>
+
+
+                <button
+                    class="btn-continue"
+                    onclick="closeNewsletterModal()"
+                >
+                    Continue
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Error -->
+        <div
+            class="modal-error-content"
+            id="modalError"
+            style="display:none;"
+        >
+
+            <div class="error-icon">
+                ✕
+            </div>
+
+            <h2>
+                Subscription Failed
+            </h2>
+
+            <p>
+                We couldn't complete your subscription at this time.
+            </p>
+
+            <div
+                class="error-details"
+                id="errorDetails"
+            >
                 An unexpected error occurred. Please try again.
             </div>
-            <button class="btn-retry" onclick="retrySubscription()">Try Again</button>
+
+            <button
+                class="btn-retry"
+                onclick="retrySubscription()"
+            >
+                Try Again
+            </button>
+
         </div>
-        
-        <!-- Already Subscribed State -->
-        <div class="modal-already-content" id="modalAlready" style="display: none;">
-            <div class="already-icon">📧</div>
-            <h2>Already Subscribed!</h2>
-            <p>This email address is already registered to receive our newsletter.</p>
-            <div class="error-details" style="background: #fef3c7; color: #92400e;">
-                You're already part of our community! Check your inbox for our latest updates.
+
+
+        <!-- Already subscribed -->
+        <div
+            class="modal-already-content"
+            id="modalAlready"
+            style="display:none;"
+        >
+
+            <div class="already-icon">
+                📧
             </div>
-            <button class="btn-ok" onclick="closeNewsletterModal()">OK, Got it</button>
+
+            <h2>
+                Already Subscribed!
+            </h2>
+
+            <p>
+                This email address is already registered to receive
+                our newsletter.
+            </p>
+
+            <div
+                class="error-details"
+                style="background:#fef3c7;color:#92400e;"
+            >
+                You're already part of our community!
+                Check your inbox for our latest updates.
+            </div>
+
+            <button
+                class="btn-ok"
+                onclick="closeNewsletterModal()"
+            >
+                OK, Got it
+            </button>
+
         </div>
+
     </div>
+
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-import { getFirestore, collection, query, where, orderBy, limit, onSnapshot, doc, getDoc, getDocs, updateDoc, arrayUnion, arrayRemove, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
+<!-- ============================================================
+     FIREBASE / APPLICATION
+============================================================ -->
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    limit,
+    onSnapshot,
+    doc,
+    getDoc,
+    getDocs,
+    updateDoc,
+    arrayUnion,
+    arrayRemove,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+
+/* ============================================================
+   FIREBASE
+============================================================ */
 
 const firebaseConfig = {
     apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
@@ -575,718 +1622,2753 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
+
 const db = getFirestore(app);
 
-// =================== STATE ===================
+
+/* ============================================================
+   STATE
+============================================================ */
+
 let currentUser = null;
+
+let currentUserData = null;
+
 let featuredProperties = [];
+
 let allProperties = [];
+
 let savedPropertyIds = [];
-let currentCategory = 'all';
-let searchFilters = { location: '', price: '', type: '' };
+
+let currentCategory = "all";
+
+let searchFilters = {
+    location: "",
+    price: "",
+    type: ""
+};
+
 let isFilterActive = false;
 
-const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop';
+const DEFAULT_IMAGE =
+    "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop";
 
-// =================== AUTH ===================
-onAuthStateChanged(auth, async (user) => {
-    currentUser = user;
-    if (user) {
-        try {
-            const userDoc = await getDoc(doc(db, 'users', user.uid));
-            if (userDoc.exists()) {
-                savedPropertyIds = userDoc.data().savedPropertyIds || [];
-            }
-        } catch (err) {
-            console.error('Error loading user data:', err);
-        }
-    } else {
-        savedPropertyIds = [];
-    }
-    updateAuthUI();
-    renderFeatured();
-    renderPropertyGrid();
-});
 
-function updateAuthUI() {
-    const link = document.getElementById('drawerAuthLink');
-    const title = document.getElementById('drawerAuthTitle');
-    const subtitle = document.getElementById('drawerAuthSubtitle');
-    
-    if (currentUser) {
-        const name = currentUser.displayName || currentUser.email?.split('@')[0] || 'Dashboard';
-        title.textContent = name;
-        subtitle.textContent = 'Go to your dashboard';
-        link.href = 'dashboard/dashboard.html';
-    } else {
-        title.textContent = 'Login / Sign Up';
-        subtitle.textContent = 'Access your saved properties';
-        link.href = 'dashboard/sign-in.html';
+/* ============================================================
+   DASHBOARD ROUTING
+============================================================ */
+
+/*
+    IMPORTANT:
+
+    The dashboard architecture is now:
+
+        dashboard/
+        ├── agent/
+        │   └── index.html
+        ├── buyer/
+        │   └── index.html
+        ├── sign-in.html
+        └── sign-up.html
+
+    Therefore we resolve the dashboard dynamically from
+    the user's Firestore role.
+*/
+
+function getDashboardPath(userData = {}) {
+
+    const roleCandidates = [
+        userData.role,
+        userData.userRole,
+        userData.accountType,
+        userData.type
+    ];
+
+    const role = roleCandidates
+        .find(value => typeof value === "string" && value.trim())
+        ?.trim()
+        .toLowerCase();
+
+    if (
+        role === "agent" ||
+        role === "seller" ||
+        role === "owner" ||
+        role === "landlord" ||
+        role === "developer"
+    ) {
+        return "dashboard/agent/index.html";
     }
+
+    return "dashboard/buyer/index.html";
 }
 
-// =================== DATA LOADING ===================
+
+function redirectToDashboard() {
+
+    const dashboardPath = getDashboardPath(
+        currentUserData || {}
+    );
+
+    window.location.href = dashboardPath;
+}
+
+
+/* ============================================================
+   AUTH
+============================================================ */
+
+onAuthStateChanged(auth, async (user) => {
+
+    currentUser = user;
+
+    currentUserData = null;
+
+    savedPropertyIds = [];
+
+
+    if (user) {
+
+        try {
+
+            const userDoc = await getDoc(
+                doc(db, "users", user.uid)
+            );
+
+            if (userDoc.exists()) {
+
+                currentUserData = userDoc.data();
+
+                savedPropertyIds =
+                    currentUserData.savedPropertyIds || [];
+
+            }
+
+        } catch (err) {
+
+            console.error(
+                "Error loading user data:",
+                err
+            );
+
+        }
+
+    }
+
+
+    updateAuthUI();
+
+    renderFeatured();
+
+    renderPropertyGrid();
+
+});
+
+
+/* ============================================================
+   AUTH UI
+============================================================ */
+
+function updateAuthUI() {
+
+    const link =
+        document.getElementById("drawerAuthLink");
+
+    const title =
+        document.getElementById("drawerAuthTitle");
+
+    const subtitle =
+        document.getElementById("drawerAuthSubtitle");
+
+
+    if (!link || !title || !subtitle) {
+        return;
+    }
+
+
+    if (currentUser) {
+
+        const name =
+            currentUser.displayName ||
+            currentUserData?.displayName ||
+            currentUserData?.name ||
+            currentUser.email?.split("@")[0] ||
+            "Dashboard";
+
+
+        title.textContent = name;
+
+        subtitle.textContent =
+            "Go to your dashboard";
+
+
+        /*
+            IMPORTANT:
+            We no longer use dashboard/dashboard.html.
+        */
+        link.href = getDashboardPath(
+            currentUserData || {}
+        );
+
+    } else {
+
+        title.textContent =
+            "Login / Sign Up";
+
+        subtitle.textContent =
+            "Access your saved properties";
+
+        link.href =
+            "dashboard/sign-in.html";
+
+    }
+
+}
+
+
+/* ============================================================
+   DATA LOADING
+============================================================ */
+
 const featuredQuery = query(
-    collection(db, 'properties'),
-    where('featured', '==', true),
+    collection(db, "properties"),
+    where("featured", "==", true),
     limit(6)
 );
 
-onSnapshot(featuredQuery, (snapshot) => {
-    featuredProperties = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderFeatured();
-    updateFeaturedIndicator();
-}, (err) => {
-    console.error('Featured query error:', err);
-    document.getElementById('featuredSlider').innerHTML = `
-        <div class="empty-state">
-            <h3>No featured properties yet</h3>
-            <p>Check back soon for premium listings.</p>
-        </div>
-    `;
-});
+
+onSnapshot(
+    featuredQuery,
+
+    (snapshot) => {
+
+        featuredProperties =
+            snapshot.docs.map(d => ({
+                id: d.id,
+                ...d.data()
+            }));
+
+        renderFeatured();
+
+        updateFeaturedIndicator();
+
+    },
+
+    (err) => {
+
+        console.error(
+            "Featured query error:",
+            err
+        );
+
+        const slider =
+            document.getElementById(
+                "featuredSlider"
+            );
+
+        if (slider) {
+
+            slider.innerHTML = `
+                <div class="empty-state">
+                    <h3>No featured properties yet</h3>
+                    <p>Check back soon for premium listings.</p>
+                </div>
+            `;
+
+        }
+
+    }
+);
+
 
 const allQuery = query(
-    collection(db, 'properties'),
-    where('status', '==', 'Active'),
+    collection(db, "properties"),
+    where("status", "==", "Active"),
     limit(24)
 );
 
-onSnapshot(allQuery, (snapshot) => {
-    allProperties = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-    allProperties.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-    
-    document.getElementById('totalListingsCount').textContent = `${allProperties.length}+ Active Listings`;
-    console.log(`✅ Loaded ${allProperties.length} properties`);
-    renderPropertyGrid();
-}, (err) => {
-    console.error('❌ All properties query error:', err);
-    document.getElementById('totalListingsCount').textContent = '0 Active Listings';
-    renderPropertyGrid();
-});
 
-// =================== RENDERING ===================
+onSnapshot(
+    allQuery,
+
+    (snapshot) => {
+
+        allProperties =
+            snapshot.docs.map(d => ({
+                id: d.id,
+                ...d.data()
+            }));
+
+
+        allProperties.sort(
+            (a, b) => {
+
+                const aTime =
+                    a.createdAt?.seconds ||
+                    a.createdAt ||
+                    0;
+
+                const bTime =
+                    b.createdAt?.seconds ||
+                    b.createdAt ||
+                    0;
+
+                return bTime - aTime;
+
+            }
+        );
+
+
+        const count =
+            document.getElementById(
+                "totalListingsCount"
+            );
+
+
+        if (count) {
+
+            count.textContent =
+                `${allProperties.length}+ Active Listings`;
+
+        }
+
+
+        console.log(
+            `Loaded ${allProperties.length} properties`
+        );
+
+
+        renderPropertyGrid();
+
+    },
+
+    (err) => {
+
+        console.error(
+            "All properties query error:",
+            err
+        );
+
+
+        const count =
+            document.getElementById(
+                "totalListingsCount"
+            );
+
+
+        if (count) {
+            count.textContent =
+                "0 Active Listings";
+        }
+
+
+        renderPropertyGrid();
+
+    }
+
+);
+
+
+/* ============================================================
+   PRICE
+============================================================ */
+
 function formatPrice(price) {
-    if (!price || price === 0) return 'Contact for price';
+
+    if (!price || price === 0) {
+        return "Contact for price";
+    }
+
+
     if (price >= 1000000) {
-        const m = price / 1000000;
-        return '₦' + (m % 1 === 0 ? m.toFixed(0) : m.toFixed(1)) + 'M';
+
+        const m =
+            price / 1000000;
+
+        return (
+            "₦" +
+            (
+                m % 1 === 0
+                    ? m.toFixed(0)
+                    : m.toFixed(1)
+            ) +
+            "M"
+        );
+
     }
+
+
     if (price >= 1000) {
-        const k = price / 1000;
-        return '₦' + (k % 1 === 0 ? k.toFixed(0) : k.toFixed(0)) + 'K';
+
+        const k =
+            price / 1000;
+
+        return (
+            "₦" +
+            (
+                k % 1 === 0
+                    ? k.toFixed(0)
+                    : k.toFixed(0)
+            ) +
+            "K"
+        );
+
     }
-    return '₦' + price.toLocaleString();
+
+
+    return (
+        "₦" +
+        price.toLocaleString()
+    );
+
 }
+
+
+/* ============================================================
+   BADGES
+============================================================ */
 
 function getBadge(property) {
-    if (property.type === 'Shortlet') return 'Shortlet';
-    if (property.type === 'Office' || property.type === 'Commercial') return 'For Lease';
-    if (property.status === 'Rented') return 'For Rent';
-    if (property.status === 'Sold') return 'Sold';
-    return 'For Sale';
+
+    if (property.type === "Shortlet") {
+        return "Shortlet";
+    }
+
+    if (
+        property.type === "Office" ||
+        property.type === "Commercial"
+    ) {
+        return "For Lease";
+    }
+
+    if (property.status === "Rented") {
+        return "For Rent";
+    }
+
+    if (property.status === "Sold") {
+        return "Sold";
+    }
+
+    return "For Sale";
+
 }
+
 
 function getPeriod(property) {
-    if (property.type === 'Shortlet') return '/ Night';
-    if (property.status === 'Rented' || property.type === 'Office' || property.type === 'Commercial') return '/ Year';
-    return '';
+
+    if (property.type === "Shortlet") {
+        return "/ Night";
+    }
+
+    if (
+        property.status === "Rented" ||
+        property.type === "Office" ||
+        property.type === "Commercial"
+    ) {
+        return "/ Year";
+    }
+
+    return "";
+
 }
+
+
+/* ============================================================
+   SECURITY
+============================================================ */
 
 function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+    if (!str) {
+        return "";
+    }
+
+    return String(str).replace(
+        /[&<>"']/g,
+        m => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[m])
+    );
+
 }
+
+
+/* ============================================================
+   PROPERTY CARD
+============================================================ */
 
 function renderPropertyCard(p) {
-    const badge = getBadge(p);
-    const price = formatPrice(p.price);
-    const period = getPeriod(p);
-    const isSaved = savedPropertyIds.includes(p.id);
-    const image = p.image || DEFAULT_IMAGE;
-    const photoCount = (p.photos && p.photos.length) || p.viewings || 5;
+
+    const badge =
+        getBadge(p);
+
+    const price =
+        formatPrice(p.price);
+
+    const period =
+        getPeriod(p);
+
+    const isSaved =
+        savedPropertyIds.includes(p.id);
+
+    const image =
+        p.image ||
+        (
+            Array.isArray(p.images) &&
+            p.images.length
+                ? p.images[0]
+                : DEFAULT_IMAGE
+        );
+
+    const photoCount =
+        (
+            Array.isArray(p.photos)
+                ? p.photos.length
+                : Array.isArray(p.images)
+                    ? p.images.length
+                    : 0
+        ) ||
+        p.viewings ||
+        5;
+
 
     return `
-        <article class="property-card" data-id="${p.id}" onclick="viewProperty('${p.id}')">
+
+        <article
+            class="property-card"
+            data-id="${escapeHtml(p.id)}"
+            onclick="viewProperty('${escapeHtml(p.id)}')"
+        >
+
             <div class="property-image">
-                <img src="${escapeHtml(image)}" alt="${escapeHtml(p.title)}" onerror="this.src='${DEFAULT_IMAGE}'" loading="lazy">
-                <span class="property-badge">${escapeHtml(badge)}</span>
-                <button class="property-save ${isSaved ? 'saved' : ''}" onclick="event.stopPropagation(); toggleSave('${p.id}')" aria-label="Save property">
-                    <svg viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}">
-                        <path d="M6 3h12v18l-6-4-6 4V3z" stroke="currentColor" stroke-width="2"/>
+
+                <img
+                    src="${escapeHtml(image)}"
+                    alt="${escapeHtml(p.title)}"
+                    onerror="this.src='${DEFAULT_IMAGE}'"
+                    loading="lazy"
+                >
+
+
+                <span class="property-badge">
+                    ${escapeHtml(badge)}
+                </span>
+
+
+                <button
+                    class="property-save ${isSaved ? "saved" : ""}"
+                    onclick="event.stopPropagation(); toggleSave('${escapeHtml(p.id)}')"
+                    aria-label="Save property"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="${isSaved ? "currentColor" : "none"}"
+                    >
+
+                        <path
+                            d="M6 3h12v18l-6-4-6 4V3z"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        />
+
                     </svg>
+
                 </button>
-                <span class="property-count">+${photoCount} Photos</span>
+
+
+                <span class="property-count">
+                    +${photoCount} Photos
+                </span>
+
             </div>
+
+
             <div class="property-body">
-                <h3 class="property-title">${escapeHtml(p.title)}</h3>
+
+                <h3 class="property-title">
+                    ${escapeHtml(p.title)}
+                </h3>
+
+
                 <div class="property-location">
-                    <svg viewBox="0 0 24 24" fill="none">
-                        <path d="M12 21s7-5 7-11a7 7 0 10-14 0c0 6 7 11 7 11z" stroke="currentColor" stroke-width="2"/>
-                        <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/>
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <path
+                            d="M12 21s7-5 7-11a7 7 0 10-14 0c0 6 7 11 7 11z"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        />
+
+                        <circle
+                            cx="12"
+                            cy="10"
+                            r="2.5"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        />
+
                     </svg>
-                    <span>${escapeHtml(p.location || 'Nigeria')}</span>
+
+                    <span>
+                        ${escapeHtml(
+                            p.location || "Nigeria"
+                        )}
+                    </span>
+
                 </div>
+
+
                 <div class="property-features">
+
                     <div class="feature">
-                        <svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5V20H4z" stroke="currentColor" stroke-width="2"/></svg>
-                        <span>${escapeHtml(p.type || 'Property')}</span>
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+                            <path
+                                d="M4 10.5L12 4l8 6.5V20H4z"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            />
+                        </svg>
+
+                        <span>
+                            ${escapeHtml(
+                                p.type || "Property"
+                            )}
+                        </span>
+
                     </div>
+
+
                     <div class="feature">
-                        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M12 4v16" stroke="currentColor" stroke-width="2"/></svg>
-                        <span>${p.area ? p.area + ' sqm' : 'N/A'}</span>
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+                            <path
+                                d="M4 12h16M12 4v16"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            />
+                        </svg>
+
+                        <span>
+                            ${p.area
+                                ? p.area + " sqm"
+                                : "N/A"}
+                        </span>
+
                     </div>
+
+
                     <div class="feature">
-                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 17.3l-5.2 2.7 1-5.8L3.5 10l5.9-.9L12 4l2.6 5.1 5.9.9-4.3 4.2 1 5.8z" stroke="currentColor" stroke-width="2"/></svg>
-                        <span>${p.beds || 0} Bed${p.beds !== 1 ? 's' : ''}</span>
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+                            <path
+                                d="M12 17.3l-5.2 2.7 1-5.8L3.5 10l5.9-.9L12 4l2.6 5.1 5.9.9-4.3 4.2 1 5.8z"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            />
+                        </svg>
+
+                        <span>
+                            ${p.beds || 0}
+                            Bed${p.beds !== 1 ? "s" : ""}
+                        </span>
+
                     </div>
+
                 </div>
+
+
                 <div class="property-footer">
+
                     <div>
-                        <span class="price-label">${period ? 'Starting From' : 'Price'}</span>
-                        <div class="price">${price}</div>
+
+                        <span class="price-label">
+                            ${period
+                                ? "Starting From"
+                                : "Price"}
+                        </span>
+
+                        <div class="price">
+                            ${price}
+                        </div>
+
                     </div>
-                    ${period ? `<div class="price-period">${period}</div>` : ''}
+
+
+                    ${
+                        period
+                            ? `
+                                <div class="price-period">
+                                    ${period}
+                                </div>
+                            `
+                            : ""
+                    }
+
                 </div>
+
             </div>
+
         </article>
+
     `;
+
 }
+
+
+/* ============================================================
+   FEATURED
+============================================================ */
 
 function renderFeatured() {
-    const slider = document.getElementById('featuredSlider');
-    if (featuredProperties.length === 0) {
-        slider.innerHTML = `
-            <div class="empty-state" style="width:100%">
-                <h3>No featured properties yet</h3>
-                <p>Check back soon for premium listings.</p>
-            </div>
-        `;
+
+    const slider =
+        document.getElementById(
+            "featuredSlider"
+        );
+
+    if (!slider) {
         return;
     }
-    slider.innerHTML = featuredProperties.map(renderPropertyCard).join('');
+
+
+    if (featuredProperties.length === 0) {
+
+        slider.innerHTML = `
+
+            <div
+                class="empty-state"
+                style="width:100%"
+            >
+
+                <h3>
+                    No featured properties yet
+                </h3>
+
+                <p>
+                    Check back soon for premium listings.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    slider.innerHTML =
+        featuredProperties
+            .map(renderPropertyCard)
+            .join("");
+
 }
+
+
+/* ============================================================
+   PROPERTY GRID
+============================================================ */
 
 function renderPropertyGrid() {
-    let filtered = [...allProperties];
 
-    // Apply category filter
-    if (currentCategory === 'residential') {
-        filtered = filtered.filter(p => !['Commercial', 'Office', 'Land'].includes(p.type));
-    } else if (currentCategory === 'commercial') {
-        filtered = filtered.filter(p => ['Commercial', 'Office', 'Land'].includes(p.type));
-    } else if (currentCategory === 'shortlet') {
-        filtered = filtered.filter(p => p.type === 'Shortlet' || (p.amenities && p.amenities.includes('Shortlet')));
+    let filtered =
+        [...allProperties];
+
+
+    /* CATEGORY */
+
+    if (
+        currentCategory === "residential"
+    ) {
+
+        filtered =
+            filtered.filter(
+                p =>
+                    ![
+                        "Commercial",
+                        "Office",
+                        "Land"
+                    ].includes(p.type)
+            );
+
     }
 
-    // Apply search filters
+
+    else if (
+        currentCategory === "commercial"
+    ) {
+
+        filtered =
+            filtered.filter(
+                p =>
+                    [
+                        "Commercial",
+                        "Office",
+                        "Land"
+                    ].includes(p.type)
+            );
+
+    }
+
+
+    else if (
+        currentCategory === "shortlet"
+    ) {
+
+        filtered =
+            filtered.filter(
+                p =>
+                    p.type === "Shortlet" ||
+                    (
+                        Array.isArray(p.amenities) &&
+                        p.amenities.includes("Shortlet")
+                    )
+            );
+
+    }
+
+
+    /* LOCATION */
+
     if (searchFilters.location) {
-        const loc = searchFilters.location.toLowerCase();
-        filtered = filtered.filter(p => 
-            (p.location && p.location.toLowerCase().includes(loc)) ||
-            (p.title && p.title.toLowerCase().includes(loc))
-        );
+
+        const loc =
+            searchFilters.location.toLowerCase();
+
+        filtered =
+            filtered.filter(
+                p =>
+                    (
+                        p.location &&
+                        String(p.location)
+                            .toLowerCase()
+                            .includes(loc)
+                    ) ||
+                    (
+                        p.title &&
+                        String(p.title)
+                            .toLowerCase()
+                            .includes(loc)
+                    )
+            );
+
     }
+
+
+    /* TYPE */
+
     if (searchFilters.type) {
-        filtered = filtered.filter(p => p.type === searchFilters.type);
+
+        filtered =
+            filtered.filter(
+                p =>
+                    p.type ===
+                    searchFilters.type
+            );
+
     }
+
+
+    /* PRICE */
+
     if (searchFilters.price) {
-        const [min, max] = searchFilters.price.split('-').map(Number);
-        filtered = filtered.filter(p => p.price >= min && p.price <= max);
+
+        const [
+            min,
+            max
+        ] =
+            searchFilters.price
+                .split("-")
+                .map(Number);
+
+        filtered =
+            filtered.filter(
+                p =>
+                    Number(p.price) >= min &&
+                    Number(p.price) <= max
+            );
+
     }
 
-    const row1 = document.getElementById('propertyRow1');
-    const row2 = document.getElementById('propertyRow2');
-    const banner = document.getElementById('searchBanner');
-    const viewAllWrapper = document.getElementById('gridViewAllWrapper');
 
-    // Show/hide search banner
+    const row1 =
+        document.getElementById(
+            "propertyRow1"
+        );
+
+    const row2 =
+        document.getElementById(
+            "propertyRow2"
+        );
+
+    const banner =
+        document.getElementById(
+            "searchBanner"
+        );
+
+    const viewAllWrapper =
+        document.getElementById(
+            "gridViewAllWrapper"
+        );
+
+
+    if (!row1 || !row2) {
+        return;
+    }
+
+
+    /* SEARCH BANNER */
+
     if (isFilterActive) {
-        banner.classList.add('show');
-        updateBannerText(filtered.length);
+
+        banner?.classList.add("show");
+
+        updateBannerText(
+            filtered.length
+        );
+
     } else {
-        banner.classList.remove('show');
+
+        banner?.classList.remove("show");
+
     }
+
+
+    /* EMPTY */
 
     if (filtered.length === 0) {
+
         row1.innerHTML = `
-            <div class="empty-state" style="width:100%">
-                <h3>No properties found</h3>
-                <p>Try adjusting your search filters or browse all properties.</p>
-                <a href="properties.html" style="display:inline-block;margin-top:12px;padding:10px 20px;background:#3465f6;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.85rem;">Browse All Properties</a>
+
+            <div
+                class="empty-state"
+                style="width:100%"
+            >
+
+                <h3>
+                    No properties found
+                </h3>
+
+                <p>
+                    Try adjusting your search filters
+                    or browse all properties.
+                </p>
+
+                <a
+                    href="properties.html"
+                    style="
+                        display:inline-block;
+                        margin-top:12px;
+                        padding:10px 20px;
+                        background:#3465f6;
+                        color:#fff;
+                        border-radius:8px;
+                        text-decoration:none;
+                        font-weight:600;
+                        font-size:0.85rem;
+                    "
+                >
+                    Browse All Properties
+                </a>
+
             </div>
+
         `;
-        row2.innerHTML = '';
-        viewAllWrapper.style.display = 'none';
+
+        row2.innerHTML = "";
+
+        if (viewAllWrapper) {
+            viewAllWrapper.style.display =
+                "none";
+        }
+
         return;
+
     }
 
-    viewAllWrapper.style.display = '';
 
-    const middle = Math.ceil(filtered.length / 2);
-    row1.innerHTML = filtered.slice(0, middle).map(renderPropertyCard).join('');
-    row2.innerHTML = filtered.slice(middle).map(renderPropertyCard).join('');
+    if (viewAllWrapper) {
+        viewAllWrapper.style.display =
+            "";
+    }
+
+
+    const middle =
+        Math.ceil(
+            filtered.length / 2
+        );
+
+
+    row1.innerHTML =
+        filtered
+            .slice(0, middle)
+            .map(renderPropertyCard)
+            .join("");
+
+
+    row2.innerHTML =
+        filtered
+            .slice(middle)
+            .map(renderPropertyCard)
+            .join("");
+
 }
+
+
+/* ============================================================
+   BANNER
+============================================================ */
 
 function updateBannerText(count) {
-    const bannerText = document.getElementById('bannerText');
-    const bannerViewAll = document.getElementById('bannerViewAll');
-    
+
+    const bannerText =
+        document.getElementById(
+            "bannerText"
+        );
+
+    const bannerViewAll =
+        document.getElementById(
+            "bannerViewAll"
+        );
+
+
     let filterDesc = [];
-    if (searchFilters.location) filterDesc.push(`"${searchFilters.location}"`);
-    if (searchFilters.type) filterDesc.push(searchFilters.type);
-    if (searchFilters.price) {
-        const [min, max] = searchFilters.price.split('-').map(Number);
-        filterDesc.push(`${formatPrice(min)} - ${formatPrice(max)}`);
+
+
+    if (searchFilters.location) {
+
+        filterDesc.push(
+            `"${searchFilters.location}"`
+        );
+
     }
-    if (currentCategory !== 'all') filterDesc.push(currentCategory);
-    
-    const desc = filterDesc.length > 0 ? filterDesc.join(', ') : 'all';
-    bannerText.textContent = `Found ${count} ${count === 1 ? 'property' : 'properties'} matching ${desc}`;
-    
-    // Build URL for "View All Results"
-    const params = new URLSearchParams();
-    if (searchFilters.location) params.set('location', searchFilters.location);
-    if (searchFilters.type) params.set('type', searchFilters.type);
-    if (searchFilters.price) {
-        const [min, max] = searchFilters.price.split('-');
-        params.set('minPrice', min);
-        params.set('maxPrice', max);
+
+
+    if (searchFilters.type) {
+
+        filterDesc.push(
+            searchFilters.type
+        );
+
     }
-    
-    bannerViewAll.href = params.toString() 
-        ? `properties.html?${params.toString()}` 
-        : 'properties.html';
+
+
+    if (searchFilters.price) {
+
+        const [
+            min,
+            max
+        ] =
+            searchFilters.price
+                .split("-")
+                .map(Number);
+
+        filterDesc.push(
+            `${formatPrice(min)} - ${formatPrice(max)}`
+        );
+
+    }
+
+
+    if (
+        currentCategory !== "all"
+    ) {
+
+        filterDesc.push(
+            currentCategory
+        );
+
+    }
+
+
+    const desc =
+        filterDesc.length > 0
+            ? filterDesc.join(", ")
+            : "all";
+
+
+    if (bannerText) {
+
+        bannerText.textContent =
+            `Found ${count} ${
+                count === 1
+                    ? "property"
+                    : "properties"
+            } matching ${desc}`;
+
+    }
+
+
+    const params =
+        new URLSearchParams();
+
+
+    if (searchFilters.location) {
+
+        params.set(
+            "location",
+            searchFilters.location
+        );
+
+    }
+
+
+    if (searchFilters.type) {
+
+        params.set(
+            "type",
+            searchFilters.type
+        );
+
+    }
+
+
+    if (searchFilters.price) {
+
+        const [
+            min,
+            max
+        ] =
+            searchFilters.price
+                .split("-");
+
+        params.set(
+            "minPrice",
+            min
+        );
+
+        params.set(
+            "maxPrice",
+            max
+        );
+
+    }
+
+
+    if (bannerViewAll) {
+
+        bannerViewAll.href =
+            params.toString()
+                ? `properties.html?${params.toString()}`
+                : "properties.html";
+
+    }
+
 }
+
+
+/* ============================================================
+   FEATURED INDICATOR
+============================================================ */
 
 function updateFeaturedIndicator() {
-    const slider = document.getElementById('featuredSlider');
-    const dots = document.querySelectorAll('#featuredIndicator button');
-    const totalDots = dots.length;
-    
-    if (featuredProperties.length === 0) return;
-    
-    const cardWidth = slider.querySelector('.property-card')?.offsetWidth || 310;
-    const gap = 14;
-    const index = Math.round(slider.scrollLeft / (cardWidth + gap));
-    
-    dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === Math.min(index, totalDots - 1));
-    });
-}
 
-// =================== INTERACTIONS ===================
-window.viewProperty = function(id) {
-    // Navigate to property detail page
-    window.location.href = `property-detail.html?id=${id}`;
-};
+    const slider =
+        document.getElementById(
+            "featuredSlider"
+        );
 
-window.toggleSave = async function(propertyId) {
-    if (!currentUser) {
-        showToast('error', 'Sign In Required', 'Please sign in to save properties');
-        setTimeout(() => {
-            window.location.href = 'dashboard/sign-in.html';
-        }, 1500);
+    const dots =
+        document.querySelectorAll(
+            "#featuredIndicator button"
+        );
+
+    const totalDots =
+        dots.length;
+
+
+    if (
+        !slider ||
+        featuredProperties.length === 0
+    ) {
         return;
     }
 
-    const isSaved = savedPropertyIds.includes(propertyId);
-    const userRef = doc(db, 'users', currentUser.uid);
+
+    const cardWidth =
+        slider.querySelector(
+            ".property-card"
+        )?.offsetWidth || 310;
+
+
+    const gap = 14;
+
+
+    const index =
+        Math.round(
+            slider.scrollLeft /
+            (cardWidth + gap)
+        );
+
+
+    dots.forEach(
+        (dot, i) => {
+
+            dot.classList.toggle(
+                "active",
+                i ===
+                Math.min(
+                    index,
+                    totalDots - 1
+                )
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   VIEW PROPERTY
+============================================================ */
+
+window.viewProperty = function(id) {
+
+    window.location.href =
+        `property-detail.html?id=${encodeURIComponent(id)}`;
+
+};
+
+
+/* ============================================================
+   SAVE PROPERTY
+============================================================ */
+
+window.toggleSave = async function(propertyId) {
+
+    if (!currentUser) {
+
+        showToast(
+            "error",
+            "Sign In Required",
+            "Please sign in to save properties"
+        );
+
+
+        setTimeout(
+            () => {
+
+                window.location.href =
+                    "dashboard/sign-in.html";
+
+            },
+            1500
+        );
+
+        return;
+
+    }
+
+
+    const isSaved =
+        savedPropertyIds.includes(
+            propertyId
+        );
+
+
+    const userRef =
+        doc(
+            db,
+            "users",
+            currentUser.uid
+        );
+
 
     try {
+
         if (isSaved) {
-            await updateDoc(userRef, { savedPropertyIds: arrayRemove(propertyId) });
-            savedPropertyIds = savedPropertyIds.filter(id => id !== propertyId);
-            showToast('info', 'Removed', 'Property removed from saved list');
+
+            await updateDoc(
+                userRef,
+                {
+                    savedPropertyIds:
+                        arrayRemove(propertyId)
+                }
+            );
+
+
+            savedPropertyIds =
+                savedPropertyIds.filter(
+                    id => id !== propertyId
+                );
+
+
+            showToast(
+                "info",
+                "Removed",
+                "Property removed from saved list"
+            );
+
         } else {
-            await updateDoc(userRef, { savedPropertyIds: arrayUnion(propertyId) });
-            savedPropertyIds.push(propertyId);
-            showToast('success', 'Saved!', 'Property added to your saved list');
+
+            await updateDoc(
+                userRef,
+                {
+                    savedPropertyIds:
+                        arrayUnion(propertyId)
+                }
+            );
+
+
+            savedPropertyIds.push(
+                propertyId
+            );
+
+
+            showToast(
+                "success",
+                "Saved!",
+                "Property added to your saved list"
+            );
+
         }
+
+
         renderFeatured();
+
         renderPropertyGrid();
+
+
     } catch (err) {
-        console.error('Save error:', err);
-        showToast('error', 'Error', 'Failed to save property. Please try again.');
+
+        console.error(
+            "Save error:",
+            err
+        );
+
+
+        showToast(
+            "error",
+            "Error",
+            "Failed to save property. Please try again."
+        );
+
     }
+
 };
 
-window.requireAuth = function(event, feature) {
+
+/* ============================================================
+   AUTH REQUIRED
+============================================================ */
+
+window.requireAuth = function(
+    event,
+    feature
+) {
+
     if (!currentUser) {
+
         event.preventDefault();
-        showToast('error', 'Sign In Required', `Please sign in to access ${feature}`);
-        setTimeout(() => {
-            window.location.href = 'dashboard/sign-in.html';
-        }, 1500);
+
+
+        showToast(
+            "error",
+            "Sign In Required",
+            `Please sign in to access ${feature}`
+        );
+
+
+        setTimeout(
+            () => {
+
+                window.location.href =
+                    "dashboard/sign-in.html";
+
+            },
+            1500
+        );
+
     }
+
 };
 
-window.clearHomepageFilters = function() {
-    searchFilters = { location: '', price: '', type: '' };
-    currentCategory = 'all';
+
+/* ============================================================
+   CLEAR FILTERS
+============================================================ */
+
+window.clearHomepageFilters =
+function() {
+
+    searchFilters = {
+        location: "",
+        price: "",
+        type: ""
+    };
+
+
+    currentCategory = "all";
+
     isFilterActive = false;
-    
-    document.getElementById('searchLocation').value = '';
-    document.getElementById('searchPrice').value = '';
-    document.getElementById('searchType').value = '';
-    
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('.tab-btn[data-category="all"]').classList.add('active');
-    
+
+
+    const location =
+        document.getElementById(
+            "searchLocation"
+        );
+
+    const price =
+        document.getElementById(
+            "searchPrice"
+        );
+
+    const type =
+        document.getElementById(
+            "searchType"
+        );
+
+
+    if (location) {
+        location.value = "";
+    }
+
+    if (price) {
+        price.value = "";
+    }
+
+    if (type) {
+        type.value = "";
+    }
+
+
+    document
+        .querySelectorAll(".tab-btn")
+        .forEach(
+            b =>
+                b.classList.remove(
+                    "active"
+                )
+        );
+
+
+    document
+        .querySelector(
+            '.tab-btn[data-category="all"]'
+        )
+        ?.classList.add("active");
+
+
     renderPropertyGrid();
-    showToast('info', 'Filters Cleared', 'Showing all properties');
+
+
+    showToast(
+        "info",
+        "Filters Cleared",
+        "Showing all properties"
+    );
+
 };
 
-// =================== SEARCH ===================
-document.getElementById('searchForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    searchFilters.location = document.getElementById('searchLocation').value.trim();
-    searchFilters.price = document.getElementById('searchPrice').value;
-    searchFilters.type = document.getElementById('searchType').value;
-    
-    // Check if any filter is active
-    isFilterActive = !!(searchFilters.location || searchFilters.price || searchFilters.type);
-    
-    renderPropertyGrid();
-    
-    // Scroll to properties
-    document.getElementById('propertyGrid').scrollIntoView({ behavior: 'smooth' });
-    
-    if (isFilterActive) {
-        showToast('success', 'Search Applied', 'Showing filtered results below');
-    } else {
-        showToast('info', 'Showing All', 'Displaying all available properties');
-    }
-});
 
-// =================== TABS ===================
-document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentCategory = btn.dataset.category;
-        
-        // If it's a specific category and user wants to see all, redirect
-        if (currentCategory !== 'all') {
-            // Show filtered on homepage first, then user can click "View All"
+/* ============================================================
+   SEARCH
+============================================================ */
+
+const searchForm =
+    document.getElementById(
+        "searchForm"
+    );
+
+
+if (searchForm) {
+
+    searchForm.addEventListener(
+        "submit",
+        e => {
+
+            e.preventDefault();
+
+
+            searchFilters.location =
+                document
+                    .getElementById(
+                        "searchLocation"
+                    )
+                    .value
+                    .trim();
+
+
+            searchFilters.price =
+                document
+                    .getElementById(
+                        "searchPrice"
+                    )
+                    .value;
+
+
+            searchFilters.type =
+                document
+                    .getElementById(
+                        "searchType"
+                    )
+                    .value;
+
+
+            isFilterActive =
+                !!(
+                    searchFilters.location ||
+                    searchFilters.price ||
+                    searchFilters.type
+                );
+
+
             renderPropertyGrid();
-            document.getElementById('propertyGrid').scrollIntoView({ behavior: 'smooth' });
-            isFilterActive = true;
-            updateBannerText(document.querySelectorAll('.property-card').length);
-            document.getElementById('searchBanner').classList.add('show');
-        } else {
-            isFilterActive = false;
-            renderPropertyGrid();
-            document.getElementById('propertyGrid').scrollIntoView({ behavior: 'smooth' });
+
+
+            document
+                .getElementById(
+                    "propertyGrid"
+                )
+                ?.scrollIntoView({
+                    behavior: "smooth"
+                });
+
+
+            if (isFilterActive) {
+
+                showToast(
+                    "success",
+                    "Search Applied",
+                    "Showing filtered results below"
+                );
+
+            } else {
+
+                showToast(
+                    "info",
+                    "Showing All",
+                    "Displaying all available properties"
+                );
+
+            }
+
         }
-    });
-});
+    );
 
-// =================== FEATURED SLIDER ===================
-const slider = document.getElementById('featuredSlider');
-slider.addEventListener('scroll', updateFeaturedIndicator);
-
-document.querySelectorAll('#featuredIndicator button').forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-        const cardWidth = slider.querySelector('.property-card')?.offsetWidth || 310;
-        slider.scrollTo({
-            left: index * (cardWidth + 14),
-            behavior: 'smooth'
-        });
-    });
-});
-
-// =================== PRODUCTION-READY NEWSLETTER SETUP ===================
-let lastEmail = '';
-let isSubmitting = false; // Anti-spam flag
-
-window.closeNewsletterModal = function() {
-    const modal = document.getElementById('newsletterModal');
-    if (modal) {
-        modal.classList.remove('show');
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-    }
-};
-
-function showNewsletterModal(state, errorMessage = '') {
-    const modal = document.getElementById('newsletterModal');
-    if (!modal) return;
-    
-    const loading = document.getElementById('modalLoading');
-    const success = document.getElementById('modalSuccess');
-    const error = document.getElementById('modalError');
-    const already = document.getElementById('modalAlready');
-
-    if (loading) loading.style.display = 'none';
-    if (success) success.style.display = 'none';
-    if (error) error.style.display = 'none';
-    if (already) already.style.display = 'none';
-    
-    if (state === 'loading' && loading) {
-        loading.style.display = 'block';
-        resetProgress();
-    } else if (state === 'success' && success) {
-        success.style.display = 'block';
-        setTimeout(createConfetti, 100);
-    } else if (state === 'error' && error) {
-        error.style.display = 'block';
-        const errorDetails = document.getElementById('errorDetails');
-        if (errorDetails) errorDetails.textContent = errorMessage || 'An unexpected error occurred.';
-    } else if (state === 'already' && already) {
-        already.style.display = 'block';
-    }
-    
-    modal.classList.add('show');
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100%';
 }
 
-window.retrySubscription = function() {
-    window.closeNewsletterModal();
-    setTimeout(() => {
-        const emailInput = document.getElementById('newsletterEmail');
-        if (lastEmail && emailInput) {
-            emailInput.value = lastEmail;
-            emailInput.focus();
+
+/* ============================================================
+   TABS
+============================================================ */
+
+document
+    .querySelectorAll(".tab-btn")
+    .forEach(
+        btn => {
+
+            btn.addEventListener(
+                "click",
+                () => {
+
+                    document
+                        .querySelectorAll(
+                            ".tab-btn"
+                        )
+                        .forEach(
+                            b =>
+                                b.classList.remove(
+                                    "active"
+                                )
+                        );
+
+
+                    btn.classList.add(
+                        "active"
+                    );
+
+
+                    currentCategory =
+                        btn.dataset.category;
+
+
+                    if (
+                        currentCategory !== "all"
+                    ) {
+
+                        isFilterActive =
+                            true;
+
+
+                        renderPropertyGrid();
+
+
+                        document
+                            .getElementById(
+                                "propertyGrid"
+                            )
+                            ?.scrollIntoView({
+                                behavior:
+                                    "smooth"
+                            });
+
+                    } else {
+
+                        isFilterActive =
+                            false;
+
+                        renderPropertyGrid();
+
+                    }
+
+                }
+            );
+
         }
-        document.getElementById('newsletterForm').dispatchEvent(new Event('submit'));
-    }, 300);
+    );
+
+
+/* ============================================================
+   FEATURED SLIDER
+============================================================ */
+
+const slider =
+    document.getElementById(
+        "featuredSlider"
+    );
+
+
+if (slider) {
+
+    slider.addEventListener(
+        "scroll",
+        updateFeaturedIndicator
+    );
+
+}
+
+
+document
+    .querySelectorAll(
+        "#featuredIndicator button"
+    )
+    .forEach(
+        (dot, index) => {
+
+            dot.addEventListener(
+                "click",
+                () => {
+
+                    if (!slider) {
+                        return;
+                    }
+
+
+                    const cardWidth =
+                        slider.querySelector(
+                            ".property-card"
+                        )?.offsetWidth ||
+                        310;
+
+
+                    slider.scrollTo({
+                        left:
+                            index *
+                            (
+                                cardWidth +
+                                14
+                            ),
+                        behavior:
+                            "smooth"
+                    });
+
+                }
+            );
+
+        }
+    );
+
+
+/* ============================================================
+   NEWSLETTER
+============================================================ */
+
+let lastEmail = "";
+
+let isSubmitting = false;
+
+
+window.closeNewsletterModal =
+function() {
+
+    const modal =
+        document.getElementById(
+            "newsletterModal"
+        );
+
+
+    if (modal) {
+
+        modal.classList.remove(
+            "show"
+        );
+
+        document.body.style.overflow =
+            "";
+
+        document.body.style.position =
+            "";
+
+        document.body.style.width =
+            "";
+
+    }
+
 };
+
+
+function showNewsletterModal(
+    state,
+    errorMessage = ""
+) {
+
+    const modal =
+        document.getElementById(
+            "newsletterModal"
+        );
+
+
+    if (!modal) {
+        return;
+    }
+
+
+    const loading =
+        document.getElementById(
+            "modalLoading"
+        );
+
+    const success =
+        document.getElementById(
+            "modalSuccess"
+        );
+
+    const error =
+        document.getElementById(
+            "modalError"
+        );
+
+    const already =
+        document.getElementById(
+            "modalAlready"
+        );
+
+
+    if (loading) {
+        loading.style.display =
+            "none";
+    }
+
+    if (success) {
+        success.style.display =
+            "none";
+    }
+
+    if (error) {
+        error.style.display =
+            "none";
+    }
+
+    if (already) {
+        already.style.display =
+            "none";
+    }
+
+
+    if (
+        state === "loading" &&
+        loading
+    ) {
+
+        loading.style.display =
+            "block";
+
+        resetProgress();
+
+    }
+
+
+    else if (
+        state === "success" &&
+        success
+    ) {
+
+        success.style.display =
+            "block";
+
+        setTimeout(
+            createConfetti,
+            100
+        );
+
+    }
+
+
+    else if (
+        state === "error" &&
+        error
+    ) {
+
+        error.style.display =
+            "block";
+
+
+        const details =
+            document.getElementById(
+                "errorDetails"
+            );
+
+
+        if (details) {
+
+            details.textContent =
+                errorMessage ||
+                "An unexpected error occurred.";
+
+        }
+
+    }
+
+
+    else if (
+        state === "already" &&
+        already
+    ) {
+
+        already.style.display =
+            "block";
+
+    }
+
+
+    modal.classList.add(
+        "show"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+    document.body.style.position =
+        "fixed";
+
+    document.body.style.width =
+        "100%";
+
+}
+
+
+window.retrySubscription =
+function() {
+
+    window.closeNewsletterModal();
+
+
+    setTimeout(
+        () => {
+
+            const emailInput =
+                document.getElementById(
+                    "newsletterEmail"
+                );
+
+
+            if (
+                lastEmail &&
+                emailInput
+            ) {
+
+                emailInput.value =
+                    lastEmail;
+
+                emailInput.focus();
+
+            }
+
+
+            document
+                .getElementById(
+                    "newsletterForm"
+                )
+                ?.dispatchEvent(
+                    new Event("submit")
+                );
+
+        },
+        300
+    );
+
+};
+
 
 async function updateProgress(step) {
-    for (let i = 1; i < step; i++) {
-        const stepEl = document.getElementById(`step${i}`);
+
+    for (
+        let i = 1;
+        i < step;
+        i++
+    ) {
+
+        const stepEl =
+            document.getElementById(
+                `step${i}`
+            );
+
+
         if (stepEl) {
-            stepEl.classList.remove('active');
-            stepEl.classList.add('completed');
-            const icon = stepEl.querySelector('.progress-step-icon');
-            if (icon) icon.textContent = '✓';
+
+            stepEl.classList.remove(
+                "active"
+            );
+
+            stepEl.classList.add(
+                "completed"
+            );
+
+
+            const icon =
+                stepEl.querySelector(
+                    ".progress-step-icon"
+                );
+
+
+            if (icon) {
+                icon.textContent =
+                    "✓";
+            }
+
         }
+
     }
-    const currentStep = document.getElementById(`step${step}`);
-    if (currentStep) currentStep.classList.add('active');
-    await new Promise(resolve => setTimeout(resolve, 400));
+
+
+    const currentStep =
+        document.getElementById(
+            `step${step}`
+        );
+
+
+    if (currentStep) {
+
+        currentStep.classList.add(
+            "active"
+        );
+
+    }
+
+
+    await new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                400
+            )
+    );
+
 }
+
 
 function resetProgress() {
-    for (let i = 1; i <= 4; i++) {
-        const stepEl = document.getElementById(`step${i}`);
+
+    for (
+        let i = 1;
+        i <= 4;
+        i++
+    ) {
+
+        const stepEl =
+            document.getElementById(
+                `step${i}`
+            );
+
+
         if (stepEl) {
-            stepEl.classList.remove('active', 'completed');
-            const icon = stepEl.querySelector('.progress-step-icon');
-            if (icon) icon.textContent = i;
+
+            stepEl.classList.remove(
+                "active",
+                "completed"
+            );
+
+
+            const icon =
+                stepEl.querySelector(
+                    ".progress-step-icon"
+                );
+
+
+            if (icon) {
+                icon.textContent =
+                    i;
+            }
+
         }
+
     }
+
 }
+
 
 function createConfetti() {
-    const container = document.getElementById('confettiContainer');
-    if (!container) return;
-    container.innerHTML = '';
-    const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#fa709a'];
-    for (let i = 0; i < 20; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.left = Math.random() * 100 + '%';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.animationDelay = Math.random() * 1.5 + 's';
-        confetti.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
-        if (Math.random() < 0.33) confetti.style.borderRadius = '50%';
-        else if (Math.random() < 0.66) { confetti.style.width = '5px'; confetti.style.height = '12px'; }
-        container.appendChild(confetti);
+
+    const container =
+        document.getElementById(
+            "confettiContainer"
+        );
+
+
+    if (!container) {
+        return;
     }
+
+
+    container.innerHTML = "";
+
+
+    const colors = [
+        "#667eea",
+        "#764ba2",
+        "#f093fb",
+        "#f5576c",
+        "#4facfe",
+        "#00f2fe",
+        "#43e97b",
+        "#fa709a"
+    ];
+
+
+    for (
+        let i = 0;
+        i < 20;
+        i++
+    ) {
+
+        const confetti =
+            document.createElement(
+                "div"
+            );
+
+
+        confetti.className =
+            "confetti";
+
+
+        confetti.style.left =
+            Math.random() * 100 +
+            "%";
+
+
+        confetti.style.backgroundColor =
+            colors[
+                Math.floor(
+                    Math.random() *
+                    colors.length
+                )
+            ];
+
+
+        confetti.style.animationDelay =
+            Math.random() *
+            1.5 +
+            "s";
+
+
+        confetti.style.animationDuration =
+            (
+                Math.random() *
+                1.5 +
+                1.5
+            ) +
+            "s";
+
+
+        if (
+            Math.random() <
+            0.33
+        ) {
+
+            confetti.style.borderRadius =
+                "50%";
+
+        }
+
+
+        else if (
+            Math.random() <
+            0.66
+        ) {
+
+            confetti.style.width =
+                "5px";
+
+            confetti.style.height =
+                "12px";
+
+        }
+
+
+        container.appendChild(
+            confetti
+        );
+
+    }
+
 }
 
-// Close modal on outside click or Escape
-document.addEventListener('click', function(e) {
-    if (e.target.id === 'newsletterModal') window.closeNewsletterModal();
-});
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        const modal = document.getElementById('newsletterModal');
-        if (modal && modal.classList.contains('show')) window.closeNewsletterModal();
-    }
-});
 
-// =================== FORM SUBMIT HANDLER ===================
-const newsletterForm = document.getElementById('newsletterForm');
-if (newsletterForm) {
-    newsletterForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        // Prevent rapid-fire submissions
-        if (isSubmitting) return;
-        
-        const emailInput = document.getElementById('newsletterEmail');
-        let email = emailInput.value.trim().toLowerCase();
-        const btn = document.getElementById('newsletterBtn');
-        
-        // 1. STRICT HTML5 Email Validation
-        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
-        
-        if (!email || !emailRegex.test(email)) {
-            showToast('error', 'Invalid Email', 'Please enter a valid email address (e.g., name@example.com).');
-            emailInput.focus();
+/* ============================================================
+   NEWSLETTER EVENTS
+============================================================ */
+
+document.addEventListener(
+    "click",
+    function(e) {
+
+        if (
+            e.target.id ===
+            "newsletterModal"
+        ) {
+
+            window.closeNewsletterModal();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    function(e) {
+
+        if (e.key !== "Escape") {
             return;
         }
 
-        // 2. SMART TYPO DETECTION (Production-grade UX)
-        const parts = email.split('@');
-        const commonTypos = {
-            'gmai.com': 'gmail.com',
-            'gmal.com': 'gmail.com',
-            'gmial.com': 'gmail.com',
-            'gnail.com': 'gmail.com',
-            'yaho.com': 'yahoo.com',
-            'yahooo.com': 'yahoo.com',
-            'hotmal.com': 'hotmail.com',
-            'hotmial.com': 'hotmail.com',
-            'outlok.com': 'outlook.com'
-        };
 
-        if (commonTypos[parts[1]]) {
-            const correctEmail = `${parts[0]}@${commonTypos[parts[1]]}`;
-            showToast('info', 'Check your email', `Did you mean ${correctEmail}? We auto-corrected it for you.`);
-            emailInput.value = correctEmail;
-            email = correctEmail; // Update the variable
-            emailInput.focus();
-            return; // Let them review and click subscribe again
-        }
-        
-        // 3. Begin Submission
-        isSubmitting = true;
-        lastEmail = email;
-        btn.disabled = true;
-        btn.textContent = 'Verifying...';
-        
-        showNewsletterModal('loading');
-        
-        try {
-            await updateProgress(1);
-            await updateProgress(2);
-            
-            // Check for existing subscription
-            const existingQuery = query(
-                collection(db, 'newsletter'),
-                where('email', '==', email)
+        const modal =
+            document.getElementById(
+                "newsletterModal"
             );
-            const existingSnapshot = await getDocs(existingQuery);
-            
-            if (!existingSnapshot.empty) {
-                showNewsletterModal('already');
-                isSubmitting = false;
-                btn.disabled = false;
-                btn.textContent = 'Subscribe';
+
+
+        if (
+            modal &&
+            modal.classList.contains(
+                "show"
+            )
+        ) {
+
+            window.closeNewsletterModal();
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   NEWSLETTER FORM
+============================================================ */
+
+const newsletterForm =
+    document.getElementById(
+        "newsletterForm"
+    );
+
+
+if (newsletterForm) {
+
+    newsletterForm.addEventListener(
+        "submit",
+        async e => {
+
+            e.preventDefault();
+
+
+            if (isSubmitting) {
                 return;
             }
-            
-            await updateProgress(3);
-            
-            // Add to database
-            await addDoc(collection(db, 'newsletter'), {
-                email: email,
-                subscribedAt: serverTimestamp(),
-                source: 'properties_page'
-            });
-            
-            await updateProgress(4);
-            showNewsletterModal('success');
-            emailInput.value = '';
-            
-        } catch (err) {
-            console.error('Newsletter error:', err);
-            
-            // 4. PRODUCTION-READY ERROR MAPPING
-            let errorMsg = 'Failed to subscribe. Please check your internet connection and try again.';
-            
-            if (err.code === 'permission-denied') {
-                errorMsg = 'Subscription failed due to security rules. Please contact support.';
-            } else if (err.code === 'unavailable' || err.code === 'network-error') {
-                errorMsg = 'Network error. Please check your connection and try again.';
-            } else if (err.message) {
-                errorMsg = err.message;
+
+
+            const emailInput =
+                document.getElementById(
+                    "newsletterEmail"
+                );
+
+
+            let email =
+                emailInput.value
+                    .trim()
+                    .toLowerCase();
+
+
+            const btn =
+                document.getElementById(
+                    "newsletterBtn"
+                );
+
+
+            const emailRegex =
+                /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
+
+
+            if (
+                !email ||
+                !emailRegex.test(email)
+            ) {
+
+                showToast(
+                    "error",
+                    "Invalid Email",
+                    "Please enter a valid email address (e.g., name@example.com)."
+                );
+
+
+                emailInput.focus();
+
+                return;
+
             }
-            
-            showNewsletterModal('error', errorMsg);
-        } finally {
-            isSubmitting = false;
-            btn.disabled = false;
-            btn.textContent = 'Subscribe';
+
+
+            const parts =
+                email.split("@");
+
+
+            const commonTypos = {
+
+                "gmai.com":
+                    "gmail.com",
+
+                "gmal.com":
+                    "gmail.com",
+
+                "gmial.com":
+                    "gmail.com",
+
+                "gnail.com":
+                    "gmail.com",
+
+                "yaho.com":
+                    "yahoo.com",
+
+                "yahooo.com":
+                    "yahoo.com",
+
+                "hotmal.com":
+                    "hotmail.com",
+
+                "hotmial.com":
+                    "hotmail.com",
+
+                "outlok.com":
+                    "outlook.com"
+
+            };
+
+
+            if (
+                commonTypos[parts[1]]
+            ) {
+
+                const correctEmail =
+                    `${parts[0]}@${commonTypos[parts[1]]}`;
+
+
+                showToast(
+                    "info",
+                    "Check your email",
+                    `Did you mean ${correctEmail}? We auto-corrected it for you.`
+                );
+
+
+                emailInput.value =
+                    correctEmail;
+
+
+                email =
+                    correctEmail;
+
+
+                emailInput.focus();
+
+                return;
+
+            }
+
+
+            isSubmitting =
+                true;
+
+
+            lastEmail =
+                email;
+
+
+            btn.disabled =
+                true;
+
+
+            btn.textContent =
+                "Verifying...";
+
+
+            showNewsletterModal(
+                "loading"
+            );
+
+
+            try {
+
+                await updateProgress(1);
+
+                await updateProgress(2);
+
+
+                const existingQuery =
+                    query(
+                        collection(
+                            db,
+                            "newsletter"
+                        ),
+                        where(
+                            "email",
+                            "==",
+                            email
+                        )
+                    );
+
+
+                const existingSnapshot =
+                    await getDocs(
+                        existingQuery
+                    );
+
+
+                if (
+                    !existingSnapshot.empty
+                ) {
+
+                    showNewsletterModal(
+                        "already"
+                    );
+
+                    isSubmitting =
+                        false;
+
+                    btn.disabled =
+                        false;
+
+                    btn.textContent =
+                        "Subscribe";
+
+                    return;
+
+                }
+
+
+                await updateProgress(3);
+
+
+                await addDoc(
+                    collection(
+                        db,
+                        "newsletter"
+                    ),
+                    {
+                        email:
+                            email,
+
+                        subscribedAt:
+                            serverTimestamp(),
+
+                        source:
+                            "homepage"
+                    }
+                );
+
+
+                await updateProgress(4);
+
+
+                showNewsletterModal(
+                    "success"
+                );
+
+
+                emailInput.value =
+                    "";
+
+            }
+
+
+            catch (err) {
+
+                console.error(
+                    "Newsletter error:",
+                    err
+                );
+
+
+                let errorMsg =
+                    "Failed to subscribe. Please check your internet connection and try again.";
+
+
+                if (
+                    err.code ===
+                    "permission-denied"
+                ) {
+
+                    errorMsg =
+                        "Subscription failed due to security rules. Please contact support.";
+
+                }
+
+
+                else if (
+                    err.code ===
+                        "unavailable" ||
+                    err.code ===
+                        "network-error"
+                ) {
+
+                    errorMsg =
+                        "Network error. Please check your connection and try again.";
+
+                }
+
+
+                else if (
+                    err.message
+                ) {
+
+                    errorMsg =
+                        err.message;
+
+                }
+
+
+                showNewsletterModal(
+                    "error",
+                    errorMsg
+                );
+
+            }
+
+
+            finally {
+
+                isSubmitting =
+                    false;
+
+                btn.disabled =
+                    false;
+
+                btn.textContent =
+                    "Subscribe";
+
+            }
+
         }
-    });
+    );
+
 }
 
 
-// =================== TOAST ===================
-function showToast(type, title, message) {
-    const toast = document.getElementById('toast');
-    const icon = document.querySelector('.toast-icon');
-    
-    toast.className = `toast ${type}`;
-    document.getElementById('toastTitle').textContent = title;
-    document.getElementById('toastMessage').textContent = message;
-    
+/* ============================================================
+   TOAST
+============================================================ */
+
+function showToast(
+    type,
+    title,
+    message
+) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    const icon =
+        document.querySelector(
+            ".toast-icon"
+        );
+
+
+    if (!toast) {
+        return;
+    }
+
+
+    toast.className =
+        `toast ${type}`;
+
+
+    document.getElementById(
+        "toastTitle"
+    ).textContent =
+        title;
+
+
+    document.getElementById(
+        "toastMessage"
+    ).textContent =
+        message;
+
+
     const icons = {
-        success: '✓',
-        error: '✕',
-        info: 'ℹ'
+
+        success:
+            "✓",
+
+        error:
+            "✕",
+
+        info:
+            "ℹ"
+
     };
-    icon.textContent = icons[type] || 'ℹ';
-    
-    toast.classList.add('show');
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 4000);
+
+
+    if (icon) {
+
+        icon.textContent =
+            icons[type] ||
+            "ℹ";
+
+    }
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        () => {
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },
+        4000
+    );
+
 }
 
-// =================== DRAWER ===================
-document.addEventListener('DOMContentLoaded', () => {
-    const menuBtn = document.querySelector('.menu-btn');
-    const drawer = document.querySelector('.app-drawer');
-    const overlay = document.querySelector('.drawer-overlay');
-    const closeBtn = document.querySelector('.drawer-close');
 
-    function openDrawer() {
-        drawer.classList.add('show');
-        overlay.classList.add('show');
-        document.body.style.overflow = 'hidden';
+/* ============================================================
+   DRAWER
+============================================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const menuBtn =
+            document.querySelector(
+                ".menu-btn"
+            );
+
+
+        const drawer =
+            document.querySelector(
+                ".app-drawer"
+            );
+
+
+        const overlay =
+            document.querySelector(
+                ".drawer-overlay"
+            );
+
+
+        const closeBtn =
+            document.querySelector(
+                ".drawer-close"
+            );
+
+
+        function openDrawer() {
+
+            if (!drawer || !overlay) {
+                return;
+            }
+
+
+            drawer.classList.add(
+                "show"
+            );
+
+
+            overlay.classList.add(
+                "show"
+            );
+
+
+            document.body.style.overflow =
+                "hidden";
+
+        }
+
+
+        function closeDrawer() {
+
+            if (!drawer || !overlay) {
+                return;
+            }
+
+
+            drawer.classList.remove(
+                "show"
+            );
+
+
+            overlay.classList.remove(
+                "show"
+            );
+
+
+            document.body.style.overflow =
+                "";
+
+        }
+
+
+        if (menuBtn) {
+
+            menuBtn.addEventListener(
+                "click",
+                openDrawer
+            );
+
+        }
+
+
+        if (closeBtn) {
+
+            closeBtn.addEventListener(
+                "click",
+                closeDrawer
+            );
+
+        }
+
+
+        if (overlay) {
+
+            overlay.addEventListener(
+                "click",
+                closeDrawer
+            );
+
+        }
+
+
+        document.addEventListener(
+            "keydown",
+            e => {
+
+                if (
+                    e.key ===
+                    "Escape"
+                ) {
+
+                    closeDrawer();
+
+                }
+
+            }
+        );
+
+
+        document
+            .querySelectorAll(
+                ".app-drawer a"
+            )
+            .forEach(
+                link => {
+
+                    link.addEventListener(
+                        "click",
+                        closeDrawer
+                    );
+
+                }
+            );
+
+
+        const details =
+            document.querySelectorAll(
+                ".app-drawer details"
+            );
+
+
+        details.forEach(
+            item => {
+
+                item.addEventListener(
+                    "toggle",
+                    () => {
+
+                        if (
+                            !item.open
+                        ) {
+                            return;
+                        }
+
+
+                        details.forEach(
+                            other => {
+
+                                if (
+                                    other !==
+                                    item
+                                ) {
+
+                                    other.open =
+                                        false;
+
+                                }
+
+                            }
+                        );
+
+                    }
+                );
+
+            }
+        );
+
     }
-
-    function closeDrawer() {
-        drawer.classList.remove('show');
-        overlay.classList.remove('show');
-        document.body.style.overflow = '';
-    }
-
-    if (menuBtn) menuBtn.addEventListener('click', openDrawer);
-    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-    if (overlay) overlay.addEventListener('click', closeDrawer);
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeDrawer();
-    });
-
-    document.querySelectorAll('.app-drawer a').forEach(link => {
-        link.addEventListener('click', closeDrawer);
-    });
-
-    const details = document.querySelectorAll('.app-drawer details');
-    details.forEach(item => {
-        item.addEventListener('toggle', () => {
-            if (!item.open) return;
-            details.forEach(other => {
-                if (other !== item) other.open = false;
-            });
-        });
-    });
-});
+);
 
 </script>
 
 </body>
 </html>
-
