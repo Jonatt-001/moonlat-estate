@@ -4463,10 +4463,8 @@ window.whatsappAgent =
             {
                 rawWhatsApp:
                     rawWhatsApp,
-
                 normalizedWhatsApp:
                     whatsappNumber,
-
                 agent:
                     agentData
             }
@@ -4489,13 +4487,64 @@ window.whatsappAgent =
 
         const propertyLocation =
             currentProperty.location ||
+            currentProperty.address ||
             '';
 
+        /*
+         * Build the clean, canonical property URL.
+         *
+         * This intentionally creates the link from the
+         * current MoonLat domain rather than copying the
+         * current browser URL, so temporary query parameters
+         * are not accidentally included in the WhatsApp message.
+         */
+        const propertyUrl =
+            new URL(
+                'property-detail.html',
+                window.location.origin + window.location.pathname
+            );
+
+        propertyUrl.searchParams.set(
+            'id',
+            currentProperty.id
+        );
+
+        /*
+         * Build a WhatsApp-ready message.
+         *
+         * The property link is placed on its own line so
+         * WhatsApp renders it as a clean, clickable URL.
+         */
         const message =
-            `Hi, I'm interested in "${propertyTitle}" listed on MoonLat${propertyLocation ? ` in ${propertyLocation}` : ''}. Please share more details.`;
+            `Hi, I'm interested in "${propertyTitle}" listed on MoonLat${propertyLocation ? ` in ${propertyLocation}` : ''}.
+
+Property link:
+${propertyUrl.toString()}
+
+Please share more details.`;
 
         const whatsappUrl =
             `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+        console.log(
+            'MoonLat WhatsApp Message:',
+            {
+                property:
+                    propertyTitle,
+
+                propertyId:
+                    currentProperty.id,
+
+                propertyUrl:
+                    propertyUrl.toString(),
+
+                message:
+                    message,
+
+                whatsappUrl:
+                    whatsappUrl
+            }
+        );
 
         closeContactModal();
 
