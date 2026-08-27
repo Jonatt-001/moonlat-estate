@@ -4,13 +4,129 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Property Details | MoonLat</title>
-<meta name="description" content="View detailed information about this verified property on MoonLat.">
-<meta name="theme-color" content="#09063d">
+
+<meta
+    name="description"
+    content="View detailed information about this verified property on MoonLat."
+>
+
+<meta
+    name="theme-color"
+    content="#09063d"
+>
+
+<!-- =========================================================
+     OPEN GRAPH
+     Default values are replaced dynamically after the
+     Firebase property has been loaded.
+     ========================================================= -->
+
+<meta
+    property="og:type"
+    content="website"
+>
+
+<meta
+    property="og:site_name"
+    content="MoonLat"
+>
+
+<meta
+    property="og:title"
+    content="Property Details | MoonLat"
+>
+
+<meta
+    property="og:description"
+    content="View detailed information about this verified property on MoonLat."
+>
+
+<meta
+    property="og:url"
+    content="https://www.moonlat.top/property-detail.html"
+    id="ogUrl"
+>
+
+<meta
+    property="og:image"
+    content="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&auto=format&fit=crop"
+    id="ogImage"
+>
+
+<meta
+    property="og:image:alt"
+    content="MoonLat property listing"
+    id="ogImageAlt"
+>
+
+<meta
+    property="og:image:type"
+    content="image/jpeg"
+>
+
+<meta
+    property="og:image:width"
+    content="1200"
+>
+
+<meta
+    property="og:image:height"
+    content="630"
+>
+
+<!-- =========================================================
+     TWITTER / X
+     ========================================================= -->
+
+<meta
+    name="twitter:card"
+    content="summary_large_image"
+>
+
+<meta
+    name="twitter:title"
+    content="Property Details | MoonLat"
+    id="twitterTitle"
+>
+
+<meta
+    name="twitter:description"
+    content="View detailed information about this verified property on MoonLat."
+    id="twitterDescription"
+>
+
+<meta
+    name="twitter:image"
+    content="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&auto=format&fit=crop"
+    id="twitterImage"
+>
+
+<meta
+    name="twitter:image:alt"
+    content="MoonLat property listing"
+    id="twitterImageAlt"
+>
+
+<!-- =========================================================
+     CANONICAL
+     ========================================================= -->
+
+<link
+    rel="canonical"
+    href="https://www.moonlat.top/property-detail.html"
+    id="canonicalUrl"
+>
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
 
 <link rel="stylesheet" href="home.css">
 <link rel="stylesheet" href="credit.css">
@@ -22,735 +138,66 @@
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
-/>
+>
 
 <style>
-.gallery-wrapper {
-    margin-bottom: 2rem;
-}
 
-.gallery-main-container {
-    margin-bottom: 1rem;
-}
-
-.gallery-main {
-    position: relative;
-    border-radius: 1rem;
-    overflow: hidden;
-    cursor: pointer;
-    aspect-ratio: 16/10;
-    background: #f3f4f6;
-}
-
-.gallery-main img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.gallery-main:hover img {
-    transform: scale(1.02);
-}
-
-.gallery-badge {
+.moonlat-map-attribution {
     position: absolute;
-    top: 1rem;
-    left: 1rem;
-    background: #ea580c;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    font-size: 0.875rem;
-    z-index: 2;
-}
-
-.gallery-counter {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.gallery-counter svg {
-    width: 18px;
-    height: 18px;
-}
-
-.gallery-thumbnails {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 0.75rem;
-}
-
-.gallery-thumb {
-    aspect-ratio: 1;
-    border-radius: 0.75rem;
-    overflow: hidden;
-    cursor: pointer;
-    border: 3px solid transparent;
-    transition: all 0.3s ease;
-    opacity: 0.7;
-}
-
-.gallery-thumb.active {
-    border-color: #3b82f6;
-    opacity: 1;
-}
-
-.gallery-thumb:hover {
-    opacity: 1;
-    transform: translateY(-2px);
-}
-
-.gallery-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-
-/* =========================================================
-   AGENT AVATAR
-   ========================================================= */
-
-.agent-avatar {
-    position: relative;
-    flex: 0 0 64px;
-    width: 64px;
-    height: 64px;
-    min-width: 64px;
-    min-height: 64px;
-    border-radius: 50%;
-    overflow: hidden;
-}
-
-.agent-avatar img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-.ml-estate-avatar {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background:
-        radial-gradient(
-            circle at 30% 25%,
-            rgba(255,255,255,0.24) 0%,
-            rgba(255,255,255,0.08) 20%,
-            transparent 42%
-        ),
-        linear-gradient(
-            145deg,
-            #09063d 0%,
-            #17105c 48%,
-            #3564ed 100%
-        );
-    box-shadow:
-        0 8px 22px rgba(9, 6, 61, 0.20),
-        inset 0 0 0 1px rgba(255,255,255,0.18);
-}
-
-.ml-estate-avatar::before {
-    content: "";
-    position: absolute;
-    inset: 6px;
-    border: 1px solid rgba(255,255,255,0.22);
-    border-radius: 50%;
-}
-
-.ml-estate-avatar::after {
-    content: "";
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    right: -5px;
-    bottom: -5px;
-    border-radius: 50%;
-    background: #f1bf0a;
-    opacity: 0.18;
-    filter: blur(8px);
-}
-
-.ml-estate-monogram {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    line-height: 1;
-    transform: translateY(-1px);
-}
-
-.ml-estate-monogram-main {
-    color: #ffffff;
-    font-size: 1.05rem;
-    font-weight: 800;
-    letter-spacing: -0.06em;
-}
-
-.ml-estate-monogram-sub {
-    margin-top: 3px;
-    color: #f1bf0a;
-    font-size: 0.31rem;
-    font-weight: 800;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-}
-
-
-/* =========================================================
-   CONTACT CHOICE MODAL
-   ========================================================= */
-
-.contact-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 0;
-    background: rgba(9, 6, 61, 0.42);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition:
-        opacity 0.25s ease,
-        visibility 0.25s ease;
-}
-
-.contact-modal.show {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-
-.contact-modal-content {
-    position: relative;
-    width: 100%;
-    max-width: 520px;
-    background: #ffffff;
-    border-radius: 28px 28px 0 0;
-    padding: 28px 22px calc(24px + env(safe-area-inset-bottom));
-    box-shadow: 0 -20px 60px rgba(9, 6, 61, 0.22);
-    transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.contact-modal.show .contact-modal-content {
-    transform: translateY(0);
-}
-
-.contact-modal-handle {
-    width: 42px;
-    height: 4px;
-    border-radius: 999px;
-    background: #d7d9e2;
-    margin: -8px auto 24px;
-}
-
-.contact-modal-close {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    width: 40px;
-    height: 40px;
-    border: 0;
-    border-radius: 50%;
-    background: #f3f4f8;
-    color: #1f2937;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    line-height: 1;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.contact-modal-close:hover {
-    background: #e8eaf0;
-    transform: rotate(90deg);
-}
-
-.contact-modal-icon {
-    width: 58px;
-    height: 58px;
-    border-radius: 18px;
-    background: #eef3ff;
-    color: #3564ed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 18px;
-}
-
-.contact-modal-icon svg {
-    width: 29px;
-    height: 29px;
-}
-
-.contact-modal-content h3 {
-    margin: 0;
-    padding-right: 45px;
-    color: #09063d;
-    font-size: 1.45rem;
-    line-height: 1.25;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-}
-
-.contact-modal-subtitle {
-    margin: 8px 0 4px;
-    color: #667085;
-    font-size: 0.92rem;
-    line-height: 1.5;
-}
-
-.contact-modal-property {
-    margin: 0 0 22px;
-    color: #1f2937;
-    font-size: 0.84rem;
-    font-weight: 600;
-    line-height: 1.45;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.contact-choice-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-}
-
-.contact-choice-btn {
-    width: 100%;
-    min-height: 68px;
-    border: 1px solid #e3e6ed;
-    border-radius: 18px;
-    background: #ffffff;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 12px 16px;
-    color: #111827;
-    font-family: inherit;
-    text-align: left;
-    cursor: pointer;
-    transition:
-        transform 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
-}
-
-.contact-choice-btn:hover {
-    transform: translateY(-1px);
-    border-color: #cbd5e1;
-    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
-}
-
-.contact-choice-btn:active {
-    transform: scale(0.985);
-}
-
-.contact-choice-icon {
-    flex: 0 0 46px;
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.contact-choice-icon svg {
-    width: 24px;
-    height: 24px;
-}
-
-.contact-choice-call .contact-choice-icon {
-    background: #eef2ff;
-    color: #315ee8;
-}
-
-.contact-choice-whatsapp .contact-choice-icon {
-    background: #eafaf3;
-    color: #10a76d;
-}
-
-.contact-choice-text {
-    flex: 1;
-    min-width: 0;
-}
-
-.contact-choice-text strong {
-    display: block;
-    color: #09063d;
-    font-size: 1rem;
-    font-weight: 750;
-    line-height: 1.3;
-}
-
-.contact-choice-text span {
-    display: block;
-    margin-top: 3px;
-    color: #737b8c;
-    font-size: 0.76rem;
-    line-height: 1.35;
-}
-
-.contact-choice-arrow {
-    flex: 0 0 auto;
-    color: #9aa1af;
-}
-
-.contact-choice-arrow svg {
-    width: 19px;
-    height: 19px;
-}
-
-
-/* =========================================================
-   MAP
-   ========================================================= */
-
-.property-map {
-    position: relative;
-    width: 100%;
-    min-height: 300px;
-    overflow: hidden;
-    background: #eef2f7;
-    border-radius: 0.75rem;
-}
-
-.property-map .leaflet-container {
-    width: 100%;
-    height: 100%;
-    min-height: 300px;
-    border-radius: 0.75rem;
-    font-family: "Poppins", sans-serif;
-    z-index: 1;
-}
-
-.property-map .leaflet-control-container {
+    right: 0;
+    bottom: 0;
     z-index: 1000;
-}
 
-.map-loading-state {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px;
-    background:
-        linear-gradient(
-            135deg,
-            #f8f9fc 0%,
-            #eef2f7 100%
-        );
-    color: #6b7280;
+    gap: 7px;
+
+    min-height: 32px;
+    padding: 6px 10px;
+
+    background: rgba(255,255,255,0.94);
+
+    color: #30343b;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+
+    border-top-left-radius: 8px;
+
+    box-shadow:
+        0 -1px 5px rgba(0,0,0,0.08);
+
+    pointer-events: none;
+
+    user-select: none;
+    -webkit-user-select: none;
 }
 
-.map-loading-state p {
-    margin: 0;
-    font-size: 0.88rem;
+.moonlat-map-attribution-brand {
+    color: #211b63;
+    font-weight: 700;
 }
 
-.map-loading-spinner {
-    width: 34px;
-    height: 34px;
-    border: 3px solid #dbe1ec;
-    border-top-color: #3564ed;
-    border-radius: 50%;
-    animation: moonlatMapSpin 0.8s linear infinite;
-}
-
-@keyframes moonlatMapSpin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.map-placeholder {
-    width: 100%;
-    height: 100%;
-    min-height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    padding: 2rem;
-    background:
-        linear-gradient(
-            135deg,
-            #f8f9fc 0%,
-            #eef2f7 100%
-        );
-    border-radius: 0.75rem;
-    border: 2px dashed #d1d5db;
-    box-sizing: border-box;
-}
-
-.map-placeholder svg {
-    width: 48px;
-    height: 48px;
-    margin: 0 auto 1rem;
+.moonlat-map-attribution-separator {
     color: #9ca3af;
 }
 
-.map-placeholder p {
-    margin: 0;
+.moonlat-map-attribution-osm {
+    color: #4b5563;
 }
-
-.map-placeholder-main {
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-
-.map-placeholder-sub {
-    color: #9ca3af;
-    font-size: 0.8rem;
-    margin-top: 0.5rem !important;
-}
-
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media (min-width: 641px) {
-
-    .contact-modal {
-        align-items: center;
-        padding: 20px;
-    }
-
-    .contact-modal-content {
-        border-radius: 28px;
-        padding: 32px;
-        box-shadow: 0 25px 80px rgba(9, 6, 61, 0.25);
-        transform: translateY(30px) scale(0.97);
-    }
-
-    .contact-modal.show .contact-modal-content {
-        transform: translateY(0) scale(1);
-    }
-
-    .contact-choice-list {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .contact-choice-btn {
-        min-height: 150px;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: space-between;
-        padding: 18px;
-    }
-
-    .contact-choice-arrow {
-        align-self: flex-end;
-    }
-
-}
-
-@media (max-width: 640px) {
-
-    .gallery-thumbnails {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .gallery-main {
-        aspect-ratio: 4/3;
-    }
-
-    .agent-avatar {
-        flex-basis: 58px;
-        width: 58px;
-        height: 58px;
-        min-width: 58px;
-        min-height: 58px;
-    }
-
-}
-
-@media (max-width: 480px) {
-
-    .gallery-thumbnails {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.5rem;
-    }
-
-    .gallery-thumb {
-        border-width: 2px;
-    }
-
-    .contact-modal-content {
-        padding-left: 18px;
-        padding-right: 18px;
-    }
-
-}
-
-
-
-/* =========================================================
-   MOONLAT MAPS — FINAL ATTRIBUTION
-   Prevent Leaflet branding/link from being clickable
-   ========================================================= */
 
 .property-map {
-    position: relative !important;
-    overflow: hidden !important;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Attribution container */
-.property-map .leaflet-control-attribution {
-    background: rgba(9, 6, 61, 0.94) !important;
-    color: rgba(255, 255, 255, 0.72) !important;
-
-    border: 1px solid rgba(255, 255, 255, 0.10) !important;
-    border-radius: 12px 0 0 0 !important;
-
-    padding: 7px 12px !important;
-    margin: 0 !important;
-
-    font-family: 'Poppins', sans-serif !important;
-    font-size: 0 !important;
-    line-height: 1.3 !important;
-    font-weight: 400 !important;
-
-    box-shadow: 0 -4px 20px rgba(9, 6, 61, 0.18) !important;
-
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-
-    cursor: default !important;
-}
-
-/* ---------------------------------------------------------
-   Completely remove Leaflet's clickable branding
-   --------------------------------------------------------- */
-
-.property-map
-.leaflet-control-attribution
-a[href*="leafletjs.com"] {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-}
-
-/* Remove Leaflet flag */
-.property-map
-.leaflet-control-attribution
-.leaflet-attribution-flag {
-    display: none !important;
-}
-
-/* ---------------------------------------------------------
-   MoonLat Maps
-   --------------------------------------------------------- */
-
-.property-map
-.leaflet-control-attribution::before {
-    content: 'MoonLat Maps';
-
-    display: inline-block;
-
-    color: #ffffff;
-
-    font-family: 'Poppins', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-
-    letter-spacing: -0.01em;
-
-    margin-right: 8px;
-
-    pointer-events: none;
-}
-
-/* ---------------------------------------------------------
-   Separator
-   --------------------------------------------------------- */
-
-.property-map
-.leaflet-control-attribution::after {
-    content: '|  © OpenStreetMap contributors';
-
-    display: inline-block;
-
-    color: rgba(255, 255, 255, 0.70);
-
-    font-family: 'Poppins', sans-serif;
-    font-size: 10px;
-    font-weight: 400;
-
-    pointer-events: none;
-}
-
-/* ---------------------------------------------------------
-   Disable accidental interaction with hidden branding
-   --------------------------------------------------------- */
-
-.property-map
-.leaflet-control-attribution a {
-    cursor: default !important;
-}
-
-/* ---------------------------------------------------------
-   Mobile
-   --------------------------------------------------------- */
-
-@media (max-width: 640px) {
-
-    .property-map
-    .leaflet-control-attribution {
-        padding: 6px 10px !important;
-        border-radius: 10px 0 0 0 !important;
-    }
-
-    .property-map
-    .leaflet-control-attribution::before {
-        font-size: 8px;
-        margin-right: 6px;
-    }
-
-    .property-map
-    .leaflet-control-attribution::after {
-        font-size: 8px;
-    }
-
-}
 </style>
 
 </head>
@@ -1187,6 +634,7 @@ a[href*="leafletjs.com"] {
                         viewBox="0 0 24 24"
                         fill="none"
                     >
+
                         <rect
                             x="3"
                             y="3"
@@ -1635,7 +1083,7 @@ a[href*="leafletjs.com"] {
                         />
 
                         <path
-                            d="M9 9.5c.3 1.3 1.8 3.3 4.2 4.3.7.3 1.2.2 1.6-.2l.6-.7c.2-.2.2-.5-.1-.7l-1.1-.6c-.2-.1-.4-.1-.6.1l-.4.5c-.1.1-.2.1-.4 0-.5-.2-1.7-1.2-2.2-2-.1-.2-.1-.3 0-.4l.4-.4c.1-.2.2-.4.1-.6l-.5-1.2c-.1-.3-.4-.4-.7-.3l-.7.2c-.3.1-.5.5-.4.8Z"
+                            d="M9 9.5c.3 1.3 1.8 3.3 4.2 4.3.7.3 1.2.2 1.6-.2l.6-.7c.2-.2.2-.5-.1-.7l-1.1-.6c-.2-.1-.4-.1-.6.1l-.4.5c-.1.1-.2.2-.4 0-.5-.2-1.7-1.2-2.2-2-.1-.2-.1-.3 0-.4l.4-.4c.1-.2.2-.4.1-.6l-.5-1.2c-.1-.3-.4-.4-.7-.3l-.7.2c-.3.1-.5.5-.4.8Z"
                             fill="currentColor"
                         />
 
@@ -2104,7 +1552,7 @@ let mapInitializationPromise = null;
 
 
 const DEFAULT_IMAGE =
-    'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop';
+    'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&auto=format&fit=crop';
 
 
 const LEAFLET_JS_URL =
@@ -2233,6 +1681,420 @@ function updateAuthUI() {
 }
 
 
+// =================== DYNAMIC PROPERTY SEO ===================
+
+function getPropertyPrimaryImage(property) {
+
+    if (!property) {
+        return DEFAULT_IMAGE;
+    }
+
+    let images = [];
+
+    if (
+        Array.isArray(property.images) &&
+        property.images.length > 0
+    ) {
+
+        images =
+            [...property.images];
+
+    } else if (
+        Array.isArray(property.photos) &&
+        property.photos.length > 0
+    ) {
+
+        images =
+            [...property.photos];
+
+    }
+
+    if (
+        property.image &&
+        !images.includes(property.image)
+    ) {
+
+        images.unshift(
+            property.image
+        );
+
+    }
+
+    return (
+        images[0] ||
+        DEFAULT_IMAGE
+    );
+
+}
+
+
+function createSeoDescription(property) {
+
+    if (!property) {
+
+        return 'View detailed information about this verified property on MoonLat.';
+
+    }
+
+    const title =
+        property.title ||
+        'Property';
+
+    const location =
+        property.location ||
+        property.address ||
+        property.city ||
+        'Nigeria';
+
+    const description =
+        property.description ||
+        '';
+
+    const price =
+        property.price
+            ? formatPrice(property.price)
+            : '';
+
+    let text =
+        `${title} in ${location}.`;
+
+    if (price) {
+
+        text +=
+            ` ${price}.`;
+
+    }
+
+    if (description) {
+
+        text +=
+            ` ${description}`;
+
+    }
+
+    return text
+        .replace(/\s+/g, ' ')
+        .trim()
+        .substring(0, 300);
+
+}
+
+
+function updatePropertyMeta(property) {
+
+    if (!property) {
+        return;
+    }
+
+    const title =
+        property.title ||
+        'Property Details';
+
+    const fullTitle =
+        `${title} | MoonLat`;
+
+    const description =
+        createSeoDescription(
+            property
+        );
+
+    const image =
+        getPropertyPrimaryImage(
+            property
+        );
+
+    const propertyUrl =
+        `${window.location.origin}${window.location.pathname}?id=${encodeURIComponent(property.id)}`;
+
+
+    document.title =
+        fullTitle;
+
+
+    const descriptionMeta =
+        document.querySelector(
+            'meta[name="description"]'
+        );
+
+    if (descriptionMeta) {
+
+        descriptionMeta.setAttribute(
+            'content',
+            description
+        );
+
+    }
+
+
+    const ogTitle =
+        document.querySelector(
+            'meta[property="og:title"]'
+        );
+
+    if (ogTitle) {
+
+        ogTitle.setAttribute(
+            'content',
+            fullTitle
+        );
+
+    }
+
+
+    const ogDescription =
+        document.querySelector(
+            'meta[property="og:description"]'
+        );
+
+    if (ogDescription) {
+
+        ogDescription.setAttribute(
+            'content',
+            description
+        );
+
+    }
+
+
+    const ogUrl =
+        document.getElementById(
+            'ogUrl'
+        );
+
+    if (ogUrl) {
+
+        ogUrl.setAttribute(
+            'content',
+            propertyUrl
+        );
+
+    }
+
+
+    const ogImage =
+        document.getElementById(
+            'ogImage'
+        );
+
+    if (ogImage) {
+
+        ogImage.setAttribute(
+            'content',
+            image
+        );
+
+    }
+
+
+    const ogImageAlt =
+        document.getElementById(
+            'ogImageAlt'
+        );
+
+    if (ogImageAlt) {
+
+        ogImageAlt.setAttribute(
+            'content',
+            title
+        );
+
+    }
+
+
+    const twitterTitle =
+        document.getElementById(
+            'twitterTitle'
+        );
+
+    if (twitterTitle) {
+
+        twitterTitle.setAttribute(
+            'content',
+            fullTitle
+        );
+
+    }
+
+
+    const twitterDescription =
+        document.getElementById(
+            'twitterDescription'
+        );
+
+    if (twitterDescription) {
+
+        twitterDescription.setAttribute(
+            'content',
+            description
+        );
+
+    }
+
+
+    const twitterImage =
+        document.getElementById(
+            'twitterImage'
+        );
+
+    if (twitterImage) {
+
+        twitterImage.setAttribute(
+            'content',
+            image
+        );
+
+    }
+
+
+    const twitterImageAlt =
+        document.getElementById(
+            'twitterImageAlt'
+        );
+
+    if (twitterImageAlt) {
+
+        twitterImageAlt.setAttribute(
+            'content',
+            title
+        );
+
+    }
+
+
+    const canonical =
+        document.getElementById(
+            'canonicalUrl'
+        );
+
+    if (canonical) {
+
+        canonical.setAttribute(
+            'href',
+            propertyUrl
+        );
+
+    }
+
+
+    /*
+     * Dynamic JSON-LD for the property.
+     */
+    let structuredData =
+        document.getElementById(
+            'moonlatPropertyStructuredData'
+        );
+
+
+    if (!structuredData) {
+
+        structuredData =
+            document.createElement(
+                'script'
+            );
+
+        structuredData.type =
+            'application/ld+json';
+
+        structuredData.id =
+            'moonlatPropertyStructuredData';
+
+        document.head.appendChild(
+            structuredData
+        );
+
+    }
+
+
+    const schema = {
+
+        '@context':
+            'https://schema.org',
+
+        '@type':
+            'RealEstateListing',
+
+        name:
+            title,
+
+        description:
+            description,
+
+        url:
+            propertyUrl,
+
+        image: [
+            image
+        ],
+
+        ...(property.location
+            ? {
+                address: {
+                    '@type':
+                        'PostalAddress',
+
+                    addressLocality:
+                        property.location,
+
+                    addressCountry:
+                        'NG'
+                }
+            }
+            : {}),
+
+        ...(property.price
+            ? {
+                offers: {
+                    '@type':
+                        'Offer',
+
+                    price:
+                        property.price,
+
+                    priceCurrency:
+                        'NGN',
+
+                    url:
+                        propertyUrl
+                }
+            }
+            : {}),
+
+        ...(property.type
+            ? {
+                additionalType:
+                    property.type
+            }
+            : {})
+
+    };
+
+
+    structuredData.textContent =
+        JSON.stringify(
+            schema
+        );
+
+
+    console.log(
+        'MoonLat SEO Metadata Updated:',
+        {
+            title:
+                fullTitle,
+
+            description:
+                description,
+
+            image:
+                image,
+
+            url:
+                propertyUrl
+        }
+    );
+
+}
+
+
 // =================== LOAD PROPERTY ===================
 
 async function loadProperty() {
@@ -2274,6 +2136,15 @@ async function loadProperty() {
             id: propertyDoc.id,
             ...propertyDoc.data()
         };
+
+        /*
+         * Update property-specific SEO metadata
+         * immediately after Firebase returns the
+         * property.
+         */
+        updatePropertyMeta(
+            currentProperty
+        );
 
         agentData = null;
 
@@ -2837,6 +2708,17 @@ function renderPropertyDetail() {
         'p.image:',
         p.image
     );
+
+    /*
+     * Make absolutely certain the social image
+     * corresponds to the exact image used by
+     * the property gallery.
+     */
+    updatePropertyMeta({
+        ...p,
+        image:
+            propertyImages[0]
+    });
 
     logAgentContactResolution();
 
@@ -3893,14 +3775,6 @@ function renderPropertyDetail() {
     checkDescription();
 
 
-    /*
-     * Wait for the DOM/layout to settle before
-     * initializing Leaflet.
-     *
-     * Two animation frames are intentional here.
-     * The first allows the HTML to be inserted.
-     * The second allows responsive layout calculations.
-     */
     requestAnimationFrame(
         () => {
 
@@ -3931,10 +3805,16 @@ function renderPropertyCard(p) {
 
     const image =
         p.image ||
-        DEFAULT_IMAGE;
+        (
+            Array.isArray(p.images) &&
+            p.images.length > 0
+                ? p.images[0]
+                : DEFAULT_IMAGE
+        );
 
     const photoCount =
         (p.photos && p.photos.length) ||
+        (p.images && p.images.length) ||
         5;
 
     return `
@@ -4333,58 +4213,66 @@ function updateSaveUI() {
 
 
 window.shareProperty =
-    function() {
+    async function() {
 
         if (!currentProperty) return;
 
         const url =
-            window.location.href;
+            `${window.location.origin}${window.location.pathname}?id=${encodeURIComponent(currentProperty.id)}`;
 
         const text =
-            `Check out this property: ${currentProperty.title} - ${formatPrice(currentProperty.price)}`;
+            `Check out this property: ${currentProperty.title || 'Property'} - ${formatPrice(currentProperty.price)}`;
 
         if (navigator.share) {
 
-            navigator.share({
-                title:
-                    currentProperty.title,
-                text:
-                    text,
-                url:
-                    url
-            }).catch(
-                err =>
-                    console.log(
-                        'Share cancelled'
-                    )
-            );
+            try {
+
+                await navigator.share({
+
+                    title:
+                        currentProperty.title ||
+                        'Property on MoonLat',
+
+                    text:
+                        text,
+
+                    url:
+                        url
+
+                });
+
+            } catch (err) {
+
+                console.log(
+                    'Share cancelled'
+                );
+
+            }
 
         } else {
 
-            navigator.clipboard
-                .writeText(url)
-                .then(
-                    () => {
+            try {
 
-                        showToast(
-                            'success',
-                            'Link Copied!',
-                            'Property link copied to clipboard'
-                        );
+                await navigator.clipboard
+                    .writeText(
+                        url
+                    );
 
-                    }
-                )
-                .catch(
-                    () => {
-
-                        showToast(
-                            'error',
-                            'Error',
-                            'Could not copy link'
-                        );
-
-                    }
+                showToast(
+                    'success',
+                    'Link Copied!',
+                    'Property link copied to clipboard'
                 );
+
+            } catch (err) {
+
+                showToast(
+                    'error',
+                    'Error',
+                    'Could not copy link'
+                );
+
+            }
 
         }
 
@@ -4395,7 +4283,7 @@ window.viewProperty =
     function(id) {
 
         window.location.href =
-            `property-detail.html?id=${id}`;
+            `property-detail.html?id=${encodeURIComponent(id)}`;
 
     };
 
@@ -4403,14 +4291,6 @@ window.viewProperty =
 // =========================================================
 // CONTACT AGENT
 // PUBLIC ACTION
-//
-// IMPORTANT:
-// There is intentionally NO authentication check here.
-//
-// Guests can contact agents.
-// Registered users can contact agents.
-// Authentication is only required for account-owned
-// features such as Save, Alerts, Dashboard, etc.
 // =========================================================
 
 window.openContactModal =
@@ -4526,8 +4406,10 @@ window.callAgent =
             {
                 rawPhone:
                     rawPhone,
+
                 normalizedPhone:
                     phone,
+
                 agent:
                     agentData
             }
@@ -4581,8 +4463,10 @@ window.whatsappAgent =
             {
                 rawWhatsApp:
                     rawWhatsApp,
+
                 normalizedWhatsApp:
                     whatsappNumber,
+
                 agent:
                     agentData
             }
@@ -4925,6 +4809,7 @@ window.changeMainImage =
             galleryWrapper.scrollIntoView({
                 behavior:
                     'smooth',
+
                 block:
                     'start'
             });
@@ -6056,12 +5941,7 @@ async function ensureLeafletLoaded() {
                                         interval
                                     );
 
-                                    /*
-                                     * The original script exists but did
-                                     * not create window.L. Load a clean
-                                     * fallback script without relying on
-                                     * the failed script execution.
-                                     */
+
                                     const fallbackScript =
                                         document.createElement(
                                             'script'
@@ -6358,9 +6238,6 @@ function getPropertyCoordinates(property) {
 
 async function initPropertyMap() {
 
-    /*
-     * Prevent multiple concurrent initializations.
-     */
     if (
         mapInitializationPromise
     ) {
@@ -6409,10 +6286,6 @@ async function initializePropertyMapInternal() {
     }
 
 
-    /*
-     * If a Leaflet map already exists for this
-     * property, simply refresh its dimensions.
-     */
     if (
         propertyMapInstance
     ) {
@@ -6435,9 +6308,6 @@ async function initializePropertyMapInternal() {
     }
 
 
-    /*
-     * Show loading state.
-     */
     mapContainer.innerHTML = `
 
         <div class="map-loading-state">
@@ -6453,9 +6323,6 @@ async function initializePropertyMapInternal() {
     `;
 
 
-    /*
-     * Make sure Leaflet actually exists.
-     */
     try {
 
         await ensureLeafletLoaded();
@@ -6476,10 +6343,6 @@ async function initializePropertyMapInternal() {
     }
 
 
-    /*
-     * Give the browser a moment after Leaflet
-     * becomes available.
-     */
     await new Promise(
         resolve =>
             requestAnimationFrame(
@@ -6488,19 +6351,12 @@ async function initializePropertyMapInternal() {
     );
 
 
-    /*
-     * Resolve coordinates from the property.
-     */
     let coordinates =
         getPropertyCoordinates(
             p
         );
 
 
-    /*
-     * If Firebase does not contain coordinates,
-     * attempt address/location geocoding.
-     */
     if (!coordinates) {
 
         const address =
@@ -6536,9 +6392,6 @@ async function initializePropertyMapInternal() {
     }
 
 
-    /*
-     * Still no coordinates.
-     */
     if (!coordinates) {
 
         showMapPlaceholder(
@@ -6559,17 +6412,10 @@ async function initializePropertyMapInternal() {
 
     try {
 
-        /*
-         * Clean the container before creating
-         * the Leaflet instance.
-         */
         mapContainer.innerHTML =
             '';
 
 
-        /*
-         * Defensive duplicate initialization check.
-         */
         if (
             mapContainer._leaflet_id
         ) {
@@ -6598,8 +6444,14 @@ async function initializePropertyMapInternal() {
                         zoomControl:
                             true,
 
+                        /*
+                         * IMPORTANT:
+                         * Disable Leaflet's built-in attribution.
+                         * MoonLat renders its own non-clickable
+                         * attribution below.
+                         */
                         attributionControl:
-                            true,
+                            false,
 
                         scrollWheelZoom:
                             false,
@@ -6629,8 +6481,13 @@ async function initializePropertyMapInternal() {
                 .tileLayer(
                     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                     {
+                        /*
+                         * IMPORTANT:
+                         * Attribution is rendered by MoonLat
+                         * instead of Leaflet's clickable control.
+                         */
                         attribution:
-                            '&copy; OpenStreetMap contributors',
+                            '',
 
                         maxZoom:
                             19,
@@ -6646,6 +6503,46 @@ async function initializePropertyMapInternal() {
 
         tileLayer.addTo(
             map
+        );
+
+
+        /*
+         * MoonLat custom map attribution.
+         *
+         * This is deliberately NOT a link, so tapping it
+         * cannot route the user to leafletjs.com.
+         */
+        const attribution =
+            document.createElement(
+                'div'
+            );
+
+        attribution.className =
+            'moonlat-map-attribution';
+
+        attribution.setAttribute(
+            'aria-label',
+            'MoonLat Maps. OpenStreetMap contributors.'
+        );
+
+        attribution.innerHTML = `
+
+            <span class="moonlat-map-attribution-brand">
+                MoonLat Maps
+            </span>
+
+            <span class="moonlat-map-attribution-separator">
+                |
+            </span>
+
+            <span class="moonlat-map-attribution-osm">
+                © OpenStreetMap contributors
+            </span>
+
+        `;
+
+        mapContainer.appendChild(
+            attribution
         );
 
 
@@ -6677,20 +6574,9 @@ async function initializePropertyMapInternal() {
         );
 
 
-        /*
-         * Open popup without forcing an aggressive
-         * map pan on mobile.
-         */
         marker.openPopup();
 
 
-        /*
-         * Leaflet requires an explicit size refresh
-         * when its container was rendered dynamically.
-         *
-         * Multiple refreshes cover mobile Safari,
-         * responsive CSS and delayed font/layout work.
-         */
         requestAnimationFrame(
             () => {
 
@@ -6759,10 +6645,6 @@ async function initializePropertyMapInternal() {
         );
 
 
-        /*
-         * Recalculate the map whenever the viewport
-         * changes size.
-         */
         if (
             !window.__moonlatMapResizeHandler
         ) {
@@ -6806,10 +6688,6 @@ async function initializePropertyMapInternal() {
         }
 
 
-        /*
-         * Mobile Safari can change viewport dimensions
-         * when browser chrome expands/collapses.
-         */
         if (
             window.visualViewport
         ) {
@@ -6890,10 +6768,6 @@ async function initializePropertyMapInternal() {
             null;
 
 
-        /*
-         * If Leaflet reports that the container is
-         * already initialized, clean it and retry once.
-         */
         if (
             String(
                 err?.message || ''
@@ -6920,7 +6794,11 @@ async function initializePropertyMapInternal() {
                 const retryMap =
                     window.L
                         .map(
-                            mapContainer
+                            mapContainer,
+                            {
+                                attributionControl:
+                                    false
+                            }
                         )
                         .setView(
                             [
@@ -6940,7 +6818,7 @@ async function initializePropertyMapInternal() {
                         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                         {
                             attribution:
-                                '&copy; OpenStreetMap contributors',
+                                '',
 
                             maxZoom:
                                 19,
@@ -6952,6 +6830,40 @@ async function initializePropertyMapInternal() {
                     .addTo(
                         retryMap
                     );
+
+
+                const retryAttribution =
+                    document.createElement(
+                        'div'
+                    );
+
+                retryAttribution.className =
+                    'moonlat-map-attribution';
+
+                retryAttribution.setAttribute(
+                    'aria-label',
+                    'MoonLat Maps. OpenStreetMap contributors.'
+                );
+
+                retryAttribution.innerHTML = `
+
+                    <span class="moonlat-map-attribution-brand">
+                        MoonLat Maps
+                    </span>
+
+                    <span class="moonlat-map-attribution-separator">
+                        |
+                    </span>
+
+                    <span class="moonlat-map-attribution-osm">
+                        © OpenStreetMap contributors
+                    </span>
+
+                `;
+
+                mapContainer.appendChild(
+                    retryAttribution
+                );
 
 
                 window.L
