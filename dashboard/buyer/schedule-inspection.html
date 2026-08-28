@@ -1,0 +1,3968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <title>Schedule a Viewing — MoonLat</title>
+
+  <meta
+    name="description"
+    content="Schedule a property viewing with MoonLat."
+  >
+
+  <meta name="theme-color" content="#080b12">
+  <meta name="color-scheme" content="light">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif']
+          },
+
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a'
+            }
+          },
+
+          boxShadow: {
+            soft: '0 10px 35px rgba(15,23,42,.055)',
+            premium: '0 24px 70px rgba(15,23,42,.12)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+      authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+      projectId: "moonlat-estate-dashboard",
+      storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+      messagingSenderId: "289878951289",
+      appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(
+          circle at 85% -10%,
+          rgba(37, 99, 235, .055),
+          transparent 30%
+        ),
+        #f7f8fa;
+      color: #0f172a;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    button,
+    input,
+    textarea,
+    select,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible,
+    a:focus-visible {
+      outline: 3px solid rgba(37, 99, 235, .18);
+      outline-offset: 2px;
+    }
+
+    .font-display {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, .9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .page-shell {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(
+          circle at 90% 10%,
+          rgba(96, 165, 250, .2),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 10% 100%,
+          rgba(37, 99, 235, .18),
+          transparent 34%
+        ),
+        #090d16;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      opacity: .055;
+      background-image:
+        linear-gradient(
+          rgba(255,255,255,.7) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.7) 1px,
+          transparent 1px
+        );
+      background-size: 42px 42px;
+      mask-image: linear-gradient(
+        to bottom right,
+        black,
+        transparent 78%
+      );
+      -webkit-mask-image: linear-gradient(
+        to bottom right,
+        black,
+        transparent 78%
+      );
+      pointer-events: none;
+    }
+
+    .hero-orb {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      right: -140px;
+      top: -150px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, .15);
+      filter: blur(65px);
+      pointer-events: none;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid #e5e9ef;
+      box-shadow: 0 10px 35px rgba(15,23,42,.045);
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 9px;
+      line-height: 1;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: #94a3b8;
+    }
+
+    .field {
+      width: 100%;
+      height: 48px;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      padding: 0 14px;
+      color: #0f172a;
+      font-size: 13px;
+      font-weight: 600;
+      outline: none;
+      transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease;
+    }
+
+    .field:hover {
+      border-color: #cbd5e1;
+    }
+
+    .field:focus {
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 4px rgba(59,130,246,.09);
+    }
+
+    textarea.field {
+      height: auto;
+      min-height: 120px;
+      padding-top: 13px;
+      padding-bottom: 13px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .field-wrap {
+      position: relative;
+    }
+
+    .field-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 12px;
+      pointer-events: none;
+    }
+
+    .field.with-icon {
+      padding-left: 40px;
+    }
+
+    .property-card {
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #e5e9ef;
+      box-shadow: 0 10px 35px rgba(15,23,42,.045);
+    }
+
+    .property-image {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      display: block;
+      background: #eef2f7;
+    }
+
+    .skeleton {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(
+          90deg,
+          #eef1f5 25%,
+          #f8fafc 50%,
+          #eef1f5 75%
+        );
+      background-size: 200% 100%;
+      animation: shimmer 1.35s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .fade-up {
+      animation: fadeUp .35s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .success-screen {
+      animation: successIn .4s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @keyframes successIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .success-icon {
+      animation: successIcon .55s cubic-bezier(.22,1,.36,1) .08s both;
+    }
+
+    @keyframes successIcon {
+      from {
+        opacity: 0;
+        transform: scale(.75) rotate(-8deg);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    .page-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      transition: opacity .25s ease;
+    }
+
+    .page-loader.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #dbeafe;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .toast {
+      animation: toastIn .28s cubic-bezier(.22,1,.36,1);
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .step {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 10px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .step-line {
+      width: 32px;
+      height: 1px;
+      background: #e2e8f0;
+    }
+
+    .disabled-submit {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 639px) {
+      .property-image {
+        height: 210px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- PAGE LOADER -->
+
+  <div
+    id="pageLoader"
+    class="page-loader"
+  >
+    <div class="text-center">
+
+      <div class="w-12 h-12 rounded-2xl bg-slate-950 text-white flex items-center justify-center mx-auto mb-4 shadow-xl">
+        <i class="fas fa-calendar-check text-sm"></i>
+      </div>
+
+      <div class="spinner mx-auto mb-3"></div>
+
+      <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+        MoonLat
+      </p>
+
+      <p class="text-xs text-slate-400 mt-1">
+        Preparing your viewing
+      </p>
+
+    </div>
+  </div>
+
+
+  <!-- HEADER -->
+
+  <header class="sticky top-0 z-50 glass border-b border-slate-200/80">
+
+    <div class="page-shell px-4 sm:px-6 lg:px-8">
+
+      <div class="h-[68px] sm:h-[74px] flex items-center justify-between gap-3">
+
+        <div class="flex items-center gap-3 min-w-0">
+
+          <button
+            type="button"
+            onclick="goBack()"
+            class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-slate-950 hover:border-slate-300 transition shrink-0"
+            aria-label="Go back"
+          >
+            <i class="fas fa-arrow-left text-sm"></i>
+          </button>
+
+          <div class="h-7 w-px bg-slate-200 hidden sm:block"></div>
+
+          <div class="min-w-0">
+
+            <p class="hidden sm:block text-[9px] uppercase tracking-[.17em] font-extrabold text-slate-400">
+              Buyer portal
+            </p>
+
+            <h1
+              id="pageTitle"
+              class="font-display text-base sm:text-lg font-extrabold text-slate-950 tracking-tight truncate"
+            >
+              Schedule a Viewing
+            </h1>
+
+          </div>
+
+        </div>
+
+
+        <div class="flex items-center gap-2">
+
+          <a
+            href="my-viewing.html"
+            class="hidden sm:inline-flex h-10 px-4 rounded-xl bg-white border border-slate-200 text-slate-600 text-xs font-extrabold items-center justify-center gap-2 hover:text-slate-950 hover:border-slate-300 transition"
+          >
+            <i class="far fa-calendar-check"></i>
+            My Viewings
+          </a>
+
+          <button
+            type="button"
+            onclick="window.location.href='settings.html'"
+            class="w-10 h-10 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 shrink-0"
+            aria-label="Open account settings"
+          >
+
+            <img
+              id="headerAvatar"
+              src=""
+              alt=""
+              class="hidden w-full h-full object-cover"
+            >
+
+            <span
+              id="headerInitials"
+              class="w-full h-full flex items-center justify-center text-white text-xs font-extrabold"
+            >
+              U
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="page-shell px-4 sm:px-6 lg:px-8 py-5 sm:py-7 lg:py-9">
+
+    <!-- HERO -->
+
+    <section class="hero rounded-[26px] sm:rounded-[32px] p-5 sm:p-8 lg:p-10 mb-5 sm:mb-7">
+
+      <div class="hero-grid"></div>
+      <div class="hero-orb"></div>
+
+      <div class="relative z-10">
+
+        <div class="flex items-center gap-2 mb-4">
+
+          <span class="w-7 h-px bg-blue-400"></span>
+
+          <span
+            id="heroLabel"
+            class="text-[9px] sm:text-xs uppercase tracking-[.2em] font-extrabold text-blue-300"
+          >
+            Property viewing
+          </span>
+
+        </div>
+
+
+        <h2 class="font-display text-[29px] sm:text-4xl lg:text-[44px] leading-[1.05] tracking-[-.045em] font-extrabold text-white max-w-3xl">
+
+          Choose a time
+          <span class="text-blue-300">
+            that works for you.
+          </span>
+
+        </h2>
+
+
+        <p class="text-sm sm:text-base leading-6 sm:leading-7 text-slate-300 max-w-2xl mt-4">
+          Request a convenient time to visit this property. Your viewing will remain pending until the property agent confirms it.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- LOADING PROPERTY -->
+
+    <section
+      id="propertyLoading"
+      class="panel rounded-[24px] overflow-hidden mb-5"
+    >
+
+      <div class="grid md:grid-cols-[300px_1fr]">
+
+        <div class="skeleton h-[220px] md:h-full min-h-[220px]"></div>
+
+        <div class="p-5 sm:p-6 space-y-4">
+
+          <div class="skeleton h-4 rounded w-2/3"></div>
+
+          <div class="skeleton h-3 rounded w-1/3"></div>
+
+          <div class="skeleton h-10 rounded-xl w-full mt-6"></div>
+
+          <div class="skeleton h-10 rounded-xl w-3/4"></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROPERTY -->
+
+    <section
+      id="propertySection"
+      class="property-card rounded-[24px] overflow-hidden mb-5 hidden fade-up"
+    >
+
+      <div class="grid md:grid-cols-[300px_1fr]">
+
+        <div class="relative">
+
+          <img
+            id="propertyImage"
+            src=""
+            alt=""
+            class="property-image md:h-full md:min-h-[220px]"
+          >
+
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/55 via-transparent to-transparent md:hidden pointer-events-none"></div>
+
+          <span
+            class="absolute top-3 left-3 px-2.5 py-1.5 rounded-lg bg-slate-950/75 backdrop-blur text-white text-[9px] font-extrabold uppercase tracking-wide"
+          >
+            Selected property
+          </span>
+
+        </div>
+
+
+        <div class="p-5 sm:p-6 flex flex-col justify-center">
+
+          <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-primary-600">
+            Viewing property
+          </p>
+
+          <h2
+            id="propertyTitle"
+            class="font-display text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950 mt-2"
+          >
+            Property
+          </h2>
+
+          <p
+            id="propertyLocation"
+            class="flex items-center gap-1.5 text-xs text-slate-500 mt-2"
+          >
+            <i class="fas fa-location-dot text-primary-500 text-[10px]"></i>
+            <span>Location</span>
+          </p>
+
+
+          <div
+            id="propertyMeta"
+            class="flex flex-wrap gap-4 mt-4 text-[10px] font-semibold text-slate-500"
+          >
+          </div>
+
+
+          <div
+            id="propertyPrice"
+            class="font-display text-lg font-extrabold text-slate-950 mt-4"
+          >
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ERROR -->
+
+    <section
+      id="errorState"
+      class="hidden panel rounded-[24px] p-8 sm:p-12 text-center"
+    >
+
+      <div class="w-14 h-14 mx-auto rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mb-4">
+        <i class="fas fa-triangle-exclamation"></i>
+      </div>
+
+      <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-rose-500">
+        Viewing unavailable
+      </p>
+
+      <h2 class="font-display text-xl font-extrabold text-slate-950 mt-2">
+        We couldn't prepare this viewing
+      </h2>
+
+      <p
+        id="errorText"
+        class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 leading-6"
+      >
+        The selected property could not be loaded.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-2 mt-5">
+
+        <button
+          type="button"
+          onclick="window.location.reload()"
+          class="h-10 px-5 rounded-xl bg-slate-950 text-white text-xs font-extrabold"
+        >
+          <i class="fas fa-rotate-right mr-2"></i>
+          Try again
+        </button>
+
+        <a
+          href="browse-property.html"
+          class="h-10 px-5 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-extrabold flex items-center justify-center"
+        >
+          Browse properties
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- FORM -->
+
+    <section
+      id="formSection"
+      class="hidden"
+    >
+
+      <div class="grid lg:grid-cols-[1fr_360px] gap-5 items-start">
+
+        <!-- FORM PANEL -->
+
+        <section class="panel rounded-[24px] overflow-hidden">
+
+          <div class="p-5 sm:p-6 border-b border-slate-100">
+
+            <div class="flex items-start justify-between gap-4">
+
+              <div>
+
+                <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-primary-600">
+                  Appointment details
+                </p>
+
+                <h2 class="font-display text-lg sm:text-xl font-extrabold text-slate-950 mt-1">
+                  Select your preferred time
+                </h2>
+
+              </div>
+
+
+              <div
+                id="modeBadge"
+                class="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-[9px] font-extrabold uppercase tracking-wide"
+              >
+                New request
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <form
+            id="viewingForm"
+            class="p-5 sm:p-6"
+            novalidate
+          >
+
+            <!-- STEPS -->
+
+            <div class="flex items-center mb-7 overflow-x-auto pb-1">
+
+              <div class="step shrink-0">
+
+                <span class="step-number">
+                  01
+                </span>
+
+                <span class="text-[10px] font-extrabold text-slate-700">
+                  Date
+                </span>
+
+              </div>
+
+
+              <span class="step-line mx-3"></span>
+
+
+              <div class="step shrink-0">
+
+                <span class="step-number">
+                  02
+                </span>
+
+                <span class="text-[10px] font-extrabold text-slate-700">
+                  Time
+                </span>
+
+              </div>
+
+
+              <span class="step-line mx-3"></span>
+
+
+              <div class="step shrink-0">
+
+                <span class="step-number">
+                  03
+                </span>
+
+                <span class="text-[10px] font-extrabold text-slate-700">
+                  Confirm
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- DATE / TIME -->
+
+            <div class="grid sm:grid-cols-2 gap-4">
+
+              <div>
+
+                <label
+                  for="viewingDate"
+                  class="field-label"
+                >
+                  Preferred date
+                </label>
+
+                <div class="field-wrap">
+
+                  <i class="far fa-calendar field-icon"></i>
+
+                  <input
+                    id="viewingDate"
+                    name="viewingDate"
+                    type="date"
+                    class="field with-icon"
+                    required
+                  >
+
+                </div>
+
+                <p
+                  id="dateError"
+                  class="hidden text-[10px] font-semibold text-rose-600 mt-1.5"
+                ></p>
+
+              </div>
+
+
+              <div>
+
+                <label
+                  for="viewingTime"
+                  class="field-label"
+                >
+                  Preferred time
+                </label>
+
+                <div class="field-wrap">
+
+                  <i class="far fa-clock field-icon"></i>
+
+                  <select
+                    id="viewingTime"
+                    name="viewingTime"
+                    class="field with-icon"
+                    required
+                  >
+                    <option value="">
+                      Select a time
+                    </option>
+                  </select>
+
+                </div>
+
+                <p
+                  id="timeError"
+                  class="hidden text-[10px] font-semibold text-rose-600 mt-1.5"
+                ></p>
+
+              </div>
+
+            </div>
+
+
+            <!-- CONTACT -->
+
+            <div class="mt-7 pt-6 border-t border-slate-100">
+
+              <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+                Your details
+              </p>
+
+              <p class="text-xs text-slate-500 mt-1">
+                These details will be attached to your viewing request.
+              </p>
+
+
+              <div class="grid sm:grid-cols-2 gap-4 mt-4">
+
+                <div>
+
+                  <label
+                    for="buyerName"
+                    class="field-label"
+                  >
+                    Full name
+                  </label>
+
+                  <input
+                    id="buyerName"
+                    name="buyerName"
+                    type="text"
+                    autocomplete="name"
+                    class="field"
+                    placeholder="Your full name"
+                    required
+                  >
+
+                  <p
+                    id="nameError"
+                    class="hidden text-[10px] font-semibold text-rose-600 mt-1.5"
+                  ></p>
+
+                </div>
+
+
+                <div>
+
+                  <label
+                    for="buyerPhone"
+                    class="field-label"
+                  >
+                    Phone number
+                  </label>
+
+                  <input
+                    id="buyerPhone"
+                    name="buyerPhone"
+                    type="tel"
+                    autocomplete="tel"
+                    class="field"
+                    placeholder="0800 000 0000"
+                  >
+
+                </div>
+
+
+                <div class="sm:col-span-2">
+
+                  <label
+                    for="buyerEmail"
+                    class="field-label"
+                  >
+                    Email address
+                  </label>
+
+                  <input
+                    id="buyerEmail"
+                    name="buyerEmail"
+                    type="email"
+                    autocomplete="email"
+                    class="field"
+                    placeholder="you@example.com"
+                    required
+                  >
+
+                  <p
+                    id="emailError"
+                    class="hidden text-[10px] font-semibold text-rose-600 mt-1.5"
+                  ></p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- NOTES -->
+
+            <div class="mt-7 pt-6 border-t border-slate-100">
+
+              <label
+                for="buyerNotes"
+                class="field-label"
+              >
+                Message to agent
+                <span class="normal-case tracking-normal font-semibold text-slate-300">
+                  optional
+                </span>
+              </label>
+
+              <textarea
+                id="buyerNotes"
+                name="buyerNotes"
+                class="field"
+                maxlength="500"
+                placeholder="Anything the agent should know about your visit?"
+              ></textarea>
+
+              <div class="flex justify-end mt-1">
+
+                <span
+                  id="notesCount"
+                  class="text-[9px] font-semibold text-slate-400"
+                >
+                  0 / 500
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- NOTICE -->
+
+            <div class="mt-6 p-4 rounded-2xl bg-blue-50/70 border border-blue-100">
+
+              <div class="flex items-start gap-3">
+
+                <div class="w-8 h-8 rounded-xl bg-white text-primary-600 flex items-center justify-center shrink-0 border border-blue-100">
+                  <i class="fas fa-info text-[10px]"></i>
+                </div>
+
+                <div>
+
+                  <p class="text-xs font-extrabold text-slate-800">
+                    Your request is not confirmed yet
+                  </p>
+
+                  <p class="text-[10px] text-slate-500 leading-5 mt-1">
+                    MoonLat will send your request to the property agent. The appointment becomes confirmed only after the agent approves the selected time.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <div class="mt-6">
+
+              <button
+                id="submitButton"
+                type="submit"
+                class="w-full h-12 rounded-2xl bg-slate-950 text-white text-xs font-extrabold flex items-center justify-center gap-2 hover:bg-slate-800 transition shadow-sm"
+              >
+                <i class="far fa-calendar-check text-[11px]"></i>
+
+                <span id="submitButtonText">
+                  Request viewing
+                </span>
+
+              </button>
+
+              <p class="text-center text-[9px] text-slate-400 mt-3 leading-4">
+                By submitting, you are requesting a property viewing through MoonLat.
+              </p>
+
+            </div>
+
+          </form>
+
+        </section>
+
+
+        <!-- SIDE PANEL -->
+
+        <aside class="space-y-4 lg:sticky lg:top-[94px]">
+
+          <section class="panel rounded-[24px] p-5">
+
+            <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+              How it works
+            </p>
+
+            <div class="space-y-5 mt-5">
+
+              <div class="flex items-start gap-3">
+
+                <div class="w-9 h-9 rounded-xl bg-blue-50 text-primary-600 flex items-center justify-center shrink-0">
+                  <i class="far fa-calendar text-xs"></i>
+                </div>
+
+                <div>
+
+                  <p class="text-xs font-extrabold text-slate-800">
+                    Choose a date
+                  </p>
+
+                  <p class="text-[10px] text-slate-400 leading-5 mt-1">
+                    Pick a day that works for your schedule.
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              <div class="flex items-start gap-3">
+
+                <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                  <i class="far fa-clock text-xs"></i>
+                </div>
+
+                <div>
+
+                  <p class="text-xs font-extrabold text-slate-800">
+                    Request a time
+                  </p>
+
+                  <p class="text-[10px] text-slate-400 leading-5 mt-1">
+                    Select one of the available viewing times.
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              <div class="flex items-start gap-3">
+
+                <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                  <i class="fas fa-check text-xs"></i>
+                </div>
+
+                <div>
+
+                  <p class="text-xs font-extrabold text-slate-800">
+                    Agent confirms
+                  </p>
+
+                  <p class="text-[10px] text-slate-400 leading-5 mt-1">
+                    You'll be notified when the viewing is approved.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <section class="panel rounded-[24px] p-5">
+
+            <div class="flex items-start gap-3">
+
+              <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+                <i class="fas fa-shield-halved text-xs"></i>
+              </div>
+
+              <div>
+
+                <p class="text-xs font-extrabold text-slate-800">
+                  Your information is protected
+                </p>
+
+                <p class="text-[10px] text-slate-400 leading-5 mt-1">
+                  Your viewing request is associated with your MoonLat account so you can manage it from My Viewings.
+                </p>
+
+              </div>
+
+            </div>
+
+          </section>
+
+        </aside>
+
+      </div>
+
+    </section>
+
+
+    <!-- SUCCESS -->
+
+    <section
+      id="successState"
+      class="hidden success-screen panel rounded-[28px] p-7 sm:p-12 text-center"
+    >
+
+      <div class="success-icon w-20 h-20 rounded-[26px] bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
+
+        <i class="fas fa-check text-2xl"></i>
+
+      </div>
+
+
+      <p class="text-[9px] uppercase tracking-[.2em] font-extrabold text-emerald-600 mt-6">
+        Request submitted
+      </p>
+
+
+      <h2
+        id="successTitle"
+        class="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-950 mt-2"
+      >
+        Your viewing request is pending
+      </h2>
+
+
+      <p
+        id="successDescription"
+        class="text-xs sm:text-sm text-slate-500 leading-6 max-w-lg mx-auto mt-3"
+      >
+        Your viewing request has been sent to the property agent. You'll be notified when it is confirmed.
+      </p>
+
+
+      <div
+        id="successSummary"
+        class="max-w-md mx-auto mt-6 rounded-2xl bg-slate-50 border border-slate-100 p-4 text-left"
+      >
+      </div>
+
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-2 mt-6">
+
+        <a
+          href="my-viewing.html"
+          class="w-full sm:w-auto h-11 px-6 rounded-xl bg-slate-950 text-white text-xs font-extrabold flex items-center justify-center gap-2 hover:bg-slate-800 transition"
+        >
+          <i class="far fa-calendar-check"></i>
+          View my appointments
+        </a>
+
+        <a
+          id="successPropertyLink"
+          href="#"
+          class="w-full sm:w-auto h-11 px-6 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-extrabold flex items-center justify-center gap-2 hover:bg-slate-50 transition"
+        >
+          <i class="fas fa-house"></i>
+          View property
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- TOAST -->
+
+  <div
+    id="toastContainer"
+    class="fixed left-4 right-4 sm:left-auto sm:right-5 bottom-5 z-[300] flex flex-col gap-2 items-stretch sm:items-end pointer-events-none"
+  ></div>
+
+
+  <script>
+
+    /* =========================================================
+       STATE
+    ========================================================== */
+
+    let currentUser = null;
+
+    let property = null;
+
+    let rescheduleAppointment = null;
+
+    let submitting = false;
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const propertyId =
+      params.get('property') ||
+      params.get('propertyId') ||
+      '';
+
+    const rescheduleId =
+      params.get('reschedule') ||
+      params.get('appointment') ||
+      '';
+
+
+    const FALLBACK_IMAGE =
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85';
+
+
+    const VIEWING_TIMES = [
+      '09:00',
+      '09:30',
+      '10:00',
+      '10:30',
+      '11:00',
+      '11:30',
+      '12:00',
+      '12:30',
+      '13:00',
+      '13:30',
+      '14:00',
+      '14:30',
+      '15:00',
+      '15:30',
+      '16:00',
+      '16:30',
+      '17:00',
+      '17:30'
+    ];
+
+
+    /* =========================================================
+       INIT
+    ========================================================== */
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      () => {
+
+        setupTimeOptions();
+
+        setupDateRules();
+
+        setupNotesCounter();
+
+        setupForm();
+
+        auth.onAuthStateChanged(
+          async user => {
+
+            if (!user) {
+
+              sessionStorage.setItem(
+                'redirectAfterLogin',
+                window.location.href
+              );
+
+              window.location.replace(
+                '../sign-in.html'
+              );
+
+              return;
+
+            }
+
+
+            currentUser =
+              user;
+
+
+            renderUser();
+
+
+            await initializePage();
+
+          }
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       INITIALIZE PAGE
+    ========================================================== */
+
+    async function initializePage() {
+
+      if (!propertyId) {
+
+        showError(
+          'No property was selected. Open a property first, then choose Schedule a viewing.'
+        );
+
+        hideLoader();
+
+        return;
+
+      }
+
+
+      try {
+
+        await loadProperty();
+
+
+        if (rescheduleId) {
+
+          await loadAppointmentForReschedule();
+
+        }
+
+
+        populateBuyerDetails();
+
+        hidePropertyLoading();
+
+        showProperty();
+
+        showForm();
+
+      } catch (error) {
+
+        console.error(
+          'Viewing page initialization failed:',
+          error
+        );
+
+        showError(
+          getFirestoreErrorMessage(
+            error
+          )
+        );
+
+      } finally {
+
+        hideLoader();
+
+      }
+
+    }
+
+
+    /* =========================================================
+       PROPERTY
+    ========================================================== */
+
+    async function loadProperty() {
+
+      const snapshot =
+        await db
+          .collection('properties')
+          .doc(propertyId)
+          .get();
+
+
+      if (!snapshot.exists) {
+
+        throw new Error(
+          'property-not-found'
+        );
+
+      }
+
+
+      property = {
+        id: snapshot.id,
+        ...snapshot.data()
+      };
+
+
+      renderProperty();
+
+    }
+
+
+    function renderProperty() {
+
+      if (!property) {
+        return;
+      }
+
+
+      const title =
+        getPropertyTitle(
+          property
+        );
+
+
+      const location =
+        getPropertyLocation(
+          property
+        );
+
+
+      const image =
+        safeImage(
+          getPropertyImage(
+            property
+          )
+        );
+
+
+      const imageElement =
+        document.getElementById(
+          'propertyImage'
+        );
+
+
+      imageElement.src =
+        image;
+
+      imageElement.alt =
+        title;
+
+
+      imageElement.onerror =
+        () => {
+
+          imageElement.onerror =
+            null;
+
+          imageElement.src =
+            FALLBACK_IMAGE;
+
+        };
+
+
+      setText(
+        'propertyTitle',
+        title
+      );
+
+
+      const locationElement =
+        document.getElementById(
+          'propertyLocation'
+        );
+
+
+      if (locationElement) {
+
+        locationElement.innerHTML = `
+          <i class="fas fa-location-dot text-primary-500 text-[10px]"></i>
+          <span>${escapeHtml(location)}</span>
+        `;
+
+      }
+
+
+      const meta =
+        document.getElementById(
+          'propertyMeta'
+        );
+
+
+      if (meta) {
+
+        const items = [];
+
+
+        if (property.beds) {
+
+          items.push(`
+            <span class="flex items-center gap-1.5">
+              <i class="fas fa-bed text-primary-500"></i>
+              ${escapeHtml(property.beds)} beds
+            </span>
+          `);
+
+        }
+
+
+        if (property.baths) {
+
+          items.push(`
+            <span class="flex items-center gap-1.5">
+              <i class="fas fa-bath text-primary-500"></i>
+              ${escapeHtml(property.baths)} baths
+            </span>
+          `);
+
+        }
+
+
+        if (property.area) {
+
+          items.push(`
+            <span class="flex items-center gap-1.5">
+              <i class="fas fa-ruler-combined text-primary-500"></i>
+              ${escapeHtml(property.area)} ft²
+            </span>
+          `);
+
+        }
+
+
+        meta.innerHTML =
+          items.join('');
+
+      }
+
+
+      const price =
+        document.getElementById(
+          'propertyPrice'
+        );
+
+
+      if (
+        price &&
+        property.price !== undefined &&
+        property.price !== null &&
+        property.price !== ''
+      ) {
+
+        price.textContent =
+          formatMoney(
+            property.price
+          );
+
+      } else if (price) {
+
+        price.textContent =
+          '';
+
+      }
+
+
+      const successLink =
+        document.getElementById(
+          'successPropertyLink'
+        );
+
+
+      if (successLink) {
+
+        successLink.href =
+          `property-detail.html?id=${encodeURIComponent(propertyId)}`;
+
+      }
+
+    }
+
+
+    function getPropertyTitle(
+      data
+    ) {
+
+      return (
+        data?.title ||
+        data?.name ||
+        data?.propertyTitle ||
+        'Property viewing'
+      );
+
+    }
+
+
+    function getPropertyLocation(
+      data
+    ) {
+
+      return (
+        data?.location ||
+        data?.address ||
+        data?.city ||
+        'Location unavailable'
+      );
+
+    }
+
+
+    function getPropertyImage(
+      data
+    ) {
+
+      return (
+        data?.image ||
+        data?.coverImage ||
+        data?.featuredImage ||
+        data?.propertyImage ||
+        data?.imageUrl ||
+        data?.photo ||
+        FALLBACK_IMAGE
+      );
+
+    }
+
+
+    /* =========================================================
+       RESCHEDULE
+    ========================================================== */
+
+    async function loadAppointmentForReschedule() {
+
+      const snapshot =
+        await db
+          .collection('appointments')
+          .doc(rescheduleId)
+          .get();
+
+
+      if (!snapshot.exists) {
+
+        throw new Error(
+          'appointment-not-found'
+        );
+
+      }
+
+
+      const appointment = {
+        id: snapshot.id,
+        ...snapshot.data()
+      };
+
+
+      if (
+        appointment.buyerId !==
+        currentUser.uid
+      ) {
+
+        throw new Error(
+          'appointment-access-denied'
+        );
+
+      }
+
+
+      const appointmentPropertyId =
+        appointment.propertyId ||
+        appointment.propertyID ||
+        '';
+
+
+      if (
+        appointmentPropertyId &&
+        appointmentPropertyId !==
+          propertyId
+      ) {
+
+        throw new Error(
+          'appointment-property-mismatch'
+        );
+
+      }
+
+
+      const status =
+        normalizeStatus(
+          appointment.status
+        );
+
+
+      if (
+        [
+          'cancelled',
+          'completed',
+          'declined',
+          'rejected',
+          'expired'
+        ].includes(
+          status.toLowerCase()
+        )
+      ) {
+
+        throw new Error(
+          'appointment-not-reschedulable'
+        );
+
+      }
+
+
+      rescheduleAppointment =
+        appointment;
+
+
+      document.getElementById(
+        'pageTitle'
+      ).textContent =
+        'Reschedule Viewing';
+
+
+      document.getElementById(
+        'heroLabel'
+      ).textContent =
+        'Update your appointment';
+
+
+      document.getElementById(
+        'modeBadge'
+      ).textContent =
+        'Reschedule';
+
+
+      document.getElementById(
+        'submitButtonText'
+      ).textContent =
+        'Update viewing';
+
+
+      const scheduledDate =
+        parseDate(
+          appointment.date ||
+          appointment.scheduledAt ||
+          appointment.viewingDate ||
+          appointment.appointmentDate
+        );
+
+
+      if (scheduledDate) {
+
+        const dateInput =
+          document.getElementById(
+            'viewingDate'
+          );
+
+
+        const timeSelect =
+          document.getElementById(
+            'viewingTime'
+          );
+
+
+        dateInput.value =
+          formatDateInput(
+            scheduledDate
+          );
+
+
+        const time =
+          appointment.viewingTime ||
+          appointment.time ||
+          formatTimeInput(
+            scheduledDate
+          );
+
+
+        if (
+          time &&
+          [
+            ...timeSelect.options
+          ].some(
+            option =>
+              option.value === time
+          )
+        ) {
+
+          timeSelect.value =
+            time;
+
+        }
+
+      }
+
+
+      if (appointment.notes) {
+
+        document.getElementById(
+          'buyerNotes'
+        ).value =
+          String(
+            appointment.notes
+          );
+
+        updateNotesCounter();
+
+      }
+
+    }
+
+
+    /* =========================================================
+       BUYER
+    ========================================================== */
+
+    function populateBuyerDetails() {
+
+      if (!currentUser) {
+        return;
+      }
+
+
+      const nameInput =
+        document.getElementById(
+          'buyerName'
+        );
+
+
+      const emailInput =
+        document.getElementById(
+          'buyerEmail'
+        );
+
+
+      if (
+        nameInput &&
+        !nameInput.value
+      ) {
+
+        nameInput.value =
+          currentUser.displayName ||
+          '';
+
+      }
+
+
+      if (
+        emailInput &&
+        !emailInput.value
+      ) {
+
+        emailInput.value =
+          currentUser.email ||
+          '';
+
+      }
+
+
+      /*
+       * We deliberately do not overwrite an existing
+       * phone number here because Firebase Auth phone
+       * information may not represent the buyer's preferred
+       * viewing contact number.
+       */
+
+    }
+
+
+    function renderUser() {
+
+      if (!currentUser) {
+        return;
+      }
+
+
+      const name =
+        currentUser.displayName ||
+        currentUser.email ||
+        'User';
+
+
+      const initial =
+        name
+          .trim()
+          .charAt(0)
+          .toUpperCase() ||
+        'U';
+
+
+      setText(
+        'headerInitials',
+        initial
+      );
+
+
+      const avatar =
+        document.getElementById(
+          'headerAvatar'
+        );
+
+
+      if (
+        avatar &&
+        currentUser.photoURL
+      ) {
+
+        avatar.src =
+          currentUser.photoURL;
+
+
+        avatar.onload =
+          () => {
+
+            avatar.classList.remove(
+              'hidden'
+            );
+
+            document
+              .getElementById(
+                'headerInitials'
+              )
+              ?.classList.add(
+                'hidden'
+              );
+
+          };
+
+      }
+
+    }
+
+
+    /* =========================================================
+       TIME OPTIONS
+    ========================================================== */
+
+    function setupTimeOptions() {
+
+      const select =
+        document.getElementById(
+          'viewingTime'
+        );
+
+
+      if (!select) {
+        return;
+      }
+
+
+      VIEWING_TIMES.forEach(
+        value => {
+
+          const option =
+            document.createElement(
+              'option'
+            );
+
+
+          option.value =
+            value;
+
+
+          option.textContent =
+            formatDisplayTime(
+              value
+            );
+
+
+          select.appendChild(
+            option
+          );
+
+        }
+      );
+
+    }
+
+
+    function formatDisplayTime(
+      value
+    ) {
+
+      const [
+        hours,
+        minutes
+      ] =
+        String(
+          value
+        )
+          .split(':')
+          .map(Number);
+
+
+      const date =
+        new Date();
+
+
+      date.setHours(
+        hours,
+        minutes,
+        0,
+        0
+      );
+
+
+      return date.toLocaleTimeString(
+        'en-NG',
+        {
+          hour: 'numeric',
+          minute: '2-digit'
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       DATE
+    ========================================================== */
+
+    function setupDateRules() {
+
+      const input =
+        document.getElementById(
+          'viewingDate'
+        );
+
+
+      if (!input) {
+        return;
+      }
+
+
+      const today =
+        new Date();
+
+
+      input.min =
+        formatDateInput(
+          today
+        );
+
+
+      input.addEventListener(
+        'change',
+        () => {
+
+          validateDate();
+
+          validateTimeForDate();
+
+        }
+      );
+
+    }
+
+
+    function validateDate() {
+
+      const input =
+        document.getElementById(
+          'viewingDate'
+        );
+
+
+      const error =
+        document.getElementById(
+          'dateError'
+        );
+
+
+      if (!input) {
+        return false;
+      }
+
+
+      if (!input.value) {
+
+        showFieldError(
+          error,
+          'Please choose a viewing date.'
+        );
+
+        return false;
+
+      }
+
+
+      const selected =
+        parseDateOnly(
+          input.value
+        );
+
+
+      const today =
+        startOfDay(
+          new Date()
+        );
+
+
+      if (
+        !selected ||
+        selected <
+          today
+      ) {
+
+        showFieldError(
+          error,
+          'Please choose today or a future date.'
+        );
+
+        return false;
+
+      }
+
+
+      hideFieldError(
+        error
+      );
+
+
+      return true;
+
+    }
+
+
+    function validateTimeForDate() {
+
+      const dateInput =
+        document.getElementById(
+          'viewingDate'
+        );
+
+
+      const timeSelect =
+        document.getElementById(
+          'viewingTime'
+        );
+
+
+      if (
+        !dateInput ||
+        !timeSelect ||
+        !dateInput.value
+      ) {
+        return;
+      }
+
+
+      const error =
+        document.getElementById(
+          'timeError'
+        );
+
+
+      if (!timeSelect.value) {
+        return;
+      }
+
+
+      if (
+        isSelectedTimeInPast(
+          dateInput.value,
+          timeSelect.value
+        )
+      ) {
+
+        showFieldError(
+          error,
+          'That time has already passed. Please choose a later time.'
+        );
+
+      } else {
+
+        hideFieldError(
+          error
+        );
+
+      }
+
+    }
+
+
+    /* =========================================================
+       FORM
+    ========================================================== */
+
+    function setupForm() {
+
+      const form =
+        document.getElementById(
+          'viewingForm'
+        );
+
+
+      if (!form) {
+        return;
+      }
+
+
+      form.addEventListener(
+        'submit',
+        event => {
+
+          event.preventDefault();
+
+          submitViewing();
+
+        }
+      );
+
+
+      document
+        .getElementById(
+          'viewingTime'
+        )
+        ?.addEventListener(
+          'change',
+          validateTimeForDate
+        );
+
+
+      document
+        .getElementById(
+          'buyerName'
+        )
+        ?.addEventListener(
+          'input',
+          () => {
+
+            hideFieldError(
+              document.getElementById(
+                'nameError'
+              )
+            );
+
+          }
+        );
+
+
+      document
+        .getElementById(
+          'buyerEmail'
+        )
+        ?.addEventListener(
+          'input',
+          () => {
+
+            hideFieldError(
+              document.getElementById(
+                'emailError'
+              )
+            );
+
+          }
+        );
+
+    }
+
+
+    async function submitViewing() {
+
+      if (
+        submitting ||
+        !currentUser ||
+        !property
+      ) {
+        return;
+      }
+
+
+      clearValidationErrors();
+
+
+      const dateValue =
+        document.getElementById(
+          'viewingDate'
+        ).value;
+
+
+      const timeValue =
+        document.getElementById(
+          'viewingTime'
+        ).value;
+
+
+      const buyerName =
+        document.getElementById(
+          'buyerName'
+        ).value.trim();
+
+
+      const buyerEmail =
+        document.getElementById(
+          'buyerEmail'
+        ).value.trim();
+
+
+      const buyerPhone =
+        document.getElementById(
+          'buyerPhone'
+        ).value.trim();
+
+
+      const notes =
+        document.getElementById(
+          'buyerNotes'
+        ).value.trim();
+
+
+      let valid =
+        true;
+
+
+      if (!validateDate()) {
+        valid = false;
+      }
+
+
+      if (!timeValue) {
+
+        showFieldError(
+          document.getElementById(
+            'timeError'
+          ),
+          'Please choose a viewing time.'
+        );
+
+        valid = false;
+
+      } else if (
+        isSelectedTimeInPast(
+          dateValue,
+          timeValue
+        )
+      ) {
+
+        showFieldError(
+          document.getElementById(
+            'timeError'
+          ),
+          'That time has already passed. Please choose a later time.'
+        );
+
+        valid = false;
+
+      }
+
+
+      if (
+        buyerName.length <
+        2
+      ) {
+
+        showFieldError(
+          document.getElementById(
+            'nameError'
+          ),
+          'Please enter your full name.'
+        );
+
+        valid = false;
+
+      }
+
+
+      if (
+        !isValidEmail(
+          buyerEmail
+        )
+      ) {
+
+        showFieldError(
+          document.getElementById(
+            'emailError'
+          ),
+          'Please enter a valid email address.'
+        );
+
+        valid = false;
+
+      }
+
+
+      if (!valid) {
+
+        showToast(
+          'Please check the highlighted fields.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      const scheduledAt =
+        combineDateAndTime(
+          dateValue,
+          timeValue
+        );
+
+
+      if (!scheduledAt) {
+
+        showToast(
+          'The selected date and time is invalid.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      if (
+        scheduledAt.getTime() <=
+        Date.now()
+      ) {
+
+        showToast(
+          'Please choose a future viewing time.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      submitting =
+        true;
+
+
+      setSubmittingState(
+        true
+      );
+
+
+      try {
+
+        const title =
+          getPropertyTitle(
+            property
+          );
+
+
+        const location =
+          getPropertyLocation(
+            property
+          );
+
+
+        const image =
+          getPropertyImage(
+            property
+          );
+
+
+        const timestamp =
+          firebase.firestore.Timestamp.fromDate(
+            scheduledAt
+          );
+
+
+        const payload = {
+
+          buyerId:
+            currentUser.uid,
+
+          buyerName:
+            buyerName,
+
+          buyerEmail:
+            buyerEmail,
+
+          buyerPhone:
+            buyerPhone,
+
+          propertyId:
+            property.id,
+
+          propertyTitle:
+            title,
+
+          propertyImage:
+            image,
+
+          location:
+            location,
+
+          date:
+            timestamp,
+
+          scheduledAt:
+            timestamp,
+
+          viewingDate:
+            dateValue,
+
+          viewingTime:
+            timeValue,
+
+          time:
+            timeValue,
+
+          notes:
+            notes,
+
+          status:
+            'Pending',
+
+          updatedAt:
+            firebase.firestore.FieldValue
+              .serverTimestamp()
+
+        };
+
+
+        if (rescheduleAppointment) {
+
+          payload.rescheduledAt =
+            firebase.firestore.FieldValue
+              .serverTimestamp();
+
+          payload.rescheduledBy =
+            'buyer';
+
+
+          await db
+            .collection('appointments')
+            .doc(
+              rescheduleAppointment.id
+            )
+            .update(
+              payload
+            );
+
+
+          showSuccess(
+            scheduledAt,
+            true
+          );
+
+        } else {
+
+          payload.createdAt =
+            firebase.firestore.FieldValue
+              .serverTimestamp();
+
+
+          const reference =
+            await db
+              .collection('appointments')
+              .add(
+                payload
+              );
+
+
+          showSuccess(
+            scheduledAt,
+            false,
+            reference.id
+          );
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          'Viewing submission failed:',
+          error
+        );
+
+
+        showToast(
+          getFirestoreErrorMessage(
+            error
+          ),
+          'error'
+        );
+
+      } finally {
+
+        submitting =
+          false;
+
+        setSubmittingState(
+          false
+        );
+
+      }
+
+    }
+
+
+    /* =========================================================
+       SUCCESS
+    ========================================================== */
+
+    function showSuccess(
+      scheduledAt,
+      isReschedule,
+      appointmentId
+    ) {
+
+      document
+        .getElementById(
+          'propertySection'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+
+      document
+        .getElementById(
+          'formSection'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+
+      document
+        .getElementById(
+          'errorState'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+
+      const success =
+        document.getElementById(
+          'successState'
+        );
+
+
+      if (!success) {
+        return;
+      }
+
+
+      const title =
+        document.getElementById(
+          'successTitle'
+        );
+
+
+      const description =
+        document.getElementById(
+          'successDescription'
+        );
+
+
+      if (isReschedule) {
+
+        title.textContent =
+          'Your viewing has been rescheduled';
+
+        description.textContent =
+          'The updated viewing time has been sent to the property agent. Your appointment remains pending until the agent confirms the new time.';
+
+      } else {
+
+        title.textContent =
+          'Your viewing request is pending';
+
+        description.textContent =
+          'Your viewing request has been sent to the property agent. You will be notified when the appointment is confirmed.';
+
+      }
+
+
+      const summary =
+        document.getElementById(
+          'successSummary'
+        );
+
+
+      summary.innerHTML = `
+
+        <div class="flex items-start gap-3">
+
+          <div class="w-10 h-10 rounded-xl bg-white border border-slate-200 text-primary-600 flex items-center justify-center shrink-0">
+            <i class="far fa-calendar-check text-sm"></i>
+          </div>
+
+          <div class="min-w-0">
+
+            <p class="text-xs font-extrabold text-slate-900">
+              ${escapeHtml(
+                getPropertyTitle(property)
+              )}
+            </p>
+
+            <p class="text-[10px] text-slate-400 mt-1">
+              ${escapeHtml(
+                formatLongDate(
+                  scheduledAt
+                )
+              )}
+            </p>
+
+            <p class="text-[10px] text-slate-500 font-bold mt-1">
+              ${escapeHtml(
+                scheduledAt.toLocaleTimeString(
+                  'en-NG',
+                  {
+                    hour: 'numeric',
+                    minute: '2-digit'
+                  }
+                )
+              )}
+            </p>
+
+            <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-amber-50 text-amber-700 text-[8px] font-extrabold uppercase tracking-wide mt-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+              Pending confirmation
+            </span>
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      success.classList.remove(
+        'hidden'
+      );
+
+
+      if (appointmentId) {
+
+        success.dataset.appointmentId =
+          appointmentId;
+
+      }
+
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+
+    }
+
+
+    /* =========================================================
+       SUBMIT STATE
+    ========================================================== */
+
+    function setSubmittingState(
+      active
+    ) {
+
+      const button =
+        document.getElementById(
+          'submitButton'
+        );
+
+
+      const text =
+        document.getElementById(
+          'submitButtonText'
+        );
+
+
+      if (
+        !button ||
+        !text
+      ) {
+        return;
+      }
+
+
+      button.disabled =
+        active;
+
+
+      if (active) {
+
+        button.classList.add(
+          'disabled-submit'
+        );
+
+
+        text.textContent =
+          rescheduleAppointment
+            ? 'Updating...'
+            : 'Submitting...';
+
+
+        button
+          .querySelector(
+            'i'
+          )
+          ?.classList.add(
+            'hidden'
+          );
+
+
+        const spinner =
+          document.createElement(
+            'span'
+          );
+
+
+        spinner.id =
+          'submitSpinner';
+
+
+        spinner.className =
+          'spinner w-4 h-4 border-[1.5px] border-slate-500 border-t-white';
+
+
+        button.prepend(
+          spinner
+        );
+
+      } else {
+
+        button.classList.remove(
+          'disabled-submit'
+        );
+
+
+        document
+          .getElementById(
+            'submitSpinner'
+          )
+          ?.remove();
+
+
+        button
+          .querySelector(
+            'i'
+          )
+          ?.classList.remove(
+            'hidden'
+          );
+
+
+        text.textContent =
+          rescheduleAppointment
+            ? 'Update viewing'
+            : 'Request viewing';
+
+      }
+
+    }
+
+
+    /* =========================================================
+       NOTES
+    ========================================================== */
+
+    function setupNotesCounter() {
+
+      const notes =
+        document.getElementById(
+          'buyerNotes'
+        );
+
+
+      if (!notes) {
+        return;
+      }
+
+
+      notes.addEventListener(
+        'input',
+        updateNotesCounter
+      );
+
+    }
+
+
+    function updateNotesCounter() {
+
+      const notes =
+        document.getElementById(
+          'buyerNotes'
+        );
+
+
+      const counter =
+        document.getElementById(
+          'notesCount'
+        );
+
+
+      if (
+        !notes ||
+        !counter
+      ) {
+        return;
+      }
+
+
+      counter.textContent =
+        `${notes.value.length} / 500`;
+
+    }
+
+
+    /* =========================================================
+       STATES
+    ========================================================== */
+
+    function showProperty() {
+
+      document
+        .getElementById(
+          'propertySection'
+        )
+        ?.classList.remove(
+          'hidden'
+        );
+
+    }
+
+
+    function hidePropertyLoading() {
+
+      document
+        .getElementById(
+          'propertyLoading'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+    }
+
+
+    function showForm() {
+
+      document
+        .getElementById(
+          'formSection'
+        )
+        ?.classList.remove(
+          'hidden'
+        );
+
+    }
+
+
+    function showError(
+      message
+    ) {
+
+      document
+        .getElementById(
+          'propertyLoading'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+
+      document
+        .getElementById(
+          'propertySection'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+
+      document
+        .getElementById(
+          'formSection'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+
+      const error =
+        document.getElementById(
+          'errorState'
+        );
+
+
+      const text =
+        document.getElementById(
+          'errorText'
+        );
+
+
+      if (text) {
+
+        text.textContent =
+          message;
+
+      }
+
+
+      error
+        ?.classList.remove(
+          'hidden'
+        );
+
+    }
+
+
+    /* =========================================================
+       VALIDATION
+    ========================================================== */
+
+    function clearValidationErrors() {
+
+      [
+        'dateError',
+        'timeError',
+        'nameError',
+        'emailError'
+      ].forEach(
+        id => {
+
+          hideFieldError(
+            document.getElementById(
+              id
+            )
+          );
+
+        }
+      );
+
+    }
+
+
+    function showFieldError(
+      element,
+      message
+    ) {
+
+      if (!element) {
+        return;
+      }
+
+
+      element.textContent =
+        message;
+
+
+      element.classList.remove(
+        'hidden'
+      );
+
+    }
+
+
+    function hideFieldError(
+      element
+    ) {
+
+      if (!element) {
+        return;
+      }
+
+
+      element.textContent =
+        '';
+
+
+      element.classList.add(
+        'hidden'
+      );
+
+    }
+
+
+    function isValidEmail(
+      email
+    ) {
+
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        .test(
+          String(
+            email
+          )
+            .trim()
+        );
+
+    }
+
+
+    /* =========================================================
+       DATE / TIME HELPERS
+    ========================================================== */
+
+    function combineDateAndTime(
+      dateValue,
+      timeValue
+    ) {
+
+      if (
+        !dateValue ||
+        !timeValue
+      ) {
+        return null;
+      }
+
+
+      const [
+        year,
+        month,
+        day
+      ] =
+        dateValue
+          .split('-')
+          .map(Number);
+
+
+      const [
+        hours,
+        minutes
+      ] =
+        timeValue
+          .split(':')
+          .map(Number);
+
+
+      const date =
+        new Date(
+          year,
+          month - 1,
+          day,
+          hours,
+          minutes,
+          0,
+          0
+        );
+
+
+      return isValidDate(
+        date
+      )
+        ? date
+        : null;
+
+    }
+
+
+    function parseDateOnly(
+      value
+    ) {
+
+      if (!value) {
+        return null;
+      }
+
+
+      const [
+        year,
+        month,
+        day
+      ] =
+        String(
+          value
+        )
+          .split('-')
+          .map(Number);
+
+
+      const date =
+        new Date(
+          year,
+          month - 1,
+          day
+        );
+
+
+      return isValidDate(
+        date
+      )
+        ? date
+        : null;
+
+    }
+
+
+    function isSelectedTimeInPast(
+      dateValue,
+      timeValue
+    ) {
+
+      const selected =
+        combineDateAndTime(
+          dateValue,
+          timeValue
+        );
+
+
+      if (!selected) {
+        return false;
+      }
+
+
+      /*
+       * Give buyers a small buffer so a request cannot
+       * be submitted exactly as the current minute changes.
+       */
+
+      const minimum =
+        new Date(
+          Date.now() +
+          15 * 60 * 1000
+        );
+
+
+      return (
+        selected.getTime() <
+        minimum.getTime()
+      );
+
+    }
+
+
+    function startOfDay(
+      date
+    ) {
+
+      const result =
+        new Date(
+          date
+        );
+
+
+      result.setHours(
+        0,
+        0,
+        0,
+        0
+      );
+
+
+      return result;
+
+    }
+
+
+    function formatDateInput(
+      date
+    ) {
+
+      const year =
+        date.getFullYear();
+
+
+      const month =
+        String(
+          date.getMonth() + 1
+        )
+          .padStart(
+            2,
+            '0'
+          );
+
+
+      const day =
+        String(
+          date.getDate()
+        )
+          .padStart(
+            2,
+            '0'
+          );
+
+
+      return `${year}-${month}-${day}`;
+
+    }
+
+
+    function formatTimeInput(
+      date
+    ) {
+
+      return (
+        String(
+          date.getHours()
+        )
+          .padStart(
+            2,
+            '0'
+          ) +
+        ':' +
+        String(
+          date.getMinutes()
+        )
+          .padStart(
+            2,
+            '0'
+          )
+      );
+
+    }
+
+
+    function formatLongDate(
+      date
+    ) {
+
+      return date.toLocaleDateString(
+        'en-NG',
+        {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        }
+      );
+
+    }
+
+
+    function parseDate(
+      value
+    ) {
+
+      if (!value) {
+        return null;
+      }
+
+
+      if (
+        typeof value.toDate ===
+        'function'
+      ) {
+
+        const date =
+          value.toDate();
+
+
+        return isValidDate(
+          date
+        )
+          ? date
+          : null;
+
+      }
+
+
+      if (
+        typeof value.seconds ===
+        'number'
+      ) {
+
+        const date =
+          new Date(
+            value.seconds * 1000
+          );
+
+
+        return isValidDate(
+          date
+        )
+          ? date
+          : null;
+
+      }
+
+
+      if (
+        typeof value._seconds ===
+        'number'
+      ) {
+
+        const date =
+          new Date(
+            value._seconds * 1000
+          );
+
+
+        return isValidDate(
+          date
+        )
+          ? date
+          : null;
+
+      }
+
+
+      const date =
+        new Date(
+          value
+        );
+
+
+      return isValidDate(
+        date
+      )
+        ? date
+        : null;
+
+    }
+
+
+    function isValidDate(
+      date
+    ) {
+
+      return (
+        date instanceof Date &&
+        !Number.isNaN(
+          date.getTime()
+        )
+      );
+
+    }
+
+
+    /* =========================================================
+       STATUS
+    ========================================================== */
+
+    function normalizeStatus(
+      status
+    ) {
+
+      const value =
+        String(
+          status ||
+          'Pending'
+        )
+          .trim()
+          .toLowerCase();
+
+
+      if (
+        value === 'approved' ||
+        value === 'confirm' ||
+        value === 'confirmed'
+      ) {
+        return 'Confirmed';
+      }
+
+
+      if (
+        value === 'cancelled' ||
+        value === 'canceled'
+      ) {
+        return 'Cancelled';
+      }
+
+
+      if (
+        value === 'decline'
+      ) {
+        return 'Declined';
+      }
+
+
+      if (
+        value === 'rejected'
+      ) {
+        return 'Rejected';
+      }
+
+
+      if (
+        value === 'complete'
+      ) {
+        return 'Completed';
+      }
+
+
+      if (
+        value === 'reschedule'
+      ) {
+        return 'Rescheduled';
+      }
+
+
+      return (
+        value.charAt(0).toUpperCase() +
+        value.slice(1)
+      );
+
+    }
+
+
+    /* =========================================================
+       IMAGES
+    ========================================================== */
+
+    function safeImage(
+      value
+    ) {
+
+      const image =
+        String(
+          value ||
+          ''
+        )
+          .trim();
+
+
+      if (
+        image.startsWith('https://') ||
+        image.startsWith('http://') ||
+        image.startsWith('/') ||
+        image.startsWith('./') ||
+        image.startsWith('../')
+      ) {
+
+        return image;
+
+      }
+
+
+      return FALLBACK_IMAGE;
+
+    }
+
+
+    /* =========================================================
+       MONEY
+    ========================================================== */
+
+    function formatMoney(
+      amount
+    ) {
+
+      const numeric =
+        Number(
+          amount
+        );
+
+
+      if (
+        !Number.isFinite(
+          numeric
+        )
+      ) {
+        return '';
+      }
+
+
+      return (
+        '₦' +
+        numeric.toLocaleString(
+          'en-NG'
+        )
+      );
+
+    }
+
+
+    /* =========================================================
+       FIRESTORE ERRORS
+    ========================================================== */
+
+    function getFirestoreErrorMessage(
+      error
+    ) {
+
+      if (!error) {
+        return 'Something went wrong. Please try again.';
+      }
+
+
+      const code =
+        String(
+          error.code ||
+          ''
+        );
+
+
+      if (
+        code ===
+        'permission-denied'
+      ) {
+
+        return 'MoonLat could not save this viewing request because your account does not currently have permission to create appointments.';
+
+      }
+
+
+      if (
+        code ===
+        'unavailable'
+      ) {
+
+        return 'MoonLat could not reach the database. Check your connection and try again.';
+
+      }
+
+
+      if (
+        code ===
+        'failed-precondition'
+      ) {
+
+        return 'The viewing system needs a Firestore configuration update before this request can be completed.';
+
+      }
+
+
+      switch (
+        error.message
+      ) {
+
+        case 'property-not-found':
+          return 'This property could not be found. It may have been removed or is no longer available.';
+
+        case 'appointment-not-found':
+          return 'The viewing appointment could not be found.';
+
+        case 'appointment-access-denied':
+          return 'You do not have permission to modify this viewing appointment.';
+
+        case 'appointment-property-mismatch':
+          return 'This appointment does not belong to the selected property.';
+
+        case 'appointment-not-reschedulable':
+          return 'This appointment can no longer be rescheduled.';
+
+        default:
+          return (
+            error.message ||
+            'Something went wrong. Please try again.'
+          );
+
+      }
+
+    }
+
+
+    /* =========================================================
+       NAVIGATION
+    ========================================================== */
+
+    function goBack() {
+
+      if (
+        document.referrer &&
+        document.referrer.includes(
+          window.location.host
+        )
+      ) {
+
+        window.history.back();
+
+      } else {
+
+        window.location.href =
+          'browse-property.html';
+
+      }
+
+    }
+
+
+    /* =========================================================
+       UTILITIES
+    ========================================================== */
+
+    function setText(
+      id,
+      value
+    ) {
+
+      const element =
+        document.getElementById(
+          id
+        );
+
+
+      if (element) {
+
+        element.textContent =
+          String(
+            value ?? ''
+          );
+
+      }
+
+    }
+
+
+    function escapeHtml(
+      value
+    ) {
+
+      return String(
+        value ??
+        ''
+      )
+        .replace(
+          /&/g,
+          '&amp;'
+        )
+        .replace(
+          /</g,
+          '&lt;'
+        )
+        .replace(
+          />/g,
+          '&gt;'
+        )
+        .replace(
+          /"/g,
+          '&quot;'
+        )
+        .replace(
+          /'/g,
+          '&#039;'
+        );
+
+    }
+
+
+    /* =========================================================
+       TOAST
+    ========================================================== */
+
+    function showToast(
+      message,
+      type = 'success'
+    ) {
+
+      const container =
+        document.getElementById(
+          'toastContainer'
+        );
+
+
+      if (!container) {
+        return;
+      }
+
+
+      const toast =
+        document.createElement(
+          'div'
+        );
+
+
+      const config = {
+
+        success: {
+          icon:
+            'fa-check',
+          iconClass:
+            'bg-emerald-50 text-emerald-600'
+        },
+
+        error: {
+          icon:
+            'fa-triangle-exclamation',
+          iconClass:
+            'bg-rose-50 text-rose-600'
+        },
+
+        info: {
+          icon:
+            'fa-info',
+          iconClass:
+            'bg-blue-50 text-blue-600'
+        }
+
+      };
+
+
+      const selected =
+        config[type] ||
+        config.info;
+
+
+      toast.className =
+        'toast pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl bg-white border border-slate-200 shadow-premium max-w-[420px]';
+
+
+      toast.innerHTML = `
+
+        <span class="w-8 h-8 rounded-xl ${selected.iconClass} flex items-center justify-center shrink-0">
+
+          <i class="fas ${selected.icon} text-[10px]"></i>
+
+        </span>
+
+        <span class="text-xs font-bold text-slate-800 leading-5">
+          ${escapeHtml(message)}
+        </span>
+
+      `;
+
+
+      container.appendChild(
+        toast
+      );
+
+
+      setTimeout(
+        () => {
+
+          toast.style.opacity =
+            '0';
+
+          toast.style.transform =
+            'translateY(8px)';
+
+          toast.style.transition =
+            'opacity .2s ease, transform .2s ease';
+
+
+          setTimeout(
+            () => toast.remove(),
+            220
+          );
+
+        },
+        3500
+      );
+
+    }
+
+
+    /* =========================================================
+       PAGE LOADER
+    ========================================================== */
+
+    function hideLoader() {
+
+      const loader =
+        document.getElementById(
+          'pageLoader'
+        );
+
+
+      if (!loader) {
+        return;
+      }
+
+
+      loader.classList.add(
+        'hide'
+      );
+
+
+      setTimeout(
+        () => loader.remove(),
+        280
+      );
+
+    }
+
+
+    window.addEventListener(
+      'load',
+      () => {
+
+        setTimeout(
+          hideLoader,
+          150
+        );
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
