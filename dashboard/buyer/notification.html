@@ -582,6 +582,11 @@
 
         if (!user) {
 
+          if (unsubscribe) {
+            unsubscribe();
+            unsubscribe = null;
+          }
+
           sessionStorage.setItem(
             'redirectAfterLogin',
             window.location.href
@@ -610,6 +615,7 @@
 
       if (unsubscribe) {
         unsubscribe();
+        unsubscribe = null;
       }
 
     });
@@ -628,14 +634,25 @@
 
       if (unsubscribe) {
         unsubscribe();
+        unsubscribe = null;
       }
 
 
       /*
-       * Primary query.
+       * IMPORTANT:
        *
-       * This is the standard query for:
-       * userId + createdAt.
+       * Do NOT use:
+       *
+       * .where('userId', '==', currentUser.uid)
+       * .orderBy('createdAt', 'desc')
+       *
+       * together unless the corresponding composite
+       * Firestore index exists.
+       *
+       * The notification center does not need that index.
+       *
+       * We query only by userId and perform the newest-first
+       * ordering locally in JavaScript.
        */
       unsubscribe =
         db.collection('notifications')
@@ -644,22 +661,22 @@
             '==',
             currentUser.uid
           )
-          .orderBy(
-            'createdAt',
-            'desc'
-          )
           .limit(50)
           .onSnapshot(
 
             (snapshot) => {
 
               notifications =
-                snapshot.docs.map(
-                  doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                  })
-                );
+                snapshot.docs
+                  .map(
+                    doc => ({
+                      id: doc.id,
+                      ...doc.data()
+                    })
+                  )
+                  .sort(
+                    sortNotificationsNewestFirst
+                  );
 
 
               renderNotifications();
@@ -681,6 +698,93 @@
             }
 
           );
+
+    }
+
+
+    /* =========================================================
+       NOTIFICATION SORTING
+    ========================================================== */
+
+    function sortNotificationsNewestFirst(
+      first,
+      second
+    ) {
+
+      const firstTime =
+        getTimestampMilliseconds(
+          first?.createdAt
+        );
+
+
+      const secondTime =
+        getTimestampMilliseconds(
+          second?.createdAt
+        );
+
+
+      return secondTime - firstTime;
+
+    }
+
+
+    function getTimestampMilliseconds(
+      timestamp
+    ) {
+
+      if (!timestamp) {
+        return 0;
+      }
+
+
+      try {
+
+        if (
+          typeof timestamp.toMillis ===
+          'function'
+        ) {
+
+          return timestamp.toMillis();
+
+        }
+
+
+        if (
+          typeof timestamp.toDate ===
+          'function'
+        ) {
+
+          return timestamp.toDate().getTime();
+
+        }
+
+
+        if (
+          timestamp instanceof Date
+        ) {
+
+          return timestamp.getTime();
+
+        }
+
+
+        const milliseconds =
+          new Date(
+            timestamp
+          ).getTime();
+
+
+        return Number.isNaN(
+          milliseconds
+        )
+          ? 0
+          : milliseconds;
+
+      } catch (error) {
+
+        return 0;
+
+      }
 
     }
 
@@ -1447,13 +1551,50 @@
         );
 
 
-      const isIndexError =
+      const errorCode =
+        String(
+          error?.code || ''
+        ).toLowerCase();
+
+
+      const errorMessage =
         String(
           error?.message || ''
-        ).toLowerCase()
-          .includes(
-            'index'
-          );
+        ).toLowerCase();
+
+
+      const isIndexError =
+        errorCode.includes(
+          'failed-precondition'
+        )
+        ||
+        errorMessage.includes(
+          'index'
+        );
+
+
+      const isPermissionError =
+        errorCode.includes(
+          'permission-denied'
+        );
+
+
+      let message =
+        'There was a problem connecting to your notification center.';
+
+
+      if (isIndexError) {
+
+        message =
+          'The notification query requires a Firestore index.';
+
+
+      } else if (isPermissionError) {
+
+        message =
+          'Your account does not currently have permission to access these notifications.';
+
+      }
 
 
       container.innerHTML = `
@@ -1468,16 +1609,12 @@
           </h3>
 
           <p class="text-xs text-slate-500 leading-5 max-w-md mx-auto mt-2">
-            ${
-              isIndexError
-                ? 'Your notification query needs a Firestore index before it can be displayed.'
-                : 'There was a problem connecting to your notification center.'
-            }
+            ${escapeHtml(message)}
           </p>
 
           <button
             type="button"
-            onclick="location.reload()"
+            onclick="setupRealtimeNotifications()"
             class="inline-flex items-center gap-2 h-10 px-5 mt-5 rounded-xl bg-slate-950 text-white text-xs font-extrabold hover:bg-slate-800 transition"
           >
             <i class="fas fa-rotate-right text-[10px]"></i>
@@ -1890,7 +2027,10 @@
           'MoonLat is temporarily unavailable. Please try again.',
 
         'network-request-failed':
-          'Your network connection failed. Please try again.'
+          'Your network connection failed. Please try again.',
+
+        'failed-precondition':
+          'The requested Firestore operation is not currently available.'
 
       };
 
@@ -2081,6 +2221,7 @@
         }, 100);
 
       }
+
     );
 
   </script>
