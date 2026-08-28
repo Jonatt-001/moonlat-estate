@@ -13,481 +13,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="home.css">
-
 <link rel="stylesheet" href="credit.css">
-
-
 <link rel="stylesheet" href="newsletter.css">
-
 <link rel="stylesheet" href="property-page.css">
-<style>
-
-
-
-
-</style>
-</head>
-
-<body>
-
-<!-- DRAWER (same as homepage) -->
-<div class="drawer-overlay"></div>
-<aside class="app-drawer">
-    <div class="drawer-header">
-        <button class="drawer-close" aria-label="Close Menu">✕</button>
-        <div class="drawer-title">
-            <h2>Menu</h2>
-            <p>Discover verified homes, apartments, shortlets and commercial properties across Nigeria.</p>
-        </div>
-    </div>
-
-    <div class="drawer-card">
-        <a href="dashboard/sign-in.html" class="drawer-item drawer-primary" id="drawerAuthLink">
-            <div class="drawer-icon">
-                <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-7 8a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </div>
-            <div>
-                <strong id="drawerAuthTitle">Login / Sign Up</strong>
-                <span id="drawerAuthSubtitle">Access your saved properties</span>
-            </div>
-            <span class="drawer-arrow">›</span>
-        </a>
-    </div>
-
-    <div class="drawer-section">
-        <h4>Browse Properties</h4>
-        <a href="properties.html" class="drawer-link">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M5 3h14v18H5V3Zm4 4h2m-2 4h2m4-4h2m-2 4h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>All Properties</span>
-            <span>›</span>
-        </a>
-        <a href="properties.html?type=Apartment" class="drawer-link">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M3 11L12 4l9 7v10H3V11Z" stroke="currentColor" stroke-width="2"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="2"/></svg>Apartments</span>
-            <span>›</span>
-        </a>
-        <a href="properties.html?type=House" class="drawer-link">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M3 11L12 4l9 7v10H3V11Z" stroke="currentColor" stroke-width="2"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="2"/></svg>Houses</span>
-            <span>›</span>
-        </a>
-        <a href="properties.html?type=Shortlet" class="drawer-link">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M4 10h16M6 6h12a2 2 0 0 1 2 2v8H4V8a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2"/><path d="M7 16v2m10-2v2" stroke="currentColor" stroke-width="2"/></svg>Shortlets</span>
-            <span>›</span>
-        </a>
-        <a href="properties.html?type=Commercial" class="drawer-link">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M4 21V5h10v16M14 9h6v12" stroke="currentColor" stroke-width="2"/></svg>Commercial</span>
-            <span>›</span>
-        </a>
-    </div>
-
-    <div class="drawer-section">
-        <h4>Quick Access</h4>
-        <a href="#" class="drawer-link" onclick="requireAuth(event, 'saved properties')">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M6 3h12v18l-6-4-6 4V3Z" stroke="currentColor" stroke-width="2"/></svg>Saved Properties</span>
-            <span>›</span>
-        </a>
-        <a href="#" class="drawer-link" onclick="requireAuth(event, 'property alerts')">
-            <span><svg class="link-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3a5 5 0 0 1 5 5v4l2 3H5l2-3V8a5 5 0 0 1 5-5Z" stroke="currentColor" stroke-width="2"/><path d="M10 19a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="2"/></svg>Property Alerts</span>
-            <span>›</span>
-        </a>
-    </div>
-
-    <div class="drawer-section">
-        <h4>Follow MoonLat</h4>
-        <div class="drawer-socials">
-            <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7h2.3l.4-3h-2.7V9.2c0-.9.2-1.5 1.5-1.5H16V5c-.5-.1-1.4-.2-2.3-.2-2.4 0-3.9 1.4-3.9 4V11H7v3h2.8v7h3.7z"/></svg></a>
-            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
-            <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.3L6.7 21H3.6l7.3-8.4L1 3h6.2l4.4 5.8L18.9 3z"/></svg></a>
-        </div>
-    </div>
-
-    <div class="drawer-footer">
-        <div><strong>MoonLat</strong><br><small>Version 2.0.0</small></div>
-        <div style="text-align:right"><small>© 2026</small><br><small>All Rights Reserved</small></div>
-    </div>
-</aside>
-
-<!-- HEADER -->
-<header class="header">
-    <div class="container header__container">
-        <a href="index.html" class="logo">
-            <img src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png" alt="MoonLat Logo">
-        </a>
-        <button class="menu-btn" aria-label="Open navigation">
-            <span></span><span></span><span></span>
-        </button>
-    </div>
-</header>
-
-<main>
-<!-- PAGE HEADER -->
-<section class="page-header">
-    <div class="container">
-        <div class="breadcrumb">
-            <a href="index.html">Home</a>
-            <span class="separator">/</span>
-            <span class="current">Properties</span>
-        </div>
-        <h1 class="page-title">Properties for Sale & Rent in Nigeria</h1>
-        <p class="page-subtitle">Browse verified apartments, houses, shortlets and commercial spaces from trusted property owners and agents.</p>
-    </div>
-</section>
-
-<!-- MAIN LAYOUT -->
-<section class="properties-layout">
-    <div class="container" style="display:grid;grid-template-columns:1fr;gap:24px;">
-        
-        <!-- Mobile Filter Toggle -->
-        <button class="filter-toggle-btn" id="filterToggleBtn">
-            <svg viewBox="0 0 24 24" fill="none">
-                <path d="M3 6h18M6 12h12M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <span>Filter Properties</span>
-        </button>
-
-        <div style="display:grid;gap:24px;" class="layout-grid">
-            
-            <!-- FILTER SIDEBAR -->
-            <aside class="filter-sidebar" id="filterSidebar">
-                <div class="filter-header">
-                    <h3>
-                        <svg viewBox="0 0 24 24" fill="none">
-                            <path d="M3 6h18M6 12h12M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                        Filters
-                    </h3>
-                    <div style="display:flex;gap:10px;align-items:center;">
-                        <button class="clear-filters" id="clearFilters">Clear All</button>
-                        <button class="filter-sidebar-close" id="filterCloseBtn">✕</button>
-                    </div>
-                </div>
-
-                <!-- Location -->
-                <div class="filter-group">
-                    <div class="filter-group-title">Location</div>
-                    <div class="filter-search">
-                        <svg viewBox="0 0 24 24" fill="none">
-                            <path d="M12 21s7-5 7-11a7 7 0 1 0-14 0c0 6 7 11 7 11z" stroke="currentColor" stroke-width="2"/>
-                            <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                        <input type="text" id="filterLocation" placeholder="City, State or Area">
-                    </div>
-                </div>
-
-                <!-- Property Type -->
-                <div class="filter-group">
-                    <div class="filter-group-title">Property Type</div>
-                    <div class="checkbox-group" id="typeFilters">
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Apartment">
-                            <label>Apartment <span class="count" data-type="Apartment"></span></label>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="House">
-                            <label>House <span class="count" data-type="House"></span></label>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Villa">
-                            <label>Villa <span class="count" data-type="Villa"></span></label>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Townhouse">
-                            <label>Townhouse <span class="count" data-type="Townhouse"></span></label>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Shortlet">
-                            <label>Shortlet <span class="count" data-type="Shortlet"></span></label>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Commercial">
-                            <label>Commercial <span class="count" data-type="Commercial"></span></label>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Office">
-                            <label>Office <span class="count" data-type="Office"></span></label>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Land">
-                            <label>Land <span class="count" data-type="Land"></span></label>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Price Range -->
-                <div class="filter-group">
-                    <div class="filter-group-title">Price Range (₦)</div>
-                    <div class="price-range">
-                        <div class="price-input">
-                            <span>₦</span>
-                            <input type="number" id="priceMin" placeholder="Min">
-                        </div>
-                        <span class="price-separator">—</span>
-                        <div class="price-input">
-                            <span>₦</span>
-                            <input type="number" id="priceMax" placeholder="Max">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bedrooms -->
-                <div class="filter-group">
-                    <div class="filter-group-title">Bedrooms</div>
-                    <div class="bed-buttons" id="bedButtons">
-                        <button class="bed-btn" data-beds="any">Any</button>
-                        <button class="bed-btn" data-beds="1">1</button>
-                        <button class="bed-btn" data-beds="2">2</button>
-                        <button class="bed-btn" data-beds="3">3</button>
-                        <button class="bed-btn" data-beds="4">4+</button>
-                    </div>
-                </div>
-
-                <!-- Status -->
-                <div class="filter-group">
-                    <div class="filter-group-title">Status</div>
-                    <div class="checkbox-group" id="statusFilters">
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Active">
-                            <label>For Sale</label>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Rented">
-                            <label>For Rent</label>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Shortlet">
-                            <label>Shortlet</label>
-                        </label>
-                    </div>
-                </div>
-
-                <button class="apply-filters-btn" id="applyFiltersBtn">Apply Filters</button>
-            </aside>
-
-            <!-- RESULTS AREA -->
-            <div class="results-area">
-                <!-- Results Header -->
-                <div class="results-header">
-                    <div class="results-count">
-                        Showing <strong id="resultCount">0</strong> properties
-                    </div>
-                    <div class="results-controls">
-                        <select class="sort-select" id="sortSelect">
-                            <option value="newest">Newest First</option>
-                            <option value="price-low">Price: Low to High</option>
-                            <option value="price-high">Price: High to Low</option>
-                            <option value="popular">Most Popular</option>
-                        </select>
-                        <div class="view-toggle">
-                            <button class="view-btn active" data-view="grid" aria-label="Grid view">
-                                <svg viewBox="0 0 24 24" fill="none">
-                                    <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"/>
-                                    <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"/>
-                                    <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/>
-                                    <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/>
-                                </svg>
-                            </button>
-                            <button class="view-btn" data-view="list" aria-label="List view">
-                                <svg viewBox="0 0 24 24" fill="none">
-                                    <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Active Filters -->
-                <div class="active-filters" id="activeFilters"></div>
-
-                <!-- Property Grid -->
-                <div class="property-grid" id="propertyGrid">
-                    <!-- Skeleton loaders -->
-                    <div class="skeleton-card-v"></div>
-                    <div class="skeleton-card-v"></div>
-                    <div class="skeleton-card-v"></div>
-                    <div class="skeleton-card-v"></div>
-                    <div class="skeleton-card-v"></div>
-                    <div class="skeleton-card-v"></div>
-                </div>
-
-                <!-- Pagination -->
-                <div class="pagination" id="pagination"></div>
-            </div>
-        </div>
-    </div>
-</section>
-</main>
-
-<!-- FOOTER (same as homepage) -->
-<footer class="footer">
-    <div class="footer-container">
-        <div class="footer-top">
-            <img src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png" alt="MoonLat Logo" class="footer-logo">
-            <p class="footer-text">Join thousands of Nigerians discovering verified homes, apartments, shortlets and commercial properties.</p>
-            <form class="footer-newsletter" id="newsletterForm">
-                <input type="email" id="newsletterEmail" placeholder="Enter your email address" required>
-                <button type="submit" id="newsletterBtn">Subscribe</button>
-            </form>
-            <div class="footer-socials">
-                <a href="#" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none"><path d="M20 12A8 8 0 1 0 5.1 16.1L4 20l4-1.1A8 8 0 1 0 20 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-                <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.2L6.7 21H3.6l7.3-8.3L1 3h6.2l4.4 5.8L18.9 3Z"/></svg></a>
-                <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7h2.3l.4-3h-2.7V9.1c0-.9.2-1.5 1.5-1.5H16V5c-.5-.1-1.4-.2-2.3-.2-2.3 0-3.9 1.4-3.9 4V11H7v3h2.8v7h3.7Z"/></svg></a>
-                <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/></svg></a>
-            </div>
-        </div>
-        <div class="footer-links">
-            <div class="footer-column">
-                <h4>Properties</h4>
-                <a href="properties.html?type=Apartment">Apartments</a>
-                <a href="properties.html?type=House">Houses</a>
-                <a href="properties.html?type=Shortlet">Shortlets</a>
-                <a href="properties.html?type=Commercial">Commercial</a>
-            </div>
-            <div class="footer-column">
-                <h4>Company</h4>
-                <a href="#">About Us</a>
-                <a href="#">Advertise</a>
-                <a href="#">Partners</a>
-                <a href="#">Contact</a>
-            </div>
-            <div class="footer-column">
-                <h4>Support</h4>
-                <a href="#">Help Center</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-            </div>
-        </div>
-               <div class="footer-divider"></div>
-        <div class="footer-bottom">
-            <div class="footer-bottom-links">
-                <a href="#">Terms</a>
-                <a href="#">Privacy</a>
-                <a href="#">Cookies</a>
-                <a href="#">Sitemap</a>
-            </div>
-            <p>© 2026 MoonLat. All rights reserved.</p>
-        </div>
-        
-        <!-- FOOTER CREDIT - KAALI NG -->
-        <div class="footer-credit">
-            <div class="credit-content">
-                <span class="credit-label">Built by</span>
-                <a href="kaali.space" class="credit-logo" title="KAALI NG - Crafting Digital Excellence">
-                    <span class="logo-icon">
-                        <svg viewBox="0 0 24 24" fill="none">
-                            <path d="M12 2L2 7v10l10 5 10-5V7L12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                            <path d="M12 22V12M2 7l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                            <circle cx="12" cy="12" r="2" fill="currentColor"/>
-                        </svg>
-                    </span>
-                    <span class="logo-text">
-                        <span class="logo-kaali">KAALI</span>
-                        <span class="logo-ng">NG</span>
-                    </span>
-                </a>
-            </div>
-
-        </div>
-    </div>
-</footer>
-
-
-
-<!-- TOAST -->
-<div class="toast" id="toast">
-    <div class="toast-icon"><i class="fas fa-check"></i></div>
-    <div class="toast-content">
-        <div class="toast-title" id="toastTitle">Success</div>
-        <div class="toast-message" id="toastMessage">Action completed</div>
-    </div>
-</div>
-
-
-<!-- NEWSLETTER MODAL -->
-<div class="modal-overlay" id="newsletterModal">
-    <div class="modal-container">
-        <button class="modal-close" onclick="closeNewsletterModal()">✕</button>
-        
-        <!-- Loading State -->
-        <div class="modal-loading-content" id="modalLoading" style="display: none;">
-            <div class="loading-icon">
-                <div class="loading-spinner"></div>
-            </div>
-            <h2>Subscribing...</h2>
-            <p>Please wait while we process your subscription</p>
-            
-            <div class="progress-timeline">
-                <div class="progress-step" id="step1">
-                    <div class="progress-step-icon">1</div>
-                    <div class="progress-step-text">Validating email address</div>
-                </div>
-                <div class="progress-step" id="step2">
-                    <div class="progress-step-icon">2</div>
-                    <div class="progress-step-text">Checking existing subscriptions</div>
-                </div>
-                <div class="progress-step" id="step3">
-                    <div class="progress-step-icon">3</div>
-                    <div class="progress-step-text">Adding to newsletter database</div>
-                </div>
-                <div class="progress-step" id="step4">
-                    <div class="progress-step-icon">4</div>
-                    <div class="progress-step-text">Confirming subscription</div>
-                </div>
-            </div>
-        </div>
-        
-<!-- Success State -->
-<div class="modal-success-content" id="modalSuccess" style="display: none;">
-    <div class="success-header">
-        <!-- Decorative layers -->
-        <div class="grid-pattern"></div>
-        <div class="noise-overlay"></div>
-        <div class="blob-1"></div>
-        <div class="blob-2"></div>
-        <div class="shimmer"></div>
-        <div class="confetti-container" id="confettiContainer"></div>
-        
-        <div class="success-icon"></div>
-        <h2>Congratulations!</h2>
-        <p>You're now subscribed</p>
-    </div>
-    <div class="success-body">
-        <div class="success-stats">
-            <div class="stat-stars">★★★★★</div>
-            <div class="stat-number">90,000+</div>
-            <div class="stat-label">Happy Subscribers</div>
-        </div>
-        <p class="success-message">
-            Welcome to the MoonLat community! You'll now receive exclusive listings, market insights, and verified property updates directly to your inbox.
-        </p>
-        <button class="btn-continue" onclick="closeNewsletterModal()">Continue</button>
-    </div>
-</div>
-
-        
-        <!-- Error State -->
-        <div class="modal-error-content" id="modalError" style="display: none;">
-            <div class="error-icon">✕</div>
-            <h2>Subscription Failed</h2>
-            <p>We couldn't complete your subscription at this time.</p>
-            <div class="error-details" id="errorDetails">
-                An unexpected error occurred. Please try again.
-            </div>
-            <button class="btn-retry" onclick="retrySubscription()">Try Again</button>
-        </div>
-        
-        <!-- Already Subscribed State -->
-        <div class="modal-already-content" id="modalAlready" style="display: none;">
-            <div class="already-icon">📧</div>
-            <h2>Already Subscribed!</h2>
-            <p>This email address is already registered to receive our newsletter.</p>
-            <div class="error-details" style="background: #fef3c7; color: #92400e;">
-                You're already part of our community! Check your inbox for our latest updates.
-            </div>
-            <button class="btn-ok" onclick="closeNewsletterModal()">OK, Got it</button>
-        </div>
-    </div>
-</div>
-
 
 <style>
 /* Layout grid for properties page */
@@ -498,886 +26,5351 @@
     }
 }
 </style>
+</head>
+
+<body>
+
+<!-- DRAWER (same as homepage) -->
+<div class="drawer-overlay"></div>
+
+<aside class="app-drawer">
+
+    <div class="drawer-header">
+
+        <button
+            class="drawer-close"
+            aria-label="Close Menu"
+        >
+            ✕
+        </button>
+
+        <div class="drawer-title">
+
+            <h2>Menu</h2>
+
+            <p>
+                Discover verified homes, apartments, shortlets and commercial properties across Nigeria.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="drawer-card">
+
+        <a
+            href="dashboard/sign-in.html"
+            class="drawer-item drawer-primary"
+            id="drawerAuthLink"
+        >
+
+            <div class="drawer-icon">
+
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-7 8a7 7 0 0 1 14 0"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                </svg>
+
+            </div>
+
+            <div>
+
+                <strong id="drawerAuthTitle">
+                    Login / Sign Up
+                </strong>
+
+                <span id="drawerAuthSubtitle">
+                    Access your saved properties
+                </span>
+
+            </div>
+
+            <span class="drawer-arrow">
+                ›
+            </span>
+
+        </a>
+
+    </div>
+
+
+    <div class="drawer-section">
+
+        <h4>Browse Properties</h4>
+
+        <a
+            href="properties.html"
+            class="drawer-link"
+        >
+
+            <span>
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                >
+                    <path
+                        d="M5 3h14v18H5V3Zm4 4h2m-2 4h2m4-4h2m-2 4h2"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                </svg>
+
+                All Properties
+
+            </span>
+
+            <span>›</span>
+
+        </a>
+
+
+        <a
+            href="properties.html?type=Apartment"
+            class="drawer-link"
+        >
+
+            <span>
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                >
+                    <path
+                        d="M3 11L12 4l9 7v10H3V11Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+
+                    <path
+                        d="M9 21v-6h6v6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+
+                Apartments
+
+            </span>
+
+            <span>›</span>
+
+        </a>
+
+
+        <a
+            href="properties.html?type=House"
+            class="drawer-link"
+        >
+
+            <span>
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                >
+                    <path
+                        d="M3 11L12 4l9 7v10H3V11Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+
+                    <path
+                        d="M9 21v-6h6v6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+
+                Houses
+
+            </span>
+
+            <span>›</span>
+
+        </a>
+
+
+        <a
+            href="properties.html?type=Shortlet"
+            class="drawer-link"
+        >
+
+            <span>
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                >
+                    <path
+                        d="M4 10h16M6 6h12a2 2 0 0 1 2 2v8H4V8a2 2 0 0 1 2-2Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+
+                    <path
+                        d="M7 16v2m10-2v2"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+
+                Shortlets
+
+            </span>
+
+            <span>›</span>
+
+        </a>
+
+
+        <a
+            href="properties.html?type=Commercial"
+            class="drawer-link"
+        >
+
+            <span>
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                >
+                    <path
+                        d="M4 21V5h10v16M14 9h6v12"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+
+                Commercial
+
+            </span>
+
+            <span>›</span>
+
+        </a>
+
+    </div>
+
+
+    <div class="drawer-section">
+
+        <h4>Quick Access</h4>
+
+        <a
+            href="#"
+            class="drawer-link"
+            onclick="requireAuth(event, 'saved properties')"
+        >
+
+            <span>
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                >
+                    <path
+                        d="M6 3h12v18l-6-4-6 4V3Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+
+                Saved Properties
+
+            </span>
+
+            <span>›</span>
+
+        </a>
+
+
+        <a
+            href="#"
+            class="drawer-link"
+            onclick="requireAuth(event, 'property alerts')"
+        >
+
+            <span>
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                >
+                    <path
+                        d="M12 3a5 5 0 0 1 5 5v4l2 3H5l2-3V8a5 5 0 0 1 5-5Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+
+                    <path
+                        d="M10 19a2 2 0 0 0 4 0"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                </svg>
+
+                Property Alerts
+
+            </span>
+
+            <span>›</span>
+
+        </a>
+
+    </div>
+
+
+    <div class="drawer-section">
+
+        <h4>Follow MoonLat</h4>
+
+        <div class="drawer-socials">
+
+            <a
+                href="#"
+                aria-label="Facebook"
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                >
+                    <path
+                        d="M13.5 21v-7h2.3l.4-3h-2.7V9.2c0-.9.2-1.5 1.5-1.5H16V5c-.5-.1-1.4-.2-2.3-.2-2.4 0-3.9 1.4-3.9 4V11H7v3h2.8v7h3.7z"
+                    />
+                </svg>
+            </a>
+
+
+            <a
+                href="#"
+                aria-label="Instagram"
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                >
+                    <rect
+                        x="3"
+                        y="3"
+                        width="18"
+                        height="18"
+                        rx="5"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="4"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+
+                    <circle
+                        cx="17.5"
+                        cy="6.5"
+                        r="1"
+                        fill="currentColor"
+                    />
+                </svg>
+            </a>
+
+
+            <a
+                href="#"
+                aria-label="X"
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                >
+                    <path
+                        d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.3L6.7 21H3.6l7.3-8.4L1 3h6.2l4.4 5.8L18.9 3z"
+                    />
+                </svg>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="drawer-footer">
+
+        <div>
+            <strong>MoonLat</strong>
+            <br>
+            <small>Version 2.0.0</small>
+        </div>
+
+        <div style="text-align:right">
+            <small>© 2026</small>
+            <br>
+            <small>All Rights Reserved</small>
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- HEADER -->
+<header class="header">
+
+    <div class="container header__container">
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+
+            <img
+                src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png"
+                alt="MoonLat Logo"
+            >
+
+        </a>
+
+
+        <button
+            class="menu-btn"
+            aria-label="Open navigation"
+        >
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<main>
+
+<!-- PAGE HEADER -->
+<section class="page-header">
+
+    <div class="container">
+
+        <div class="breadcrumb">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <span class="separator">
+                /
+            </span>
+
+            <span class="current">
+                Properties
+            </span>
+
+        </div>
+
+
+        <h1 class="page-title">
+            Properties for Sale & Rent in Nigeria
+        </h1>
+
+
+        <p class="page-subtitle">
+            Browse verified apartments, houses, shortlets and commercial spaces from trusted property owners and agents.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- MAIN LAYOUT -->
+<section class="properties-layout">
+
+    <div
+        class="container"
+        style="display:grid;grid-template-columns:1fr;gap:24px;"
+    >
+
+        <!-- Mobile Filter Toggle -->
+        <button
+            class="filter-toggle-btn"
+            id="filterToggleBtn"
+        >
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+            >
+                <path
+                    d="M3 6h18M6 12h12M10 18h4"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                />
+            </svg>
+
+            <span>
+                Filter Properties
+            </span>
+
+        </button>
+
+
+        <div
+            style="display:grid;gap:24px;"
+            class="layout-grid"
+        >
+
+            <!-- FILTER SIDEBAR -->
+            <aside
+                class="filter-sidebar"
+                id="filterSidebar"
+            >
+
+                <div class="filter-header">
+
+                    <h3>
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+                            <path
+                                d="M3 6h18M6 12h12M10 18h4"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+
+                        Filters
+
+                    </h3>
+
+
+                    <div
+                        style="display:flex;gap:10px;align-items:center;"
+                    >
+
+                        <button
+                            class="clear-filters"
+                            id="clearFilters"
+                        >
+                            Clear All
+                        </button>
+
+                        <button
+                            class="filter-sidebar-close"
+                            id="filterCloseBtn"
+                        >
+                            ✕
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Location -->
+                <div class="filter-group">
+
+                    <div class="filter-group-title">
+                        Location
+                    </div>
+
+                    <div class="filter-search">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+                            <path
+                                d="M12 21s7-5 7-11a7 7 0 1 0-14 0c0 6 7 11 7 11z"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            />
+
+                            <circle
+                                cx="12"
+                                cy="10"
+                                r="2.5"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            />
+                        </svg>
+
+
+                        <input
+                            type="text"
+                            id="filterLocation"
+                            placeholder="City, State or Area"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Property Type -->
+                <div class="filter-group">
+
+                    <div class="filter-group-title">
+                        Property Type
+                    </div>
+
+
+                    <div
+                        class="checkbox-group"
+                        id="typeFilters"
+                    >
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                value="Apartment"
+                            >
+
+                            <label>
+                                Apartment
+                                <span
+                                    class="count"
+                                    data-type="Apartment"
+                                ></span>
+                            </label>
+
+                        </label>
+
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                value="House"
+                            >
+
+                            <label>
+                                House
+                                <span
+                                    class="count"
+                                    data-type="House"
+                                ></span>
+                            </label>
+
+                        </label>
+
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                value="Villa"
+                            >
+
+                            <label>
+                                Villa
+                                <span
+                                    class="count"
+                                    data-type="Villa"
+                                ></span>
+                            </label>
+
+                        </label>
+
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                value="Townhouse"
+                            >
+
+                            <label>
+                                Townhouse
+                                <span
+                                    class="count"
+                                    data-type="Townhouse"
+                                ></span>
+                            </label>
+
+                        </label>
+
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                value="Shortlet"
+                            >
+
+                            <label>
+                                Shortlet
+                                <span
+                                    class="count"
+                                    data-type="Shortlet"
+                                ></span>
+                            </label>
+
+                        </label>
+
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                value="Commercial"
+                            >
+
+                            <label>
+                                Commercial
+                                <span
+                                    class="count"
+                                    data-type="Commercial"
+                                ></span>
+                            </label>
+
+                        </label>
+
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                value="Office"
+                            >
+
+                            <label>
+                                Office
+                                <span
+                                    class="count"
+                                    data-type="Office"
+                                ></span>
+                            </label>
+
+                        </label>
+
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                value="Land"
+                            >
+
+                            <label>
+                                Land
+                                <span
+                                    class="count"
+                                    data-type="Land"
+                                ></span>
+                            </label>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Price Range -->
+                <div class="filter-group">
+
+                    <div class="filter-group-title">
+                        Price Range (₦)
+                    </div>
+
+
+                    <div class="price-range">
+
+                        <div class="price-input">
+
+                            <span>₦</span>
+
+                            <input
+                                type="number"
+                                id="priceMin"
+                                placeholder="Min"
+                            >
+
+                        </div>
+
+
+                        <span class="price-separator">
+                            —
+                        </span>
+
+
+                        <div class="price-input">
+
+                            <span>₦</span>
+
+                            <input
+                                type="number"
+                                id="priceMax"
+                                placeholder="Max"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Bedrooms -->
+                <div class="filter-group">
+
+                    <div class="filter-group-title">
+                        Bedrooms
+                    </div>
+
+
+                    <div
+                        class="bed-buttons"
+                        id="bedButtons"
+                    >
+
+                        <button
+                            class="bed-btn"
+                            data-beds="any"
+                        >
+                            Any
+                        </button>
+
+                        <button
+                            class="bed-btn"
+                            data-beds="1"
+                        >
+                            1
+                        </button>
+
+                        <button
+                            class="bed-btn"
+                            data-beds="2"
+                        >
+                            2
+                        </button>
+
+                        <button
+                            class="bed-btn"
+                            data-beds="3"
+                        >
+                            3
+                        </button>
+
+                        <button
+                            class="bed-btn"
+                            data-beds="4"
+                        >
+                            4+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Status -->
+                <div class="filter-group">
+
+                    <div class="filter-group-title">
+                        Status
+                    </div>
+
+
+                    <div
+                        class="checkbox-group"
+                        id="statusFilters"
+                    >
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                value="Active"
+                            >
+
+                            <label>
+                                For Sale
+                            </label>
+
+                        </label>
+
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                value="Rented"
+                            >
+
+                            <label>
+                                For Rent
+                            </label>
+
+                        </label>
+
+
+                        <label class="checkbox-item">
+
+                            <input
+                                type="checkbox"
+                                value="Shortlet"
+                            >
+
+                            <label>
+                                Shortlet
+                            </label>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="apply-filters-btn"
+                    id="applyFiltersBtn"
+                >
+                    Apply Filters
+                </button>
+
+            </aside>
+
+
+            <!-- RESULTS AREA -->
+            <div class="results-area">
+
+                <!-- Results Header -->
+                <div class="results-header">
+
+                    <div class="results-count">
+
+                        Showing
+                        <strong id="resultCount">
+                            0
+                        </strong>
+                        properties
+
+                    </div>
+
+
+                    <div class="results-controls">
+
+                        <select
+                            class="sort-select"
+                            id="sortSelect"
+                        >
+
+                            <option value="newest">
+                                Newest First
+                            </option>
+
+                            <option value="price-low">
+                                Price: Low to High
+                            </option>
+
+                            <option value="price-high">
+                                Price: High to Low
+                            </option>
+
+                            <option value="popular">
+                                Most Popular
+                            </option>
+
+                        </select>
+
+
+                        <div class="view-toggle">
+
+                            <button
+                                class="view-btn active"
+                                data-view="grid"
+                                aria-label="Grid view"
+                            >
+
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                >
+                                    <rect
+                                        x="3"
+                                        y="3"
+                                        width="7"
+                                        height="7"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    />
+
+                                    <rect
+                                        x="14"
+                                        y="3"
+                                        width="7"
+                                        height="7"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    />
+
+                                    <rect
+                                        x="3"
+                                        y="14"
+                                        width="7"
+                                        height="7"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    />
+
+                                    <rect
+                                        x="14"
+                                        y="14"
+                                        width="7"
+                                        height="7"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    />
+
+                                </svg>
+
+                            </button>
+
+
+                            <button
+                                class="view-btn"
+                                data-view="list"
+                                aria-label="List view"
+                            >
+
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                >
+
+                                    <path
+                                        d="M3 6h18M3 12h18M3 18h18"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                    />
+
+                                </svg>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Active Filters -->
+                <div
+                    class="active-filters"
+                    id="activeFilters"
+                ></div>
+
+
+                <!-- Property Grid -->
+                <div
+                    class="property-grid"
+                    id="propertyGrid"
+                >
+
+                    <!-- Skeleton loaders -->
+
+                    <div class="skeleton-card-v"></div>
+                    <div class="skeleton-card-v"></div>
+                    <div class="skeleton-card-v"></div>
+                    <div class="skeleton-card-v"></div>
+                    <div class="skeleton-card-v"></div>
+                    <div class="skeleton-card-v"></div>
+
+                </div>
+
+
+                <!-- Pagination -->
+                <div
+                    class="pagination"
+                    id="pagination"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- FOOTER (same as homepage) -->
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div class="footer-top">
+
+            <img
+                src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png"
+                alt="MoonLat Logo"
+                class="footer-logo"
+            >
+
+
+            <p class="footer-text">
+                Join thousands of Nigerians discovering verified homes, apartments, shortlets and commercial properties.
+            </p>
+
+
+            <form
+                class="footer-newsletter"
+                id="newsletterForm"
+            >
+
+                <input
+                    type="email"
+                    id="newsletterEmail"
+                    placeholder="Enter your email address"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    id="newsletterBtn"
+                >
+                    Subscribe
+                </button>
+
+            </form>
+
+
+            <div class="footer-socials">
+
+                <a
+                    href="#"
+                    aria-label="WhatsApp"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <path
+                            d="M20 12A8 8 0 1 0 5.1 16.1L4 20l4-1.1A8 8 0 1 0 20 12Z"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+
+                    </svg>
+
+                </a>
+
+
+                <a
+                    href="#"
+                    aria-label="X"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+
+                        <path
+                            d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.2L6.7 21H3.6l7.3-8.3L1 3h6.2l4.4 5.8L18.9 3Z"
+                        />
+
+                    </svg>
+
+                </a>
+
+
+                <a
+                    href="#"
+                    aria-label="Facebook"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+
+                        <path
+                            d="M13.5 21v-7h2.3l.4-3h-2.7V9.1c0-.9.2-1.5 1.5-1.5H16V5c-.5-.1-1.4-.2-2.3-.2-2.3 0-3.9 1.4-3.9 4V11H7v3h2.8v7h3.7Z"
+                        />
+
+                    </svg>
+
+                </a>
+
+
+                <a
+                    href="#"
+                    aria-label="Instagram"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <rect
+                            x="3"
+                            y="3"
+                            width="18"
+                            height="18"
+                            rx="5"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        />
+
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="4"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        />
+
+                    </svg>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <div class="footer-column">
+
+                <h4>
+                    Properties
+                </h4>
+
+                <a href="properties.html?type=Apartment">
+                    Apartments
+                </a>
+
+                <a href="properties.html?type=House">
+                    Houses
+                </a>
+
+                <a href="properties.html?type=Shortlet">
+                    Shortlets
+                </a>
+
+                <a href="properties.html?type=Commercial">
+                    Commercial
+                </a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h4>
+                    Company
+                </h4>
+
+                <a href="#">
+                    About Us
+                </a>
+
+                <a href="#">
+                    Advertise
+                </a>
+
+                <a href="#">
+                    Partners
+                </a>
+
+                <a href="#">
+                    Contact
+                </a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h4>
+                    Support
+                </h4>
+
+                <a href="#">
+                    Help Center
+                </a>
+
+                <a href="#">
+                    Privacy Policy
+                </a>
+
+                <a href="#">
+                    Terms of Service
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-divider"></div>
+
+
+        <div class="footer-bottom">
+
+            <div class="footer-bottom-links">
+
+                <a href="#">
+                    Terms
+                </a>
+
+                <a href="#">
+                    Privacy
+                </a>
+
+                <a href="#">
+                    Cookies
+                </a>
+
+                <a href="#">
+                    Sitemap
+                </a>
+
+            </div>
+
+
+            <p>
+                © 2026 MoonLat. All rights reserved.
+            </p>
+
+        </div>
+
+
+        <!-- FOOTER CREDIT - KAALI NG -->
+        <div class="footer-credit">
+
+            <div class="credit-content">
+
+                <span class="credit-label">
+                    Built by
+                </span>
+
+
+                <a
+                    href="kaali.space"
+                    class="credit-logo"
+                    title="KAALI NG - Crafting Digital Excellence"
+                >
+
+                    <span class="logo-icon">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+
+                            <path
+                                d="M12 2L2 7v10l10 5 10-5V7L12 2z"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linejoin="round"
+                            />
+
+                            <path
+                                d="M12 22V12M2 7l10 5 10-5"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linejoin="round"
+                            />
+
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="2"
+                                fill="currentColor"
+                            />
+
+                        </svg>
+
+                    </span>
+
+
+                    <span class="logo-text">
+
+                        <span class="logo-kaali">
+                            KAALI
+                        </span>
+
+                        <span class="logo-ng">
+                            NG
+                        </span>
+
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- TOAST -->
+<div
+    class="toast"
+    id="toast"
+>
+
+    <div class="toast-icon">
+        <i class="fas fa-check"></i>
+    </div>
+
+
+    <div class="toast-content">
+
+        <div
+            class="toast-title"
+            id="toastTitle"
+        >
+            Success
+        </div>
+
+        <div
+            class="toast-message"
+            id="toastMessage"
+        >
+            Action completed
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- NEWSLETTER MODAL -->
+<div
+    class="modal-overlay"
+    id="newsletterModal"
+>
+
+    <div class="modal-container">
+
+        <button
+            class="modal-close"
+            onclick="closeNewsletterModal()"
+        >
+            ✕
+        </button>
+
+
+        <!-- Loading State -->
+        <div
+            class="modal-loading-content"
+            id="modalLoading"
+            style="display: none;"
+        >
+
+            <div class="loading-icon">
+
+                <div class="loading-spinner"></div>
+
+            </div>
+
+
+            <h2>
+                Subscribing...
+            </h2>
+
+
+            <p>
+                Please wait while we process your subscription
+            </p>
+
+
+            <div class="progress-timeline">
+
+                <div
+                    class="progress-step"
+                    id="step1"
+                >
+
+                    <div class="progress-step-icon">
+                        1
+                    </div>
+
+                    <div class="progress-step-text">
+                        Validating email address
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="progress-step"
+                    id="step2"
+                >
+
+                    <div class="progress-step-icon">
+                        2
+                    </div>
+
+                    <div class="progress-step-text">
+                        Checking existing subscriptions
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="progress-step"
+                    id="step3"
+                >
+
+                    <div class="progress-step-icon">
+                        3
+                    </div>
+
+                    <div class="progress-step-text">
+                        Adding to newsletter database
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="progress-step"
+                    id="step4"
+                >
+
+                    <div class="progress-step-icon">
+                        4
+                    </div>
+
+                    <div class="progress-step-text">
+                        Confirming subscription
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Success State -->
+        <div
+            class="modal-success-content"
+            id="modalSuccess"
+            style="display: none;"
+        >
+
+            <div class="success-header">
+
+                <!-- Decorative layers -->
+
+                <div class="grid-pattern"></div>
+
+                <div class="noise-overlay"></div>
+
+                <div class="blob-1"></div>
+
+                <div class="blob-2"></div>
+
+                <div class="shimmer"></div>
+
+                <div
+                    class="confetti-container"
+                    id="confettiContainer"
+                ></div>
+
+
+                <div class="success-icon"></div>
+
+
+                <h2>
+                    Congratulations!
+                </h2>
+
+
+                <p>
+                    You're now subscribed
+                </p>
+
+            </div>
+
+
+            <div class="success-body">
+
+                <div class="success-stats">
+
+                    <div class="stat-stars">
+                        ★★★★★
+                    </div>
+
+                    <div class="stat-number">
+                        90,000+
+                    </div>
+
+                    <div class="stat-label">
+                        Happy Subscribers
+                    </div>
+
+                </div>
+
+
+                <p class="success-message">
+
+                    Welcome to the MoonLat community! You'll now receive exclusive listings, market insights, and verified property updates directly to your inbox.
+
+                </p>
+
+
+                <button
+                    class="btn-continue"
+                    onclick="closeNewsletterModal()"
+                >
+                    Continue
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Error State -->
+        <div
+            class="modal-error-content"
+            id="modalError"
+            style="display: none;"
+        >
+
+            <div class="error-icon">
+                ✕
+            </div>
+
+
+            <h2>
+                Subscription Failed
+            </h2>
+
+
+            <p>
+                We couldn't complete your subscription at this time.
+            </p>
+
+
+            <div
+                class="error-details"
+                id="errorDetails"
+            >
+                An unexpected error occurred. Please try again.
+            </div>
+
+
+            <button
+                class="btn-retry"
+                onclick="retrySubscription()"
+            >
+                Try Again
+            </button>
+
+        </div>
+
+
+        <!-- Already Subscribed State -->
+        <div
+            class="modal-already-content"
+            id="modalAlready"
+            style="display: none;"
+        >
+
+            <div class="already-icon">
+                📧
+            </div>
+
+
+            <h2>
+                Already Subscribed!
+            </h2>
+
+
+            <p>
+                This email address is already registered to receive our newsletter.
+            </p>
+
+
+            <div
+                class="error-details"
+                style="background: #fef3c7; color: #92400e;"
+            >
+                You're already part of our community! Check your inbox for our latest updates.
+            </div>
+
+
+            <button
+                class="btn-ok"
+                onclick="closeNewsletterModal()"
+            >
+                OK, Got it
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-import { getFirestore, collection, query, where, orderBy, limit, onSnapshot, doc, getDoc, getDocs, updateDoc, arrayUnion, arrayRemove, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+
+import {
+    getAuth,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+
+import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    orderBy,
+    limit,
+    onSnapshot,
+    doc,
+    getDoc,
+    updateDoc,
+    arrayUnion,
+    arrayRemove,
+    setDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
-    authDomain: "moonlat-estate-dashboard.firebaseapp.com",
-    projectId: "moonlat-estate-dashboard",
-    storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
-    messagingSenderId: "289878951289",
-    appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+
+    apiKey:
+        "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+
+    authDomain:
+        "moonlat-estate-dashboard.firebaseapp.com",
+
+    projectId:
+        "moonlat-estate-dashboard",
+
+    storageBucket:
+        "moonlat-estate-dashboard.firebasestorage.app",
+
+    messagingSenderId:
+        "289878951289",
+
+    appId:
+        "1:289878951289:web:18db63e3ab8f071b811ba8"
+
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+
+const app =
+    initializeApp(firebaseConfig);
+
+
+const auth =
+    getAuth(app);
+
+
+const db =
+    getFirestore(app);
+
 
 // =================== STATE ===================
+
 let currentUser = null;
+
 let allProperties = [];
+
 let filteredProperties = [];
+
 let savedPropertyIds = [];
+
 let currentPage = 1;
+
 const itemsPerPage = 12;
 
-const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop';
+
+const DEFAULT_IMAGE =
+    'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop';
+
 
 // Filter state
+
 let filters = {
+
     location: '',
+
     types: [],
+
     priceMin: null,
+
     priceMax: null,
+
     beds: 'any',
+
     statuses: [],
+
     sort: 'newest',
+
     view: 'grid'
+
 };
+
 
 // =================== URL PARAMS ===================
+
 function loadFiltersFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
     if (params.get('location')) {
-        filters.location = params.get('location');
-        document.getElementById('filterLocation').value = filters.location;
+
+        filters.location =
+            params.get('location');
+
+        document.getElementById(
+            'filterLocation'
+        ).value =
+            filters.location;
+
     }
+
+
     if (params.get('type')) {
-        filters.types = params.get('type').split(',');
-        filters.types.forEach(type => {
-            const checkbox = document.querySelector(`#typeFilters input[value="${type}"]`);
-            if (checkbox) checkbox.checked = true;
-        });
+
+        filters.types =
+            params
+                .get('type')
+                .split(',');
+
+
+        filters.types.forEach(
+            type => {
+
+                const checkbox =
+                    document.querySelector(
+                        `#typeFilters input[value="${type}"]`
+                    );
+
+
+                if (checkbox) {
+
+                    checkbox.checked =
+                        true;
+
+                }
+
+            }
+        );
+
     }
+
+
     if (params.get('minPrice')) {
-        filters.priceMin = parseInt(params.get('minPrice'));
-        document.getElementById('priceMin').value = filters.priceMin;
+
+        filters.priceMin =
+            parseInt(
+                params.get('minPrice')
+            );
+
+
+        document.getElementById(
+            'priceMin'
+        ).value =
+            filters.priceMin;
+
     }
+
+
     if (params.get('maxPrice')) {
-        filters.priceMax = parseInt(params.get('maxPrice'));
-        document.getElementById('priceMax').value = filters.priceMax;
+
+        filters.priceMax =
+            parseInt(
+                params.get('maxPrice')
+            );
+
+
+        document.getElementById(
+            'priceMax'
+        ).value =
+            filters.priceMax;
+
     }
+
+
     if (params.get('beds')) {
-        filters.beds = params.get('beds');
-        document.querySelectorAll('.bed-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.beds === filters.beds);
-        });
+
+        filters.beds =
+            params.get('beds');
+
+
+        document.querySelectorAll(
+            '.bed-btn'
+        ).forEach(
+            btn => {
+
+                btn.classList.toggle(
+                    'active',
+                    btn.dataset.beds ===
+                    filters.beds
+                );
+
+            }
+        );
+
     }
+
+
     if (params.get('sort')) {
-        filters.sort = params.get('sort');
-        document.getElementById('sortSelect').value = filters.sort;
+
+        filters.sort =
+            params.get('sort');
+
+
+        document.getElementById(
+            'sortSelect'
+        ).value =
+            filters.sort;
+
     }
+
 }
+
 
 function updateURL() {
-    const params = new URLSearchParams();
-    
-    if (filters.location) params.set('location', filters.location);
-    if (filters.types.length) params.set('type', filters.types.join(','));
-    if (filters.priceMin) params.set('minPrice', filters.priceMin);
-    if (filters.priceMax) params.set('maxPrice', filters.priceMax);
-    if (filters.beds !== 'any') params.set('beds', filters.beds);
-    if (filters.sort !== 'newest') params.set('sort', filters.sort);
-    
-    const newURL = params.toString() 
-        ? `${window.location.pathname}?${params.toString()}`
-        : window.location.pathname;
-    
-    window.history.replaceState({}, '', newURL);
+
+    const params =
+        new URLSearchParams();
+
+
+    if (filters.location) {
+
+        params.set(
+            'location',
+            filters.location
+        );
+
+    }
+
+
+    if (filters.types.length) {
+
+        params.set(
+            'type',
+            filters.types.join(',')
+        );
+
+    }
+
+
+    if (filters.priceMin) {
+
+        params.set(
+            'minPrice',
+            filters.priceMin
+        );
+
+    }
+
+
+    if (filters.priceMax) {
+
+        params.set(
+            'maxPrice',
+            filters.priceMax
+        );
+
+    }
+
+
+    if (filters.beds !== 'any') {
+
+        params.set(
+            'beds',
+            filters.beds
+        );
+
+    }
+
+
+    if (filters.sort !== 'newest') {
+
+        params.set(
+            'sort',
+            filters.sort
+        );
+
+    }
+
+
+    const newURL =
+        params.toString()
+            ? `${window.location.pathname}?${params.toString()}`
+            : window.location.pathname;
+
+
+    window.history.replaceState(
+        {},
+        '',
+        newURL
+    );
+
 }
+
 
 // =================== AUTH ===================
-onAuthStateChanged(auth, async (user) => {
-    currentUser = user;
-    if (user) {
-        try {
-            const userDoc = await getDoc(doc(db, 'users', user.uid));
-            if (userDoc.exists()) {
-                savedPropertyIds = userDoc.data().savedPropertyIds || [];
+
+onAuthStateChanged(
+    auth,
+    async (user) => {
+
+        currentUser =
+            user;
+
+
+        if (user) {
+
+            try {
+
+                const userDoc =
+                    await getDoc(
+                        doc(
+                            db,
+                            'users',
+                            user.uid
+                        )
+                    );
+
+
+                if (
+                    userDoc.exists()
+                ) {
+
+                    savedPropertyIds =
+                        userDoc.data()
+                            .savedPropertyIds ||
+                        [];
+
+                }
+
             }
-        } catch (err) {
-            console.error('Error loading user data:', err);
+
+            catch (err) {
+
+                console.error(
+                    'Error loading user data:',
+                    err
+                );
+
+            }
+
         }
-    }
-    updateAuthUI();
-});
 
-function updateAuthUI() {
-    const link = document.getElementById('drawerAuthLink');
-    const title = document.getElementById('drawerAuthTitle');
-    const subtitle = document.getElementById('drawerAuthSubtitle');
-    
-    if (currentUser) {
-        const name = currentUser.displayName || currentUser.email?.split('@')[0] || 'Dashboard';
-        title.textContent = name;
-        subtitle.textContent = 'Go to your dashboard';
-        link.href = 'dashboard/dashboard.html';
-    } else {
-        title.textContent = 'Login / Sign Up';
-        subtitle.textContent = 'Access your saved properties';
-        link.href = 'dashboard/sign-in.html';
-    }
-}
 
-// =================== DATA LOADING ===================
-const allQuery = query(
-    collection(db, 'properties'),
-    where('status', 'in', ['Active', 'Rented']),
-    limit(200)
+        updateAuthUI();
+
+    }
 );
 
-onSnapshot(allQuery, (snapshot) => {
-    allProperties = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-    allProperties.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-    
-    updateTypeCounts();
-    applyFilters();
-}, (err) => {
-    console.error('Properties query error:', err);
-    document.getElementById('propertyGrid').innerHTML = `
-        <div class="empty-state">
-            <svg viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <h3>Unable to load properties</h3>
-            <p>Please check your connection and try again.</p>
-            <button onclick="location.reload()">Retry</button>
-        </div>
-    `;
-});
+
+function updateAuthUI() {
+
+    const link =
+        document.getElementById(
+            'drawerAuthLink'
+        );
+
+
+    const title =
+        document.getElementById(
+            'drawerAuthTitle'
+        );
+
+
+    const subtitle =
+        document.getElementById(
+            'drawerAuthSubtitle'
+        );
+
+
+    if (currentUser) {
+
+        const name =
+            currentUser.displayName ||
+            currentUser.email?.split('@')[0] ||
+            'Dashboard';
+
+
+        title.textContent =
+            name;
+
+
+        subtitle.textContent =
+            'Go to your dashboard';
+
+
+        link.href =
+            'dashboard/dashboard.html';
+
+    }
+
+
+    else {
+
+        title.textContent =
+            'Login / Sign Up';
+
+
+        subtitle.textContent =
+            'Access your saved properties';
+
+
+        link.href =
+            'dashboard/sign-in.html';
+
+    }
+
+}
+
+
+// =================== DATA LOADING ===================
+
+const allQuery =
+    query(
+
+        collection(
+            db,
+            'properties'
+        ),
+
+        where(
+            'status',
+            'in',
+            [
+                'Active',
+                'Rented'
+            ]
+        ),
+
+        limit(200)
+
+    );
+
+
+onSnapshot(
+    allQuery,
+
+    (snapshot) => {
+
+        allProperties =
+            snapshot.docs.map(
+                d => ({
+                    id: d.id,
+                    ...d.data()
+                })
+            );
+
+
+        allProperties.sort(
+            (a, b) =>
+                (b.createdAt || 0) -
+                (a.createdAt || 0)
+        );
+
+
+        updateTypeCounts();
+
+        applyFilters();
+
+    },
+
+
+    (err) => {
+
+        console.error(
+            'Properties query error:',
+            err
+        );
+
+
+        document.getElementById(
+            'propertyGrid'
+        ).innerHTML = `
+
+            <div class="empty-state">
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                >
+
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+
+                    <path
+                        d="M12 8v4M12 16h.01"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+
+                </svg>
+
+
+                <h3>
+                    Unable to load properties
+                </h3>
+
+
+                <p>
+                    Please check your connection and try again.
+                </p>
+
+
+                <button
+                    onclick="location.reload()"
+                >
+                    Retry
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+);
+
 
 function updateTypeCounts() {
+
     const counts = {};
-    allProperties.forEach(p => {
-        counts[p.type] = (counts[p.type] || 0) + 1;
-    });
-    
-    document.querySelectorAll('[data-type]').forEach(el => {
-        const type = el.dataset.type;
-        el.textContent = counts[type] ? `(${counts[type]})` : '';
-    });
+
+
+    allProperties.forEach(
+        p => {
+
+            counts[p.type] =
+                (
+                    counts[p.type] ||
+                    0
+                ) + 1;
+
+        }
+    );
+
+
+    document.querySelectorAll(
+        '[data-type]'
+    ).forEach(
+        el => {
+
+            const type =
+                el.dataset.type;
+
+
+            el.textContent =
+                counts[type]
+                    ? `(${counts[type]})`
+                    : '';
+
+        }
+    );
+
 }
+
 
 // =================== FILTERING ===================
+
 function applyFilters() {
-    filteredProperties = [...allProperties];
-    
+
+    filteredProperties =
+        [...allProperties];
+
+
     // Location filter
+
     if (filters.location) {
-        const loc = filters.location.toLowerCase();
-        filteredProperties = filteredProperties.filter(p => 
-            (p.location && p.location.toLowerCase().includes(loc)) ||
-            (p.title && p.title.toLowerCase().includes(loc))
-        );
+
+        const loc =
+            filters.location.toLowerCase();
+
+
+        filteredProperties =
+            filteredProperties.filter(
+                p =>
+
+                    (
+                        p.location &&
+                        p.location
+                            .toLowerCase()
+                            .includes(loc)
+                    )
+
+                    ||
+
+                    (
+                        p.title &&
+                        p.title
+                            .toLowerCase()
+                            .includes(loc)
+                    )
+
+            );
+
     }
-    
+
+
     // Type filter
-    if (filters.types.length > 0) {
-        filteredProperties = filteredProperties.filter(p => 
-            filters.types.includes(p.type)
-        );
+
+    if (
+        filters.types.length > 0
+    ) {
+
+        filteredProperties =
+            filteredProperties.filter(
+                p =>
+                    filters.types.includes(
+                        p.type
+                    )
+            );
+
     }
-    
+
+
     // Price filter
-    if (filters.priceMin !== null) {
-        filteredProperties = filteredProperties.filter(p => p.price >= filters.priceMin);
+
+    if (
+        filters.priceMin !== null
+    ) {
+
+        filteredProperties =
+            filteredProperties.filter(
+                p =>
+                    p.price >=
+                    filters.priceMin
+            );
+
     }
-    if (filters.priceMax !== null) {
-        filteredProperties = filteredProperties.filter(p => p.price <= filters.priceMax);
+
+
+    if (
+        filters.priceMax !== null
+    ) {
+
+        filteredProperties =
+            filteredProperties.filter(
+                p =>
+                    p.price <=
+                    filters.priceMax
+            );
+
     }
-    
+
+
     // Bedrooms filter
-    if (filters.beds !== 'any') {
-        const beds = parseInt(filters.beds);
+
+    if (
+        filters.beds !== 'any'
+    ) {
+
+        const beds =
+            parseInt(
+                filters.beds
+            );
+
+
         if (beds === 4) {
-            filteredProperties = filteredProperties.filter(p => (p.beds || 0) >= 4);
-        } else {
-            filteredProperties = filteredProperties.filter(p => (p.beds || 0) === beds);
+
+            filteredProperties =
+                filteredProperties.filter(
+                    p =>
+                        (p.beds || 0) >= 4
+                );
+
         }
+
+
+        else {
+
+            filteredProperties =
+                filteredProperties.filter(
+                    p =>
+                        (p.beds || 0) ===
+                        beds
+                );
+
+        }
+
     }
-    
+
+
     // Sort
+
     switch (filters.sort) {
+
         case 'price-low':
-            filteredProperties.sort((a, b) => (a.price || 0) - (b.price || 0));
+
+            filteredProperties.sort(
+                (a, b) =>
+                    (a.price || 0) -
+                    (b.price || 0)
+            );
+
             break;
+
+
         case 'price-high':
-            filteredProperties.sort((a, b) => (b.price || 0) - (a.price || 0));
+
+            filteredProperties.sort(
+                (a, b) =>
+                    (b.price || 0) -
+                    (a.price || 0)
+            );
+
             break;
+
+
         case 'newest':
-            filteredProperties.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+            filteredProperties.sort(
+                (a, b) =>
+                    (b.createdAt || 0) -
+                    (a.createdAt || 0)
+            );
+
             break;
+
+
         case 'popular':
-            filteredProperties.sort((a, b) => (b.viewings || 0) - (a.viewings || 0));
+
+            filteredProperties.sort(
+                (a, b) =>
+                    (b.viewings || 0) -
+                    (a.viewings || 0)
+            );
+
             break;
+
     }
-    
+
+
     currentPage = 1;
+
+
     updateURL();
+
     renderActiveFilters();
+
     renderProperties();
+
     renderPagination();
+
 }
+
 
 // =================== RENDERING ===================
+
 function formatPrice(price) {
-    if (!price || price === 0) return 'Contact for price';
+
+    if (
+        !price ||
+        price === 0
+    ) {
+
+        return 'Contact for price';
+
+    }
+
+
     if (price >= 1000000) {
-        const m = price / 1000000;
-        return '₦' + (m % 1 === 0 ? m.toFixed(0) : m.toFixed(1)) + 'M';
+
+        const m =
+            price / 1000000;
+
+
+        return (
+            '₦' +
+            (
+                m % 1 === 0
+                    ? m.toFixed(0)
+                    : m.toFixed(1)
+            ) +
+            'M'
+        );
+
     }
+
+
     if (price >= 1000) {
-        const k = price / 1000;
-        return '₦' + k.toFixed(0) + 'K';
+
+        const k =
+            price / 1000;
+
+
+        return (
+            '₦' +
+            k.toFixed(0) +
+            'K'
+        );
+
     }
-    return '₦' + price.toLocaleString();
+
+
+    return (
+        '₦' +
+        price.toLocaleString()
+    );
+
 }
+
 
 function getBadge(property) {
-    if (property.type === 'Shortlet') return 'Shortlet';
-    if (property.type === 'Office' || property.type === 'Commercial') return 'For Lease';
-    if (property.status === 'Rented') return 'For Rent';
+
+    if (
+        property.type ===
+        'Shortlet'
+    ) {
+
+        return 'Shortlet';
+
+    }
+
+
+    if (
+        property.type === 'Office' ||
+        property.type === 'Commercial'
+    ) {
+
+        return 'For Lease';
+
+    }
+
+
+    if (
+        property.status ===
+        'Rented'
+    ) {
+
+        return 'For Rent';
+
+    }
+
+
     return 'For Sale';
+
 }
+
 
 function getPeriod(property) {
-    if (property.type === 'Shortlet') return '/ Night';
-    if (property.status === 'Rented' || property.type === 'Office' || property.type === 'Commercial') return '/ Year';
+
+    if (
+        property.type ===
+        'Shortlet'
+    ) {
+
+        return '/ Night';
+
+    }
+
+
+    if (
+        property.status === 'Rented' ||
+        property.type === 'Office' ||
+        property.type === 'Commercial'
+    ) {
+
+        return '/ Year';
+
+    }
+
+
     return '';
+
 }
+
 
 function escapeHtml(str) {
+
     if (!str) return '';
-    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+
+    return String(str).replace(
+        /[&<>"']/g,
+
+        m =>
+            ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[m])
+    );
+
 }
+
 
 function renderPropertyCard(p) {
-    const badge = getBadge(p);
-    const price = formatPrice(p.price);
-    const period = getPeriod(p);
-    const isSaved = savedPropertyIds.includes(p.id);
-    const image = p.image || DEFAULT_IMAGE;
-    const photoCount = (p.photos && p.photos.length) || p.viewings || 5;
+
+    const badge =
+        getBadge(p);
+
+
+    const price =
+        formatPrice(
+            p.price
+        );
+
+
+    const period =
+        getPeriod(p);
+
+
+    const isSaved =
+        savedPropertyIds.includes(
+            p.id
+        );
+
+
+    const image =
+        p.image ||
+        DEFAULT_IMAGE;
+
+
+    const photoCount =
+        (
+            p.photos &&
+            p.photos.length
+        ) ||
+        p.viewings ||
+        5;
+
 
     return `
-        <article class="property-card" data-id="${p.id}" onclick="viewProperty('${p.id}')">
+
+        <article
+            class="property-card"
+            data-id="${p.id}"
+            onclick="viewProperty('${p.id}')"
+        >
+
             <div class="property-image">
-                <img src="${escapeHtml(image)}" alt="${escapeHtml(p.title)}" onerror="this.src='${DEFAULT_IMAGE}'" loading="lazy">
-                <span class="property-badge">${escapeHtml(badge)}</span>
-                <button class="property-save ${isSaved ? 'saved' : ''}" onclick="event.stopPropagation(); toggleSave('${p.id}')" aria-label="Save property">
-                    <svg viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}">
-                        <path d="M6 3h12v18l-6-4-6 4V3z" stroke="currentColor" stroke-width="2"/>
+
+                <img
+                    src="${escapeHtml(image)}"
+                    alt="${escapeHtml(p.title)}"
+                    onerror="this.src='${DEFAULT_IMAGE}'"
+                    loading="lazy"
+                >
+
+
+                <span class="property-badge">
+                    ${escapeHtml(badge)}
+                </span>
+
+
+                <button
+                    class="property-save ${isSaved ? 'saved' : ''}"
+                    onclick="event.stopPropagation(); toggleSave('${p.id}')"
+                    aria-label="Save property"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="${isSaved ? 'currentColor' : 'none'}"
+                    >
+
+                        <path
+                            d="M6 3h12v18l-6-4-6 4V3z"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        />
+
                     </svg>
+
                 </button>
-                <span class="property-count">+${photoCount} Photos</span>
+
+
+                <span class="property-count">
+                    +${photoCount} Photos
+                </span>
+
             </div>
+
+
             <div class="property-body">
-                <h3 class="property-title">${escapeHtml(p.title)}</h3>
+
+                <h3 class="property-title">
+                    ${escapeHtml(p.title)}
+                </h3>
+
+
                 <div class="property-location">
-                    <svg viewBox="0 0 24 24" fill="none">
-                        <path d="M12 21s7-5 7-11a7 7 0 10-14 0c0 6 7 11 7 11z" stroke="currentColor" stroke-width="2"/>
-                        <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/>
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <path
+                            d="M12 21s7-5 7-11a7 7 0 10-14 0c0 6 7 11 7 11z"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        />
+
+                        <circle
+                            cx="12"
+                            cy="10"
+                            r="2.5"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        />
+
                     </svg>
-                    <span>${escapeHtml(p.location || 'Nigeria')}</span>
+
+
+                    <span>
+                        ${escapeHtml(
+                            p.location ||
+                            'Nigeria'
+                        )}
+                    </span>
+
                 </div>
+
+
                 <div class="property-features">
+
                     <div class="feature">
-                        <svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5V20H4z" stroke="currentColor" stroke-width="2"/></svg>
-                        <span>${escapeHtml(p.type || 'Property')}</span>
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+
+                            <path
+                                d="M4 10.5L12 4l8 6.5V20H4z"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            />
+
+                        </svg>
+
+
+                        <span>
+                            ${escapeHtml(
+                                p.type ||
+                                'Property'
+                            )}
+                        </span>
+
                     </div>
+
+
                     <div class="feature">
-                        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M12 4v16" stroke="currentColor" stroke-width="2"/></svg>
-                        <span>${p.area ? p.area + ' sqm' : 'N/A'}</span>
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+
+                            <path
+                                d="M4 12h16M12 4v16"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            />
+
+                        </svg>
+
+
+                        <span>
+                            ${
+                                p.area
+                                    ? p.area + ' sqm'
+                                    : 'N/A'
+                            }
+                        </span>
+
                     </div>
+
+
                     <div class="feature">
-                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 17.3l-5.2 2.7 1-5.8L3.5 10l5.9-.9L12 4l2.6 5.1 5.9.9-4.3 4.2 1 5.8z" stroke="currentColor" stroke-width="2"/></svg>
-                        <span>${p.beds || 0} Bed${p.beds !== 1 ? 's' : ''}</span>
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+
+                            <path
+                                d="M12 17.3l-5.2 2.7 1-5.8L3.5 10l5.9-.9L12 4l2.6 5.1 5.9.9-4.3 4.2 1 5.8z"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            />
+
+                        </svg>
+
+
+                        <span>
+
+                            ${p.beds || 0}
+
+                            Bed${p.beds !== 1 ? 's' : ''}
+
+                        </span>
+
                     </div>
+
                 </div>
+
+
                 <div class="property-footer">
+
                     <div>
-                        <span class="price-label">${period ? 'Starting From' : 'Price'}</span>
-                        <div class="price">${price}</div>
+
+                        <span class="price-label">
+
+                            ${
+                                period
+                                    ? 'Starting From'
+                                    : 'Price'
+                            }
+
+                        </span>
+
+
+                        <div class="price">
+                            ${price}
+                        </div>
+
                     </div>
-                    ${period ? `<div class="price-period">${period}</div>` : ''}
+
+
+                    ${
+                        period
+                            ? `
+                                <div class="price-period">
+                                    ${period}
+                                </div>
+                            `
+                            : ''
+                    }
+
                 </div>
+
             </div>
+
         </article>
+
     `;
+
 }
+
 
 function renderProperties() {
-    const grid = document.getElementById('propertyGrid');
-    const countEl = document.getElementById('resultCount');
-    
-    countEl.textContent = filteredProperties.length;
-    
-    if (filteredProperties.length === 0) {
+
+    const grid =
+        document.getElementById(
+            'propertyGrid'
+        );
+
+
+    const countEl =
+        document.getElementById(
+            'resultCount'
+        );
+
+
+    countEl.textContent =
+        filteredProperties.length;
+
+
+    if (
+        filteredProperties.length === 0
+    ) {
+
         grid.innerHTML = `
+
             <div class="empty-state">
-                <svg viewBox="0 0 24 24" fill="none">
-                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
-                    <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                >
+
+                    <circle
+                        cx="11"
+                        cy="11"
+                        r="7"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+
+                    <path
+                        d="M20 20l-3.5-3.5"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+
                 </svg>
-                <h3>No properties found</h3>
-                <p>Try adjusting your filters or search criteria to find more properties.</p>
-                <button onclick="clearAllFilters()">Clear All Filters</button>
+
+
+                <h3>
+                    No properties found
+                </h3>
+
+
+                <p>
+                    Try adjusting your filters or search criteria to find more properties.
+                </p>
+
+
+                <button
+                    onclick="clearAllFilters()"
+                >
+                    Clear All Filters
+                </button>
+
             </div>
+
         `;
+
+
         return;
+
     }
-    
+
+
     // Paginate
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const pageItems = filteredProperties.slice(start, end);
-    
-    grid.innerHTML = pageItems.map(renderPropertyCard).join('');
+
+    const start =
+        (
+            currentPage - 1
+        ) *
+        itemsPerPage;
+
+
+    const end =
+        start +
+        itemsPerPage;
+
+
+    const pageItems =
+        filteredProperties.slice(
+            start,
+            end
+        );
+
+
+    grid.innerHTML =
+        pageItems
+            .map(
+                renderPropertyCard
+            )
+            .join('');
+
 }
+
 
 function renderPagination() {
-    const pagination = document.getElementById('pagination');
-    const totalPages = Math.ceil(filteredProperties.length / itemsPerPage);
-    
+
+    const pagination =
+        document.getElementById(
+            'pagination'
+        );
+
+
+    const totalPages =
+        Math.ceil(
+            filteredProperties.length /
+            itemsPerPage
+        );
+
+
     if (totalPages <= 1) {
-        pagination.innerHTML = '';
+
+        pagination.innerHTML =
+            '';
+
         return;
+
     }
-    
+
+
     let html = '';
-    
+
+
     // Previous button
-    html += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>`;
-    
+
+    html += `
+
+        <button
+            class="page-btn"
+            ${
+                currentPage === 1
+                    ? 'disabled'
+                    : ''
+            }
+            onclick="goToPage(${currentPage - 1})"
+        >
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+            >
+
+                <path
+                    d="M15 18L9 12L15 6"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                />
+
+            </svg>
+
+        </button>
+
+    `;
+
+
     // Page numbers
+
     const maxVisible = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-    
-    if (endPage - startPage < maxVisible - 1) {
-        startPage = Math.max(1, endPage - maxVisible + 1);
+
+
+    let startPage =
+        Math.max(
+            1,
+            currentPage -
+            Math.floor(
+                maxVisible / 2
+            )
+        );
+
+
+    let endPage =
+        Math.min(
+            totalPages,
+            startPage +
+            maxVisible -
+            1
+        );
+
+
+    if (
+        endPage -
+        startPage <
+        maxVisible - 1
+    ) {
+
+        startPage =
+            Math.max(
+                1,
+                endPage -
+                maxVisible +
+                1
+            );
+
     }
-    
+
+
     if (startPage > 1) {
-        html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
-        if (startPage > 2) html += `<span style="padding:0 6px;color:#8b93a5;">...</span>`;
+
+        html += `
+
+            <button
+                class="page-btn"
+                onclick="goToPage(1)"
+            >
+                1
+            </button>
+
+        `;
+
+
+        if (startPage > 2) {
+
+            html += `
+
+                <span
+                    style="padding:0 6px;color:#8b93a5;"
+                >
+                    ...
+                </span>
+
+            `;
+
+        }
+
     }
-    
-    for (let i = startPage; i <= endPage; i++) {
-        html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+
+
+    for (
+        let i = startPage;
+        i <= endPage;
+        i++
+    ) {
+
+        html += `
+
+            <button
+                class="page-btn ${i === currentPage ? 'active' : ''}"
+                onclick="goToPage(${i})"
+            >
+                ${i}
+            </button>
+
+        `;
+
     }
-    
-    if (endPage < totalPages) {
-        if (endPage < totalPages - 1) html += `<span style="padding:0 6px;color:#8b93a5;">...</span>`;
-        html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+
+
+    if (
+        endPage <
+        totalPages
+    ) {
+
+        if (
+            endPage <
+            totalPages - 1
+        ) {
+
+            html += `
+
+                <span
+                    style="padding:0 6px;color:#8b93a5;"
+                >
+                    ...
+                </span>
+
+            `;
+
+        }
+
+
+        html += `
+
+            <button
+                class="page-btn"
+                onclick="goToPage(${totalPages})"
+            >
+                ${totalPages}
+            </button>
+
+        `;
+
     }
-    
+
+
     // Next button
-    html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>`;
-    
-    pagination.innerHTML = html;
+
+    html += `
+
+        <button
+            class="page-btn"
+            ${
+                currentPage === totalPages
+                    ? 'disabled'
+                    : ''
+            }
+            onclick="goToPage(${currentPage + 1})"
+        >
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+            >
+
+                <path
+                    d="M9 18L15 12L9 6"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                />
+
+            </svg>
+
+        </button>
+
+    `;
+
+
+    pagination.innerHTML =
+        html;
+
 }
+
 
 function renderActiveFilters() {
-    const container = document.getElementById('activeFilters');
+
+    const container =
+        document.getElementById(
+            'activeFilters'
+        );
+
+
     const chips = [];
-    
+
+
     if (filters.location) {
-        chips.push({ label: `Location: ${filters.location}`, key: 'location' });
+
+        chips.push({
+            label:
+                `Location: ${filters.location}`,
+
+            key:
+                'location'
+        });
+
     }
-    filters.types.forEach(type => {
-        chips.push({ label: type, key: 'type', value: type });
-    });
-    if (filters.priceMin !== null || filters.priceMax !== null) {
-        const min = filters.priceMin ? `₦${filters.priceMin.toLocaleString()}` : '₦0';
-        const max = filters.priceMax ? `₦${filters.priceMax.toLocaleString()}` : '∞';
-        chips.push({ label: `${min} - ${max}`, key: 'price' });
+
+
+    filters.types.forEach(
+        type => {
+
+            chips.push({
+
+                label:
+                    type,
+
+                key:
+                    'type',
+
+                value:
+                    type
+
+            });
+
+        }
+    );
+
+
+    if (
+        filters.priceMin !== null ||
+        filters.priceMax !== null
+    ) {
+
+        const min =
+            filters.priceMin
+                ? `₦${filters.priceMin.toLocaleString()}`
+                : '₦0';
+
+
+        const max =
+            filters.priceMax
+                ? `₦${filters.priceMax.toLocaleString()}`
+                : '∞';
+
+
+        chips.push({
+
+            label:
+                `${min} - ${max}`,
+
+            key:
+                'price'
+
+        });
+
     }
-    if (filters.beds !== 'any') {
-        chips.push({ label: `${filters.beds === '4' ? '4+' : filters.beds} Bed${filters.beds !== '1' ? 's' : ''}`, key: 'beds' });
+
+
+    if (
+        filters.beds !== 'any'
+    ) {
+
+        chips.push({
+
+            label:
+                `${filters.beds === '4' ? '4+' : filters.beds} Bed${filters.beds !== '1' ? 's' : ''}`,
+
+            key:
+                'beds'
+
+        });
+
     }
-    
+
+
     if (chips.length === 0) {
-        container.innerHTML = '';
+
+        container.innerHTML =
+            '';
+
         return;
+
     }
-    
-    container.innerHTML = chips.map(chip => `
-        <div class="filter-chip">
-            ${chip.label}
-            <button onclick="removeFilter('${chip.key}', '${chip.value || ''}')" aria-label="Remove filter">×</button>
-        </div>
-    `).join('');
+
+
+    container.innerHTML =
+        chips
+            .map(
+                chip => `
+
+                    <div class="filter-chip">
+
+                        ${chip.label}
+
+                        <button
+                            onclick="removeFilter('${chip.key}', '${chip.value || ''}')"
+                            aria-label="Remove filter"
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+                `
+            )
+            .join('');
+
 }
 
+
 // =================== INTERACTIONS ===================
-window.viewProperty = function(id) {
-    window.location.href = `property-detail.html?id=${id}`;
-};
 
-window.toggleSave = async function(propertyId) {
-    if (!currentUser) {
-        showToast('error', 'Sign In Required', 'Please sign in to save properties');
-        setTimeout(() => {
-            window.location.href = 'dashboard/sign-in.html';
-        }, 1500);
-        return;
-    }
+window.viewProperty =
+    function(id) {
 
-    const isSaved = savedPropertyIds.includes(propertyId);
-    const userRef = doc(db, 'users', currentUser.uid);
+        window.location.href =
+            `property-detail.html?id=${id}`;
 
-    try {
-        if (isSaved) {
-            await updateDoc(userRef, { savedPropertyIds: arrayRemove(propertyId) });
-            savedPropertyIds = savedPropertyIds.filter(id => id !== propertyId);
-            showToast('info', 'Removed', 'Property removed from saved list');
-        } else {
-            await updateDoc(userRef, { savedPropertyIds: arrayUnion(propertyId) });
-            savedPropertyIds.push(propertyId);
-            showToast('success', 'Saved!', 'Property added to your saved list');
-        }
-        renderProperties();
-    } catch (err) {
-        console.error('Save error:', err);
-        showToast('error', 'Error', 'Failed to save property. Please try again.');
-    }
-};
-
-window.goToPage = function(page) {
-    const totalPages = Math.ceil(filteredProperties.length / itemsPerPage);
-    if (page < 1 || page > totalPages) return;
-    currentPage = page;
-    renderProperties();
-    renderPagination();
-    window.scrollTo({ top: 400, behavior: 'smooth' });
-};
-
-window.removeFilter = function(key, value) {
-    if (key === 'location') {
-        filters.location = '';
-        document.getElementById('filterLocation').value = '';
-    } else if (key === 'type') {
-        filters.types = filters.types.filter(t => t !== value);
-        const checkbox = document.querySelector(`#typeFilters input[value="${value}"]`);
-        if (checkbox) checkbox.checked = false;
-    } else if (key === 'price') {
-        filters.priceMin = null;
-        filters.priceMax = null;
-        document.getElementById('priceMin').value = '';
-        document.getElementById('priceMax').value = '';
-    } else if (key === 'beds') {
-        filters.beds = 'any';
-        document.querySelectorAll('.bed-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.beds === 'any');
-        });
-    }
-    applyFilters();
-};
-
-window.clearAllFilters = function() {
-    filters = {
-        location: '',
-        types: [],
-        priceMin: null,
-        priceMax: null,
-        beds: 'any',
-        statuses: [],
-        sort: 'newest',
-        view: filters.view
     };
-    
-    document.getElementById('filterLocation').value = '';
-    document.getElementById('priceMin').value = '';
-    document.getElementById('priceMax').value = '';
-    document.querySelectorAll('#typeFilters input').forEach(cb => cb.checked = false);
-    document.querySelectorAll('.bed-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.beds === 'any');
-    });
-    document.getElementById('sortSelect').value = 'newest';
-    
-    applyFilters();
-};
 
-window.requireAuth = function(event, feature) {
-    if (!currentUser) {
-        event.preventDefault();
-        showToast('error', 'Sign In Required', `Please sign in to access ${feature}`);
-        setTimeout(() => {
-            window.location.href = 'dashboard/sign-in.html';
-        }, 1500);
-    }
-};
+
+window.toggleSave =
+    async function(propertyId) {
+
+        if (!currentUser) {
+
+            showToast(
+                'error',
+                'Sign In Required',
+                'Please sign in to save properties'
+            );
+
+
+            setTimeout(
+                () => {
+
+                    window.location.href =
+                        'dashboard/sign-in.html';
+
+                },
+                1500
+            );
+
+
+            return;
+
+        }
+
+
+        const isSaved =
+            savedPropertyIds.includes(
+                propertyId
+            );
+
+
+        const userRef =
+            doc(
+                db,
+                'users',
+                currentUser.uid
+            );
+
+
+        try {
+
+            if (isSaved) {
+
+                await updateDoc(
+                    userRef,
+                    {
+                        savedPropertyIds:
+                            arrayRemove(
+                                propertyId
+                            )
+                    }
+                );
+
+
+                savedPropertyIds =
+                    savedPropertyIds.filter(
+                        id =>
+                            id !==
+                            propertyId
+                    );
+
+
+                showToast(
+                    'info',
+                    'Removed',
+                    'Property removed from saved list'
+                );
+
+            }
+
+
+            else {
+
+                await updateDoc(
+                    userRef,
+                    {
+                        savedPropertyIds:
+                            arrayUnion(
+                                propertyId
+                            )
+                    }
+                );
+
+
+                savedPropertyIds.push(
+                    propertyId
+                );
+
+
+                showToast(
+                    'success',
+                    'Saved!',
+                    'Property added to your saved list'
+                );
+
+            }
+
+
+            renderProperties();
+
+        }
+
+
+        catch (err) {
+
+            console.error(
+                'Save error:',
+                err
+            );
+
+
+            showToast(
+                'error',
+                'Error',
+                'Failed to save property. Please try again.'
+            );
+
+        }
+
+    };
+
+
+window.goToPage =
+    function(page) {
+
+        const totalPages =
+            Math.ceil(
+                filteredProperties.length /
+                itemsPerPage
+            );
+
+
+        if (
+            page < 1 ||
+            page > totalPages
+        ) {
+
+            return;
+
+        }
+
+
+        currentPage =
+            page;
+
+
+        renderProperties();
+
+        renderPagination();
+
+
+        window.scrollTo({
+            top: 400,
+            behavior: 'smooth'
+        });
+
+    };
+
+
+window.removeFilter =
+    function(
+        key,
+        value
+    ) {
+
+        if (
+            key === 'location'
+        ) {
+
+            filters.location =
+                '';
+
+
+            document.getElementById(
+                'filterLocation'
+            ).value =
+                '';
+
+        }
+
+
+        else if (
+            key === 'type'
+        ) {
+
+            filters.types =
+                filters.types.filter(
+                    t =>
+                        t !==
+                        value
+                );
+
+
+            const checkbox =
+                document.querySelector(
+                    `#typeFilters input[value="${value}"]`
+                );
+
+
+            if (checkbox) {
+
+                checkbox.checked =
+                    false;
+
+            }
+
+        }
+
+
+        else if (
+            key === 'price'
+        ) {
+
+            filters.priceMin =
+                null;
+
+            filters.priceMax =
+                null;
+
+
+            document.getElementById(
+                'priceMin'
+            ).value =
+                '';
+
+
+            document.getElementById(
+                'priceMax'
+            ).value =
+                '';
+
+        }
+
+
+        else if (
+            key === 'beds'
+        ) {
+
+            filters.beds =
+                'any';
+
+
+            document.querySelectorAll(
+                '.bed-btn'
+            ).forEach(
+                btn => {
+
+                    btn.classList.toggle(
+                        'active',
+                        btn.dataset.beds ===
+                        'any'
+                    );
+
+                }
+            );
+
+        }
+
+
+        applyFilters();
+
+    };
+
+
+window.clearAllFilters =
+    function() {
+
+        filters = {
+
+            location: '',
+
+            types: [],
+
+            priceMin: null,
+
+            priceMax: null,
+
+            beds: 'any',
+
+            statuses: [],
+
+            sort: 'newest',
+
+            view: filters.view
+
+        };
+
+
+        document.getElementById(
+            'filterLocation'
+        ).value =
+            '';
+
+
+        document.getElementById(
+            'priceMin'
+        ).value =
+            '';
+
+
+        document.getElementById(
+            'priceMax'
+        ).value =
+            '';
+
+
+        document.querySelectorAll(
+            '#typeFilters input'
+        ).forEach(
+            cb =>
+                cb.checked =
+                    false
+        );
+
+
+        document.querySelectorAll(
+            '.bed-btn'
+        ).forEach(
+            btn => {
+
+                btn.classList.toggle(
+                    'active',
+                    btn.dataset.beds ===
+                    'any'
+                );
+
+            }
+        );
+
+
+        document.getElementById(
+            'sortSelect'
+        ).value =
+            'newest';
+
+
+        applyFilters();
+
+    };
+
+
+window.requireAuth =
+    function(
+        event,
+        feature
+    ) {
+
+        if (!currentUser) {
+
+            event.preventDefault();
+
+
+            showToast(
+                'error',
+                'Sign In Required',
+                `Please sign in to access ${feature}`
+            );
+
+
+            setTimeout(
+                () => {
+
+                    window.location.href =
+                        'dashboard/sign-in.html';
+
+                },
+                1500
+            );
+
+        }
+
+    };
 
 
 // =================== EVENT LISTENERS (UI) ===================
-document.addEventListener('DOMContentLoaded', () => {
-    // Load URL filters
-    loadFiltersFromURL();
-    
-    // Filter toggle (mobile)
-    const filterToggleBtn = document.getElementById('filterToggleBtn');
-    const filterSidebar = document.getElementById('filterSidebar');
-    const filterCloseBtn = document.getElementById('filterCloseBtn');
-    
-    if (filterToggleBtn) {
-        filterToggleBtn.addEventListener('click', () => {
-            filterSidebar.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        });
-    }
-    if (filterCloseBtn) {
-        filterCloseBtn.addEventListener('click', () => {
-            filterSidebar.classList.remove('show');
-            document.body.style.overflow = '';
-        });
-    }
-    
-    // Location filter (debounced)
-    const locationInput = document.getElementById('filterLocation');
-    if (locationInput) {
-        let locationTimeout;
-        locationInput.addEventListener('input', (e) => {
-            clearTimeout(locationTimeout);
-            locationTimeout = setTimeout(() => {
-                filters.location = e.target.value.trim();
-                applyFilters();
-            }, 400);
-        });
-    }
-    
-    // Type checkboxes
-    document.querySelectorAll('#typeFilters input').forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            filters.types = Array.from(document.querySelectorAll('#typeFilters input:checked')).map(cb => cb.value);
-            applyFilters();
-        });
-    });
-    
-    // Price inputs (debounced)
-    let priceTimeout;
-    ['priceMin', 'priceMax'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.addEventListener('input', (e) => {
-                clearTimeout(priceTimeout);
-                priceTimeout = setTimeout(() => {
-                    const val = e.target.value ? parseInt(e.target.value) : null;
-                    if (id === 'priceMin') filters.priceMin = val;
-                    else filters.priceMax = val;
+
+document.addEventListener(
+    'DOMContentLoaded',
+    () => {
+
+        // Load URL filters
+
+        loadFiltersFromURL();
+
+
+        // Filter toggle (mobile)
+
+        const filterToggleBtn =
+            document.getElementById(
+                'filterToggleBtn'
+            );
+
+
+        const filterSidebar =
+            document.getElementById(
+                'filterSidebar'
+            );
+
+
+        const filterCloseBtn =
+            document.getElementById(
+                'filterCloseBtn'
+            );
+
+
+        if (filterToggleBtn) {
+
+            filterToggleBtn.addEventListener(
+                'click',
+                () => {
+
+                    filterSidebar.classList.add(
+                        'show'
+                    );
+
+
+                    document.body.style.overflow =
+                        'hidden';
+
+                }
+            );
+
+        }
+
+
+        if (filterCloseBtn) {
+
+            filterCloseBtn.addEventListener(
+                'click',
+                () => {
+
+                    filterSidebar.classList.remove(
+                        'show'
+                    );
+
+
+                    document.body.style.overflow =
+                        '';
+
+                }
+            );
+
+        }
+
+
+        // Location filter (debounced)
+
+        const locationInput =
+            document.getElementById(
+                'filterLocation'
+            );
+
+
+        if (locationInput) {
+
+            let locationTimeout;
+
+
+            locationInput.addEventListener(
+                'input',
+                (e) => {
+
+                    clearTimeout(
+                        locationTimeout
+                    );
+
+
+                    locationTimeout =
+                        setTimeout(
+                            () => {
+
+                                filters.location =
+                                    e.target.value.trim();
+
+
+                                applyFilters();
+
+                            },
+                            400
+                        );
+
+                }
+            );
+
+        }
+
+
+        // Type checkboxes
+
+        document.querySelectorAll(
+            '#typeFilters input'
+        ).forEach(
+            checkbox => {
+
+                checkbox.addEventListener(
+                    'change',
+                    () => {
+
+                        filters.types =
+                            Array.from(
+                                document.querySelectorAll(
+                                    '#typeFilters input:checked'
+                                )
+                            ).map(
+                                cb =>
+                                    cb.value
+                            );
+
+
+                        applyFilters();
+
+                    }
+                );
+
+            }
+        );
+
+
+        // Price inputs (debounced)
+
+        let priceTimeout;
+
+
+        [
+            'priceMin',
+            'priceMax'
+        ].forEach(
+            id => {
+
+                const el =
+                    document.getElementById(
+                        id
+                    );
+
+
+                if (el) {
+
+                    el.addEventListener(
+                        'input',
+                        (e) => {
+
+                            clearTimeout(
+                                priceTimeout
+                            );
+
+
+                            priceTimeout =
+                                setTimeout(
+                                    () => {
+
+                                        const val =
+                                            e.target.value
+                                                ? parseInt(
+                                                    e.target.value
+                                                )
+                                                : null;
+
+
+                                        if (
+                                            id ===
+                                            'priceMin'
+                                        ) {
+
+                                            filters.priceMin =
+                                                val;
+
+                                        }
+
+                                        else {
+
+                                            filters.priceMax =
+                                                val;
+
+                                        }
+
+
+                                        applyFilters();
+
+                                    },
+                                    500
+                                );
+
+                        }
+                    );
+
+                }
+
+            }
+        );
+
+
+        // Bedroom buttons
+
+        document.querySelectorAll(
+            '.bed-btn'
+        ).forEach(
+            btn => {
+
+                btn.addEventListener(
+                    'click',
+                    () => {
+
+                        document.querySelectorAll(
+                            '.bed-btn'
+                        ).forEach(
+                            b =>
+                                b.classList.remove(
+                                    'active'
+                                )
+                        );
+
+
+                        btn.classList.add(
+                            'active'
+                        );
+
+
+                        filters.beds =
+                            btn.dataset.beds;
+
+
+                        applyFilters();
+
+                    }
+                );
+
+            }
+        );
+
+
+        // Initialize "Any" bed button as active
+
+        const anyBedBtn =
+            document.querySelector(
+                '.bed-btn[data-beds="any"]'
+            );
+
+
+        if (anyBedBtn) {
+
+            anyBedBtn.classList.add(
+                'active'
+            );
+
+        }
+
+
+        // Sort select
+
+        const sortSelect =
+            document.getElementById(
+                'sortSelect'
+            );
+
+
+        if (sortSelect) {
+
+            sortSelect.addEventListener(
+                'change',
+                (e) => {
+
+                    filters.sort =
+                        e.target.value;
+
+
                     applyFilters();
-                }, 500);
-            });
+
+                }
+            );
+
         }
-    });
-    
-    // Bedroom buttons
-    document.querySelectorAll('.bed-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.bed-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            filters.beds = btn.dataset.beds;
-            applyFilters();
-        });
-    });
-    
-    // Initialize "Any" bed button as active
-    const anyBedBtn = document.querySelector('.bed-btn[data-beds="any"]');
-    if (anyBedBtn) anyBedBtn.classList.add('active');
-    
-    // Sort select
-    const sortSelect = document.getElementById('sortSelect');
-    if (sortSelect) {
-        sortSelect.addEventListener('change', (e) => {
-            filters.sort = e.target.value;
-            applyFilters();
-        });
-    }
-    
-    // View toggle
-    document.querySelectorAll('.view-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const view = btn.dataset.view;
-            filters.view = view;
-            const grid = document.getElementById('propertyGrid');
-            if (grid) grid.classList.toggle('list-view', view === 'list');
-        });
-    });
-    
-    // Clear all filters
-    const clearFiltersBtn = document.getElementById('clearFilters');
-    if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearAllFilters);
-    
-    // Apply filters button (mobile)
-    const applyFiltersBtn = document.getElementById('applyFiltersBtn');
-    if (applyFiltersBtn) {
-        applyFiltersBtn.addEventListener('click', () => {
-            filterSidebar.classList.remove('show');
-            document.body.style.overflow = '';
-        });
-    }
-    
-    // Drawer (Hamburger Menu)
-    const menuBtn = document.querySelector('.menu-btn');
-    const drawer = document.querySelector('.app-drawer');
-    const overlay = document.querySelector('.drawer-overlay');
-    const closeBtn = document.querySelector('.drawer-close');
 
-    function openDrawer() {
-        if (drawer) drawer.classList.add('show');
-        if (overlay) overlay.classList.add('show');
-        document.body.style.overflow = 'hidden';
-    }
 
-    function closeDrawer() {
-        if (drawer) drawer.classList.remove('show');
-        if (overlay) overlay.classList.remove('show');
-        document.body.style.overflow = '';
-    }
+        // View toggle
 
-    if (menuBtn) menuBtn.addEventListener('click', openDrawer);
-    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-    if (overlay) overlay.addEventListener('click', closeDrawer);
+        document.querySelectorAll(
+            '.view-btn'
+        ).forEach(
+            btn => {
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeDrawer();
-            if (filterSidebar) filterSidebar.classList.remove('show');
-            document.body.style.overflow = '';
+                btn.addEventListener(
+                    'click',
+                    () => {
+
+                        document.querySelectorAll(
+                            '.view-btn'
+                        ).forEach(
+                            b =>
+                                b.classList.remove(
+                                    'active'
+                                )
+                        );
+
+
+                        btn.classList.add(
+                            'active'
+                        );
+
+
+                        const view =
+                            btn.dataset.view;
+
+
+                        filters.view =
+                            view;
+
+
+                        const grid =
+                            document.getElementById(
+                                'propertyGrid'
+                            );
+
+
+                        if (grid) {
+
+                            grid.classList.toggle(
+                                'list-view',
+                                view === 'list'
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+        // Clear all filters
+
+        const clearFiltersBtn =
+            document.getElementById(
+                'clearFilters'
+            );
+
+
+        if (clearFiltersBtn) {
+
+            clearFiltersBtn.addEventListener(
+                'click',
+                clearAllFilters
+            );
+
         }
-    });
-}); // <--- THIS PROPERLY CLOSES DOMContentLoaded
+
+
+        // Apply filters button (mobile)
+
+        const applyFiltersBtn =
+            document.getElementById(
+                'applyFiltersBtn'
+            );
+
+
+        if (applyFiltersBtn) {
+
+            applyFiltersBtn.addEventListener(
+                'click',
+                () => {
+
+                    filterSidebar.classList.remove(
+                        'show'
+                    );
+
+
+                    document.body.style.overflow =
+                        '';
+
+                }
+            );
+
+        }
+
+
+        // Drawer (Hamburger Menu)
+
+        const menuBtn =
+            document.querySelector(
+                '.menu-btn'
+            );
+
+
+        const drawer =
+            document.querySelector(
+                '.app-drawer'
+            );
+
+
+        const overlay =
+            document.querySelector(
+                '.drawer-overlay'
+            );
+
+
+        const closeBtn =
+            document.querySelector(
+                '.drawer-close'
+            );
+
+
+        function openDrawer() {
+
+            if (drawer) {
+
+                drawer.classList.add(
+                    'show'
+                );
+
+            }
+
+
+            if (overlay) {
+
+                overlay.classList.add(
+                    'show'
+                );
+
+            }
+
+
+            document.body.style.overflow =
+                'hidden';
+
+        }
+
+
+        function closeDrawer() {
+
+            if (drawer) {
+
+                drawer.classList.remove(
+                    'show'
+                );
+
+            }
+
+
+            if (overlay) {
+
+                overlay.classList.remove(
+                    'show'
+                );
+
+            }
+
+
+            document.body.style.overflow =
+                '';
+
+        }
+
+
+        if (menuBtn) {
+
+            menuBtn.addEventListener(
+                'click',
+                openDrawer
+            );
+
+        }
+
+
+        if (closeBtn) {
+
+            closeBtn.addEventListener(
+                'click',
+                closeDrawer
+            );
+
+        }
+
+
+        if (overlay) {
+
+            overlay.addEventListener(
+                'click',
+                closeDrawer
+            );
+
+        }
+
+
+        document.addEventListener(
+            'keydown',
+            (e) => {
+
+                if (e.key === 'Escape') {
+
+                    closeDrawer();
+
+
+                    if (filterSidebar) {
+
+                        filterSidebar.classList.remove(
+                            'show'
+                        );
+
+                    }
+
+
+                    document.body.style.overflow =
+                        '';
+
+                }
+
+            }
+        );
+
+    }
+);
+
 
 // =================== PRODUCTION-READY NEWSLETTER SETUP ===================
+
 let lastEmail = '';
+
 let isSubmitting = false;
 
-window.closeNewsletterModal = function() {
-    const modal = document.getElementById('newsletterModal');
-    if (modal) {
-        modal.classList.remove('show');
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-    }
-};
 
-function showNewsletterModal(state, errorMessage = '') {
-    const modal = document.getElementById('newsletterModal');
+/* ============================================================
+   CLOSE NEWSLETTER MODAL
+============================================================ */
+
+window.closeNewsletterModal =
+    function() {
+
+        const modal =
+            document.getElementById(
+                'newsletterModal'
+            );
+
+
+        if (modal) {
+
+            modal.classList.remove(
+                'show'
+            );
+
+
+            document.body.style.overflow =
+                '';
+
+
+            document.body.style.position =
+                '';
+
+
+            document.body.style.width =
+                '';
+
+        }
+
+    };
+
+
+/* ============================================================
+   SHOW NEWSLETTER MODAL
+============================================================ */
+
+function showNewsletterModal(
+    state,
+    errorMessage = ''
+) {
+
+    const modal =
+        document.getElementById(
+            'newsletterModal'
+        );
+
+
     if (!modal) return;
-    
-    const loading = document.getElementById('modalLoading');
-    const success = document.getElementById('modalSuccess');
-    const error = document.getElementById('modalError');
-    const already = document.getElementById('modalAlready');
 
-    if (loading) loading.style.display = 'none';
-    if (success) success.style.display = 'none';
-    if (error) error.style.display = 'none';
-    if (already) already.style.display = 'none';
-    
-    if (state === 'loading' && loading) {
-        loading.style.display = 'block';
+
+    const loading =
+        document.getElementById(
+            'modalLoading'
+        );
+
+
+    const success =
+        document.getElementById(
+            'modalSuccess'
+        );
+
+
+    const error =
+        document.getElementById(
+            'modalError'
+        );
+
+
+    const already =
+        document.getElementById(
+            'modalAlready'
+        );
+
+
+    if (loading) {
+
+        loading.style.display =
+            'none';
+
+    }
+
+
+    if (success) {
+
+        success.style.display =
+            'none';
+
+    }
+
+
+    if (error) {
+
+        error.style.display =
+            'none';
+
+    }
+
+
+    if (already) {
+
+        already.style.display =
+            'none';
+
+    }
+
+
+    if (
+        state === 'loading' &&
+        loading
+    ) {
+
+        loading.style.display =
+            'block';
+
+
         resetProgress();
-    } else if (state === 'success' && success) {
-        success.style.display = 'block';
-        setTimeout(createConfetti, 100);
-    } else if (state === 'error' && error) {
-        error.style.display = 'block';
-        const errorDetails = document.getElementById('errorDetails');
-        if (errorDetails) errorDetails.textContent = errorMessage || 'An unexpected error occurred.';
-    } else if (state === 'already' && already) {
-        already.style.display = 'block';
+
     }
-    
-    modal.classList.add('show');
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100%';
+
+
+    else if (
+        state === 'success' &&
+        success
+    ) {
+
+        success.style.display =
+            'block';
+
+
+        setTimeout(
+            createConfetti,
+            100
+        );
+
+    }
+
+
+    else if (
+        state === 'error' &&
+        error
+    ) {
+
+        error.style.display =
+            'block';
+
+
+        const errorDetails =
+            document.getElementById(
+                'errorDetails'
+            );
+
+
+        if (errorDetails) {
+
+            errorDetails.textContent =
+                errorMessage ||
+                'An unexpected error occurred.';
+
+        }
+
+    }
+
+
+    else if (
+        state === 'already' &&
+        already
+    ) {
+
+        already.style.display =
+            'block';
+
+    }
+
+
+    modal.classList.add(
+        'show'
+    );
+
+
+    document.body.style.overflow =
+        'hidden';
+
+
+    document.body.style.position =
+        'fixed';
+
+
+    document.body.style.width =
+        '100%';
+
 }
 
-window.retrySubscription = function() {
-    window.closeNewsletterModal();
-    setTimeout(() => {
-        const emailInput = document.getElementById('newsletterEmail');
-        if (lastEmail && emailInput) {
-            emailInput.value = lastEmail;
-            emailInput.focus();
-        }
-        const form = document.getElementById('newsletterForm');
-        if (form) form.dispatchEvent(new Event('submit'));
-    }, 300);
-};
 
-async function updateProgress(step) {
-    for (let i = 1; i < step; i++) {
-        const stepEl = document.getElementById(`step${i}`);
+/* ============================================================
+   RETRY SUBSCRIPTION
+============================================================ */
+
+window.retrySubscription =
+    function() {
+
+        window.closeNewsletterModal();
+
+
+        setTimeout(
+            () => {
+
+                const emailInput =
+                    document.getElementById(
+                        'newsletterEmail'
+                    );
+
+
+                if (
+                    lastEmail &&
+                    emailInput
+                ) {
+
+                    emailInput.value =
+                        lastEmail;
+
+
+                    emailInput.focus();
+
+                }
+
+
+                const form =
+                    document.getElementById(
+                        'newsletterForm'
+                    );
+
+
+                if (form) {
+
+                    form.dispatchEvent(
+                        new Event(
+                            'submit',
+                            {
+                                bubbles:
+                                    true,
+
+                                cancelable:
+                                    true
+                            }
+                        )
+                    );
+
+                }
+
+            },
+            300
+        );
+
+    };
+
+
+/* ============================================================
+   NEWSLETTER PROGRESS
+============================================================ */
+
+async function updateProgress(
+    step
+) {
+
+    for (
+        let i = 1;
+        i < step;
+        i++
+    ) {
+
+        const stepEl =
+            document.getElementById(
+                `step${i}`
+            );
+
+
         if (stepEl) {
-            stepEl.classList.remove('active');
-            stepEl.classList.add('completed');
-            const icon = stepEl.querySelector('.progress-step-icon');
-            if (icon) icon.textContent = '✓';
+
+            stepEl.classList.remove(
+                'active'
+            );
+
+
+            stepEl.classList.add(
+                'completed'
+            );
+
+
+            const icon =
+                stepEl.querySelector(
+                    '.progress-step-icon'
+                );
+
+
+            if (icon) {
+
+                icon.textContent =
+                    '✓';
+
+            }
+
         }
+
     }
-    const currentStep = document.getElementById(`step${step}`);
-    if (currentStep) currentStep.classList.add('active');
-    await new Promise(resolve => setTimeout(resolve, 400));
+
+
+    const currentStep =
+        document.getElementById(
+            `step${step}`
+        );
+
+
+    if (currentStep) {
+
+        currentStep.classList.add(
+            'active'
+        );
+
+    }
+
+
+    await new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                400
+            )
+    );
+
 }
+
+
+/* ============================================================
+   RESET PROGRESS
+============================================================ */
 
 function resetProgress() {
-    for (let i = 1; i <= 4; i++) {
-        const stepEl = document.getElementById(`step${i}`);
+
+    for (
+        let i = 1;
+        i <= 4;
+        i++
+    ) {
+
+        const stepEl =
+            document.getElementById(
+                `step${i}`
+            );
+
+
         if (stepEl) {
-            stepEl.classList.remove('active', 'completed');
-            const icon = stepEl.querySelector('.progress-step-icon');
-            if (icon) icon.textContent = i;
+
+            stepEl.classList.remove(
+                'active',
+                'completed'
+            );
+
+
+            const icon =
+                stepEl.querySelector(
+                    '.progress-step-icon'
+                );
+
+
+            if (icon) {
+
+                icon.textContent =
+                    i;
+
+            }
+
         }
+
     }
+
 }
+
+
+/* ============================================================
+   CONFETTI
+============================================================ */
 
 function createConfetti() {
-    const container = document.getElementById('confettiContainer');
+
+    const container =
+        document.getElementById(
+            'confettiContainer'
+        );
+
+
     if (!container) return;
-    container.innerHTML = '';
-    const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#fa709a'];
-    for (let i = 0; i < 20; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.left = Math.random() * 100 + '%';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.animationDelay = Math.random() * 1.5 + 's';
-        confetti.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
-        if (Math.random() < 0.33) confetti.style.borderRadius = '50%';
-        else if (Math.random() < 0.66) { confetti.style.width = '5px'; confetti.style.height = '12px'; }
-        container.appendChild(confetti);
+
+
+    container.innerHTML =
+        '';
+
+
+    const colors = [
+
+        '#667eea',
+
+        '#764ba2',
+
+        '#f093fb',
+
+        '#f5576c',
+
+        '#4facfe',
+
+        '#00f2fe',
+
+        '#43e97b',
+
+        '#fa709a'
+
+    ];
+
+
+    for (
+        let i = 0;
+        i < 20;
+        i++
+    ) {
+
+        const confetti =
+            document.createElement(
+                'div'
+            );
+
+
+        confetti.className =
+            'confetti';
+
+
+        confetti.style.left =
+            Math.random() *
+            100 +
+            '%';
+
+
+        confetti.style.backgroundColor =
+            colors[
+                Math.floor(
+                    Math.random() *
+                    colors.length
+                )
+            ];
+
+
+        confetti.style.animationDelay =
+            Math.random() *
+            1.5 +
+            's';
+
+
+        confetti.style.animationDuration =
+            (
+                Math.random() *
+                1.5 +
+                1.5
+            ) +
+            's';
+
+
+        if (
+            Math.random() <
+            0.33
+        ) {
+
+            confetti.style.borderRadius =
+                '50%';
+
+        }
+
+
+        else if (
+            Math.random() <
+            0.66
+        ) {
+
+            confetti.style.width =
+                '5px';
+
+
+            confetti.style.height =
+                '12px';
+
+        }
+
+
+        container.appendChild(
+            confetti
+        );
+
     }
+
 }
 
-document.addEventListener('click', function(e) {
-    if (e.target.id === 'newsletterModal') window.closeNewsletterModal();
-});
 
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        const modal = document.getElementById('newsletterModal');
-        if (modal && modal.classList.contains('show')) window.closeNewsletterModal();
+/* ============================================================
+   MODAL EVENTS
+============================================================ */
+
+document.addEventListener(
+    'click',
+    function(e) {
+
+        if (
+            e.target.id ===
+            'newsletterModal'
+        ) {
+
+            window.closeNewsletterModal();
+
+        }
+
     }
-});
+);
 
-const newsletterForm = document.getElementById('newsletterForm');
-if (newsletterForm) {
-    newsletterForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (isSubmitting) return;
-        
-        const emailInput = document.getElementById('newsletterEmail');
-        let email = emailInput.value.trim().toLowerCase();
-        const btn = document.getElementById('newsletterBtn');
-        
-        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
-        
-        if (!email || !emailRegex.test(email)) {
-            showToast('error', 'Invalid Email', 'Please enter a valid email address (e.g., name@example.com).');
-            emailInput.focus();
-            return;
-        }
 
-        const parts = email.split('@');
-        const commonTypos = {
-            'gmai.com': 'gmail.com', 'gmal.com': 'gmail.com', 'gmial.com': 'gmail.com', 'gnail.com': 'gmail.com',
-            'yaho.com': 'yahoo.com', 'yahooo.com': 'yahoo.com', 'hotmal.com': 'hotmail.com', 'hotmial.com': 'hotmail.com', 'outlok.com': 'outlook.com'
-        };
+document.addEventListener(
+    'keydown',
+    function(e) {
 
-        if (commonTypos[parts[1]]) {
-            const correctEmail = `${parts[0]}@${commonTypos[parts[1]]}`;
-            showToast('info', 'Check your email', `Did you mean ${correctEmail}? We auto-corrected it for you.`);
-            emailInput.value = correctEmail;
-            email = correctEmail;
-            emailInput.focus();
-            return;
-        }
-        
-        isSubmitting = true;
-        lastEmail = email;
-        btn.disabled = true;
-        btn.textContent = 'Verifying...';
-        
-        showNewsletterModal('loading');
-        
-        try {
-            await updateProgress(1);
-            await updateProgress(2);
-            
-            const existingQuery = query(collection(db, 'newsletter'), where('email', '==', email));
-            const existingSnapshot = await getDocs(existingQuery);
-            
-            if (!existingSnapshot.empty) {
-                showNewsletterModal('already');
-                isSubmitting = false;
-                btn.disabled = false;
-                btn.textContent = 'Subscribe';
-                return;
+        if (
+            e.key ===
+            'Escape'
+        ) {
+
+            const modal =
+                document.getElementById(
+                    'newsletterModal'
+                );
+
+
+            if (
+                modal &&
+                modal.classList.contains(
+                    'show'
+                )
+            ) {
+
+                window.closeNewsletterModal();
+
             }
-            
-            await updateProgress(3);
-            
-            await addDoc(collection(db, 'newsletter'), {
-                email: email,
-                subscribedAt: serverTimestamp(),
-                source: 'properties_page'
-            });
-            
-            await updateProgress(4);
-            showNewsletterModal('success');
-            emailInput.value = '';
-            
-        } catch (err) {
-            console.error('Newsletter error:', err);
-            let errorMsg = 'Failed to subscribe. Please check your internet connection and try again.';
-            if (err.code === 'permission-denied') errorMsg = 'Subscription failed due to security rules.';
-            else if (err.code === 'unavailable' || err.code === 'network-error') errorMsg = 'Network error. Please check your connection.';
-            else if (err.message) errorMsg = err.message;
-            
-            showNewsletterModal('error', errorMsg);
-        } finally {
-            isSubmitting = false;
-            btn.disabled = false;
-            btn.textContent = 'Subscribe';
+
         }
-    });
+
+    }
+);
+
+
+/* ============================================================
+   NEWSLETTER FORM
+============================================================ */
+
+const newsletterForm =
+    document.getElementById(
+        'newsletterForm'
+    );
+
+
+if (newsletterForm) {
+
+    newsletterForm.addEventListener(
+        'submit',
+        async (e) => {
+
+            e.preventDefault();
+
+
+            if (isSubmitting) {
+
+                return;
+
+            }
+
+
+            const emailInput =
+                document.getElementById(
+                    'newsletterEmail'
+                );
+
+
+            const btn =
+                document.getElementById(
+                    'newsletterBtn'
+                );
+
+
+            if (
+                !emailInput ||
+                !btn
+            ) {
+
+                return;
+
+            }
+
+
+            let email =
+                emailInput.value
+                    .trim()
+                    .toLowerCase();
+
+
+            /* ====================================================
+               EMAIL VALIDATION
+            ==================================================== */
+
+            const emailRegex =
+                /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
+
+
+            if (
+                !email ||
+                !emailRegex.test(
+                    email
+                )
+            ) {
+
+                showToast(
+                    'error',
+                    'Invalid Email',
+                    'Please enter a valid email address (e.g., name@example.com).'
+                );
+
+
+                emailInput.focus();
+
+
+                return;
+
+            }
+
+
+            /* ====================================================
+               COMMON EMAIL TYPO CORRECTION
+            ==================================================== */
+
+            const parts =
+                email.split('@');
+
+
+            const commonTypos = {
+
+                'gmai.com':
+                    'gmail.com',
+
+                'gmal.com':
+                    'gmail.com',
+
+                'gmial.com':
+                    'gmail.com',
+
+                'gnail.com':
+                    'gmail.com',
+
+                'yaho.com':
+                    'yahoo.com',
+
+                'yahooo.com':
+                    'yahoo.com',
+
+                'hotmal.com':
+                    'hotmail.com',
+
+                'hotmial.com':
+                    'hotmail.com',
+
+                'outlok.com':
+                    'outlook.com'
+
+            };
+
+
+            if (
+                commonTypos[
+                    parts[1]
+                ]
+            ) {
+
+                const correctEmail =
+                    `${parts[0]}@${commonTypos[parts[1]]}`;
+
+
+                showToast(
+                    'info',
+                    'Check your email',
+                    `Did you mean ${correctEmail}? We auto-corrected it for you.`
+                );
+
+
+                emailInput.value =
+                    correctEmail;
+
+
+                email =
+                    correctEmail;
+
+
+                emailInput.focus();
+
+
+                return;
+
+            }
+
+
+            /* ====================================================
+               SUBMISSION STATE
+            ==================================================== */
+
+            isSubmitting =
+                true;
+
+
+            lastEmail =
+                email;
+
+
+            btn.disabled =
+                true;
+
+
+            btn.textContent =
+                'Verifying...';
+
+
+            showNewsletterModal(
+                'loading'
+            );
+
+
+            try {
+
+                /* ==================================================
+                   STEP 1
+                ================================================== */
+
+                await updateProgress(
+                    1
+                );
+
+
+                /* ==================================================
+                   STEP 2
+
+                   We intentionally do not query the newsletter
+                   collection.
+
+                   Public users should not need read access to
+                   subscriber records.
+                ================================================== */
+
+                await updateProgress(
+                    2
+                );
+
+
+                /* ==================================================
+                   CREATE DETERMINISTIC EMAIL HASH
+                ================================================== */
+
+                const encoder =
+                    new TextEncoder();
+
+
+                const data =
+                    encoder.encode(
+                        email
+                    );
+
+
+                const hashBuffer =
+                    await crypto.subtle.digest(
+                        'SHA-256',
+                        data
+                    );
+
+
+                const hashArray =
+                    Array.from(
+                        new Uint8Array(
+                            hashBuffer
+                        )
+                    );
+
+
+                const emailHash =
+                    hashArray
+                        .map(
+                            byte =>
+                                byte
+                                    .toString(
+                                        16
+                                    )
+                                    .padStart(
+                                        2,
+                                        '0'
+                                    )
+                        )
+                        .join('');
+
+
+                /* ==================================================
+                   NEWSLETTER DOCUMENT
+                ================================================== */
+
+                const newsletterRef =
+                    doc(
+                        db,
+                        'newsletter',
+                        emailHash
+                    );
+
+
+                /* ==================================================
+                   STEP 3
+                ================================================== */
+
+                await updateProgress(
+                    3
+                );
+
+
+                /* ==================================================
+                   CREATE SUBSCRIPTION
+
+                   IMPORTANT:
+                   Keep source as "homepage" because the same
+                   public newsletter security rule is used by the
+                   working homepage footer.
+                ================================================== */
+
+                await setDoc(
+                    newsletterRef,
+                    {
+
+                        email:
+                            email,
+
+                        subscribedAt:
+                            serverTimestamp(),
+
+                        source:
+                            'homepage'
+
+                    }
+                );
+
+
+                /* ==================================================
+                   STEP 4
+                ================================================== */
+
+                await updateProgress(
+                    4
+                );
+
+
+                showNewsletterModal(
+                    'success'
+                );
+
+
+                emailInput.value =
+                    '';
+
+            }
+
+
+            catch (err) {
+
+                console.error(
+                    'Newsletter error:',
+                    err
+                );
+
+
+                /* ==================================================
+                   EXISTING EMAIL
+
+                   The public page does not read newsletter records.
+
+                   If Firestore rejects an attempt to overwrite the
+                   deterministic existing document, we treat that
+                   as an existing subscription.
+                ================================================== */
+
+                if (
+                    err.code ===
+                    'permission-denied'
+                ) {
+
+                    showNewsletterModal(
+                        'already'
+                    );
+
+
+                    return;
+
+                }
+
+
+                let errorMsg =
+                    'Failed to subscribe. Please check your internet connection and try again.';
+
+
+                if (
+                    err.code ===
+                        'unavailable' ||
+                    err.code ===
+                        'network-error'
+                ) {
+
+                    errorMsg =
+                        'Network error. Please check your connection and try again.';
+
+                }
+
+
+                else if (
+                    err.code ===
+                    'failed-precondition'
+                ) {
+
+                    errorMsg =
+                        'The subscription service is temporarily unavailable. Please try again.';
+
+                }
+
+
+                else if (
+                    err.message
+                ) {
+
+                    errorMsg =
+                        err.message;
+
+                }
+
+
+                showNewsletterModal(
+                    'error',
+                    errorMsg
+                );
+
+            }
+
+
+            finally {
+
+                isSubmitting =
+                    false;
+
+
+                btn.disabled =
+                    false;
+
+
+                btn.textContent =
+                    'Subscribe';
+
+            }
+
+        }
+    );
+
 }
+
 
 // =================== TOAST ===================
-window.showToast = function(type, title, message) {
-    const toast = document.getElementById('toast');
-    if (!toast) return;
-    const icon = toast.querySelector('.toast-icon');
-    
-    toast.className = `toast ${type}`;
-    document.getElementById('toastTitle').textContent = title;
-    document.getElementById('toastMessage').textContent = message;
-    
-    const icons = { success: '✓', error: '✕', info: 'ℹ' };
-    if (icon) icon.textContent = icons[type] || 'ℹ';
-    
-    toast.classList.add('show');
-    setTimeout(() => { toast.classList.remove('show'); }, 4000);
-};
+
+window.showToast =
+    function(
+        type,
+        title,
+        message
+    ) {
+
+        const toast =
+            document.getElementById(
+                'toast'
+            );
+
+
+        if (!toast) return;
+
+
+        const icon =
+            toast.querySelector(
+                '.toast-icon'
+            );
+
+
+        toast.className =
+            `toast ${type}`;
+
+
+        document.getElementById(
+            'toastTitle'
+        ).textContent =
+            title;
+
+
+        document.getElementById(
+            'toastMessage'
+        ).textContent =
+            message;
+
+
+        const icons = {
+
+            success:
+                '✓',
+
+            error:
+                '✕',
+
+            info:
+                'ℹ'
+
+        };
+
+
+        if (icon) {
+
+            icon.textContent =
+                icons[type] ||
+                'ℹ';
+
+        }
+
+
+        toast.classList.add(
+            'show'
+        );
+
+
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    'show'
+                );
+
+            },
+            4000
+        );
+
+    };
 
 </script>
 
 </body>
 </html>
-
