@@ -2,32 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
     <title>Browse Properties - MoonLat</title>
+
+    <meta
+        name="description"
+        content="Browse available properties on MoonLat. Search, filter, compare locations and save properties you're interested in."
+    >
+
+    <meta
+        name="theme-color"
+        content="#020617"
+    >
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    },
+
                     colors: {
-                        primary: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a'
+                        }
+                    },
+
+                    boxShadow: {
+                        soft: '0 10px 40px rgba(15, 23, 42, 0.06)',
+                        premium: '0 20px 60px rgba(15, 23, 42, 0.10)'
                     }
                 }
             }
-        }
+        };
 
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
             authDomain: "moonlat-estate-dashboard.firebaseapp.com",
@@ -36,443 +82,4897 @@
             messagingSenderId: "289878951289",
             appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
         };
+
         firebase.initializeApp(firebaseConfig);
+
         const db = firebase.firestore();
         const auth = firebase.auth();
     </script>
 
     <style>
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        #map { height: 45vh; min-height: 350px; z-index: 1; }
-        .results-container {
-            margin-top: -50px;
-            border-top-left-radius: 32px;
-            border-top-right-radius: 32px;
-            position: relative;
-            z-index: 10;
-            background: white;
+
+        * {
+            -webkit-tap-highlight-color: transparent;
         }
-        .property-marker {
-            width: 42px;
-            height: 42px;
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at 50% -10%,
+                    rgba(37, 99, 235, 0.06),
+                    transparent 30%
+                ),
+                #f8fafc;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            -webkit-appearance: none;
+        }
+
+        ::selection {
+            background: rgba(37, 99, 235, 0.18);
+        }
+
+        .no-scrollbar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .map-shell {
+            min-height: 420px;
+        }
+
+        .leaflet-control-attribution {
+            font-size: 8px !important;
+            opacity: .7;
+        }
+
+        .leaflet-popup-content-wrapper {
+            border-radius: 18px;
+            box-shadow: 0 18px 50px rgba(15, 23, 42, .16);
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .leaflet-popup-content {
+            margin: 0;
+            min-width: 220px;
+        }
+
+        .leaflet-popup-tip {
+            box-shadow: none;
+        }
+
+        .custom-property-marker {
+            background: transparent;
+            border: 0;
+        }
+
+        .marker-pin {
+            width: 38px;
+            height: 38px;
             border-radius: 50% 50% 50% 0;
             background: #2563eb;
-            position: absolute;
             transform: rotate(-45deg);
-            left: 50%;
-            top: 50%;
-            margin: -21px 0 0 -21px;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow:
+                0 7px 18px rgba(37, 99, 235, .34),
+                0 0 0 4px rgba(255, 255, 255, .85);
         }
-        .property-marker::after {
+
+        .marker-pin::after {
             content: '';
-            width: 16px;
-            height: 16px;
-            background: #fff;
-            position: absolute;
+            width: 13px;
+            height: 13px;
             border-radius: 50%;
-            transform: rotate(45deg);
+            background: white;
         }
-        .property-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .property-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-        .favorite-btn.active { color: #ef4444; }
-        .favorite-btn.active i { font-weight: 900; }
+
+        .marker-pin.featured {
+            background: #0f172a;
+            box-shadow:
+                0 7px 18px rgba(15, 23, 42, .34),
+                0 0 0 4px rgba(255, 255, 255, .85);
+        }
+
+        .property-card {
+            transition:
+                transform .22s ease,
+                box-shadow .22s ease,
+                border-color .22s ease;
+        }
+
+        .property-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, .09);
+        }
+
+        .property-card:active {
+            transform: scale(.995);
+        }
+
+        .favorite-btn {
+            transition:
+                transform .18s ease,
+                background .18s ease,
+                color .18s ease,
+                border-color .18s ease;
+        }
+
+        .favorite-btn:active {
+            transform: scale(.92);
+        }
+
+        .favorite-btn.active {
+            color: #e11d48;
+            background: #fff1f2;
+            border-color: #fecdd3;
+        }
+
+        .favorite-btn.active i {
+            font-weight: 900;
+        }
+
+        .filter-chip {
+            transition:
+                background .18s ease,
+                color .18s ease,
+                border-color .18s ease,
+                transform .18s ease;
+        }
+
+        .filter-chip:active {
+            transform: scale(.97);
+        }
+
+        .filter-chip.active {
+            background: #0f172a;
+            color: white;
+            border-color: #0f172a;
+        }
+
+        .sheet-backdrop {
+            background: rgba(2, 6, 23, .62);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .sheet-enter {
+            animation: sheetEnter .25s cubic-bezier(.2, .8, .2, 1);
+        }
+
+        @keyframes sheetEnter {
+
+            from {
+                opacity: 0;
+                transform: translateY(100%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        .fade-up {
+            animation: fadeUp .3s ease both;
+        }
+
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        .skeleton {
+            background:
+                linear-gradient(
+                    90deg,
+                    #e2e8f0 25%,
+                    #f1f5f9 37%,
+                    #e2e8f0 63%
+                );
+
+            background-size: 400% 100%;
+
+            animation: skeleton 1.4s ease infinite;
+        }
+
+        @keyframes skeleton {
+
+            0% {
+                background-position: 100% 0;
+            }
+
+            100% {
+                background-position: -100% 0;
+            }
+
+        }
+
+        .toast-enter {
+            animation: toastEnter .25s cubic-bezier(.2, .8, .2, 1);
+        }
+
+        @keyframes toastEnter {
+
+            from {
+                opacity: 0;
+                transform: translate(-50%, -10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+
+        }
+
+        .mobile-bottom-nav {
+            padding-bottom: max(10px, env(safe-area-inset-bottom));
+        }
+
+        .desktop-only {
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+
+            .desktop-only {
+                display: block;
+            }
+
+            body {
+                padding-bottom: 0;
+            }
+
+        }
+
+        @media (max-width: 1023px) {
+
+            body {
+                padding-bottom: 84px;
+            }
+
+        }
+
     </style>
+
 </head>
-<body class="bg-slate-50 text-slate-900 antialiased font-sans">
 
-    <main class="max-w-7xl mx-auto min-h-screen bg-white relative shadow-xl overflow-hidden md:rounded-3xl md:my-10 md:border md:border-slate-200">
-        
-        <!-- Top Navigation -->
-        <div class="absolute top-0 left-0 right-0 z-[1000] bg-gradient-to-b from-white/95 to-transparent p-4 pointer-events-none">
-            <div class="flex items-center justify-between pointer-events-auto max-w-md mx-auto md:max-w-none md:mx-4">
-                <a href="index.html" class="w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-slate-600 hover:bg-slate-50 transition">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-                <div class="flex gap-2">
-                    <button onclick="toggleMapView()" class="w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-slate-600 hover:bg-slate-50 transition md:hidden">
-                        <i class="fas fa-list"></i>
-                    </button>
-                    <button onclick="window.location.href='saved-property.html'" class="w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-slate-600 hover:bg-slate-50 transition relative">
-                        <i class="fas fa-heart"></i>
-                        <span id="savedCount" class="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 text-white text-xs font-bold rounded-full flex items-center justify-center hidden">0</span>
-                    </button>
-                </div>
-            </div>
-        </div>
 
-        <!-- Map -->
-        <div id="map" class="w-full"></div>
+<body class="text-slate-900 font-sans antialiased">
 
-        <!-- Search -->
-        <div class="absolute top-20 left-4 right-4 z-[400] max-w-md mx-auto md:max-w-none md:mx-8">
-            <div class="bg-white rounded-2xl shadow-xl p-2 flex items-center gap-2 border border-slate-200">
-                <div class="flex-1 relative">
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="searchInput" class="w-full pl-10 pr-4 py-3 bg-slate-50 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="Search location, type...">
-                </div>
-                <button onclick="clearSearch()" class="p-3 bg-slate-100 rounded-xl text-slate-600 hover:bg-slate-200 transition">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
 
-        <!-- Results -->
-        <div class="results-container shadow-2xl min-h-[55vh]">
-            <div class="flex justify-center pt-4 pb-2">
-                <div class="w-12 h-1.5 bg-slate-300 rounded-full"></div>
-            </div>
+    <!-- =========================================================
+         APPLICATION SHELL
+    ========================================================== -->
 
-            <div class="px-6 pb-4 border-b border-slate-100">
-                <h2 class="text-xl font-bold text-slate-900">Properties</h2>
-                <p class="text-sm text-slate-500"><span id="resultCount">0</span> properties found</p>
-            </div>
+    <div class="min-h-screen">
 
-            <!-- Filters -->
-            <div class="px-4 py-4 flex gap-2 overflow-x-auto no-scrollbar border-b border-slate-100">
-                <button onclick="filterByType('all')" class="filter-chip whitespace-nowrap px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium shadow-md transition-all" data-filter="all">All</button>
-                <button onclick="filterByType('Apartment')" class="filter-chip whitespace-nowrap px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-all" data-filter="Apartment">Apartments</button>
-                <button onclick="filterByType('Villa')" class="filter-chip whitespace-nowrap px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-all" data-filter="Villa">Villas</button>
-                <button onclick="filterByType('House')" class="filter-chip whitespace-nowrap px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-all" data-filter="House">Houses</button>
-                <button onclick="filterByFeatured()" class="filter-chip whitespace-nowrap px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-all" data-filter="featured">Featured</button>
-            </div>
 
-            <!-- Properties List -->
-            <div id="propertiesList" class="p-4 space-y-4 pb-24 overflow-y-auto max-h-[60vh]">
-                <div class="text-center py-12">
-                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-                        <i class="fas fa-spinner fa-spin text-slate-400 text-2xl"></i>
+        <!-- =====================================================
+             DESKTOP / MOBILE HEADER
+        ====================================================== -->
+
+        <header
+            class="sticky top-0 z-[1000] bg-white/92 backdrop-blur-xl border-b border-slate-200/80"
+        >
+
+            <div class="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
+
+                <div class="h-[68px] flex items-center gap-3">
+
+
+                    <!-- Back -->
+                    <a
+                        href="index.html"
+                        class="w-10 h-10 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:text-slate-950 hover:border-slate-300 transition shrink-0"
+                        aria-label="Back to buyer dashboard"
+                    >
+                        <i class="fas fa-arrow-left text-sm"></i>
+                    </a>
+
+
+                    <!-- Title -->
+                    <div class="min-w-0 flex-1">
+
+                        <p
+                            class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600"
+                        >
+                            Buyer Dashboard
+                        </p>
+
+                        <h1
+                            class="text-base sm:text-lg font-extrabold tracking-tight text-slate-950 truncate"
+                        >
+                            Browse Properties
+                        </h1>
+
                     </div>
-                    <p class="text-slate-500">Loading properties...</p>
+
+
+                    <!-- Desktop view toggle -->
+                    <div
+                        class="hidden md:flex items-center gap-1 p-1 rounded-xl bg-slate-100 border border-slate-200"
+                    >
+
+                        <button
+                            id="desktopListToggle"
+                            onclick="setViewMode('list')"
+                            class="view-toggle px-3.5 py-2 rounded-lg text-xs font-extrabold text-slate-600"
+                        >
+                            <i class="fas fa-list mr-1.5"></i>
+                            List
+                        </button>
+
+                        <button
+                            id="desktopMapToggle"
+                            onclick="setViewMode('map')"
+                            class="view-toggle px-3.5 py-2 rounded-lg text-xs font-extrabold text-slate-600"
+                        >
+                            <i class="fas fa-map mr-1.5"></i>
+                            Map
+                        </button>
+
+                    </div>
+
+
+                    <!-- Saved -->
+                    <a
+                        href="saved-property.html"
+                        class="relative w-10 h-10 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:text-rose-600 hover:border-rose-200 transition shrink-0"
+                        aria-label="Saved properties"
+                    >
+
+                        <i class="far fa-heart text-sm"></i>
+
+                        <span
+                            id="savedCount"
+                            class="hidden absolute -top-1 -right-1 min-w-[19px] h-[19px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-extrabold items-center justify-center border-2 border-white"
+                        >
+                            0
+                        </span>
+
+                    </a>
+
                 </div>
+
             </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             MAIN
+        ====================================================== -->
+
+        <main class="max-w-[1500px] mx-auto px-3 sm:px-5 lg:px-8 py-4 lg:py-7">
+
+
+            <!-- =================================================
+                 SEARCH / CONTROL AREA
+            ================================================== -->
+
+            <section class="mb-4 lg:mb-6">
+
+                <div class="flex flex-col lg:flex-row lg:items-end gap-3 lg:gap-5">
+
+
+                    <!-- Search -->
+                    <div class="flex-1">
+
+                        <label
+                            for="searchInput"
+                            class="sr-only"
+                        >
+                            Search properties
+                        </label>
+
+                        <div class="relative">
+
+                            <span
+                                class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                            >
+                                <i class="fas fa-search"></i>
+                            </span>
+
+
+                            <input
+                                type="search"
+                                id="searchInput"
+                                autocomplete="off"
+                                enterkeyhint="search"
+                                class="w-full h-13 rounded-2xl border border-slate-200 bg-white pl-11 pr-24 text-sm font-medium text-slate-900 placeholder:text-slate-400 outline-none shadow-soft focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition"
+                                placeholder="Search location, property name or type..."
+                            >
+
+
+                            <button
+                                id="clearSearchBtn"
+                                onclick="clearSearch()"
+                                class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 transition items-center justify-center"
+                                aria-label="Clear search"
+                            >
+                                <i class="fas fa-xmark text-xs"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Sort -->
+                    <div class="flex gap-2">
+
+
+                        <button
+                            onclick="openFilterSheet()"
+                            class="flex-1 lg:flex-none h-13 px-4 rounded-2xl border border-slate-200 bg-white text-slate-700 text-xs sm:text-sm font-extrabold shadow-soft hover:border-slate-300 transition flex items-center justify-center gap-2"
+                        >
+
+                            <i class="fas fa-sliders"></i>
+
+                            <span>
+                                Filters
+                            </span>
+
+                            <span
+                                id="filterCountBadge"
+                                class="hidden min-w-[20px] h-5 px-1.5 rounded-full bg-primary-600 text-white text-[9px] items-center justify-center"
+                            >
+                                0
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            onclick="openSortSheet()"
+                            class="flex-1 lg:flex-none h-13 px-4 rounded-2xl border border-slate-200 bg-white text-slate-700 text-xs sm:text-sm font-extrabold shadow-soft hover:border-slate-300 transition flex items-center justify-center gap-2"
+                        >
+
+                            <i class="fas fa-arrow-down-wide-short"></i>
+
+                            <span>
+                                Sort
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Quick filters -->
+                <div
+                    class="flex gap-2 overflow-x-auto no-scrollbar mt-3"
+                >
+
+                    <button
+                        onclick="setQuickFilter('all')"
+                        data-quick-filter="all"
+                        class="filter-chip active whitespace-nowrap px-4 py-2.5 rounded-xl border border-slate-900 bg-slate-950 text-white text-xs font-extrabold"
+                    >
+                        All
+                    </button>
+
+
+                    <button
+                        onclick="setQuickFilter('Apartment')"
+                        data-quick-filter="Apartment"
+                        class="filter-chip whitespace-nowrap px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-extrabold"
+                    >
+                        Apartments
+                    </button>
+
+
+                    <button
+                        onclick="setQuickFilter('Villa')"
+                        data-quick-filter="Villa"
+                        class="filter-chip whitespace-nowrap px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-extrabold"
+                    >
+                        Villas
+                    </button>
+
+
+                    <button
+                        onclick="setQuickFilter('House')"
+                        data-quick-filter="House"
+                        class="filter-chip whitespace-nowrap px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-extrabold"
+                    >
+                        Houses
+                    </button>
+
+
+                    <button
+                        onclick="setQuickFilter('featured')"
+                        data-quick-filter="featured"
+                        class="filter-chip whitespace-nowrap px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-extrabold"
+                    >
+                        <i class="fas fa-star text-amber-500 mr-1"></i>
+                        Featured
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 MOBILE VIEW SWITCH
+            ================================================== -->
+
+            <div
+                class="lg:hidden mb-4 p-1 rounded-2xl bg-slate-100 border border-slate-200 flex"
+            >
+
+                <button
+                    id="mobileListToggle"
+                    onclick="setViewMode('list')"
+                    class="flex-1 h-11 rounded-xl bg-white shadow-sm text-slate-950 text-xs font-extrabold flex items-center justify-center gap-2"
+                >
+                    <i class="fas fa-list"></i>
+                    List
+                </button>
+
+
+                <button
+                    id="mobileMapToggle"
+                    onclick="setViewMode('map')"
+                    class="flex-1 h-11 rounded-xl text-slate-500 text-xs font-extrabold flex items-center justify-center gap-2"
+                >
+                    <i class="fas fa-map-location-dot"></i>
+                    Map
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 RESULTS META
+            ================================================== -->
+
+            <div
+                class="flex items-center justify-between gap-3 mb-3"
+            >
+
+                <div>
+
+                    <p
+                        class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-slate-400"
+                    >
+                        Available listings
+                    </p>
+
+                    <p
+                        class="text-sm sm:text-base font-extrabold text-slate-950 mt-0.5"
+                    >
+                        <span id="resultCount">0</span>
+                        <span class="text-slate-400 font-semibold">
+                            properties
+                        </span>
+                    </p>
+
+                </div>
+
+
+                <button
+                    id="resetFiltersBtn"
+                    onclick="resetAllFilters()"
+                    class="hidden text-xs font-extrabold text-primary-600 hover:text-primary-700"
+                >
+                    Reset filters
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 CONTENT GRID
+            ================================================== -->
+
+            <div
+                id="browseLayout"
+                class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6"
+            >
+
+
+                <!-- =================================================
+                     MAP
+                ================================================== -->
+
+                <section
+                    id="mapPanel"
+                    class="hidden lg:block lg:col-span-7"
+                >
+
+                    <div
+                        class="map-shell sticky top-[88px] h-[calc(100vh-112px)] min-h-[600px] rounded-[28px] overflow-hidden border border-slate-200 bg-slate-200 shadow-soft relative"
+                    >
+
+                        <div id="map"></div>
+
+
+                        <!-- Map floating controls -->
+
+                        <div
+                            class="absolute top-4 left-4 z-[500] flex flex-col gap-2"
+                        >
+
+                            <button
+                                onclick="recenterMap()"
+                                class="w-11 h-11 rounded-xl bg-white/95 backdrop-blur shadow-lg border border-slate-200 text-slate-700 flex items-center justify-center hover:bg-white transition"
+                                aria-label="Recenter map"
+                            >
+                                <i class="fas fa-crosshairs text-sm"></i>
+                            </button>
+
+                        </div>
+
+
+                        <!-- Map status -->
+
+                        <div
+                            class="absolute bottom-4 left-4 right-4 z-[500] pointer-events-none"
+                        >
+
+                            <div
+                                class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white/95 backdrop-blur border border-slate-200 shadow-lg"
+                            >
+
+                                <span
+                                    class="w-2 h-2 rounded-full bg-emerald-500"
+                                ></span>
+
+                                <span
+                                    id="mapResultText"
+                                    class="text-[11px] font-extrabold text-slate-700"
+                                >
+                                    Showing available properties
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     LIST
+                ================================================== -->
+
+                <section
+                    id="listPanel"
+                    class="lg:col-span-5"
+                >
+
+                    <div
+                        id="propertiesList"
+                        class="space-y-3.5 pb-5"
+                    >
+
+                        <!-- Loading -->
+                        <div
+                            id="loadingState"
+                            class="space-y-3.5"
+                        >
+
+                            <div
+                                class="bg-white rounded-[24px] border border-slate-200 overflow-hidden"
+                            >
+
+                                <div class="h-52 skeleton"></div>
+
+                                <div class="p-4 space-y-3">
+
+                                    <div class="h-5 w-4/5 rounded skeleton"></div>
+
+                                    <div class="h-4 w-2/5 rounded skeleton"></div>
+
+                                    <div class="h-10 rounded skeleton"></div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="bg-white rounded-[24px] border border-slate-200 overflow-hidden"
+                            >
+
+                                <div class="h-52 skeleton"></div>
+
+                                <div class="p-4 space-y-3">
+
+                                    <div class="h-5 w-3/4 rounded skeleton"></div>
+
+                                    <div class="h-4 w-1/2 rounded skeleton"></div>
+
+                                    <div class="h-10 rounded skeleton"></div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================================================
+         FILTER SHEET
+    ========================================================== -->
+
+    <div
+        id="filterSheet"
+        class="hidden fixed inset-0 z-[2000] sheet-backdrop items-end sm:items-center justify-center"
+        aria-hidden="true"
+    >
+
+        <div
+            class="sheet-enter w-full sm:max-w-lg bg-white rounded-t-[30px] sm:rounded-[30px] max-h-[92vh] overflow-hidden shadow-2xl flex flex-col"
+        >
+
+            <div
+                class="px-5 sm:px-7 pt-4 sm:pt-6 pb-4 border-b border-slate-100 shrink-0"
+            >
+
+                <div class="flex justify-center sm:hidden mb-4">
+                    <span class="w-11 h-1.5 rounded-full bg-slate-200"></span>
+                </div>
+
+
+                <div class="flex items-start justify-between gap-4">
+
+                    <div>
+
+                        <p
+                            class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600"
+                        >
+                            Refine results
+                        </p>
+
+                        <h2
+                            class="text-xl font-extrabold tracking-tight text-slate-950 mt-1"
+                        >
+                            Property filters
+                        </h2>
+
+                    </div>
+
+
+                    <button
+                        onclick="closeFilterSheet()"
+                        class="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center"
+                        aria-label="Close filters"
+                    >
+                        <i class="fas fa-xmark"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="overflow-y-auto p-5 sm:p-7 space-y-7"
+            >
+
+
+                <!-- Property type -->
+
+                <div>
+
+                    <label
+                        class="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3"
+                    >
+                        Property type
+                    </label>
+
+                    <div class="grid grid-cols-2 gap-2.5">
+
+                        <button
+                            onclick="setAdvancedType('all')"
+                            data-advanced-type="all"
+                            class="advanced-type h-12 rounded-xl border border-slate-900 bg-slate-950 text-white text-xs font-extrabold"
+                        >
+                            All types
+                        </button>
+
+                        <button
+                            onclick="setAdvancedType('Apartment')"
+                            data-advanced-type="Apartment"
+                            class="advanced-type h-12 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-extrabold"
+                        >
+                            Apartment
+                        </button>
+
+                        <button
+                            onclick="setAdvancedType('Villa')"
+                            data-advanced-type="Villa"
+                            class="advanced-type h-12 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-extrabold"
+                        >
+                            Villa
+                        </button>
+
+                        <button
+                            onclick="setAdvancedType('House')"
+                            data-advanced-type="House"
+                            class="advanced-type h-12 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-extrabold"
+                        >
+                            House
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Price -->
+
+                <div>
+
+                    <label
+                        class="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3"
+                    >
+                        Price range
+                    </label>
+
+                    <div class="grid grid-cols-2 gap-3">
+
+                        <div>
+
+                            <label
+                                for="minPrice"
+                                class="block text-[11px] text-slate-400 mb-1.5"
+                            >
+                                Minimum
+                            </label>
+
+                            <input
+                                type="number"
+                                id="minPrice"
+                                min="0"
+                                inputmode="numeric"
+                                placeholder="₦0"
+                                class="w-full h-12 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-semibold outline-none focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label
+                                for="maxPrice"
+                                class="block text-[11px] text-slate-400 mb-1.5"
+                            >
+                                Maximum
+                            </label>
+
+                            <input
+                                type="number"
+                                id="maxPrice"
+                                min="0"
+                                inputmode="numeric"
+                                placeholder="No limit"
+                                class="w-full h-12 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-semibold outline-none focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Bedrooms -->
+
+                <div>
+
+                    <label
+                        class="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3"
+                    >
+                        Bedrooms
+                    </label>
+
+                    <div class="flex gap-2 overflow-x-auto no-scrollbar">
+
+                        <button
+                            onclick="setBedrooms(0)"
+                            data-bedroom="0"
+                            class="bedroom-chip active h-11 min-w-[58px] px-3 rounded-xl border border-slate-900 bg-slate-950 text-white text-xs font-extrabold"
+                        >
+                            Any
+                        </button>
+
+                        <button
+                            onclick="setBedrooms(1)"
+                            data-bedroom="1"
+                            class="bedroom-chip h-11 min-w-[58px] px-3 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-extrabold"
+                        >
+                            1+
+                        </button>
+
+                        <button
+                            onclick="setBedrooms(2)"
+                            data-bedroom="2"
+                            class="bedroom-chip h-11 min-w-[58px] px-3 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-extrabold"
+                        >
+                            2+
+                        </button>
+
+                        <button
+                            onclick="setBedrooms(3)"
+                            data-bedroom="3"
+                            class="bedroom-chip h-11 min-w-[58px] px-3 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-extrabold"
+                        >
+                            3+
+                        </button>
+
+                        <button
+                            onclick="setBedrooms(4)"
+                            data-bedroom="4"
+                            class="bedroom-chip h-11 min-w-[58px] px-3 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-extrabold"
+                        >
+                            4+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Featured -->
+
+                <label
+                    class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-slate-200 bg-slate-50 cursor-pointer"
+                >
+
+                    <div class="flex items-center gap-3">
+
+                        <span
+                            class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center"
+                        >
+                            <i class="fas fa-star"></i>
+                        </span>
+
+                        <span>
+
+                            <span class="block text-sm font-extrabold text-slate-900">
+                                Featured only
+                            </span>
+
+                            <span class="block text-[11px] text-slate-400 mt-0.5">
+                                Show highlighted listings
+                            </span>
+
+                        </span>
+
+                    </div>
+
+
+                    <input
+                        type="checkbox"
+                        id="featuredOnly"
+                        class="w-5 h-5 accent-blue-600"
+                    >
+
+                </label>
+
+            </div>
+
+
+            <div
+                class="p-4 sm:p-5 border-t border-slate-100 flex gap-2 shrink-0"
+            >
+
+                <button
+                    onclick="resetAdvancedFilters()"
+                    class="flex-1 h-12 rounded-xl border border-slate-200 text-slate-600 text-sm font-extrabold"
+                >
+                    Reset
+                </button>
+
+                <button
+                    onclick="applyAdvancedFilters()"
+                    class="flex-[1.5] h-12 rounded-xl bg-slate-950 text-white text-sm font-extrabold hover:bg-slate-800 transition"
+                >
+                    Show properties
+                </button>
+
+            </div>
+
         </div>
-    </main>
+
+    </div>
+
+
+    <!-- =========================================================
+         SORT SHEET
+    ========================================================== -->
+
+    <div
+        id="sortSheet"
+        class="hidden fixed inset-0 z-[2000] sheet-backdrop items-end sm:items-center justify-center"
+        aria-hidden="true"
+    >
+
+        <div
+            class="sheet-enter w-full sm:max-w-md bg-white rounded-t-[30px] sm:rounded-[30px] overflow-hidden shadow-2xl"
+        >
+
+            <div
+                class="px-5 pt-4 pb-4 border-b border-slate-100"
+            >
+
+                <div class="flex justify-center sm:hidden mb-4">
+                    <span class="w-11 h-1.5 rounded-full bg-slate-200"></span>
+                </div>
+
+
+                <div class="flex items-center justify-between">
+
+                    <div>
+
+                        <p
+                            class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600"
+                        >
+                            Order results
+                        </p>
+
+                        <h2
+                            class="text-xl font-extrabold text-slate-950 mt-1"
+                        >
+                            Sort properties
+                        </h2>
+
+                    </div>
+
+
+                    <button
+                        onclick="closeSortSheet()"
+                        class="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center"
+                    >
+                        <i class="fas fa-xmark"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="p-4 sm:p-5 space-y-2">
+
+                <button
+                    onclick="applySort('recommended')"
+                    data-sort="recommended"
+                    class="sort-option w-full p-4 rounded-2xl border border-primary-200 bg-primary-50 text-left flex items-center gap-3"
+                >
+
+                    <span
+                        class="w-10 h-10 rounded-xl bg-white border border-primary-100 text-primary-600 flex items-center justify-center"
+                    >
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                    </span>
+
+                    <span class="flex-1">
+
+                        <span class="block text-sm font-extrabold text-slate-900">
+                            Recommended
+                        </span>
+
+                        <span class="block text-[11px] text-slate-400 mt-0.5">
+                            Featured and relevant listings first
+                        </span>
+
+                    </span>
+
+                    <i class="fas fa-check text-primary-600 sort-check"></i>
+
+                </button>
+
+
+                <button
+                    onclick="applySort('newest')"
+                    data-sort="newest"
+                    class="sort-option w-full p-4 rounded-2xl border border-slate-200 bg-white text-left flex items-center gap-3"
+                >
+
+                    <span
+                        class="w-10 h-10 rounded-xl bg-slate-50 text-slate-600 flex items-center justify-center"
+                    >
+                        <i class="fas fa-clock"></i>
+                    </span>
+
+                    <span class="flex-1">
+
+                        <span class="block text-sm font-extrabold text-slate-900">
+                            Newest
+                        </span>
+
+                        <span class="block text-[11px] text-slate-400 mt-0.5">
+                            Recently listed properties
+                        </span>
+
+                    </span>
+
+                    <i class="fas fa-check text-primary-600 sort-check hidden"></i>
+
+                </button>
+
+
+                <button
+                    onclick="applySort('price-low')"
+                    data-sort="price-low"
+                    class="sort-option w-full p-4 rounded-2xl border border-slate-200 bg-white text-left flex items-center gap-3"
+                >
+
+                    <span
+                        class="w-10 h-10 rounded-xl bg-slate-50 text-slate-600 flex items-center justify-center"
+                    >
+                        <i class="fas fa-arrow-down-1-9"></i>
+                    </span>
+
+                    <span class="flex-1">
+
+                        <span class="block text-sm font-extrabold text-slate-900">
+                            Price: Low to high
+                        </span>
+
+                        <span class="block text-[11px] text-slate-400 mt-0.5">
+                            Most affordable first
+                        </span>
+
+                    </span>
+
+                    <i class="fas fa-check text-primary-600 sort-check hidden"></i>
+
+                </button>
+
+
+                <button
+                    onclick="applySort('price-high')"
+                    data-sort="price-high"
+                    class="sort-option w-full p-4 rounded-2xl border border-slate-200 bg-white text-left flex items-center gap-3"
+                >
+
+                    <span
+                        class="w-10 h-10 rounded-xl bg-slate-50 text-slate-600 flex items-center justify-center"
+                    >
+                        <i class="fas fa-arrow-up-1-9"></i>
+                    </span>
+
+                    <span class="flex-1">
+
+                        <span class="block text-sm font-extrabold text-slate-900">
+                            Price: High to low
+                        </span>
+
+                        <span class="block text-[11px] text-slate-400 mt-0.5">
+                            Highest value first
+                        </span>
+
+                    </span>
+
+                    <i class="fas fa-check text-primary-600 sort-check hidden"></i>
+
+                </button>
+
+
+                <button
+                    onclick="applySort('beds')"
+                    data-sort="beds"
+                    class="sort-option w-full p-4 rounded-2xl border border-slate-200 bg-white text-left flex items-center gap-3"
+                >
+
+                    <span
+                        class="w-10 h-10 rounded-xl bg-slate-50 text-slate-600 flex items-center justify-center"
+                    >
+                        <i class="fas fa-bed"></i>
+                    </span>
+
+                    <span class="flex-1">
+
+                        <span class="block text-sm font-extrabold text-slate-900">
+                            Most bedrooms
+                        </span>
+
+                        <span class="block text-[11px] text-slate-400 mt-0.5">
+                            Larger properties first
+                        </span>
+
+                    </span>
+
+                    <i class="fas fa-check text-primary-600 sort-check hidden"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         MOBILE BOTTOM NAV
+    ========================================================== -->
+
+    <nav
+        class="lg:hidden fixed bottom-0 left-0 right-0 z-[1500] bg-white/96 backdrop-blur-xl border-t border-slate-200 mobile-bottom-nav shadow-[0_-12px_35px_rgba(15,23,42,.08)]"
+        aria-label="Buyer navigation"
+    >
+
+        <div class="max-w-lg mx-auto grid grid-cols-4 px-3 pt-2">
+
+            <a
+                href="index.html"
+                class="h-14 flex flex-col items-center justify-center gap-1 text-slate-400"
+            >
+
+                <i class="fas fa-house text-[17px]"></i>
+
+                <span class="text-[10px] font-extrabold">
+                    Home
+                </span>
+
+            </a>
+
+
+            <a
+                href="notification.html"
+                class="h-14 flex flex-col items-center justify-center gap-1 text-slate-400"
+            >
+
+                <i class="fas fa-bell text-[17px]"></i>
+
+                <span class="text-[10px] font-extrabold">
+                    Inbox
+                </span>
+
+            </a>
+
+
+            <a
+                href="browse-property.html"
+                class="h-14 flex flex-col items-center justify-center gap-1 text-primary-600"
+                aria-current="page"
+            >
+
+                <span
+                    class="w-10 h-8 rounded-xl bg-primary-50 flex items-center justify-center"
+                >
+                    <i class="fas fa-compass text-[17px]"></i>
+                </span>
+
+                <span class="text-[10px] font-extrabold -mt-0.5">
+                    Explore
+                </span>
+
+            </a>
+
+
+            <a
+                href="saved-property.html"
+                class="h-14 flex flex-col items-center justify-center gap-1 text-slate-400"
+            >
+
+                <i class="far fa-heart text-[17px]"></i>
+
+                <span class="text-[10px] font-extrabold">
+                    Saved
+                </span>
+
+            </a>
+
+        </div>
+
+    </nav>
+
 
     <script>
-        let map;
+
+        /*
+         * =========================================================
+         * APPLICATION STATE
+         * =========================================================
+         */
+
+        let map = null;
+
         let markers = [];
+
         let allProperties = [];
+
         let filteredProperties = [];
-        let currentFilter = 'all';
-        let savedProperties = new Set();
+
         let currentUser = null;
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Check auth state
-            auth.onAuthStateChanged(async (user) => {
-                if (user) {
-                    currentUser = user;
-                    await loadSavedProperties(); // This will now trigger a re-render
-                } else {
-                    // Redirect to sign in if not logged in
-                    window.location.href = '../sign-in.html';
+        let currentViewMode = 'list';
+
+        let currentQuickFilter = 'all';
+
+        let currentSort = 'recommended';
+
+        let savedProperties = new Set();
+
+        let advancedFilters = {
+
+            type: 'all',
+
+            minPrice: '',
+
+            maxPrice: '',
+
+            bedrooms: 0,
+
+            featured: false
+
+        };
+
+
+        const FALLBACK_IMAGE =
+            'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85';
+
+
+        /*
+         * =========================================================
+         * INITIALIZATION
+         * =========================================================
+         */
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            () => {
+
+                initializeApplication();
+
+            }
+        );
+
+
+        async function initializeApplication() {
+
+            initializeMap();
+
+            setupSearch();
+
+            setupSheetBackdrops();
+
+            updateViewModeUI();
+
+
+            auth.onAuthStateChanged(
+                async user => {
+
+                    if (!user) {
+
+                        window.location.href =
+                            '../sign-in.html';
+
+                        return;
+
+                    }
+
+
+                    currentUser =
+                        user;
+
+
+                    await Promise.allSettled([
+                        loadProperties(),
+                        loadSavedProperties()
+                    ]);
+
                 }
+            );
+
+        }
+
+
+        /*
+         * =========================================================
+         * MAP
+         * =========================================================
+         */
+
+        function initializeMap() {
+
+            const mapElement =
+                document.getElementById('map');
+
+
+            if (!mapElement) return;
+
+
+            map =
+                L.map(
+                    'map',
+                    {
+                        zoomControl: false,
+                        attributionControl: true
+                    }
+                )
+                .setView(
+                    [6.5244, 3.3792],
+                    11
+                );
+
+
+            L.tileLayer(
+                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                {
+                    maxZoom: 19,
+                    minZoom: 3,
+                    attribution:
+                        '&copy; OpenStreetMap contributors'
+                }
+            )
+            .addTo(map);
+
+
+            L.control
+                .zoom({
+                    position: 'bottomright'
+                })
+                .addTo(map);
+
+        }
+
+
+        function createMarkerIcon(
+            property
+        ) {
+
+            return L.divIcon({
+
+                className:
+                    'custom-property-marker',
+
+                html:
+                    `
+                        <div
+                            class="marker-pin ${
+                                property.featured
+                                    ? 'featured'
+                                    : ''
+                            }"
+                        ></div>
+                    `,
+
+                iconSize:
+                    [38, 38],
+
+                iconAnchor:
+                    [19, 38],
+
+                popupAnchor:
+                    [0, -38]
+
             });
 
-            initMap();
-            await loadProperties(); // Properties load first, rendering them initially without hearts.
-            setupSearch();
-        });
-
-        // Initialize Map
-        function initMap() {
-            map = L.map('map', { zoomControl: false, attributionControl: false })
-                .setView([6.5244, 3.3792], 12); // Lagos default
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-            L.control.zoom({ position: 'bottomright' }).addTo(map);
         }
 
-        // Load Properties from Firebase
-        async function loadProperties() {
-            try {
-                const snapshot = await db.collection('properties')
-                    .where('status', '==', 'Active')
-                    .get();
-                
-                allProperties = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-                
-                filteredProperties = allProperties;
-                renderProperties();
-                updateMapMarkers();
-            } catch (error) {
-                console.error('Error loading properties:', error);
-                showToast('Error loading properties', 'error');
-            }
-        }
 
-        // Render Properties
-        function renderProperties() {
-            const container = document.getElementById('propertiesList');
-            document.getElementById('resultCount').textContent = filteredProperties.length;
-
-            if (filteredProperties.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12">
-                        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-search text-slate-400 text-2xl"></i>
-                        </div>
-                        <h3 class="font-semibold text-slate-900 mb-2">No properties found</h3>
-                        <p class="text-sm text-slate-500">Try adjusting your filters</p>
-                    </div>`;
-                return;
-            }
-
-            container.innerHTML = filteredProperties.map(prop => `
-                <div class="property-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm cursor-pointer group" onclick="viewProperty('${prop.id}')">
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="${prop.image || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'}" 
-                             alt="${prop.title}" 
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                             onerror="this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'">
-                        
-                        ${prop.featured ? '<div class="absolute top-3 left-3 bg-amber-500 text-white px-3 py-1 rounded-lg text-xs font-bold shadow-lg">FEATURED</div>' : ''}
-                        
-                        <button onclick="toggleFavorite(event, '${prop.id}')" 
-                                class="favorite-btn absolute top-3 right-3 w-9 h-9 bg-white/95 backdrop-blur rounded-full flex items-center justify-center shadow-md hover:scale-110 transition ${savedProperties.has(prop.id) ? 'active' : ''}">
-                            <i class="${savedProperties.has(prop.id) ? 'fas' : 'far'} fa-heart text-lg"></i>
-                        </button>
-                        
-                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
-                            <p class="text-white font-bold text-2xl">₦${formatPrice(prop.price)}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="p-4">
-                        <h3 class="font-bold text-slate-900 text-lg mb-1 line-clamp-1">${prop.title}</h3>
-                        <p class="text-sm text-slate-500 mb-3 flex items-center gap-1">
-                            <i class="fas fa-map-marker-alt text-primary-500"></i> ${prop.location}
-                        </p>
-                        
-                        <div class="flex items-center gap-4 text-sm text-slate-600 pt-3 border-t border-slate-100">
-                            <span class="flex items-center gap-1.5"><i class="fas fa-bed text-primary-500"></i> ${prop.beds || 0}</span>
-                            <span class="flex items-center gap-1.5"><i class="fas fa-bath text-primary-500"></i> ${prop.baths || 0}</span>
-                            <span class="flex items-center gap-1.5"><i class="fas fa-ruler-combined text-primary-500"></i> ${prop.area || 0}m²</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Update Map Markers
         function updateMapMarkers() {
-            markers.forEach(marker => map.removeLayer(marker));
+
+            if (!map) return;
+
+
+            markers.forEach(
+                marker => {
+
+                    map.removeLayer(
+                        marker
+                    );
+
+                }
+            );
+
+
             markers = [];
 
-            const customIcon = L.divIcon({
-                className: 'property-marker-wrapper',
-                html: '<div class="property-marker"></div>',
-                iconSize: [42, 42],
-                iconAnchor: [21, 42]
-            });
 
-            filteredProperties.forEach(prop => {
-                if (prop.lat && prop.lng) {
-                    const marker = L.marker([prop.lat, prop.lng], { icon: customIcon })
-                        .addTo(map)
-                        .bindPopup(`
-                            <div class="text-center p-2">
-                                <p class="font-bold text-slate-900 text-sm">${prop.title}</p>
-                                <p class="text-xs text-slate-600">₦${formatPrice(prop.price)}</p>
-                                <button onclick="viewProperty('${prop.id}')" class="mt-2 px-3 py-1.5 bg-primary-600 text-white text-xs rounded-lg">View</button>
-                            </div>
-                        `);
-                    markers.push(marker);
+            filteredProperties.forEach(
+                property => {
+
+                    const lat =
+                        Number(
+                            property.lat
+                        );
+
+                    const lng =
+                        Number(
+                            property.lng
+                        );
+
+
+                    if (
+                        !Number.isFinite(lat) ||
+                        !Number.isFinite(lng)
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const marker =
+                        L.marker(
+                            [lat, lng],
+                            {
+                                icon:
+                                    createMarkerIcon(
+                                        property
+                                    )
+                            }
+                        )
+                        .addTo(map);
+
+
+                    marker.bindPopup(
+                        buildMapPopup(
+                            property
+                        )
+                    );
+
+
+                    marker.on(
+                        'click',
+                        () => {
+
+                            highlightPropertyCard(
+                                property.id
+                            );
+
+                        }
+                    );
+
+
+                    markers.push(
+                        marker
+                    );
+
                 }
-            });
+            );
+
+
+            updateMapResultText();
+
+        }
+
+
+        function buildMapPopup(
+            property
+        ) {
+
+            const image =
+                getPropertyImage(
+                    property
+                );
+
+
+            const title =
+                escapeHtml(
+                    property.title ||
+                    'Untitled Property'
+                );
+
+
+            const location =
+                escapeHtml(
+                    property.location ||
+                    'Location unavailable'
+                );
+
+
+            return `
+
+                <div class="w-[245px] overflow-hidden">
+
+                    <div class="h-[125px] bg-slate-100 overflow-hidden">
+
+                        <img
+                            src="${escapeAttribute(image)}"
+                            alt="${title}"
+                            class="w-full h-full object-cover"
+                            onerror="this.src='${FALLBACK_IMAGE}'"
+                        >
+
+                    </div>
+
+
+                    <div class="p-3.5">
+
+                        <div class="flex items-start justify-between gap-2">
+
+                            <div class="min-w-0">
+
+                                ${
+                                    property.featured
+                                        ? `
+                                            <span class="inline-flex items-center gap-1 text-[9px] font-extrabold uppercase tracking-wider text-amber-700 mb-1">
+                                                <i class="fas fa-star"></i>
+                                                Featured
+                                            </span>
+                                        `
+                                        : ''
+                                }
+
+                                <p class="font-extrabold text-slate-950 text-sm truncate">
+                                    ${title}
+                                </p>
+
+                                <p class="text-[10px] text-slate-500 mt-1 truncate">
+                                    ${location}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="flex items-center justify-between gap-2 mt-3">
+
+                            <p class="font-extrabold text-slate-950 text-sm">
+                                ₦${formatPrice(property.price)}
+                            </p>
+
+
+                            <button
+                                onclick="viewProperty('${escapeAttribute(property.id)}')"
+                                class="px-3 py-2 rounded-lg bg-slate-950 text-white text-[10px] font-extrabold"
+                            >
+                                View
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+
+        function recenterMap() {
+
+            if (!map) return;
+
+
+            if (markers.length === 1) {
+
+                map.setView(
+                    markers[0].getLatLng(),
+                    15
+                );
+
+                return;
+
+            }
+
 
             if (markers.length > 1) {
-                const group = new L.featureGroup(markers);
-                map.fitBounds(group.getBounds().pad(0.1));
-            }
-        }
 
-        // Toggle Favorite - Firebase
-        async function toggleFavorite(event, propertyId) {
-            event.stopPropagation();
-            
-            if (!currentUser) {
-                showToast('Please sign in first', 'error');
-                return;
-            }
-
-            const btn = event.currentTarget;
-            
-            try {
-                if (savedProperties.has(propertyId)) {
-                    // Remove from Firebase
-                    await db.collection('users')
-                        .doc(currentUser.uid)
-                        .collection('savedProperties')
-                        .doc(propertyId)
-                        .delete();
-                    
-                    savedProperties.delete(propertyId);
-                    btn.classList.remove('active');
-                    btn.querySelector('i').classList.remove('fas');
-                    btn.querySelector('i').classList.add('far');
-                    showToast('Removed from favorites');
-                } else {
-                    // Add to Firebase
-                    const prop = allProperties.find(p => p.id === propertyId);
-                    await db.collection('users')
-                        .doc(currentUser.uid)
-                        .collection('savedProperties')
-                        .doc(propertyId)
-                        .set({
-                            ...prop,
-                            savedAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                    
-                    savedProperties.add(propertyId);
-                    btn.classList.add('active');
-                    btn.querySelector('i').classList.remove('far');
-                    btn.querySelector('i').classList.add('fas');
-                    showToast('Added to favorites');
-                }
-                
-                updateSavedCount();
-            } catch (error) {
-                console.error('Error toggling favorite:', error);
-                showToast('Error saving property', 'error');
-            }
-        }
-
-        // Load Saved Properties from Firebase
-        async function loadSavedProperties() {
-            try {
-                const snapshot = await db.collection('users')
-                    .doc(currentUser.uid)
-                    .collection('savedProperties')
-                    .get();
-
-                savedProperties.clear(); // Clear existing to prevent duplicates
-                snapshot.forEach(doc => {
-                    savedProperties.add(doc.id);
-                });
-
-                updateSavedCount();
-                renderProperties(); // Re-render UI to update active hearts on loaded properties
-            } catch (error) {
-                console.error('Error loading saved:', error);
-            }
-        }
-
-        // Update Saved Count Badge
-        function updateSavedCount() {
-            const badge = document.getElementById('savedCount');
-            const count = savedProperties.size;
-            
-            if (count > 0) {
-                badge.textContent = count;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
-
-        // Filter Functions
-        function filterByType(type) {
-            currentFilter = type;
-            
-            document.querySelectorAll('.filter-chip').forEach(chip => {
-                if (chip.dataset.filter === type) {
-                    chip.classList.remove('bg-slate-100', 'text-slate-600');
-                    chip.classList.add('bg-primary-600', 'text-white', 'shadow-md');
-                } else {
-                    chip.classList.add('bg-slate-100', 'text-slate-600');
-                    chip.classList.remove('bg-primary-600', 'text-white', 'shadow-md');
-                }
-            });
-
-            if (type === 'all') {
-                filteredProperties = allProperties;
-            } else {
-                filteredProperties = allProperties.filter(p => p.type === type);
-            }
-
-            renderProperties();
-            updateMapMarkers();
-        }
-
-        function filterByFeatured() {
-            filteredProperties = allProperties.filter(p => p.featured === true);
-            renderProperties();
-            updateMapMarkers();
-        }
-
-        // Search
-        function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            
-            searchInput.addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase().trim();
-                
-                if (query.length === 0) {
-                    filteredProperties = allProperties;
-                } else {
-                    filteredProperties = allProperties.filter(p => 
-                        p.title?.toLowerCase().includes(query) ||
-                        p.location?.toLowerCase().includes(query) ||
-                        p.type?.toLowerCase().includes(query)
+                const group =
+                    new L.featureGroup(
+                        markers
                     );
-                }
-                
-                renderProperties();
-                updateMapMarkers();
-            });
+
+
+                map.fitBounds(
+                    group.getBounds().pad(.12)
+                );
+
+                return;
+
+            }
+
+
+            map.setView(
+                [6.5244, 3.3792],
+                11
+            );
+
         }
+
+
+        /*
+         * =========================================================
+         * FIREBASE PROPERTIES
+         * =========================================================
+         */
+
+        async function loadProperties() {
+
+            showLoadingState();
+
+
+            try {
+
+                const snapshot =
+                    await db
+                        .collection('properties')
+                        .where(
+                            'status',
+                            '==',
+                            'Active'
+                        )
+                        .get();
+
+
+                allProperties =
+                    snapshot.docs
+                        .map(
+                            doc => ({
+                                id:
+                                    doc.id,
+                                ...doc.data()
+                            })
+                        );
+
+
+                filteredProperties =
+                    [...allProperties];
+
+
+                applyAllFilters();
+
+
+            } catch (error) {
+
+                console.error(
+                    'Error loading properties:',
+                    error
+                );
+
+
+                showErrorState();
+
+                showToast(
+                    'Unable to load properties.',
+                    'error'
+                );
+
+            }
+
+        }
+
+
+        async function loadSavedProperties() {
+
+            if (!currentUser) return;
+
+
+            try {
+
+                const snapshot =
+                    await db
+                        .collection('users')
+                        .doc(
+                            currentUser.uid
+                        )
+                        .collection('savedProperties')
+                        .get();
+
+
+                savedProperties.clear();
+
+
+                snapshot.forEach(
+                    doc => {
+
+                        savedProperties.add(
+                            doc.id
+                        );
+
+                    }
+                );
+
+
+                updateSavedCount();
+
+                renderProperties();
+
+            } catch (error) {
+
+                console.error(
+                    'Error loading saved properties:',
+                    error
+                );
+
+            }
+
+        }
+
+
+        /*
+         * =========================================================
+         * FILTER ENGINE
+         * =========================================================
+         */
+
+        function applyAllFilters() {
+
+            let results =
+                [...allProperties];
+
+
+            const query =
+                document
+                    .getElementById(
+                        'searchInput'
+                    )
+                    ?.value
+                    .toLowerCase()
+                    .trim() ||
+                '';
+
+
+            /*
+             * Search
+             */
+
+            if (query) {
+
+                results =
+                    results.filter(
+                        property => {
+
+                            const haystack =
+                                [
+                                    property.title,
+                                    property.location,
+                                    property.type,
+                                    property.description,
+                                    property.city,
+                                    property.state,
+                                    property.address
+                                ]
+                                .filter(Boolean)
+                                .join(' ')
+                                .toLowerCase();
+
+
+                            return haystack.includes(
+                                query
+                            );
+
+                        }
+                    );
+
+            }
+
+
+            /*
+             * Quick type filter
+             */
+
+            if (
+                currentQuickFilter !==
+                'all'
+            ) {
+
+                if (
+                    currentQuickFilter ===
+                    'featured'
+                ) {
+
+                    results =
+                        results.filter(
+                            property =>
+                                property.featured ===
+                                true
+                        );
+
+                } else {
+
+                    results =
+                        results.filter(
+                            property =>
+                                normalizeType(
+                                    property.type
+                                ) ===
+                                normalizeType(
+                                    currentQuickFilter
+                                )
+                        );
+
+                }
+
+            }
+
+
+            /*
+             * Advanced type
+             */
+
+            if (
+                advancedFilters.type !==
+                'all'
+            ) {
+
+                results =
+                    results.filter(
+                        property =>
+                            normalizeType(
+                                property.type
+                            ) ===
+                            normalizeType(
+                                advancedFilters.type
+                            )
+                    );
+
+            }
+
+
+            /*
+             * Minimum price
+             */
+
+            const minPrice =
+                Number(
+                    advancedFilters.minPrice
+                );
+
+
+            if (
+                advancedFilters.minPrice !== '' &&
+                Number.isFinite(minPrice)
+            ) {
+
+                results =
+                    results.filter(
+                        property =>
+                            Number(
+                                property.price || 0
+                            ) >=
+                            minPrice
+                    );
+
+            }
+
+
+            /*
+             * Maximum price
+             */
+
+            const maxPrice =
+                Number(
+                    advancedFilters.maxPrice
+                );
+
+
+            if (
+                advancedFilters.maxPrice !== '' &&
+                Number.isFinite(maxPrice)
+            ) {
+
+                results =
+                    results.filter(
+                        property =>
+                            Number(
+                                property.price || 0
+                            ) <=
+                            maxPrice
+                    );
+
+            }
+
+
+            /*
+             * Bedrooms
+             */
+
+            if (
+                Number(
+                    advancedFilters.bedrooms
+                ) > 0
+            ) {
+
+                results =
+                    results.filter(
+                        property =>
+                            Number(
+                                property.beds || 0
+                            ) >=
+                            Number(
+                                advancedFilters.bedrooms
+                            )
+                    );
+
+            }
+
+
+            /*
+             * Featured
+             */
+
+            if (
+                advancedFilters.featured
+            ) {
+
+                results =
+                    results.filter(
+                        property =>
+                            property.featured ===
+                            true
+                    );
+
+            }
+
+
+            /*
+             * Sorting
+             */
+
+            results =
+                sortProperties(
+                    results
+                );
+
+
+            filteredProperties =
+                results;
+
+
+            renderProperties();
+
+            updateMapMarkers();
+
+            updateResultMeta();
+
+        }
+
+
+        function sortProperties(
+            properties
+        ) {
+
+            const results =
+                [...properties];
+
+
+            if (
+                currentSort ===
+                'price-low'
+            ) {
+
+                return results.sort(
+                    (a, b) =>
+                        Number(
+                            a.price || 0
+                        ) -
+                        Number(
+                            b.price || 0
+                        )
+                );
+
+            }
+
+
+            if (
+                currentSort ===
+                'price-high'
+            ) {
+
+                return results.sort(
+                    (a, b) =>
+                        Number(
+                            b.price || 0
+                        ) -
+                        Number(
+                            a.price || 0
+                        )
+                );
+
+            }
+
+
+            if (
+                currentSort ===
+                'beds'
+            ) {
+
+                return results.sort(
+                    (a, b) =>
+                        Number(
+                            b.beds || 0
+                        ) -
+                        Number(
+                            a.beds || 0
+                        )
+                );
+
+            }
+
+
+            if (
+                currentSort ===
+                'newest'
+            ) {
+
+                return results.sort(
+                    (
+                        a,
+                        b
+                    ) =>
+                        getTimestampMillis(
+                            b.createdAt
+                        ) -
+                        getTimestampMillis(
+                            a.createdAt
+                        )
+                );
+
+            }
+
+
+            /*
+             * Recommended:
+             *
+             * Featured first, then verified,
+             * then newer properties.
+             */
+
+            return results.sort(
+                (a, b) => {
+
+                    const scoreA =
+                        getRecommendationScore(
+                            a
+                        );
+
+                    const scoreB =
+                        getRecommendationScore(
+                            b
+                        );
+
+
+                    return scoreB - scoreA;
+
+                }
+            );
+
+        }
+
+
+        function getRecommendationScore(
+            property
+        ) {
+
+            let score = 0;
+
+
+            if (
+                property.featured ===
+                true
+            ) {
+
+                score += 100;
+
+            }
+
+
+            if (
+                property.verified ===
+                true
+            ) {
+
+                score += 30;
+
+            }
+
+
+            score +=
+                Math.min(
+                    20,
+                    Number(
+                        property.beds ||
+                        0
+                    ) *
+                    2
+                );
+
+
+            const created =
+                getTimestampMillis(
+                    property.createdAt
+                );
+
+
+            if (
+                created
+            ) {
+
+                const ageDays =
+                    Math.max(
+                        0,
+                        (
+                            Date.now() -
+                            created
+                        ) /
+                        86400000
+                    );
+
+
+                score +=
+                    Math.max(
+                        0,
+                        20 -
+                        ageDays
+                    );
+
+            }
+
+
+            return score;
+
+        }
+
+
+        function normalizeType(
+            value
+        ) {
+
+            return String(
+                value ||
+                ''
+            )
+            .trim()
+            .toLowerCase();
+
+        }
+
+
+        /*
+         * =========================================================
+         * RENDER PROPERTIES
+         * =========================================================
+         */
+
+        function renderProperties() {
+
+            const container =
+                document.getElementById(
+                    'propertiesList'
+                );
+
+
+            if (!container) return;
+
+
+            if (
+                !filteredProperties.length
+            ) {
+
+                renderEmptyState();
+
+                return;
+
+            }
+
+
+            container.innerHTML =
+                filteredProperties
+                    .map(
+                        (
+                            property,
+                            index
+                        ) =>
+                            buildPropertyCard(
+                                property,
+                                index
+                            )
+                    )
+                    .join('');
+
+        }
+
+
+        function buildPropertyCard(
+            property,
+            index
+        ) {
+
+            const image =
+                getPropertyImage(
+                    property
+                );
+
+
+            const title =
+                escapeHtml(
+                    property.title ||
+                    'Untitled Property'
+                );
+
+
+            const location =
+                escapeHtml(
+                    property.location ||
+                    'Location unavailable'
+                );
+
+
+            const type =
+                escapeHtml(
+                    property.type ||
+                    'Property'
+                );
+
+
+            const price =
+                formatPrice(
+                    property.price
+                );
+
+
+            const saved =
+                savedProperties.has(
+                    property.id
+                );
+
+
+            const verified =
+                property.verified ===
+                true;
+
+
+            const featured =
+                property.featured ===
+                true;
+
+
+            const bedrooms =
+                Number(
+                    property.beds ||
+                    0
+                );
+
+
+            const bathrooms =
+                Number(
+                    property.baths ||
+                    0
+                );
+
+
+            const area =
+                Number(
+                    property.area ||
+                    0
+                );
+
+
+            return `
+
+                <article
+                    id="property-card-${escapeAttribute(property.id)}"
+                    class="property-card fade-up bg-white rounded-[24px] border border-slate-200/90 overflow-hidden shadow-soft cursor-pointer group"
+                    style="animation-delay:${Math.min(index * 35, 180)}ms"
+                    onclick="viewProperty('${escapeAttribute(property.id)}')"
+                >
+
+                    <!-- Image -->
+
+                    <div
+                        class="relative h-[220px] sm:h-[240px] overflow-hidden bg-slate-100"
+                    >
+
+                        <img
+                            src="${escapeAttribute(image)}"
+                            alt="${title}"
+                            loading="${index < 2 ? 'eager' : 'lazy'}"
+                            decoding="async"
+                            class="w-full h-full object-cover transition duration-700 group-hover:scale-[1.035]"
+                            onerror="this.src='${FALLBACK_IMAGE}'"
+                        >
+
+
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-slate-950/10 pointer-events-none"
+                        ></div>
+
+
+                        <!-- Top badges -->
+
+                        <div
+                            class="absolute top-3.5 left-3.5 right-3.5 flex items-start justify-between gap-2"
+                        >
+
+                            <div class="flex flex-wrap gap-1.5">
+
+                                ${
+                                    featured
+                                        ? `
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-950/85 text-white text-[9px] font-extrabold tracking-wider backdrop-blur">
+                                                <i class="fas fa-star text-amber-400"></i>
+                                                FEATURED
+                                            </span>
+                                        `
+                                        : ''
+                                }
+
+
+                                <span
+                                    class="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-white/92 text-slate-800 text-[9px] font-extrabold backdrop-blur"
+                                >
+                                    ${type}
+                                </span>
+
+                            </div>
+
+
+                            <button
+                                onclick="toggleFavorite(event, '${escapeAttribute(property.id)}')"
+                                class="favorite-btn ${
+                                    saved
+                                        ? 'active'
+                                        : ''
+                                } w-10 h-10 rounded-xl border ${
+                                    saved
+                                        ? 'border-rose-200 bg-rose-50'
+                                        : 'border-white/60 bg-white/92'
+                                } backdrop-blur flex items-center justify-center shadow-lg shrink-0"
+                                aria-label="${
+                                    saved
+                                        ? 'Remove from saved properties'
+                                        : 'Save property'
+                                }"
+                                aria-pressed="${
+                                    saved
+                                        ? 'true'
+                                        : 'false'
+                                }"
+                            >
+
+                                <i
+                                    class="${
+                                        saved
+                                            ? 'fas'
+                                            : 'far'
+                                    } fa-heart text-sm"
+                                ></i>
+
+                            </button>
+
+                        </div>
+
+
+                        <!-- Bottom image info -->
+
+                        <div
+                            class="absolute left-4 right-4 bottom-4 flex items-end justify-between gap-3"
+                        >
+
+                            <div class="min-w-0">
+
+                                <p
+                                    class="text-[10px] uppercase tracking-[0.16em] text-white/65 font-extrabold mb-1"
+                                >
+                                    Asking price
+                                </p>
+
+                                <p
+                                    class="text-xl sm:text-2xl font-extrabold text-white tracking-tight"
+                                >
+                                    ₦${price}
+                                </p>
+
+                            </div>
+
+
+                            ${
+                                verified
+                                    ? `
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/95 text-primary-700 text-[9px] font-extrabold shrink-0"
+                                        >
+                                            <i class="fas fa-circle-check"></i>
+                                            VERIFIED
+                                        </span>
+                                    `
+                                    : ''
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Content -->
+
+                    <div class="p-4 sm:p-5">
+
+                        <div class="min-w-0">
+
+                            <h2
+                                class="text-[16px] sm:text-[17px] font-extrabold text-slate-950 leading-6 truncate"
+                            >
+                                ${title}
+                            </h2>
+
+
+                            <p
+                                class="flex items-center gap-1.5 text-xs sm:text-[13px] text-slate-500 mt-1.5 truncate"
+                            >
+
+                                <i
+                                    class="fas fa-location-dot text-primary-500 shrink-0"
+                                ></i>
+
+                                <span class="truncate">
+                                    ${location}
+                                </span>
+
+                            </p>
+
+                        </div>
+
+
+                        <!-- Stats -->
+
+                        <div
+                            class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-slate-100"
+                        >
+
+                            <div
+                                class="flex items-center gap-2 min-w-0"
+                            >
+
+                                <span
+                                    class="w-8 h-8 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center shrink-0"
+                                >
+                                    <i class="fas fa-bed text-[11px]"></i>
+                                </span>
+
+                                <div class="min-w-0">
+
+                                    <p
+                                        class="text-xs font-extrabold text-slate-800 truncate"
+                                    >
+                                        ${bedrooms}
+                                    </p>
+
+                                    <p
+                                        class="text-[9px] text-slate-400 font-semibold truncate"
+                                    >
+                                        Beds
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="flex items-center gap-2 min-w-0"
+                            >
+
+                                <span
+                                    class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"
+                                >
+                                    <i class="fas fa-bath text-[11px]"></i>
+                                </span>
+
+                                <div class="min-w-0">
+
+                                    <p
+                                        class="text-xs font-extrabold text-slate-800 truncate"
+                                    >
+                                        ${bathrooms}
+                                    </p>
+
+                                    <p
+                                        class="text-[9px] text-slate-400 font-semibold truncate"
+                                    >
+                                        Baths
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="flex items-center gap-2 min-w-0"
+                            >
+
+                                <span
+                                    class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"
+                                >
+                                    <i class="fas fa-ruler-combined text-[11px]"></i>
+                                </span>
+
+                                <div class="min-w-0">
+
+                                    <p
+                                        class="text-xs font-extrabold text-slate-800 truncate"
+                                    >
+                                        ${
+                                            area
+                                                ? formatPrice(area)
+                                                : '—'
+                                        }
+                                    </p>
+
+                                    <p
+                                        class="text-[9px] text-slate-400 font-semibold truncate"
+                                    >
+                                        m²
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Footer -->
+
+                        <div
+                            class="flex items-center justify-between gap-3 mt-4"
+                        >
+
+                            <span
+                                class="text-[10px] text-slate-400 font-semibold"
+                            >
+                                View full property
+                            </span>
+
+
+                            <span
+                                class="w-8 h-8 rounded-lg bg-slate-950 text-white flex items-center justify-center group-hover:bg-primary-600 transition"
+                            >
+                                <i class="fas fa-arrow-right text-[10px]"></i>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            `;
+
+        }
+
+
+        function getPropertyImage(
+            property
+        ) {
+
+            if (
+                property &&
+                Array.isArray(
+                    property.images
+                )
+            ) {
+
+                const first =
+                    property.images.find(
+                        image =>
+                            typeof image ===
+                            'string' &&
+                            image.trim()
+                    );
+
+
+                if (first) {
+
+                    return first;
+
+                }
+
+            }
+
+
+            if (
+                property &&
+                typeof property.image ===
+                'string' &&
+                property.image.trim()
+            ) {
+
+                return property.image;
+
+            }
+
+
+            return FALLBACK_IMAGE;
+
+        }
+
+
+        function renderEmptyState() {
+
+            const container =
+                document.getElementById(
+                    'propertiesList'
+                );
+
+
+            if (!container) return;
+
+
+            container.innerHTML =
+                `
+
+                    <div
+                        class="bg-white rounded-[28px] border border-slate-200 p-8 sm:p-12 text-center"
+                    >
+
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-5"
+                        >
+                            <i class="fas fa-house-circle-xmark text-2xl"></i>
+                        </div>
+
+
+                        <h2
+                            class="text-lg sm:text-xl font-extrabold text-slate-950"
+                        >
+                            No properties match
+                        </h2>
+
+
+                        <p
+                            class="text-xs sm:text-sm leading-6 text-slate-500 mt-2 max-w-sm mx-auto"
+                        >
+                            Try changing your search or removing some filters to see more available properties.
+                        </p>
+
+
+                        <button
+                            onclick="resetAllFilters()"
+                            class="mt-6 inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-950 text-white text-xs font-extrabold hover:bg-slate-800 transition"
+                        >
+                            <i class="fas fa-rotate-left"></i>
+                            Reset search
+                        </button>
+
+                    </div>
+
+                `;
+
+        }
+
+
+        function showLoadingState() {
+
+            const container =
+                document.getElementById(
+                    'propertiesList'
+                );
+
+
+            if (!container) return;
+
+
+            container.innerHTML =
+                `
+
+                    <div
+                        class="bg-white rounded-[24px] border border-slate-200 overflow-hidden"
+                    >
+
+                        <div class="h-52 skeleton"></div>
+
+                        <div class="p-4 space-y-3">
+
+                            <div class="h-5 w-4/5 rounded skeleton"></div>
+
+                            <div class="h-4 w-2/5 rounded skeleton"></div>
+
+                            <div class="h-10 rounded skeleton"></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="bg-white rounded-[24px] border border-slate-200 overflow-hidden"
+                    >
+
+                        <div class="h-52 skeleton"></div>
+
+                        <div class="p-4 space-y-3">
+
+                            <div class="h-5 w-3/4 rounded skeleton"></div>
+
+                            <div class="h-4 w-1/2 rounded skeleton"></div>
+
+                            <div class="h-10 rounded skeleton"></div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+        }
+
+
+        function showErrorState() {
+
+            const container =
+                document.getElementById(
+                    'propertiesList'
+                );
+
+
+            if (!container) return;
+
+
+            container.innerHTML =
+                `
+
+                    <div
+                        class="bg-white rounded-[28px] border border-rose-200 p-8 text-center"
+                    >
+
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mx-auto mb-5"
+                        >
+                            <i class="fas fa-triangle-exclamation text-xl"></i>
+                        </div>
+
+
+                        <h2
+                            class="text-lg font-extrabold text-slate-950"
+                        >
+                            Properties could not be loaded
+                        </h2>
+
+
+                        <p
+                            class="text-xs leading-5 text-slate-500 mt-2"
+                        >
+                            Please check your connection and try again.
+                        </p>
+
+
+                        <button
+                            onclick="loadProperties()"
+                            class="mt-5 px-5 py-3 rounded-xl bg-slate-950 text-white text-xs font-extrabold"
+                        >
+                            Try again
+                        </button>
+
+                    </div>
+
+                `;
+
+        }
+
+
+        /*
+         * =========================================================
+         * SEARCH
+         * =========================================================
+         */
+
+        function setupSearch() {
+
+            const input =
+                document.getElementById(
+                    'searchInput'
+                );
+
+
+            if (!input) return;
+
+
+            let searchTimer =
+                null;
+
+
+            input.addEventListener(
+                'input',
+                () => {
+
+                    const value =
+                        input.value.trim();
+
+
+                    const clearButton =
+                        document.getElementById(
+                            'clearSearchBtn'
+                        );
+
+
+                    if (clearButton) {
+
+                        if (value) {
+
+                            clearButton.classList.remove(
+                                'hidden'
+                            );
+
+                            clearButton.classList.add(
+                                'flex'
+                            );
+
+                        } else {
+
+                            clearButton.classList.add(
+                                'hidden'
+                            );
+
+                            clearButton.classList.remove(
+                                'flex'
+                            );
+
+                        }
+
+                    }
+
+
+                    clearTimeout(
+                        searchTimer
+                    );
+
+
+                    searchTimer =
+                        setTimeout(
+                            () => {
+
+                                applyAllFilters();
+
+                            },
+                            180
+                        );
+
+                }
+            );
+
+
+            input.addEventListener(
+                'keydown',
+                event => {
+
+                    if (
+                        event.key ===
+                        'Escape'
+                    ) {
+
+                        clearSearch();
+
+                    }
+
+                }
+            );
+
+        }
+
 
         function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            filteredProperties = allProperties;
-            renderProperties();
-            updateMapMarkers();
-        }
 
-        // View Property - Route to detail page
-        function viewProperty(id) {
-            window.location.href = `property-detail.html?id=${id}`;
-        }
+            const input =
+                document.getElementById(
+                    'searchInput'
+                );
 
-        function toggleMapView() {
-            const mapDiv = document.getElementById('map');
-            mapDiv.style.display = mapDiv.style.display === 'none' ? 'block' : 'none';
-        }
 
-        function formatPrice(price) {
-            if (!price) return '0';
-            return Number(price).toLocaleString();
-        }
+            if (!input) return;
 
-        // Toast Notification
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `fixed top-4 left-1/2 -translate-x-1/2 z-[2000] px-6 py-3 rounded-full shadow-xl text-white font-medium text-sm animate-slide-in ${type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
 
-        // Add animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translate(-50%, -100%); opacity: 0; }
-                to { transform: translate(-50%, 0); opacity: 1; }
+            input.value =
+                '';
+
+
+            const clearButton =
+                document.getElementById(
+                    'clearSearchBtn'
+                );
+
+
+            if (clearButton) {
+
+                clearButton.classList.add(
+                    'hidden'
+                );
+
+                clearButton.classList.remove(
+                    'flex'
+                );
+
             }
-            .animate-slide-in { animation: slideIn 0.3s ease-out; }
-        `;
-        document.head.appendChild(style);
+
+
+            applyAllFilters();
+
+            input.focus();
+
+        }
+
+
+        /*
+         * =========================================================
+         * QUICK FILTERS
+         * =========================================================
+         */
+
+        function setQuickFilter(
+            filter
+        ) {
+
+            currentQuickFilter =
+                filter;
+
+
+            document
+                .querySelectorAll(
+                    '[data-quick-filter]'
+                )
+                .forEach(
+                    button => {
+
+                        const active =
+                            button.dataset.quickFilter ===
+                            filter;
+
+
+                        button.classList.toggle(
+                            'active',
+                            active
+                        );
+
+                        button.classList.toggle(
+                            'bg-slate-950',
+                            active
+                        );
+
+                        button.classList.toggle(
+                            'text-white',
+                            active
+                        );
+
+                        button.classList.toggle(
+                            'border-slate-900',
+                            active
+                        );
+
+                        button.classList.toggle(
+                            'bg-white',
+                            !active
+                        );
+
+                        button.classList.toggle(
+                            'text-slate-600',
+                            !active
+                        );
+
+                    }
+                );
+
+
+            applyAllFilters();
+
+        }
+
+
+        /*
+         * =========================================================
+         * ADVANCED FILTERS
+         * =========================================================
+         */
+
+        function openFilterSheet() {
+
+            const sheet =
+                document.getElementById(
+                    'filterSheet'
+                );
+
+
+            if (!sheet) return;
+
+
+            syncAdvancedFilterUI();
+
+
+            sheet.classList.remove(
+                'hidden'
+            );
+
+            sheet.classList.add(
+                'flex'
+            );
+
+            sheet.setAttribute(
+                'aria-hidden',
+                'false'
+            );
+
+
+            document.body.style.overflow =
+                'hidden';
+
+        }
+
+
+        function closeFilterSheet() {
+
+            const sheet =
+                document.getElementById(
+                    'filterSheet'
+                );
+
+
+            if (!sheet) return;
+
+
+            sheet.classList.add(
+                'hidden'
+            );
+
+            sheet.classList.remove(
+                'flex'
+            );
+
+            sheet.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+
+            restoreBodyScroll();
+
+        }
+
+
+        function setAdvancedType(
+            type
+        ) {
+
+            advancedFilters.type =
+                type;
+
+
+            document
+                .querySelectorAll(
+                    '.advanced-type'
+                )
+                .forEach(
+                    button => {
+
+                        const active =
+                            button.dataset.advancedType ===
+                            type;
+
+
+                        button.classList.toggle(
+                            'bg-slate-950',
+                            active
+                        );
+
+                        button.classList.toggle(
+                            'text-white',
+                            active
+                        );
+
+                        button.classList.toggle(
+                            'border-slate-900',
+                            active
+                        );
+
+                        button.classList.toggle(
+                            'bg-white',
+                            !active
+                        );
+
+                        button.classList.toggle(
+                            'text-slate-600',
+                            !active
+                        );
+
+                        button.classList.toggle(
+                            'border-slate-200',
+                            !active
+                        );
+
+                    }
+                );
+
+        }
+
+
+        function setBedrooms(
+            value
+        ) {
+
+            advancedFilters.bedrooms =
+                Number(value) || 0;
+
+
+            document
+                .querySelectorAll(
+                    '.bedroom-chip'
+                )
+                .forEach(
+                    button => {
+
+                        const active =
+                            Number(
+                                button.dataset.bedroom
+                            ) ===
+                            Number(value);
+
+
+                        button.classList.toggle(
+                            'bg-slate-950',
+                            active
+                        );
+
+                        button.classList.toggle(
+                            'text-white',
+                            active
+                        );
+
+                        button.classList.toggle(
+                            'border-slate-900',
+                            active
+                        );
+
+                        button.classList.toggle(
+                            'bg-white',
+                            !active
+                        );
+
+                        button.classList.toggle(
+                            'text-slate-600',
+                            !active
+                        );
+
+                        button.classList.toggle(
+                            'border-slate-200',
+                            !active
+                        );
+
+                    }
+                );
+
+        }
+
+
+        function syncAdvancedFilterUI() {
+
+            const minPrice =
+                document.getElementById(
+                    'minPrice'
+                );
+
+
+            const maxPrice =
+                document.getElementById(
+                    'maxPrice'
+                );
+
+
+            const featured =
+                document.getElementById(
+                    'featuredOnly'
+                );
+
+
+            if (minPrice) {
+
+                minPrice.value =
+                    advancedFilters.minPrice;
+
+            }
+
+
+            if (maxPrice) {
+
+                maxPrice.value =
+                    advancedFilters.maxPrice;
+
+            }
+
+
+            if (featured) {
+
+                featured.checked =
+                    advancedFilters.featured;
+
+            }
+
+
+            setAdvancedType(
+                advancedFilters.type
+            );
+
+
+            setBedrooms(
+                advancedFilters.bedrooms
+            );
+
+        }
+
+
+        function applyAdvancedFilters() {
+
+            const minPrice =
+                document.getElementById(
+                    'minPrice'
+                );
+
+
+            const maxPrice =
+                document.getElementById(
+                    'maxPrice'
+                );
+
+
+            const featured =
+                document.getElementById(
+                    'featuredOnly'
+                );
+
+
+            const minValue =
+                minPrice?.value.trim() ||
+                '';
+
+
+            const maxValue =
+                maxPrice?.value.trim() ||
+                '';
+
+
+            if (
+                minValue !== '' &&
+                maxValue !== '' &&
+                Number(minValue) >
+                Number(maxValue)
+            ) {
+
+                showToast(
+                    'Minimum price cannot exceed maximum price.',
+                    'error'
+                );
+
+                return;
+
+            }
+
+
+            advancedFilters.minPrice =
+                minValue;
+
+            advancedFilters.maxPrice =
+                maxValue;
+
+            advancedFilters.featured =
+                Boolean(
+                    featured?.checked
+                );
+
+
+            applyAllFilters();
+
+            closeFilterSheet();
+
+        }
+
+
+        function resetAdvancedFilters() {
+
+            advancedFilters = {
+
+                type: 'all',
+
+                minPrice: '',
+
+                maxPrice: '',
+
+                bedrooms: 0,
+
+                featured: false
+
+            };
+
+
+            const minPrice =
+                document.getElementById(
+                    'minPrice'
+                );
+
+
+            const maxPrice =
+                document.getElementById(
+                    'maxPrice'
+                );
+
+
+            const featured =
+                document.getElementById(
+                    'featuredOnly'
+                );
+
+
+            if (minPrice) {
+
+                minPrice.value =
+                    '';
+
+            }
+
+
+            if (maxPrice) {
+
+                maxPrice.value =
+                    '';
+
+            }
+
+
+            if (featured) {
+
+                featured.checked =
+                    false;
+
+            }
+
+
+            syncAdvancedFilterUI();
+
+        }
+
+
+        /*
+         * =========================================================
+         * SORT
+         * =========================================================
+         */
+
+        function openSortSheet() {
+
+            const sheet =
+                document.getElementById(
+                    'sortSheet'
+                );
+
+
+            if (!sheet) return;
+
+
+            syncSortUI();
+
+
+            sheet.classList.remove(
+                'hidden'
+            );
+
+            sheet.classList.add(
+                'flex'
+            );
+
+            sheet.setAttribute(
+                'aria-hidden',
+                'false'
+            );
+
+
+            document.body.style.overflow =
+                'hidden';
+
+        }
+
+
+        function closeSortSheet() {
+
+            const sheet =
+                document.getElementById(
+                    'sortSheet'
+                );
+
+
+            if (!sheet) return;
+
+
+            sheet.classList.add(
+                'hidden'
+            );
+
+            sheet.classList.remove(
+                'flex'
+            );
+
+            sheet.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+
+            restoreBodyScroll();
+
+        }
+
+
+        function applySort(
+            sort
+        ) {
+
+            currentSort =
+                sort;
+
+
+            syncSortUI();
+
+            applyAllFilters();
+
+            closeSortSheet();
+
+        }
+
+
+        function syncSortUI() {
+
+            document
+                .querySelectorAll(
+                    '.sort-option'
+                )
+                .forEach(
+                    button => {
+
+                        const active =
+                            button.dataset.sort ===
+                            currentSort;
+
+
+                        button.classList.toggle(
+                            'border-primary-200',
+                            active
+                        );
+
+                        button.classList.toggle(
+                            'bg-primary-50',
+                            active
+                        );
+
+                        button.classList.toggle(
+                            'border-slate-200',
+                            !active
+                        );
+
+                        button.classList.toggle(
+                            'bg-white',
+                            !active
+                        );
+
+
+                        const check =
+                            button.querySelector(
+                                '.sort-check'
+                            );
+
+
+                        if (check) {
+
+                            check.classList.toggle(
+                                'hidden',
+                                !active
+                            );
+
+                        }
+
+                    }
+                );
+
+        }
+
+
+        /*
+         * =========================================================
+         * RESET
+         * =========================================================
+         */
+
+        function resetAllFilters() {
+
+            currentQuickFilter =
+                'all';
+
+
+            currentSort =
+                'recommended';
+
+
+            advancedFilters = {
+
+                type: 'all',
+
+                minPrice: '',
+
+                maxPrice: '',
+
+                bedrooms: 0,
+
+                featured: false
+
+            };
+
+
+            const search =
+                document.getElementById(
+                    'searchInput'
+                );
+
+
+            if (search) {
+
+                search.value =
+                    '';
+
+            }
+
+
+            const clearButton =
+                document.getElementById(
+                    'clearSearchBtn'
+                );
+
+
+            if (clearButton) {
+
+                clearButton.classList.add(
+                    'hidden'
+                );
+
+                clearButton.classList.remove(
+                    'flex'
+                );
+
+            }
+
+
+            syncAdvancedFilterUI();
+
+            syncSortUI();
+
+            setQuickFilter(
+                'all'
+            );
+
+            applyAllFilters();
+
+        }
+
+
+        /*
+         * =========================================================
+         * VIEW MODE
+         * =========================================================
+         */
+
+        function setViewMode(
+            mode
+        ) {
+
+            currentViewMode =
+                mode;
+
+
+            const mapPanel =
+                document.getElementById(
+                    'mapPanel'
+                );
+
+
+            const listPanel =
+                document.getElementById(
+                    'listPanel'
+                );
+
+
+            if (
+                window.innerWidth <
+                1024
+            ) {
+
+                if (mode === 'map') {
+
+                    mapPanel.classList.remove(
+                        'hidden'
+                    );
+
+                    mapPanel.classList.add(
+                        'block'
+                    );
+
+                    mapPanel.classList.remove(
+                        'lg:col-span-7'
+                    );
+
+
+                    listPanel.classList.add(
+                        'hidden'
+                    );
+
+                } else {
+
+                    mapPanel.classList.add(
+                        'hidden'
+                    );
+
+                    listPanel.classList.remove(
+                        'hidden'
+                    );
+
+                }
+
+            } else {
+
+                mapPanel.classList.remove(
+                    'hidden'
+                );
+
+                listPanel.classList.remove(
+                    'hidden'
+                );
+
+                mapPanel.classList.add(
+                    'lg:col-span-7'
+                );
+
+            }
+
+
+            updateViewModeUI();
+
+
+            if (mode === 'map') {
+
+                setTimeout(
+                    () => {
+
+                        if (map) {
+
+                            map.invalidateSize();
+
+                            recenterMap();
+
+                        }
+
+                    },
+                    120
+                );
+
+            }
+
+        }
+
+
+        function updateViewModeUI() {
+
+            const mobileList =
+                document.getElementById(
+                    'mobileListToggle'
+                );
+
+
+            const mobileMap =
+                document.getElementById(
+                    'mobileMapToggle'
+                );
+
+
+            const desktopList =
+                document.getElementById(
+                    'desktopListToggle'
+                );
+
+
+            const desktopMap =
+                document.getElementById(
+                    'desktopMapToggle'
+                );
+
+
+            const activate =
+                (
+                    button,
+                    active
+                ) => {
+
+                    if (!button) return;
+
+
+                    button.classList.toggle(
+                        'bg-white',
+                        active
+                    );
+
+                    button.classList.toggle(
+                        'shadow-sm',
+                        active
+                    );
+
+                    button.classList.toggle(
+                        'text-slate-950',
+                        active
+                    );
+
+                    button.classList.toggle(
+                        'text-slate-500',
+                        !active
+                    );
+
+                    button.classList.toggle(
+                        'bg-slate-950',
+                        active &&
+                        button.id.startsWith(
+                            'desktop'
+                        )
+                    );
+
+                    button.classList.toggle(
+                        'text-white',
+                        active &&
+                        button.id.startsWith(
+                            'desktop'
+                        )
+                    );
+
+                };
+
+
+            activate(
+                mobileList,
+                currentViewMode ===
+                'list'
+            );
+
+
+            activate(
+                mobileMap,
+                currentViewMode ===
+                'map'
+            );
+
+
+            activate(
+                desktopList,
+                currentViewMode ===
+                'list'
+            );
+
+
+            activate(
+                desktopMap,
+                currentViewMode ===
+                'map'
+            );
+
+        }
+
+
+        /*
+         * =========================================================
+         * SAVED PROPERTIES
+         * =========================================================
+         */
+
+        async function toggleFavorite(
+            event,
+            propertyId
+        ) {
+
+            event.stopPropagation();
+
+
+            if (!currentUser) {
+
+                showToast(
+                    'Please sign in to save properties.',
+                    'error'
+                );
+
+                return;
+
+            }
+
+
+            const property =
+                allProperties.find(
+                    item =>
+                        item.id ===
+                        propertyId
+                );
+
+
+            if (!property) {
+
+                return;
+
+            }
+
+
+            const alreadySaved =
+                savedProperties.has(
+                    propertyId
+                );
+
+
+            try {
+
+                if (alreadySaved) {
+
+                    await db
+                        .collection('users')
+                        .doc(
+                            currentUser.uid
+                        )
+                        .collection(
+                            'savedProperties'
+                        )
+                        .doc(
+                            propertyId
+                        )
+                        .delete();
+
+
+                    savedProperties.delete(
+                        propertyId
+                    );
+
+
+                    showToast(
+                        'Removed from saved properties.'
+                    );
+
+                } else {
+
+                    await db
+                        .collection('users')
+                        .doc(
+                            currentUser.uid
+                        )
+                        .collection(
+                            'savedProperties'
+                        )
+                        .doc(
+                            propertyId
+                        )
+                        .set({
+
+                            ...property,
+
+                            savedAt:
+                                firebase
+                                    .firestore
+                                    .FieldValue
+                                    .serverTimestamp()
+
+                        });
+
+
+                    savedProperties.add(
+                        propertyId
+                    );
+
+
+                    showToast(
+                        'Property saved.'
+                    );
+
+                }
+
+
+                updateSavedCount();
+
+                renderProperties();
+
+            } catch (error) {
+
+                console.error(
+                    'Error toggling saved property:',
+                    error
+                );
+
+
+                showToast(
+                    'Unable to update saved property.',
+                    'error'
+                );
+
+            }
+
+        }
+
+
+        function updateSavedCount() {
+
+            const badge =
+                document.getElementById(
+                    'savedCount'
+                );
+
+
+            if (!badge) return;
+
+
+            const count =
+                savedProperties.size;
+
+
+            if (count > 0) {
+
+                badge.textContent =
+                    count;
+
+                badge.classList.remove(
+                    'hidden'
+                );
+
+                badge.classList.add(
+                    'flex'
+                );
+
+            } else {
+
+                badge.classList.add(
+                    'hidden'
+                );
+
+                badge.classList.remove(
+                    'flex'
+                );
+
+            }
+
+        }
+
+
+        /*
+         * =========================================================
+         * NAVIGATION
+         * =========================================================
+         */
+
+        function viewProperty(
+            id
+        ) {
+
+            if (!id) return;
+
+
+            window.location.href =
+                `property-detail.html?id=${encodeURIComponent(id)}`;
+
+        }
+
+
+        function highlightPropertyCard(
+            id
+        ) {
+
+            if (!id) return;
+
+
+            const card =
+                document.getElementById(
+                    `property-card-${id}`
+                );
+
+
+            if (!card) return;
+
+
+            if (
+                currentViewMode !==
+                'list' &&
+                window.innerWidth <
+                1024
+            ) {
+
+                return;
+
+            }
+
+
+            card.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+
+            card.classList.add(
+                'border-primary-300'
+            );
+
+
+            setTimeout(
+                () => {
+
+                    card.classList.remove(
+                        'border-primary-300'
+                    );
+
+                },
+                1600
+            );
+
+        }
+
+
+        /*
+         * =========================================================
+         * RESULT META
+         * =========================================================
+         */
+
+        function updateResultMeta() {
+
+            const resultCount =
+                document.getElementById(
+                    'resultCount'
+                );
+
+
+            if (resultCount) {
+
+                resultCount.textContent =
+                    filteredProperties.length;
+
+            }
+
+
+            const activeFilters =
+                getActiveFilterCount();
+
+
+            const badge =
+                document.getElementById(
+                    'filterCountBadge'
+                );
+
+
+            if (badge) {
+
+                if (activeFilters > 0) {
+
+                    badge.textContent =
+                        activeFilters;
+
+                    badge.classList.remove(
+                        'hidden'
+                    );
+
+                    badge.classList.add(
+                        'flex'
+                    );
+
+                } else {
+
+                    badge.classList.add(
+                        'hidden'
+                    );
+
+                    badge.classList.remove(
+                        'flex'
+                    );
+
+                }
+
+            }
+
+
+            const resetButton =
+                document.getElementById(
+                    'resetFiltersBtn'
+                );
+
+
+            if (resetButton) {
+
+                const hasQuery =
+                    Boolean(
+                        document
+                            .getElementById(
+                                'searchInput'
+                            )
+                            ?.value
+                            .trim()
+                    );
+
+
+                const active =
+                    activeFilters > 0 ||
+                    hasQuery;
+
+
+                resetButton.classList.toggle(
+                    'hidden',
+                    !active
+                );
+
+            }
+
+
+            updateMapResultText();
+
+        }
+
+
+        function getActiveFilterCount() {
+
+            let count = 0;
+
+
+            if (
+                currentQuickFilter !==
+                'all'
+            ) {
+
+                count++;
+
+            }
+
+
+            if (
+                advancedFilters.type !==
+                'all'
+            ) {
+
+                count++;
+
+            }
+
+
+            if (
+                advancedFilters.minPrice !==
+                ''
+            ) {
+
+                count++;
+
+            }
+
+
+            if (
+                advancedFilters.maxPrice !==
+                ''
+            ) {
+
+                count++;
+
+            }
+
+
+            if (
+                Number(
+                    advancedFilters.bedrooms
+                ) > 0
+            ) {
+
+                count++;
+
+            }
+
+
+            if (
+                advancedFilters.featured
+            ) {
+
+                count++;
+
+            }
+
+
+            return count;
+
+        }
+
+
+        function updateMapResultText() {
+
+            const element =
+                document.getElementById(
+                    'mapResultText'
+                );
+
+
+            if (!element) return;
+
+
+            if (
+                filteredProperties.length ===
+                0
+            ) {
+
+                element.textContent =
+                    'No matching properties';
+
+                return;
+
+            }
+
+
+            element.textContent =
+                `${filteredProperties.length} ${
+                    filteredProperties.length === 1
+                        ? 'property'
+                        : 'properties'
+                } on map`;
+
+        }
+
+
+        /*
+         * =========================================================
+         * SHEETS / BACKDROPS
+         * =========================================================
+         */
+
+        function setupSheetBackdrops() {
+
+            const filterSheet =
+                document.getElementById(
+                    'filterSheet'
+                );
+
+
+            const sortSheet =
+                document.getElementById(
+                    'sortSheet'
+                );
+
+
+            if (filterSheet) {
+
+                filterSheet.addEventListener(
+                    'click',
+                    event => {
+
+                        if (
+                            event.target ===
+                            filterSheet
+                        ) {
+
+                            closeFilterSheet();
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            if (sortSheet) {
+
+                sortSheet.addEventListener(
+                    'click',
+                    event => {
+
+                        if (
+                            event.target ===
+                            sortSheet
+                        ) {
+
+                            closeSortSheet();
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            document.addEventListener(
+                'keydown',
+                event => {
+
+                    if (
+                        event.key !==
+                        'Escape'
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const filter =
+                        document.getElementById(
+                            'filterSheet'
+                        );
+
+
+                    const sort =
+                        document.getElementById(
+                            'sortSheet'
+                        );
+
+
+                    if (
+                        filter &&
+                        filter.classList.contains(
+                            'flex'
+                        )
+                    ) {
+
+                        closeFilterSheet();
+
+                        return;
+
+                    }
+
+
+                    if (
+                        sort &&
+                        sort.classList.contains(
+                            'flex'
+                        )
+                    ) {
+
+                        closeSortSheet();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        function restoreBodyScroll() {
+
+            const filter =
+                document.getElementById(
+                    'filterSheet'
+                );
+
+
+            const sort =
+                document.getElementById(
+                    'sortSheet'
+                );
+
+
+            const filterOpen =
+                filter &&
+                filter.classList.contains(
+                    'flex'
+                );
+
+
+            const sortOpen =
+                sort &&
+                sort.classList.contains(
+                    'flex'
+                );
+
+
+            if (
+                !filterOpen &&
+                !sortOpen
+            ) {
+
+                document.body.style.overflow =
+                    '';
+
+            }
+
+        }
+
+
+        /*
+         * =========================================================
+         * RESPONSIVE BEHAVIOR
+         * =========================================================
+         */
+
+        window.addEventListener(
+            'resize',
+            () => {
+
+                if (
+                    window.innerWidth >=
+                    1024
+                ) {
+
+                    const mapPanel =
+                        document.getElementById(
+                            'mapPanel'
+                        );
+
+
+                    const listPanel =
+                        document.getElementById(
+                            'listPanel'
+                        );
+
+
+                    mapPanel?.classList.remove(
+                        'hidden'
+                    );
+
+
+                    listPanel?.classList.remove(
+                        'hidden'
+                    );
+
+
+                    if (map) {
+
+                        setTimeout(
+                            () => {
+
+                                map.invalidateSize();
+
+                            },
+                            100
+                        );
+
+                    }
+
+                } else {
+
+                    setViewMode(
+                        currentViewMode
+                    );
+
+                }
+
+            }
+        );
+
+
+        /*
+         * =========================================================
+         * UTILITIES
+         * =========================================================
+         */
+
+        function formatPrice(
+            price
+        ) {
+
+            const numeric =
+                Number(
+                    price
+                );
+
+
+            if (
+                !Number.isFinite(
+                    numeric
+                )
+            ) {
+
+                return '0';
+
+            }
+
+
+            return numeric.toLocaleString(
+                'en-NG'
+            );
+
+        }
+
+
+        function getTimestampMillis(
+            timestamp
+        ) {
+
+            if (!timestamp) {
+
+                return 0;
+
+            }
+
+
+            if (
+                typeof timestamp.toMillis ===
+                'function'
+            ) {
+
+                return timestamp.toMillis();
+
+            }
+
+
+            if (
+                timestamp.seconds !==
+                undefined
+            ) {
+
+                return Number(
+                    timestamp.seconds
+                ) * 1000;
+
+            }
+
+
+            if (
+                timestamp instanceof Date
+            ) {
+
+                return timestamp.getTime();
+
+            }
+
+
+            if (
+                typeof timestamp ===
+                'string'
+            ) {
+
+                const parsed =
+                    Date.parse(
+                        timestamp
+                    );
+
+
+                return Number.isNaN(
+                    parsed
+                )
+                    ? 0
+                    : parsed;
+
+            }
+
+
+            return 0;
+
+        }
+
+
+        function escapeHtml(
+            value
+        ) {
+
+            return String(
+                value ?? ''
+            )
+            .replace(
+                /&/g,
+                '&amp;'
+            )
+            .replace(
+                /</g,
+                '&lt;'
+            )
+            .replace(
+                />/g,
+                '&gt;'
+            )
+            .replace(
+                /"/g,
+                '&quot;'
+            )
+            .replace(
+                /'/g,
+                '&#039;'
+            );
+
+        }
+
+
+        function escapeAttribute(
+            value
+        ) {
+
+            return String(
+                value ?? ''
+            )
+            .replace(
+                /\\/g,
+                '\\\\'
+            )
+            .replace(
+                /'/g,
+                "\\'"
+            )
+            .replace(
+                /"/g,
+                '&quot;'
+            );
+
+        }
+
+
+        /*
+         * =========================================================
+         * TOAST
+         * =========================================================
+         */
+
+        function showToast(
+            message,
+            type = 'success'
+        ) {
+
+            const existing =
+                document.getElementById(
+                    'moonlatBrowseToast'
+                );
+
+
+            if (existing) {
+
+                existing.remove();
+
+            }
+
+
+            const toast =
+                document.createElement(
+                    'div'
+                );
+
+
+            toast.id =
+                'moonlatBrowseToast';
+
+
+            toast.className =
+                `
+                    fixed
+                    top-4
+                    left-1/2
+                    -translate-x-1/2
+                    z-[4000]
+                    max-w-[calc(100vw-32px)]
+                    flex
+                    items-center
+                    gap-3
+                    px-4
+                    py-3
+                    rounded-2xl
+                    shadow-2xl
+                    text-white
+                    text-xs
+                    font-extrabold
+                    toast-enter
+                    ${
+                        type === 'success'
+                            ? 'bg-slate-950'
+                            : 'bg-rose-600'
+                    }
+                `;
+
+
+            toast.innerHTML =
+                `
+
+                    <span
+                        class="w-7 h-7 rounded-lg ${
+                            type === 'success'
+                                ? 'bg-emerald-500/15 text-emerald-400'
+                                : 'bg-white/15 text-white'
+                        } flex items-center justify-center shrink-0"
+                    >
+
+                        <i
+                            class="fas ${
+                                type === 'success'
+                                    ? 'fa-check'
+                                    : 'fa-triangle-exclamation'
+                            } text-[10px]"
+                        ></i>
+
+                    </span>
+
+
+                    <span class="truncate">
+                        ${escapeHtml(message)}
+                    </span>
+
+                `;
+
+
+            document.body.appendChild(
+                toast
+            );
+
+
+            setTimeout(
+                () => {
+
+                    if (!toast.isConnected) {
+                        return;
+                    }
+
+
+                    toast.style.opacity =
+                        '0';
+
+                    toast.style.transform =
+                        'translate(-50%, -8px)';
+
+                    toast.style.transition =
+                        'all .2s ease';
+
+
+                    setTimeout(
+                        () => {
+
+                            toast.remove();
+
+                        },
+                        220
+                    );
+
+                },
+                3000
+            );
+
+        }
+
+
+        /*
+         * =========================================================
+         * INITIAL UI SYNC
+         * =========================================================
+         */
+
+        syncSortUI();
+
+        syncAdvancedFilterUI();
+
+        updateViewModeUI();
+
     </script>
+
 </body>
 </html>
