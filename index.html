@@ -1599,11 +1599,10 @@ import {
     onSnapshot,
     doc,
     getDoc,
-    getDocs,
     updateDoc,
     arrayUnion,
     arrayRemove,
-    addDoc,
+    setDoc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
@@ -3947,79 +3946,262 @@ if (newsletterForm) {
                 await updateProgress(2);
 
 
-                const existingQuery =
-                    query(
-                        collection(
-                            db,
-                            "newsletter"
-                        ),
-                        where(
-                            "email",
-                            "==",
-                            email
-                        )
-                    );
+/* ============================================================
+   CREATE NEWSLETTER SUBSCRIPTION
+============================================================ */
+
+/*
+    We intentionally do NOT query the newsletter collection.
+
+    Public users are not allowed to read newsletter records.
+    Instead, the normalized email is hashed and used as the
+    deterministic Firestore document ID.
+
+    This gives us:
+
+    - No public newsletter reads
+    - No subscriber list exposure
+    - One subscription per email
+    - Safe duplicate detection
+    - No Firestore "missing index" / permission query error
+*/
 
 
-                const existingSnapshot =
-                    await getDocs(
-                        existingQuery
-                    );
+async function createNewsletterSubscription(email) {
+
+    /*
+        Create SHA-256 hash from the normalized email.
+
+        crypto.subtle is available on HTTPS sites such as
+        https://moonlat.top/
+    */
+
+    const encoder =
+        new TextEncoder();
+
+    const data =
+        encoder.encode(email);
+
+    const hashBuffer =
+        await crypto.subtle.digest(
+            "SHA-256",
+            data
+        );
+
+    const hashArray =
+        Array.from(
+            new Uint8Array(hashBuffer)
+        );
+
+    const emailHash =
+        hashArray
+            .map(
+                byte =>
+                    byte
+                        .toString(16)
+                        .padStart(2, "0")
+            )
+            .join("");
 
 
-                if (
-                    !existingSnapshot.empty
-                ) {
+    /*
+        Use the hash as the document ID.
 
-                    showNewsletterModal(
-                        "already"
-                    );
+        Example:
 
-                    isSubmitting =
-                        false;
+        newsletter/
+          8f14e45fceea167a5a36dedd4bea2543...
+    */
 
-                    btn.disabled =
-                        false;
-
-                    btn.textContent =
-                        "Subscribe";
-
-                    return;
-
-                }
+    const newsletterRef =
+        doc(
+            db,
+            "newsletter",
+            emailHash
+        );
 
 
-                await updateProgress(3);
+    /*
+        setDoc() will create the document if it does not exist.
+
+        Because our Firestore rules allow PUBLIC CREATE but
+        do not allow PUBLIC UPDATE, attempting to subscribe
+        again to the same deterministic document will be denied.
+
+        That lets us safely identify an existing subscription
+        without exposing newsletter records to the public.
+    */
+
+    await setDoc(
+        newsletterRef,
+        {
+            email:
+                email,
+
+            subscribedAt:
+                serverTimestamp(),
+
+            source:
+                "homepage"
+        }
+    );
+
+}
 
 
-                await addDoc(
-                    collection(
-                        db,
-                        "newsletter"
-                    ),
-                    {
-                        email:
-                            email,
+/* ============================================================
+   SUBMIT NEWSLETTER
+============================================================ */
 
-                        subscribedAt:
-                            serverTimestamp(),
+try {
 
-                        source:
-                            "homepage"
-                    }
-                );
+    await updateProgress(1);
 
 
-                await updateProgress(4);
+    /*
+        Step 2 now means local validation / duplicate-safe
+        subscription preparation.
+
+        We DO NOT query Firestore here.
+    */
+
+    await updateProgress(2);
 
 
-                showNewsletterModal(
-                    "success"
-                );
+    await updateProgress(3);
 
 
-                emailInput.value =
-                    "";
+    try {
+
+        await createNewsletterSubscription(
+            email
+        );
+
+    }
+
+
+    catch (subscriptionError) {
+
+        /*
+            A permission-denied error at this point means the
+            deterministic newsletter document already exists.
+
+            We intentionally do not perform a public read to
+            verify this because newsletter records must remain
+            private.
+        */
+
+        if (
+            subscriptionError.code ===
+            "permission-denied"
+        ) {
+
+            console.info(
+                "Newsletter subscription already exists."
+            );
+
+
+            showNewsletterModal(
+                "already"
+            );
+
+
+            return;
+
+        }
+
+
+        throw subscriptionError;
+
+    }
+
+
+    await updateProgress(4);
+
+
+    showNewsletterModal(
+        "success"
+    );
+
+
+    emailInput.value =
+        "";
+
+}
+
+
+catch (err) {
+
+    console.error(
+        "Newsletter error:",
+        err
+    );
+
+
+    let errorMsg =
+        "Failed to subscribe. Please check your internet connection and try again.";
+
+
+    if (
+        err.code ===
+        "permission-denied"
+    ) {
+
+        /*
+            This normally means the email already exists because
+            newsletter creation is intentionally public while
+            newsletter updates are not.
+        */
+
+        errorMsg =
+            "This email is already subscribed to the MoonLat newsletter.";
+
+    }
+
+
+    else if (
+        err.code ===
+            "unavailable" ||
+        err.code ===
+            "network-error"
+    ) {
+
+        errorMsg =
+            "Network error. Please check your connection and try again.";
+
+    }
+
+
+    else if (
+        err.message
+    ) {
+
+        errorMsg =
+            err.message;
+
+    }
+
+
+    showNewsletterModal(
+        "error",
+        errorMsg
+    );
+
+}
+
+
+finally {
+
+    isSubmitting =
+        false;
+
+    btn.disabled =
+        false;
+
+    btn.textContent =
+        "Subscribe";
+
+}
 
             }
 
