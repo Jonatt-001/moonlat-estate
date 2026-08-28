@@ -2,13 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#080b12">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Manage your MoonLat buyer account, profile, security and notification preferences.">
   <title>Settings — MoonLat</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
-  <!-- Firebase -->
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
+
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
@@ -17,13 +27,26 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif']
+          },
           colors: {
-            primary: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a'
+            }
           }
         }
       }
-    }
+    };
 
     const firebaseConfig = {
       apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
@@ -33,434 +56,3080 @@
       messagingSenderId: "289878951289",
       appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
     };
+
     firebase.initializeApp(firebaseConfig);
+
     const db = firebase.firestore();
     const auth = firebase.auth();
   </script>
 
   <style>
-    /* Custom Toggle Switch */
-    .toggle-checkbox:checked {
-      right: 0;
-      border-color: #2563eb;
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
-    .toggle-checkbox:checked + .toggle-label {
-      background-color: #2563eb;
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
     }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeIn 0.3s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(
+          circle at 85% -10%,
+          rgba(37, 99, 235, .055),
+          transparent 28%
+        ),
+        #f7f8fa;
+      color: #0f172a;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible {
+      outline: 3px solid rgba(37, 99, 235, .20);
+      outline-offset: 2px;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, .90);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .page-shell {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .settings-card {
+      background: #fff;
+      border: 1px solid #e7ebf0;
+      box-shadow: 0 12px 40px rgba(15, 23, 42, .045);
+    }
+
+    .settings-nav {
+      position: sticky;
+      top: 92px;
+    }
+
+    .settings-nav-btn {
+      position: relative;
+      width: 100%;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 13px;
+      border-radius: 13px;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: left;
+      transition:
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease;
+    }
+
+    .settings-nav-btn:hover {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    .settings-nav-btn.active {
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-weight: 800;
+    }
+
+    .settings-nav-btn.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 3px;
+      height: 22px;
+      transform: translateY(-50%);
+      border-radius: 0 4px 4px 0;
+      background: #2563eb;
+    }
+
+    .settings-nav-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: #f8fafc;
+      color: #64748b;
+    }
+
+    .settings-nav-btn.active .settings-nav-icon {
+      background: #fff;
+      color: #2563eb;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, .06);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+      animation: panelIn .22s ease-out both;
+    }
+
+    @keyframes panelIn {
+      from {
+        opacity: 0;
+        transform: translateY(7px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-input {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid #e2e8f0;
+      border-radius: 13px;
+      background: #f8fafc;
+      color: #0f172a;
+      padding: 0 14px;
+      font-size: 13px;
+      font-weight: 600;
+      transition:
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+    }
+
+    .form-input::placeholder {
+      color: #94a3b8;
+    }
+
+    .form-input:focus {
+      outline: none;
+      background: #fff;
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .08);
+    }
+
+    .form-input:disabled,
+    .form-input[readonly] {
+      background: #f1f5f9;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    .avatar-ring {
+      box-shadow:
+        0 0 0 4px #fff,
+        0 0 0 5px #e2e8f0,
+        0 15px 30px rgba(15, 23, 42, .12);
+    }
+
+    .toggle {
+      position: relative;
+      width: 48px;
+      height: 27px;
+      flex-shrink: 0;
+    }
+
+    .toggle input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: #e2e8f0;
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 21px;
+      height: 21px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, .15);
+      transition: transform .2s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .toggle input:checked + .toggle-track {
+      background: #2563eb;
+    }
+
+    .toggle input:checked + .toggle-track::after {
+      transform: translateX(21px);
+    }
+
+    .toggle input:disabled + .toggle-track {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    .security-row {
+      border: 1px solid #e7ebf0;
+      border-radius: 17px;
+      padding: 17px;
+      background: #fff;
+    }
+
+    .security-row + .security-row {
+      margin-top: 12px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .mobile-tab-bar {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .mobile-tab-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .mobile-tab {
+      white-space: nowrap;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 11px;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 700;
+      transition: .2s ease;
+    }
+
+    .mobile-tab.active {
+      background: #0f172a;
+      color: #fff;
+    }
+
+    .danger-card {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255, 241, 242, .9),
+          rgba(255, 255, 255, 1)
+        );
+      border: 1px solid #fecdd3;
+    }
+
+    .toast {
+      animation: toastIn .28s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    .modal-backdrop {
+      background: rgba(2, 6, 23, .52);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .confirm-dialog {
+      animation: dialogIn .22s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    @keyframes dialogIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .page-loading {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      transition: opacity .25s ease;
+    }
+
+    .page-loading.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 22px;
+      height: 22px;
+      border: 2px solid #dbeafe;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 767px) {
+      body {
+        padding-bottom: calc(18px + env(safe-area-inset-bottom));
+      }
+
+      .settings-nav {
+        position: static;
+      }
+
+      .page-shell {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .mobile-tab-bar {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
   </style>
 </head>
-<body class="text-slate-800 font-sans antialiased bg-slate-50">
 
-  <div class="max-w-6xl mx-auto p-4 md:p-8">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="text-3xl font-bold text-slate-900">Account Settings</h1>
-        <p class="text-slate-500 mt-1">Manage your profile, security, and preferences</p>
-      </div>
-      <a href="index.html" class="hidden md:flex items-center gap-2 text-slate-500 hover:text-primary-600 font-medium transition">
-        <i class="fas fa-arrow-left"></i> Back to Dashboard
-      </a>
-    </div>
+<body>
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-      
-      <!-- Sidebar Tabs -->
-      <div class="md:col-span-1 space-y-1">
-        <button onclick="switchTab('profile')" id="tab-profile" class="tab-btn w-full text-left px-4 py-3 rounded-xl bg-primary-50 text-primary-700 font-semibold flex items-center gap-3 transition-all">
-          <i class="fas fa-user w-5"></i> Profile
-        </button>
-        <button onclick="switchTab('security')" id="tab-security" class="tab-btn w-full text-left px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 font-medium flex items-center gap-3 transition-all">
-          <i class="fas fa-lock w-5"></i> Security
-        </button>
-        <button onclick="switchTab('notifications')" id="tab-notifications" class="tab-btn w-full text-left px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 font-medium flex items-center gap-3 transition-all">
-          <i class="fas fa-bell w-5"></i> Notifications
-        </button>
-        
-        <div class="pt-6 mt-6 border-t border-slate-200">
-          <button onclick="handleSignOut()" class="w-full text-left px-4 py-3 rounded-xl text-rose-600 hover:bg-rose-50 font-medium flex items-center gap-3 transition-all">
-            <i class="fas fa-sign-out-alt w-5"></i> Sign Out
-          </button>
-        </div>
+  <!-- LOADING -->
+  <div id="pageLoading" class="page-loading" aria-live="polite">
+    <div class="text-center">
+      <div class="w-12 h-12 rounded-2xl bg-slate-950 text-white flex items-center justify-center mx-auto mb-4 shadow-xl">
+        <i class="fas fa-house text-sm"></i>
       </div>
 
-      <!-- Content Area -->
-      <div class="md:col-span-3">
-        
-        <!-- PROFILE TAB -->
-        <div id="content-profile" class="tab-content active bg-white rounded-2xl border border-slate-200 shadow-sm p-6 md:p-8">
-          <h2 class="text-xl font-bold text-slate-900 mb-6">Profile Information</h2>
-          
-          <div class="flex items-center gap-6 mb-8">
-            <div class="relative">
-              <img id="avatarPreview" src="" class="w-20 h-20 rounded-full object-cover bg-slate-200 border-2 border-white shadow-lg hidden">
-              <div id="avatarInitials" class="w-20 h-20 rounded-full bg-primary-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">U</div>
-            </div>
-            <div>
-              <label for="avatarInput" class="cursor-pointer px-4 py-2 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 transition inline-block">
-                Change Avatar
-              </label>
-              <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="handleAvatarUpload(event)">
-              <p class="text-xs text-slate-500 mt-2">JPG, GIF or PNG. Max size 2MB</p>
-              <p id="uploadStatus" class="text-xs text-primary-600 mt-1 hidden"><i class="fas fa-spinner fa-spin mr-1"></i> Uploading...</p>
-            </div>
-          </div>
+      <div class="spinner mx-auto mb-3"></div>
 
-          <form id="profileForm" class="space-y-5" onsubmit="saveProfile(event)">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-2">First Name</label>
-                <input type="text" id="firstName" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition" required>
-              </div>
-              <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-2">Last Name</label>
-                <input type="text" id="lastName" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition" required>
-              </div>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-semibold text-slate-700 mb-2">Email Address</label>
-              <input type="email" id="email" class="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed" readonly>
-              <p class="text-xs text-slate-500 mt-1">Email cannot be changed. Contact support for assistance.</p>
-            </div>
+      <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+        MoonLat
+      </p>
 
-            <div>
-              <label class="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
-              <input type="tel" id="phone" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition">
-            </div>
-
-            <div class="pt-4 flex justify-end">
-              <button type="submit" id="saveProfileBtn" class="px-8 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition shadow-lg shadow-primary-500/30 flex items-center gap-2">
-                <span>Save Changes</span>
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <!-- SECURITY TAB -->
-        <div id="content-security" class="tab-content bg-white rounded-2xl border border-slate-200 shadow-sm p-6 md:p-8">
-          <h2 class="text-xl font-bold text-slate-900 mb-6">Security Settings</h2>
-          
-          <div class="space-y-6">
-            <div class="p-5 bg-slate-50 rounded-xl border border-slate-200">
-              <div class="flex items-start justify-between">
-                <div>
-                  <h3 class="font-semibold text-slate-900">Password</h3>
-                  <p class="text-sm text-slate-500 mt-1">Last changed: Never</p>
-                </div>
-                <button onclick="resetPassword()" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50 transition">
-                  Reset Password
-                </button>
-              </div>
-            </div>
-
-            <div class="p-5 bg-rose-50 rounded-xl border border-rose-200">
-              <div class="flex items-start justify-between">
-                <div>
-                  <h3 class="font-semibold text-rose-900">Delete Account</h3>
-                  <p class="text-sm text-rose-700 mt-1">Permanently delete your account and all associated data. This action cannot be undone.</p>
-                </div>
-                <button onclick="showToast('Please contact support to delete your account', 'error')" class="px-4 py-2 bg-rose-600 text-white text-sm font-semibold rounded-lg hover:bg-rose-700 transition">
-                  Delete Account
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- NOTIFICATIONS TAB -->
-        <div id="content-notifications" class="tab-content bg-white rounded-2xl border border-slate-200 shadow-sm p-6 md:p-8">
-          <h2 class="text-xl font-bold text-slate-900 mb-6">Notification Preferences</h2>
-          
-          <div class="space-y-6">
-            <div class="flex items-center justify-between py-4 border-b border-slate-100">
-              <div>
-                <h3 class="font-semibold text-slate-900">New Property Alerts</h3>
-                <p class="text-sm text-slate-500">Get notified when new properties match your criteria</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" id="notifNewProperties" class="sr-only peer" onchange="saveNotificationPrefs()">
-                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
-              </label>
-            </div>
-
-            <div class="flex items-center justify-between py-4 border-b border-slate-100">
-              <div>
-                <h3 class="font-semibold text-slate-900">Viewing Reminders</h3>
-                <p class="text-sm text-slate-500">Receive reminders 24 hours before scheduled viewings</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" id="notifViewings" class="sr-only peer" checked onchange="saveNotificationPrefs()">
-                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
-              </label>
-            </div>
-
-            <div class="flex items-center justify-between py-4">
-              <div>
-                <h3 class="font-semibold text-slate-900">Marketing Emails</h3>
-                <p class="text-sm text-slate-500">Receive tips, market updates, and promotional offers</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" id="notifMarketing" class="sr-only peer" onchange="saveNotificationPrefs()">
-                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <p class="text-xs text-slate-400 mt-1">
+        Loading account
+      </p>
     </div>
   </div>
+
+
+  <!-- HEADER -->
+  <header class="glass sticky top-0 z-50 border-b border-slate-200/70">
+    <div class="page-shell px-4 sm:px-6 lg:px-8">
+      <div class="h-[68px] sm:h-[76px] flex items-center justify-between gap-4">
+
+        <div class="flex items-center gap-3 min-w-0">
+
+          <a
+            href="index.html"
+            class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-slate-950 hover:border-slate-300 transition shrink-0"
+            aria-label="Back to dashboard"
+          >
+            <i class="fas fa-arrow-left text-sm"></i>
+          </a>
+
+          <div class="min-w-0">
+            <p class="hidden sm:block text-[9px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+              Buyer account
+            </p>
+
+            <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-950 truncate">
+              Account settings
+            </h1>
+          </div>
+
+        </div>
+
+
+        <div class="flex items-center gap-2 shrink-0">
+
+          <a
+            href="my-viewing.html"
+            class="hidden sm:inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-white border border-slate-200 text-xs font-extrabold text-slate-600 hover:text-slate-950 hover:border-slate-300 transition"
+          >
+            <i class="far fa-calendar-check"></i>
+            My Viewings
+          </a>
+
+          <a
+            href="index.html"
+            class="hidden sm:inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-slate-950 text-white text-xs font-extrabold hover:bg-slate-800 transition"
+          >
+            Dashboard
+            <i class="fas fa-arrow-right text-[10px]"></i>
+          </a>
+
+          <button
+            type="button"
+            onclick="handleSignOut()"
+            class="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-rose-600 hover:border-rose-200 transition"
+            aria-label="Sign out"
+          >
+            <i class="fas fa-arrow-right-from-bracket text-xs"></i>
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+
+  <!-- MAIN -->
+  <main class="page-shell px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
+
+    <!-- PAGE INTRO -->
+    <section class="mb-5 sm:mb-7">
+
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+
+        <div>
+          <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-primary-600">
+            Account centre
+          </p>
+
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-[-.035em] text-slate-950 mt-1">
+            Manage your account
+          </h2>
+
+          <p class="text-xs sm:text-sm text-slate-500 mt-2 max-w-2xl leading-6">
+            Update your personal information, account security and MoonLat notification preferences.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-400">
+          <span class="status-dot bg-emerald-500"></span>
+          Account connected
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MOBILE TABS -->
+    <div class="mobile-tab-bar md:hidden flex gap-2 overflow-x-auto mb-4 pb-1">
+
+      <button
+        type="button"
+        id="mobileTabProfile"
+        onclick="switchTab('profile')"
+        class="mobile-tab active"
+      >
+        Profile
+      </button>
+
+      <button
+        type="button"
+        id="mobileTabSecurity"
+        onclick="switchTab('security')"
+        class="mobile-tab"
+      >
+        Security
+      </button>
+
+      <button
+        type="button"
+        id="mobileTabNotifications"
+        onclick="switchTab('notifications')"
+        class="mobile-tab"
+      >
+        Notifications
+      </button>
+
+    </div>
+
+
+    <!-- LAYOUT -->
+    <div class="grid grid-cols-1 md:grid-cols-[230px_minmax(0,1fr)] gap-5 lg:gap-7">
+
+      <!-- DESKTOP NAV -->
+      <aside class="hidden md:block">
+
+        <div class="settings-card settings-nav rounded-2xl p-2.5">
+
+          <div class="px-3 pt-2 pb-2">
+            <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+              Settings
+            </p>
+          </div>
+
+          <button
+            type="button"
+            id="tabProfile"
+            onclick="switchTab('profile')"
+            class="settings-nav-btn active"
+          >
+            <span class="settings-nav-icon">
+              <i class="fas fa-user text-xs"></i>
+            </span>
+            <span>Profile</span>
+          </button>
+
+          <button
+            type="button"
+            id="tabSecurity"
+            onclick="switchTab('security')"
+            class="settings-nav-btn"
+          >
+            <span class="settings-nav-icon">
+              <i class="fas fa-shield-halved text-xs"></i>
+            </span>
+            <span>Security</span>
+          </button>
+
+          <button
+            type="button"
+            id="tabNotifications"
+            onclick="switchTab('notifications')"
+            class="settings-nav-btn"
+          >
+            <span class="settings-nav-icon">
+              <i class="far fa-bell text-xs"></i>
+            </span>
+            <span>Notifications</span>
+          </button>
+
+
+          <div class="border-t border-slate-100 mt-3 pt-3">
+
+            <button
+              type="button"
+              onclick="handleSignOut()"
+              class="settings-nav-btn text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+            >
+              <span class="settings-nav-icon bg-rose-50 text-rose-500">
+                <i class="fas fa-arrow-right-from-bracket text-xs"></i>
+              </span>
+              <span>Sign out</span>
+            </button>
+
+          </div>
+
+        </div>
+
+      </aside>
+
+
+      <!-- CONTENT -->
+      <section class="min-w-0">
+
+
+        <!-- =====================================================
+             PROFILE
+        ====================================================== -->
+        <div id="contentProfile" class="tab-panel active">
+
+          <div class="settings-card rounded-[24px] overflow-hidden">
+
+            <div class="px-5 sm:px-7 py-5 sm:py-6 border-b border-slate-100">
+
+              <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-primary-600">
+                Personal information
+              </p>
+
+              <h3 class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-950 mt-1">
+                Your profile
+              </h3>
+
+              <p class="text-xs text-slate-400 mt-1">
+                Keep your contact details accurate for property enquiries and viewing requests.
+              </p>
+
+            </div>
+
+
+            <div class="p-5 sm:p-7">
+
+              <!-- AVATAR -->
+              <div class="flex flex-col sm:flex-row sm:items-center gap-5 pb-7 border-b border-slate-100">
+
+                <div class="relative shrink-0">
+
+                  <img
+                    id="avatarPreview"
+                    src=""
+                    alt="Profile photo"
+                    class="hidden w-20 h-20 rounded-full object-cover avatar-ring"
+                  >
+
+                  <div
+                    id="avatarInitials"
+                    class="w-20 h-20 rounded-full bg-slate-950 text-white flex items-center justify-center text-xl font-extrabold avatar-ring"
+                  >
+                    U
+                  </div>
+
+                  <div
+                    id="avatarUploadIndicator"
+                    class="hidden absolute inset-0 rounded-full bg-slate-950/70 text-white items-center justify-center"
+                  >
+                    <div class="spinner border-slate-600 border-t-white"></div>
+                  </div>
+
+                </div>
+
+
+                <div class="min-w-0">
+
+                  <h4 class="text-sm font-extrabold text-slate-950">
+                    Profile photo
+                  </h4>
+
+                  <p class="text-xs text-slate-400 mt-1 max-w-md leading-5">
+                    Use a clear profile image. JPG, PNG or GIF, maximum 2MB.
+                  </p>
+
+                  <div class="flex items-center gap-2 mt-3">
+
+                    <label
+                      for="avatarInput"
+                      class="inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-slate-950 text-white text-xs font-extrabold cursor-pointer hover:bg-slate-800 transition"
+                    >
+                      <i class="fas fa-camera text-[10px]"></i>
+                      Change photo
+                    </label>
+
+                    <input
+                      type="file"
+                      id="avatarInput"
+                      accept="image/jpeg,image/png,image/gif,image/webp"
+                      class="hidden"
+                    >
+
+                  </div>
+
+                  <p
+                    id="uploadStatus"
+                    class="hidden text-[10px] font-bold text-primary-600 mt-2"
+                  >
+                    Uploading profile photo...
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              <!-- PROFILE FORM -->
+              <form
+                id="profileForm"
+                class="pt-7 space-y-5"
+                novalidate
+              >
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                  <div>
+                    <label
+                      for="firstName"
+                      class="block text-[11px] font-extrabold text-slate-700 mb-2"
+                    >
+                      First name
+                    </label>
+
+                    <input
+                      id="firstName"
+                      type="text"
+                      autocomplete="given-name"
+                      class="form-input"
+                      placeholder="First name"
+                      required
+                    >
+                  </div>
+
+
+                  <div>
+                    <label
+                      for="lastName"
+                      class="block text-[11px] font-extrabold text-slate-700 mb-2"
+                    >
+                      Last name
+                    </label>
+
+                    <input
+                      id="lastName"
+                      type="text"
+                      autocomplete="family-name"
+                      class="form-input"
+                      placeholder="Last name"
+                      required
+                    >
+                  </div>
+
+                </div>
+
+
+                <div>
+
+                  <label
+                    for="email"
+                    class="block text-[11px] font-extrabold text-slate-700 mb-2"
+                  >
+                    Email address
+                  </label>
+
+                  <input
+                    id="email"
+                    type="email"
+                    class="form-input"
+                    readonly
+                  >
+
+                  <p class="text-[10px] text-slate-400 mt-2">
+                    Your sign-in email is managed by your authentication account.
+                  </p>
+
+                </div>
+
+
+                <div>
+
+                  <label
+                    for="phone"
+                    class="block text-[11px] font-extrabold text-slate-700 mb-2"
+                  >
+                    Phone number
+                  </label>
+
+                  <input
+                    id="phone"
+                    type="tel"
+                    autocomplete="tel"
+                    inputmode="tel"
+                    class="form-input"
+                    placeholder="+234..."
+                  >
+
+                  <p class="text-[10px] text-slate-400 mt-2">
+                    This may be used by an agent when you request a viewing or property enquiry.
+                  </p>
+
+                </div>
+
+
+                <div class="pt-2 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
+
+                  <p
+                    id="profileLastSaved"
+                    class="text-[10px] text-slate-400"
+                  >
+                    Changes are saved to your MoonLat account.
+                  </p>
+
+                  <button
+                    type="submit"
+                    id="saveProfileBtn"
+                    class="inline-flex items-center justify-center gap-2 min-h-11 px-6 rounded-xl bg-primary-600 text-white text-xs font-extrabold hover:bg-primary-700 disabled:opacity-60 disabled:cursor-not-allowed transition"
+                  >
+                    <i class="fas fa-check text-[10px]"></i>
+                    Save changes
+                  </button>
+
+                </div>
+
+              </form>
+
+            </div>
+
+          </div>
+
+
+          <!-- ACCOUNT SUMMARY -->
+          <div class="settings-card rounded-[22px] p-5 sm:p-6 mt-4">
+
+            <div class="flex items-start gap-3">
+
+              <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+                <i class="fas fa-id-card text-sm"></i>
+              </div>
+
+              <div class="min-w-0">
+
+                <p class="text-[9px] uppercase tracking-[.17em] font-extrabold text-slate-400">
+                  Account
+                </p>
+
+                <h3 class="text-sm font-extrabold text-slate-950 mt-1">
+                  Buyer account
+                </h3>
+
+                <p
+                  id="accountCreatedText"
+                  class="text-xs text-slate-400 mt-1"
+                >
+                  MoonLat account
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             SECURITY
+        ====================================================== -->
+        <div id="contentSecurity" class="tab-panel">
+
+          <div class="settings-card rounded-[24px] overflow-hidden">
+
+            <div class="px-5 sm:px-7 py-5 sm:py-6 border-b border-slate-100">
+
+              <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-primary-600">
+                Account protection
+              </p>
+
+              <h3 class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-950 mt-1">
+                Security
+              </h3>
+
+              <p class="text-xs text-slate-400 mt-1">
+                Manage your sign-in credentials and account access.
+              </p>
+
+            </div>
+
+
+            <div class="p-5 sm:p-7">
+
+              <div class="security-row">
+
+                <div class="flex items-start gap-4">
+
+                  <div class="w-11 h-11 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0">
+                    <i class="fas fa-key text-sm"></i>
+                  </div>
+
+                  <div class="flex-1 min-w-0">
+
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+
+                      <div>
+
+                        <h4 class="text-sm font-extrabold text-slate-950">
+                          Password
+                        </h4>
+
+                        <p class="text-xs text-slate-400 mt-1">
+                          Send a secure password reset link to your account email.
+                        </p>
+
+                      </div>
+
+                      <button
+                        type="button"
+                        onclick="resetPassword()"
+                        id="resetPasswordBtn"
+                        class="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-xl border border-slate-200 bg-white text-xs font-extrabold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition shrink-0"
+                      >
+                        Reset password
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <div class="security-row">
+
+                <div class="flex items-start gap-4">
+
+                  <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                    <i class="fas fa-shield-halved text-sm"></i>
+                  </div>
+
+                  <div class="flex-1 min-w-0">
+
+                    <h4 class="text-sm font-extrabold text-slate-950">
+                      Authentication status
+                    </h4>
+
+                    <div class="flex items-center gap-2 mt-2">
+                      <span class="status-dot bg-emerald-500"></span>
+                      <span
+                        id="authProviderText"
+                        class="text-xs font-bold text-emerald-700"
+                      >
+                        Authenticated
+                      </span>
+                    </div>
+
+                    <p
+                      id="authEmailSecurity"
+                      class="text-[10px] text-slate-400 mt-2 break-all"
+                    >
+                      —
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <div class="danger-card rounded-[18px] p-5 mt-5">
+
+                <div class="flex items-start gap-4">
+
+                  <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                    <i class="fas fa-triangle-exclamation text-sm"></i>
+                  </div>
+
+                  <div class="flex-1 min-w-0">
+
+                    <h4 class="text-sm font-extrabold text-rose-950">
+                      Account deletion
+                    </h4>
+
+                    <p class="text-xs text-rose-700/80 leading-5 mt-1">
+                      Account deletion is intentionally handled through MoonLat support to prevent accidental loss of saved properties, viewing history and account data.
+                    </p>
+
+                    <button
+                      type="button"
+                      onclick="requestAccountDeletion()"
+                      class="mt-4 inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-rose-600 text-white text-xs font-extrabold hover:bg-rose-700 transition"
+                    >
+                      <i class="far fa-envelope text-[10px]"></i>
+                      Request account deletion
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             NOTIFICATIONS
+        ====================================================== -->
+        <div id="contentNotifications" class="tab-panel">
+
+          <div class="settings-card rounded-[24px] overflow-hidden">
+
+            <div class="px-5 sm:px-7 py-5 sm:py-6 border-b border-slate-100">
+
+              <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-primary-600">
+                Communication
+              </p>
+
+              <h3 class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-950 mt-1">
+                Notification preferences
+              </h3>
+
+              <p class="text-xs text-slate-400 mt-1">
+                Choose the updates you want to receive from MoonLat.
+              </p>
+
+            </div>
+
+
+            <div class="p-5 sm:p-7">
+
+              <div class="divide-y divide-slate-100">
+
+                <!-- NEW PROPERTIES -->
+                <div class="py-5 first:pt-0">
+
+                  <div class="flex items-center gap-4">
+
+                    <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0">
+                      <i class="fas fa-building text-sm"></i>
+                    </div>
+
+                    <div class="flex-1 min-w-0 pr-3">
+
+                      <h4 class="text-sm font-extrabold text-slate-950">
+                        New property alerts
+                      </h4>
+
+                      <p class="text-xs text-slate-400 leading-5 mt-1">
+                        Get notified when new properties become available.
+                      </p>
+
+                    </div>
+
+                    <label class="toggle" aria-label="New property alerts">
+                      <input
+                        type="checkbox"
+                        id="notifNewProperties"
+                        onchange="handlePreferenceChange()"
+                      >
+                      <span class="toggle-track"></span>
+                    </label>
+
+                  </div>
+
+                </div>
+
+
+                <!-- VIEWINGS -->
+                <div class="py-5">
+
+                  <div class="flex items-center gap-4">
+
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                      <i class="far fa-calendar-check text-sm"></i>
+                    </div>
+
+                    <div class="flex-1 min-w-0 pr-3">
+
+                      <h4 class="text-sm font-extrabold text-slate-950">
+                        Viewing reminders
+                      </h4>
+
+                      <p class="text-xs text-slate-400 leading-5 mt-1">
+                        Receive reminders about your scheduled property viewings.
+                      </p>
+
+                    </div>
+
+                    <label class="toggle" aria-label="Viewing reminders">
+                      <input
+                        type="checkbox"
+                        id="notifViewings"
+                        onchange="handlePreferenceChange()"
+                      >
+                      <span class="toggle-track"></span>
+                    </label>
+
+                  </div>
+
+                </div>
+
+
+                <!-- MARKETING -->
+                <div class="py-5 last:pb-0">
+
+                  <div class="flex items-center gap-4">
+
+                    <div class="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center shrink-0">
+                      <i class="far fa-paper-plane text-sm"></i>
+                    </div>
+
+                    <div class="flex-1 min-w-0 pr-3">
+
+                      <h4 class="text-sm font-extrabold text-slate-950">
+                        Marketing emails
+                      </h4>
+
+                      <p class="text-xs text-slate-400 leading-5 mt-1">
+                        Receive useful property insights, market updates and occasional offers.
+                      </p>
+
+                    </div>
+
+                    <label class="toggle" aria-label="Marketing emails">
+                      <input
+                        type="checkbox"
+                        id="notifMarketing"
+                        onchange="handlePreferenceChange()"
+                      >
+                      <span class="toggle-track"></span>
+                    </label>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <div class="mt-6 rounded-2xl bg-slate-50 border border-slate-200 p-4 flex items-start gap-3">
+
+                <div class="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-500 flex items-center justify-center shrink-0">
+                  <i class="fas fa-circle-info text-xs"></i>
+                </div>
+
+                <p class="text-[10px] text-slate-500 leading-5">
+                  Viewing-related notifications may still be required to deliver important information about an appointment you have requested.
+                </p>
+
+              </div>
+
+
+              <div class="mt-5 flex items-center justify-between gap-3">
+
+                <p
+                  id="preferencesStatus"
+                  class="text-[10px] text-slate-400"
+                >
+                  Preferences are saved automatically.
+                </p>
+
+                <div
+                  id="preferencesSaving"
+                  class="hidden items-center gap-2 text-[10px] font-bold text-primary-600"
+                >
+                  <div class="spinner w-3.5 h-3.5 border-[1.5px]"></div>
+                  Saving
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <!-- CONFIRM MODAL -->
+  <div
+    id="confirmModal"
+    class="hidden fixed inset-0 z-[2000] items-center justify-center p-4"
+    role="dialog"
+    aria-modal="true"
+  >
+
+    <div
+      class="modal-backdrop absolute inset-0"
+      onclick="closeConfirmModal()"
+    ></div>
+
+    <div class="confirm-dialog relative w-full max-w-md bg-white rounded-[24px] shadow-2xl overflow-hidden">
+
+      <div class="p-5 sm:p-6">
+
+        <div class="flex items-start gap-4">
+
+          <div
+            id="confirmModalIcon"
+            class="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0"
+          >
+            <i class="fas fa-arrow-right-from-bracket text-sm"></i>
+          </div>
+
+          <div class="min-w-0">
+
+            <h3
+              id="confirmModalTitle"
+              class="text-base font-extrabold text-slate-950"
+            >
+              Sign out?
+            </h3>
+
+            <p
+              id="confirmModalMessage"
+              class="text-xs text-slate-500 leading-5 mt-1"
+            >
+              You will need to sign in again to access your buyer dashboard.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="p-4 border-t border-slate-100 bg-slate-50 flex flex-col sm:flex-row-reverse gap-2">
+
+        <button
+          type="button"
+          id="confirmPrimaryBtn"
+          class="h-11 px-5 rounded-xl bg-slate-950 text-white text-xs font-extrabold hover:bg-slate-800 transition"
+        >
+          Sign out
+        </button>
+
+        <button
+          type="button"
+          onclick="closeConfirmModal()"
+          class="h-11 px-5 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-extrabold hover:bg-slate-50 transition"
+        >
+          Cancel
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- TOAST -->
+  <div
+    id="toastContainer"
+    class="fixed top-4 left-1/2 z-[3000] pointer-events-none"
+  ></div>
+
 
   <script>
     let currentUser = null;
     let userData = {};
+    let activeTab = 'profile';
+    let isSavingProfile = false;
+    let isSavingPreferences = false;
+    let isSigningOut = false;
+    let pendingConfirmAction = null;
 
-    // Initialize
+
+    /* =========================================================
+       INITIALIZATION
+    ========================================================== */
+
     document.addEventListener('DOMContentLoaded', () => {
+
+      bindEvents();
+
       auth.onAuthStateChanged(async (user) => {
-        if (user) {
-          currentUser = user;
-          await loadUserData();
-        } else {
-          window.location.href = '../sign-in.html';
+
+        if (!user) {
+          window.location.replace('../sign-in.html');
+          return;
         }
+
+        currentUser = user;
+
+        try {
+          await loadUserData();
+          updateSecurityInfo();
+        } catch (error) {
+          console.error('Account initialization error:', error);
+          showToast('Unable to load your account information.', 'error');
+        } finally {
+          hidePageLoading();
+        }
+
       });
+
     });
 
-    // Load User Data from Firestore
-    async function loadUserData() {
-      try {
-        const doc = await db.collection('users').doc(currentUser.uid).get();
-        
-        if (doc.exists) {
-          userData = doc.data();
-        } else {
-          // Create default user doc if it doesn't exist
-          userData = {
-            firstName: currentUser.displayName?.split(' ')[0] || 'User',
-            lastName: currentUser.displayName?.split(' ')[1] || '',
-            email: currentUser.email,
-            phone: '',
-            photoURL: currentUser.photoURL || '',
-            preferences: {
-              newProperties: false,
-              viewings: true,
-              marketing: false
-            }
-          };
-          await db.collection('users').doc(currentUser.uid).set(userData);
-        }
 
-        // Populate Form
-        document.getElementById('firstName').value = userData.firstName || '';
-        document.getElementById('lastName').value = userData.lastName || '';
-        document.getElementById('email').value = userData.email || currentUser.email;
-        document.getElementById('phone').value = userData.phone || '';
+    function bindEvents() {
 
-        // Populate Avatar
-        if (userData.photoURL) {
-          document.getElementById('avatarPreview').src = userData.photoURL;
-          document.getElementById('avatarPreview').classList.remove('hidden');
-          document.getElementById('avatarInitials').classList.add('hidden');
-        } else {
-          const initials = ((userData.firstName?.[0] || '') + (userData.lastName?.[0] || '')).toUpperCase() || 'U';
-          document.getElementById('avatarInitials').textContent = initials;
-        }
+      const profileForm =
+        document.getElementById('profileForm');
 
-        // Populate Notification Toggles
-        const prefs = userData.preferences || {};
-        document.getElementById('notifNewProperties').checked = prefs.newProperties || false;
-        document.getElementById('notifViewings').checked = prefs.viewings !== false; // default true
-        document.getElementById('notifMarketing').checked = prefs.marketing || false;
-
-      } catch (error) {
-        console.error('Error loading user data:', error);
-        showToast('Error loading profile', 'error');
+      if (profileForm) {
+        profileForm.addEventListener(
+          'submit',
+          saveProfile
+        );
       }
-    }
 
-    // Tab Switching
-    function switchTab(tabName) {
-      // Hide all contents
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      // Show selected content
-      document.getElementById(`content-${tabName}`).classList.add('active');
-      
-      // Reset all buttons
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-primary-50', 'text-primary-700', 'font-semibold');
-        btn.classList.add('text-slate-600', 'hover:bg-slate-100', 'font-medium');
-      });
-      
-      // Highlight selected button
-      const activeBtn = document.getElementById(`tab-${tabName}`);
-      activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100', 'font-medium');
-      activeBtn.classList.add('bg-primary-50', 'text-primary-700', 'font-semibold');
-    }
 
-    // Save Profile
-    async function saveProfile(event) {
-      event.preventDefault();
-      const btn = document.getElementById('saveProfileBtn');
-      const originalText = btn.innerHTML;
-      
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+      const avatarInput =
+        document.getElementById('avatarInput');
 
-      try {
-        const updateData = {
-          firstName: document.getElementById('firstName').value.trim(),
-          lastName: document.getElementById('lastName').value.trim(),
-          phone: document.getElementById('phone').value.trim(),
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-
-        await db.collection('users').doc(currentUser.uid).update(updateData);
-        
-        // Also update Firebase Auth display name if it changed
-        const fullName = `${updateData.firstName} ${updateData.lastName}`.trim();
-        if (currentUser.displayName !== fullName) {
-          await currentUser.updateProfile({ displayName: fullName });
-        }
-
-        showToast('Profile updated successfully');
-      } catch (error) {
-        console.error('Error saving profile:', error);
-        showToast('Failed to save profile', 'error');
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = originalText;
+      if (avatarInput) {
+        avatarInput.addEventListener(
+          'change',
+          handleAvatarUpload
+        );
       }
+
+
+      document.addEventListener(
+        'keydown',
+        event => {
+
+          if (
+            event.key === 'Escape' &&
+            document
+              .getElementById('confirmModal')
+              ?.classList.contains('flex')
+          ) {
+            closeConfirmModal();
+          }
+
+        }
+      );
+
     }
 
-    // Handle Avatar Upload (Cloudinary)
-    async function handleAvatarUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
 
-      if (file.size > 2 * 1024 * 1024) {
-        showToast('File size must be less than 2MB', 'error');
+    function hidePageLoading() {
+
+      const loader =
+        document.getElementById('pageLoading');
+
+      if (!loader) {
         return;
       }
 
-      const statusEl = document.getElementById('uploadStatus');
-      statusEl.classList.remove('hidden');
+      loader.classList.add('hide');
 
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', 'geefox_unsigned'); // Ensure this preset exists in your Cloudinary
-        formData.append('folder', 'moonlat_properties');
+      setTimeout(() => {
+        loader.remove();
+      }, 280);
 
-        const response = await fetch(`https://api.cloudinary.com/v1_1/dxdbn6xwy/image/upload`, {
-          method: 'POST',
-          body: formData
-        });
-
-        const data = await response.json();
-        
-        if (data.secure_url) {
-          // Update UI
-          document.getElementById('avatarPreview').src = data.secure_url;
-          document.getElementById('avatarPreview').classList.remove('hidden');
-          document.getElementById('avatarInitials').classList.add('hidden');
-
-          // Save to Firestore
-          await db.collection('users').doc(currentUser.uid).update({
-            photoURL: data.secure_url,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
-
-          // Update Auth profile
-          await currentUser.updateProfile({ photoURL: data.secure_url });
-          
-          showToast('Avatar updated successfully');
-        }
-      } catch (error) {
-        console.error('Upload error:', error);
-        showToast('Failed to upload avatar', 'error');
-      } finally {
-        statusEl.classList.add('hidden');
-        event.target.value = ''; // Reset input
-      }
     }
 
-    // Reset Password
-    async function resetPassword() {
-      if (!currentUser || !currentUser.email) return;
-      
-      if (!confirm(`Send password reset link to ${currentUser.email}?`)) return;
 
-      try {
-        await auth.sendPasswordResetEmail(currentUser.email);
-        showToast('Password reset email sent! Check your inbox.');
-      } catch (error) {
-        console.error('Reset error:', error);
-        showToast('Failed to send reset email', 'error');
-      }
-    }
+    /* =========================================================
+       USER DATA
+    ========================================================== */
 
-    // Save Notification Preferences
-    async function saveNotificationPrefs() {
-      try {
-        const prefs = {
-          newProperties: document.getElementById('notifNewProperties').checked,
-          viewings: document.getElementById('notifViewings').checked,
-          marketing: document.getElementById('notifMarketing').checked
+    async function loadUserData() {
+
+      const reference =
+        db
+          .collection('users')
+          .doc(currentUser.uid);
+
+      const doc =
+        await reference.get();
+
+      if (doc.exists) {
+
+        userData =
+          doc.data() || {};
+
+      } else {
+
+        const displayName =
+          String(
+            currentUser.displayName || ''
+          ).trim();
+
+        const nameParts =
+          displayName
+            ? displayName.split(/\s+/)
+            : [];
+
+        userData = {
+          firstName:
+            nameParts[0] ||
+            'User',
+
+          lastName:
+            nameParts.slice(1).join(' '),
+
+          email:
+            currentUser.email || '',
+
+          phone: '',
+
+          photoURL:
+            currentUser.photoURL || '',
+
+          preferences: {
+            newProperties: false,
+            viewings: true,
+            marketing: false
+          },
+
+          createdAt:
+            firebase.firestore.FieldValue
+              .serverTimestamp()
         };
 
-        await db.collection('users').doc(currentUser.uid).update({
-          preferences: prefs,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        await reference.set(userData);
+
+      }
+
+
+      populateProfile();
+      populatePreferences();
+      populateAccountMeta();
+
+    }
+
+
+    function populateProfile() {
+
+      const firstName =
+        String(
+          userData.firstName ||
+          currentUser.displayName?.split(/\s+/)[0] ||
+          'User'
+        ).trim();
+
+      const lastName =
+        String(
+          userData.lastName ||
+          ''
+        ).trim();
+
+      const email =
+        userData.email ||
+        currentUser.email ||
+        '';
+
+      const phone =
+        userData.phone ||
+        '';
+
+      document.getElementById(
+        'firstName'
+      ).value = firstName;
+
+      document.getElementById(
+        'lastName'
+      ).value = lastName;
+
+      document.getElementById(
+        'email'
+      ).value = email;
+
+      document.getElementById(
+        'phone'
+      ).value = phone;
+
+
+      const initials =
+        buildInitials(
+          firstName,
+          lastName
+        );
+
+      setText(
+        'avatarInitials',
+        initials
+      );
+
+
+      const photoURL =
+        userData.photoURL ||
+        currentUser.photoURL ||
+        '';
+
+      if (photoURL) {
+
+        const image =
+          document.getElementById(
+            'avatarPreview'
+          );
+
+        image.src = photoURL;
+
+        image.classList.remove(
+          'hidden'
+        );
+
+        document.getElementById(
+          'avatarInitials'
+        ).classList.add(
+          'hidden'
+        );
+
+        image.onerror = () => {
+
+          image.classList.add(
+            'hidden'
+          );
+
+          document.getElementById(
+            'avatarInitials'
+          ).classList.remove(
+            'hidden'
+          );
+
+        };
+
+      }
+
+    }
+
+
+    function populatePreferences() {
+
+      const preferences =
+        userData.preferences || {};
+
+      document.getElementById(
+        'notifNewProperties'
+      ).checked =
+        preferences.newProperties === true;
+
+      document.getElementById(
+        'notifViewings'
+      ).checked =
+        preferences.viewings !== false;
+
+      document.getElementById(
+        'notifMarketing'
+      ).checked =
+        preferences.marketing === true;
+
+    }
+
+
+    function populateAccountMeta() {
+
+      const createdAt =
+        userData.createdAt;
+
+      const createdDate =
+        parseFirestoreDate(
+          createdAt
+        );
+
+      const element =
+        document.getElementById(
+          'accountCreatedText'
+        );
+
+      if (!element) {
+        return;
+      }
+
+      if (createdDate) {
+
+        element.textContent =
+          `Account created ${createdDate.toLocaleDateString(
+            'en-NG',
+            {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            }
+          )}`;
+
+      } else {
+
+        element.textContent =
+          'MoonLat buyer account';
+
+      }
+
+    }
+
+
+    function updateSecurityInfo() {
+
+      const email =
+        currentUser?.email ||
+        userData.email ||
+        '—';
+
+      setText(
+        'authEmailSecurity',
+        email
+      );
+
+
+      const providers =
+        Array.isArray(
+          currentUser?.providerData
+        )
+          ? currentUser.providerData
+          : [];
+
+      const hasPassword =
+        providers.some(
+          provider =>
+            provider.providerId ===
+            'password'
+        );
+
+      setText(
+        'authProviderText',
+        hasPassword
+          ? 'Password authentication enabled'
+          : 'Authenticated account'
+      );
+
+    }
+
+
+    /* =========================================================
+       TABS
+    ========================================================== */
+
+    function switchTab(tabName) {
+
+      const validTabs = [
+        'profile',
+        'security',
+        'notifications'
+      ];
+
+      if (
+        !validTabs.includes(tabName)
+      ) {
+        tabName = 'profile';
+      }
+
+      activeTab = tabName;
+
+
+      document
+        .querySelectorAll('.tab-panel')
+        .forEach(panel => {
+
+          panel.classList.remove(
+            'active'
+          );
+
         });
-        
-        showToast('Preferences saved');
-      } catch (error) {
-        console.error('Error saving prefs:', error);
-        showToast('Failed to save preferences', 'error');
+
+
+      const panel =
+        document.getElementById(
+          `content${
+            tabName.charAt(0).toUpperCase() +
+            tabName.slice(1)
+          }`
+        );
+
+      if (panel) {
+        panel.classList.add(
+          'active'
+        );
       }
+
+
+      document
+        .querySelectorAll('.settings-nav-btn')
+        .forEach(button => {
+
+          button.classList.remove(
+            'active'
+          );
+
+        });
+
+
+      const desktopButton =
+        document.getElementById(
+          `tab${
+            tabName.charAt(0).toUpperCase() +
+            tabName.slice(1)
+          }`
+        );
+
+      if (desktopButton) {
+        desktopButton.classList.add(
+          'active'
+        );
+      }
+
+
+      document
+        .querySelectorAll('.mobile-tab')
+        .forEach(button => {
+
+          button.classList.remove(
+            'active'
+          );
+
+        });
+
+
+      const mobileButton =
+        document.getElementById(
+          `mobileTab${
+            tabName.charAt(0).toUpperCase() +
+            tabName.slice(1)
+          }`
+        );
+
+      if (mobileButton) {
+        mobileButton.classList.add(
+          'active'
+        );
+
+        mobileButton.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center'
+        });
+
+      }
+
+
+      if (
+        window.innerWidth < 768
+      ) {
+
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+
+      }
+
     }
 
-    // Sign Out
-    async function handleSignOut() {
-      if (!confirm('Are you sure you want to sign out?')) return;
-      
+
+    /* =========================================================
+       PROFILE SAVE
+    ========================================================== */
+
+    async function saveProfile(event) {
+
+      event.preventDefault();
+
+      if (
+        !currentUser ||
+        isSavingProfile
+      ) {
+        return;
+      }
+
+
+      const firstName =
+        document
+          .getElementById('firstName')
+          .value
+          .trim();
+
+      const lastName =
+        document
+          .getElementById('lastName')
+          .value
+          .trim();
+
+      const phone =
+        document
+          .getElementById('phone')
+          .value
+          .trim();
+
+
+      if (!firstName) {
+
+        showToast(
+          'Please enter your first name.',
+          'error'
+        );
+
+        document
+          .getElementById('firstName')
+          .focus();
+
+        return;
+
+      }
+
+
+      if (!lastName) {
+
+        showToast(
+          'Please enter your last name.',
+          'error'
+        );
+
+        document
+          .getElementById('lastName')
+          .focus();
+
+        return;
+
+      }
+
+
+      isSavingProfile = true;
+
+      const button =
+        document.getElementById(
+          'saveProfileBtn'
+        );
+
+      const originalHTML =
+        button.innerHTML;
+
+      button.disabled = true;
+
+      button.innerHTML = `
+        <div class="spinner w-3.5 h-3.5 border-[1.5px] border-blue-200 border-t-white"></div>
+        Saving
+      `;
+
+
+      const updateData = {
+        firstName,
+        lastName,
+        phone,
+        updatedAt:
+          firebase.firestore.FieldValue
+            .serverTimestamp()
+      };
+
+
       try {
-        await auth.signOut();
-        window.location.href = '../sign-in.html';
+
+        await db
+          .collection('users')
+          .doc(currentUser.uid)
+          .set(
+            updateData,
+            { merge: true }
+          );
+
+
+        const fullName =
+          `${firstName} ${lastName}`.trim();
+
+
+        if (
+          currentUser.displayName !==
+          fullName
+        ) {
+
+          try {
+
+            await currentUser.updateProfile({
+              displayName: fullName
+            });
+
+          } catch (authError) {
+
+            console.warn(
+              'Auth display name update failed:',
+              authError
+            );
+
+          }
+
+        }
+
+
+        userData = {
+          ...userData,
+          ...updateData
+        };
+
+
+        populateProfile();
+
+
+        setText(
+          'profileLastSaved',
+          'Saved just now.'
+        );
+
+
+        showToast(
+          'Profile updated successfully.'
+        );
+
       } catch (error) {
-        console.error('Sign out error:', error);
-        showToast('Failed to sign out', 'error');
+
+        console.error(
+          'Profile save error:',
+          error
+        );
+
+        showToast(
+          getFirebaseErrorMessage(
+            error,
+            'Unable to save your profile.'
+          ),
+          'error'
+        );
+
+      } finally {
+
+        isSavingProfile = false;
+
+        button.disabled = false;
+
+        button.innerHTML =
+          originalHTML;
+
       }
+
     }
 
-    // Toast Notification
-    function showToast(message, type = 'success') {
-      const toast = document.createElement('div');
-      toast.className = `fixed top-4 left-1/2 -translate-x-1/2 z-[2000] px-6 py-3 rounded-full shadow-xl text-white font-medium text-sm flex items-center gap-2 animate-slide-in ${type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'}`;
-      toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${message}`;
-      document.body.appendChild(toast);
+
+    /* =========================================================
+       AVATAR
+    ========================================================== */
+
+    async function handleAvatarUpload(event) {
+
+      const file =
+        event.target.files?.[0];
+
+      event.target.value = '';
+
+      if (!file) {
+        return;
+      }
+
+
+      if (
+        !currentUser
+      ) {
+        return;
+      }
+
+
+      const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp'
+      ];
+
+
+      if (
+        !allowedTypes.includes(
+          file.type
+        )
+      ) {
+
+        showToast(
+          'Please select a JPG, PNG, GIF or WebP image.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      if (
+        file.size >
+        2 * 1024 * 1024
+      ) {
+
+        showToast(
+          'Profile photo must be smaller than 2MB.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      const indicator =
+        document.getElementById(
+          'avatarUploadIndicator'
+        );
+
+      const status =
+        document.getElementById(
+          'uploadStatus'
+        );
+
+
+      indicator.classList.remove(
+        'hidden'
+      );
+
+      indicator.classList.add(
+        'flex'
+      );
+
+      status.classList.remove(
+        'hidden'
+      );
+
+
+      try {
+
+        const formData =
+          new FormData();
+
+        formData.append(
+          'file',
+          file
+        );
+
+        formData.append(
+          'upload_preset',
+          'geefox_unsigned'
+        );
+
+        formData.append(
+          'folder',
+          'moonlat_properties'
+        );
+
+
+        const response =
+          await fetch(
+            'https://api.cloudinary.com/v1_1/dxdbn6xwy/image/upload',
+            {
+              method: 'POST',
+              body: formData
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (
+          !response.ok ||
+          !data.secure_url
+        ) {
+
+          throw new Error(
+            data.error?.message ||
+            'Image upload failed.'
+          );
+
+        }
+
+
+        const photoURL =
+          data.secure_url;
+
+
+        await db
+          .collection('users')
+          .doc(currentUser.uid)
+          .set(
+            {
+              photoURL,
+              updatedAt:
+                firebase.firestore.FieldValue
+                  .serverTimestamp()
+            },
+            { merge: true }
+          );
+
+
+        try {
+
+          await currentUser.updateProfile({
+            photoURL
+          });
+
+        } catch (authError) {
+
+          console.warn(
+            'Auth photo update failed:',
+            authError
+          );
+
+        }
+
+
+        userData.photoURL =
+          photoURL;
+
+
+        const preview =
+          document.getElementById(
+            'avatarPreview'
+          );
+
+        preview.src =
+          photoURL;
+
+        preview.classList.remove(
+          'hidden'
+        );
+
+        document.getElementById(
+          'avatarInitials'
+        ).classList.add(
+          'hidden'
+        );
+
+
+        showToast(
+          'Profile photo updated.'
+        );
+
+      } catch (error) {
+
+        console.error(
+          'Avatar upload error:',
+          error
+        );
+
+        showToast(
+          getFirebaseErrorMessage(
+            error,
+            'Unable to upload your profile photo.'
+          ),
+          'error'
+        );
+
+      } finally {
+
+        indicator.classList.add(
+          'hidden'
+        );
+
+        indicator.classList.remove(
+          'flex'
+        );
+
+        status.classList.add(
+          'hidden'
+        );
+
+      }
+
+    }
+
+
+    /* =========================================================
+       NOTIFICATION PREFERENCES
+    ========================================================== */
+
+    let preferenceSaveTimer = null;
+
+    function handlePreferenceChange() {
+
+      if (
+        !currentUser ||
+        isSavingPreferences
+      ) {
+        return;
+      }
+
+
+      clearTimeout(
+        preferenceSaveTimer
+      );
+
+
+      setPreferencesSaving(
+        true
+      );
+
+
+      preferenceSaveTimer =
+        setTimeout(
+          saveNotificationPrefs,
+          350
+        );
+
+    }
+
+
+    async function saveNotificationPrefs() {
+
+      if (
+        !currentUser ||
+        isSavingPreferences
+      ) {
+        return;
+      }
+
+
+      isSavingPreferences = true;
+
+
+      const prefs = {
+        newProperties:
+          document
+            .getElementById(
+              'notifNewProperties'
+            )
+            .checked,
+
+        viewings:
+          document
+            .getElementById(
+              'notifViewings'
+            )
+            .checked,
+
+        marketing:
+          document
+            .getElementById(
+              'notifMarketing'
+            )
+            .checked
+      };
+
+
+      try {
+
+        await db
+          .collection('users')
+          .doc(currentUser.uid)
+          .set(
+            {
+              preferences: prefs,
+              updatedAt:
+                firebase.firestore.FieldValue
+                  .serverTimestamp()
+            },
+            { merge: true }
+          );
+
+
+        userData.preferences =
+          prefs;
+
+
+        setText(
+          'preferencesStatus',
+          'Preferences saved.'
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          'Preference save error:',
+          error
+        );
+
+        setText(
+          'preferencesStatus',
+          'Could not save preferences.'
+        );
+
+        showToast(
+          getFirebaseErrorMessage(
+            error,
+            'Unable to save notification preferences.'
+          ),
+          'error'
+        );
+
+      } finally {
+
+        isSavingPreferences =
+          false;
+
+        setPreferencesSaving(
+          false
+        );
+
+      }
+
+    }
+
+
+    function setPreferencesSaving(
+      saving
+    ) {
+
+      const indicator =
+        document.getElementById(
+          'preferencesSaving'
+        );
+
+      if (!indicator) {
+        return;
+      }
+
+
+      if (saving) {
+
+        indicator.classList.remove(
+          'hidden'
+        );
+
+        indicator.classList.add(
+          'flex'
+        );
+
+      } else {
+
+        indicator.classList.add(
+          'hidden'
+        );
+
+        indicator.classList.remove(
+          'flex'
+        );
+
+      }
+
+    }
+
+
+    /* =========================================================
+       PASSWORD
+    ========================================================== */
+
+    async function resetPassword() {
+
+      if (
+        !currentUser ||
+        !currentUser.email
+      ) {
+
+        showToast(
+          'No account email is available.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      const confirmed =
+        await openConfirmModal({
+          title: 'Send password reset link?',
+          message:
+            `A secure password reset link will be sent to ${currentUser.email}.`,
+          confirmText: 'Send reset link',
+          icon: 'fa-key',
+          iconClass:
+            'w-11 h-11 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0',
+          buttonClass:
+            'bg-primary-600 hover:bg-primary-700',
+          action: async () => {
+
+            const button =
+              document.getElementById(
+                'resetPasswordBtn'
+              );
+
+            if (button) {
+              button.disabled = true;
+            }
+
+
+            try {
+
+              await auth.sendPasswordResetEmail(
+                currentUser.email
+              );
+
+              showToast(
+                'Password reset email sent.'
+              );
+
+            } finally {
+
+              if (button) {
+                button.disabled = false;
+              }
+
+            }
+
+          }
+        });
+
+
+      return confirmed;
+
+    }
+
+
+    /* =========================================================
+       SIGN OUT
+    ========================================================== */
+
+    function handleSignOut() {
+
+      if (
+        isSigningOut
+      ) {
+        return;
+      }
+
+
+      openConfirmModal({
+        title: 'Sign out of MoonLat?',
+        message:
+          'You will need to sign in again to access your buyer dashboard.',
+        confirmText: 'Sign out',
+        icon: 'fa-arrow-right-from-bracket',
+        iconClass:
+          'w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0',
+        buttonClass:
+          'bg-slate-950 hover:bg-slate-800',
+        action: performSignOut
+      });
+
+    }
+
+
+    async function performSignOut() {
+
+      if (
+        isSigningOut
+      ) {
+        return;
+      }
+
+
+      isSigningOut = true;
+
+
+      const button =
+        document.getElementById(
+          'confirmPrimaryBtn'
+        );
+
+
+      if (button) {
+
+        button.disabled = true;
+
+        button.innerHTML = `
+          <span class="inline-flex items-center gap-2">
+            <div class="spinner w-3.5 h-3.5 border-[1.5px] border-slate-500 border-t-white"></div>
+            Signing out
+          </span>
+        `;
+
+      }
+
+
+      try {
+
+        await auth.signOut();
+
+        window.location.replace(
+          '../sign-in.html'
+        );
+
+      } catch (error) {
+
+        console.error(
+          'Sign out error:',
+          error
+        );
+
+        isSigningOut = false;
+
+        showToast(
+          'Unable to sign out. Please try again.',
+          'error'
+        );
+
+        closeConfirmModal();
+
+      }
+
+    }
+
+
+    /* =========================================================
+       ACCOUNT DELETION REQUEST
+    ========================================================== */
+
+    function requestAccountDeletion() {
+
+      if (
+        !currentUser?.email
+      ) {
+
+        showToast(
+          'Your account email could not be determined.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      const subject =
+        encodeURIComponent(
+          'MoonLat Account Deletion Request'
+        );
+
+      const body =
+        encodeURIComponent(
+          `Hello MoonLat Support,\n\nI would like to request deletion of my MoonLat buyer account.\n\nAccount email: ${currentUser.email}\n\nThank you.`
+        );
+
+
+      window.location.href =
+        `mailto:support@moonlat.top?subject=${subject}&body=${body}`;
+
+    }
+
+
+    /* =========================================================
+       CONFIRM MODAL
+    ========================================================== */
+
+    function openConfirmModal(options) {
+
+      const modal =
+        document.getElementById(
+          'confirmModal'
+        );
+
+      const icon =
+        document.getElementById(
+          'confirmModalIcon'
+        );
+
+      const title =
+        document.getElementById(
+          'confirmModalTitle'
+        );
+
+      const message =
+        document.getElementById(
+          'confirmModalMessage'
+        );
+
+      const primary =
+        document.getElementById(
+          'confirmPrimaryBtn'
+        );
+
+
+      title.textContent =
+        options.title || 'Confirm';
+
+      message.textContent =
+        options.message || '';
+
+
+      icon.className =
+        options.iconClass ||
+        'w-11 h-11 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0';
+
+
+      icon.innerHTML =
+        `<i class="fas ${options.icon || 'fa-circle-question'} text-sm"></i>`;
+
+
+      primary.textContent =
+        options.confirmText || 'Confirm';
+
+
+      primary.className =
+        `h-11 px-5 rounded-xl text-white text-xs font-extrabold transition ${
+          options.buttonClass ||
+          'bg-slate-950 hover:bg-slate-800'
+        }`;
+
+
+      pendingConfirmAction =
+        options.action || null;
+
+
+      primary.onclick =
+        async () => {
+
+          if (
+            typeof pendingConfirmAction !==
+            'function'
+          ) {
+
+            closeConfirmModal();
+            return;
+
+          }
+
+
+          const action =
+            pendingConfirmAction;
+
+          pendingConfirmAction =
+            null;
+
+
+          try {
+
+            await action();
+
+            if (
+              !isSigningOut
+            ) {
+              closeConfirmModal();
+            }
+
+          } catch (error) {
+
+            console.error(
+              'Confirmation action error:',
+              error
+            );
+
+            if (
+              !isSigningOut
+            ) {
+              closeConfirmModal();
+            }
+
+          }
+
+        };
+
+
+      modal.classList.remove(
+        'hidden'
+      );
+
+      modal.classList.add(
+        'flex'
+      );
+
+      document.body.classList.add(
+        'modal-open'
+      );
+
+
       setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translate(-50%, -20px)';
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
+
+        primary.focus();
+
+      }, 30);
+
+
+      return new Promise(resolve => {
+
+        modal.dataset.resolve =
+          String(
+            Date.now()
+          );
+
+        modal._resolve =
+          resolve;
+
+      });
+
     }
 
-    // Add animation style
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes slideIn {
-        from { transform: translate(-50%, -100%); opacity: 0; }
-        to { transform: translate(-50%, 0); opacity: 1; }
+
+    function closeConfirmModal() {
+
+      const modal =
+        document.getElementById(
+          'confirmModal'
+        );
+
+      if (!modal) {
+        return;
       }
-      .animate-slide-in { animation: slideIn 0.3s ease-out; }
-    `;
-    document.head.appendChild(style);
+
+
+      modal.classList.add(
+        'hidden'
+      );
+
+      modal.classList.remove(
+        'flex'
+      );
+
+
+      document.body.classList.remove(
+        'modal-open'
+      );
+
+
+      pendingConfirmAction =
+        null;
+
+
+      const resolve =
+        modal._resolve;
+
+      modal._resolve =
+        null;
+
+
+      if (typeof resolve === 'function') {
+        resolve(false);
+      }
+
+    }
+
+
+    /* =========================================================
+       UTILITIES
+    ========================================================== */
+
+    function buildInitials(
+      firstName,
+      lastName
+    ) {
+
+      const first =
+        String(
+          firstName || ''
+        ).trim();
+
+      const last =
+        String(
+          lastName || ''
+        ).trim();
+
+
+      const initials =
+        (
+          (first.charAt(0) || '') +
+          (last.charAt(0) || '')
+        ).toUpperCase();
+
+
+      return initials || 'U';
+
+    }
+
+
+    function setText(
+      id,
+      value
+    ) {
+
+      const element =
+        document.getElementById(id);
+
+      if (element) {
+        element.textContent =
+          String(
+            value ?? ''
+          );
+      }
+
+    }
+
+
+    function parseFirestoreDate(
+      value
+    ) {
+
+      if (!value) {
+        return null;
+      }
+
+
+      if (
+        typeof value.toDate ===
+        'function'
+      ) {
+
+        const date =
+          value.toDate();
+
+        return isValidDate(date)
+          ? date
+          : null;
+
+      }
+
+
+      if (
+        typeof value.seconds ===
+        'number'
+      ) {
+
+        const date =
+          new Date(
+            value.seconds * 1000
+          );
+
+        return isValidDate(date)
+          ? date
+          : null;
+
+      }
+
+
+      if (
+        typeof value._seconds ===
+        'number'
+      ) {
+
+        const date =
+          new Date(
+            value._seconds * 1000
+          );
+
+        return isValidDate(date)
+          ? date
+          : null;
+
+      }
+
+
+      const date =
+        new Date(value);
+
+
+      return isValidDate(date)
+        ? date
+        : null;
+
+    }
+
+
+    function isValidDate(
+      date
+    ) {
+
+      return (
+        date instanceof Date &&
+        !Number.isNaN(
+          date.getTime()
+        )
+      );
+
+    }
+
+
+    function getFirebaseErrorMessage(
+      error,
+      fallback
+    ) {
+
+      const code =
+        String(
+          error?.code || ''
+        );
+
+
+      const messages = {
+        'permission-denied':
+          'You do not have permission to update this account.',
+        'network-request-failed':
+          'Network connection failed. Please try again.',
+        'auth/network-request-failed':
+          'Network connection failed. Please try again.',
+        'auth/too-many-requests':
+          'Too many attempts. Please wait and try again.',
+        'auth/user-not-found':
+          'This account could not be found.',
+        'auth/invalid-email':
+          'The account email is invalid.'
+      };
+
+
+      return (
+        messages[code] ||
+        fallback
+      );
+
+    }
+
+
+    /* =========================================================
+       TOAST
+    ========================================================== */
+
+    function showToast(
+      message,
+      type = 'success'
+    ) {
+
+      const container =
+        document.getElementById(
+          'toastContainer'
+        );
+
+
+      if (!container) {
+        return;
+      }
+
+
+      container
+        .querySelectorAll('.toast')
+        .forEach(
+          toast => toast.remove()
+        );
+
+
+      const toast =
+        document.createElement(
+          'div'
+        );
+
+
+      const isError =
+        type === 'error';
+
+
+      toast.className = `
+        toast
+        pointer-events-auto
+        flex
+        items-center
+        gap-3
+        min-w-[min(320px,calc(100vw-32px))]
+        max-w-[calc(100vw-32px)]
+        px-4
+        py-3
+        rounded-2xl
+        shadow-2xl
+        text-white
+        text-xs
+        font-bold
+        ${isError
+          ? 'bg-rose-600'
+          : 'bg-slate-950'}
+      `;
+
+
+      toast.innerHTML = `
+        <span class="w-7 h-7 rounded-lg ${
+          isError
+            ? 'bg-white/15'
+            : 'bg-emerald-500/15'
+        } flex items-center justify-center shrink-0">
+          <i class="fas ${
+            isError
+              ? 'fa-triangle-exclamation'
+              : 'fa-check'
+          } text-[10px]"></i>
+        </span>
+
+        <span class="leading-5">
+          ${escapeHtml(message)}
+        </span>
+      `;
+
+
+      container.appendChild(
+        toast
+      );
+
+
+      setTimeout(() => {
+
+        toast.style.opacity =
+          '0';
+
+        toast.style.transform =
+          'translate(-50%, -8px)';
+
+        toast.style.transition =
+          'opacity .2s ease, transform .2s ease';
+
+
+        setTimeout(() => {
+
+          toast.remove();
+
+        }, 220);
+
+      }, 3000);
+
+    }
+
+
+    function escapeHtml(
+      value
+    ) {
+
+      return String(
+        value ?? ''
+      )
+        .replace(
+          /&/g,
+          '&amp;'
+        )
+        .replace(
+          /</g,
+          '&lt;'
+        )
+        .replace(
+          />/g,
+          '&gt;'
+        )
+        .replace(
+          /"/g,
+          '&quot;'
+        )
+        .replace(
+          /'/g,
+          '&#039;'
+        );
+
+    }
+
+
+    /* =========================================================
+       RESIZE / MODAL
+    ========================================================== */
+
+    window.addEventListener(
+      'resize',
+      () => {
+
+        if (
+          window.innerWidth >= 768
+        ) {
+
+          const mobileTabs =
+            document.querySelector(
+              '.mobile-tab-bar'
+            );
+
+          if (mobileTabs) {
+            mobileTabs.scrollLeft = 0;
+          }
+
+        }
+
+      }
+    );
+
   </script>
+
 </body>
 </html>
