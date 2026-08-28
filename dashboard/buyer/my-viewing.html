@@ -2,16 +2,72 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Saved Viewings — MoonLat</title>
-  
-  <!-- Tailwind CSS -->
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <title>My Viewings — MoonLat</title>
+
+  <meta
+    name="description"
+    content="Manage your MoonLat property viewings, appointments and upcoming visits."
+  >
+
+  <meta name="theme-color" content="#080b12">
+  <meta name="color-scheme" content="light">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
   <script src="https://cdn.tailwindcss.com"></script>
-  
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif']
+          },
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a'
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 35px rgba(15,23,42,.055)',
+            premium: '0 24px 70px rgba(15,23,42,.12)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
+
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
@@ -21,446 +77,4009 @@
       messagingSenderId: "289878951289",
       appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
     };
-    firebase.initializeApp(firebaseConfig);
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    const db = firebase.firestore();
+    const auth = firebase.auth();
   </script>
 
-  <!-- Fonts & Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-  
-  <!-- Custom Styles -->
   <style>
-    * { font-family: 'Inter', sans-serif; }
-    .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
-    
-    .property-card {
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
-    .property-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
     }
-    .property-image-container { overflow: hidden; }
-    .property-image { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-    .property-card:hover .property-image { transform: scale(1.05); }
-    
-    .bookmark-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-    .bookmark-btn:hover { transform: scale(1.1); }
-    .bookmark-btn.saved { color: #ef4444; animation: bookmarkPulse 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-    @keyframes bookmarkPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(
+          circle at 85% -10%,
+          rgba(37, 99, 235, .055),
+          transparent 30%
+        ),
+        #f7f8fa;
+      min-height: 100vh;
+      color: #0f172a;
+      overflow-x: hidden;
     }
-    
+
+    body.drawer-open {
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    button,
+    input,
+    select,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 3px solid rgba(37, 99, 235, .2);
+      outline-offset: 2px;
+    }
+
+    .font-display {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
     .glass {
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, .88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
-    
-    /* 2-Column Mobile Grid, scaling up */
-    .property-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+
+    .page-shell {
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
     }
-    @media (min-width: 768px) {
-      .property-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(
+          circle at 90% 10%,
+          rgba(96, 165, 250, .2),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 10% 100%,
+          rgba(37, 99, 235, .18),
+          transparent 34%
+        ),
+        #090d16;
     }
-    @media (min-width: 1024px) {
-      .property-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      opacity: .055;
+      background-image:
+        linear-gradient(
+          rgba(255,255,255,.7) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.7) 1px,
+          transparent 1px
+        );
+      background-size: 42px 42px;
+      mask-image: linear-gradient(
+        to bottom right,
+        black,
+        transparent 78%
+      );
+      -webkit-mask-image: linear-gradient(
+        to bottom right,
+        black,
+        transparent 78%
+      );
+      pointer-events: none;
     }
-    
+
+    .hero-orb {
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      right: -150px;
+      top: -170px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, .16);
+      filter: blur(60px);
+      pointer-events: none;
+    }
+
+    .hero-orb-two {
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      left: -130px;
+      bottom: -150px;
+      border-radius: 999px;
+      background: rgba(29, 78, 216, .15);
+      filter: blur(60px);
+      pointer-events: none;
+    }
+
+    .stat-card {
+      background: #fff;
+      border: 1px solid #e7ebf0;
+      box-shadow: 0 8px 28px rgba(15,23,42,.035);
+      transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 38px rgba(15,23,42,.07);
+      border-color: #dbe3ec;
+    }
+
+    .viewing-card {
+      background: #fff;
+      border: 1px solid #e6eaf0;
+      box-shadow: 0 8px 28px rgba(15,23,42,.04);
+      transition:
+        transform .22s ease,
+        box-shadow .22s ease,
+        border-color .22s ease;
+    }
+
+    .viewing-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 50px rgba(15,23,42,.085);
+      border-color: #d9e1eb;
+    }
+
+    .viewing-image {
+      transition: transform .55s cubic-bezier(.4,0,.2,1);
+    }
+
+    .viewing-card:hover .viewing-image {
+      transform: scale(1.035);
+    }
+
     .skeleton {
-      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background:
+        linear-gradient(
+          90deg,
+          #eef1f5 25%,
+          #f7f8fa 50%,
+          #eef1f5 75%
+        );
       background-size: 200% 100%;
-      animation: skeleton-loading 1.5s infinite;
-      border-radius: 8px;
+      animation: shimmer 1.35s infinite;
     }
-    @keyframes skeleton-loading {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
     }
-    
-    .toast { animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+
+    .fade-up {
+      animation: fadeUp .4s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(2,6,23,.48);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .24s ease;
+    }
+
+    .drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .detail-drawer {
+      position: fixed;
+      z-index: 110;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(560px, 100vw);
+      background: #fff;
+      transform: translate3d(100%, 0, 0);
+      transition:
+        transform .32s cubic-bezier(.22,1,.36,1);
+      box-shadow: -24px 0 70px rgba(15,23,42,.14);
+      will-change: transform;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-drawer.open {
+      transform: translate3d(0, 0, 0);
+    }
+
+    .drawer-scroll {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    .status-badge {
+      white-space: nowrap;
+    }
+
+    .filter-chip {
+      transition:
+        background .18s ease,
+        color .18s ease,
+        border-color .18s ease;
+    }
+
+    .filter-chip.active {
+      background: #0f172a;
+      color: #fff;
+      border-color: #0f172a;
+    }
+
+    .toast {
+      animation: toastIn .28s cubic-bezier(.22,1,.36,1);
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .mobile-bottom-nav {
+      padding-bottom:
+        max(
+          10px,
+          env(safe-area-inset-bottom)
+        );
+    }
+
+    @media (max-width: 639px) {
+      body {
+        padding-bottom:
+          calc(
+            70px +
+            env(safe-area-inset-bottom)
+          );
+      }
+
+      .hero {
+        min-height: 300px;
+      }
+
+      .detail-drawer {
+        top: 8vh;
+        border-radius: 24px 24px 0 0;
+      }
+    }
+
+    @media (min-width: 640px) {
+      .hero {
+        min-height: 320px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
     }
   </style>
 </head>
-<body class="bg-gray-50">
 
-  <!-- Header -->
-  <header class="glass sticky top-0 z-50 border-b border-gray-200/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16 gap-4">
-        <div class="flex items-center gap-3 flex-1">
-          <button onclick="window.history.back()" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all group">
-            <div class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-200 group-hover:border-gray-300 group-hover:shadow-sm transition-all">
+<body>
+
+  <!-- =========================================================
+       PAGE
+  ========================================================== -->
+
+  <div id="page">
+
+    <!-- =======================================================
+         HEADER
+    ======================================================== -->
+
+    <header class="sticky top-0 z-50 glass border-b border-slate-200/80">
+
+      <div class="page-shell px-4 sm:px-6 lg:px-8">
+
+        <div class="h-[68px] sm:h-[74px] flex items-center justify-between gap-3">
+
+          <div class="flex items-center gap-3 min-w-0">
+
+            <button
+              type="button"
+              onclick="goBack()"
+              class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-slate-950 hover:border-slate-300 transition shrink-0"
+              aria-label="Go back"
+            >
               <i class="fas fa-arrow-left text-sm"></i>
+            </button>
+
+            <div class="h-7 w-px bg-slate-200 hidden sm:block"></div>
+
+            <div class="min-w-0">
+
+              <p class="hidden sm:block text-[9px] uppercase tracking-[.17em] font-extrabold text-slate-400">
+                Buyer portal
+              </p>
+
+              <h1 class="font-display text-base sm:text-lg font-extrabold text-slate-950 tracking-tight truncate">
+                My Viewings
+              </h1>
+
             </div>
-            <span class="hidden sm:inline font-display font-semibold">Back</span>
-          </button>
-          <div class="h-6 w-px bg-gray-300 hidden sm:block"></div>
+
+          </div>
+
+
+          <div class="flex items-center gap-2">
+
+            <a
+              href="browse-property.html"
+              class="h-10 px-3 sm:px-4 rounded-xl bg-slate-950 text-white text-xs font-extrabold flex items-center justify-center gap-2 hover:bg-slate-800 transition shadow-sm"
+            >
+              <i class="fas fa-plus text-[10px]"></i>
+              <span class="hidden sm:inline">
+                Find a property
+              </span>
+              <span class="sm:hidden">
+                Browse
+              </span>
+            </a>
+
+
+            <button
+              type="button"
+              onclick="window.location.href='settings.html'"
+              class="w-10 h-10 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 shrink-0"
+              aria-label="Open account settings"
+            >
+
+              <img
+                id="headerAvatar"
+                src=""
+                alt=""
+                class="hidden w-full h-full object-cover"
+              >
+
+              <span
+                id="headerInitials"
+                class="w-full h-full flex items-center justify-center text-white text-xs font-extrabold"
+              >
+                U
+              </span>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- =======================================================
+         MAIN
+    ======================================================== -->
+
+    <main class="page-shell px-4 sm:px-6 lg:px-8 py-5 sm:py-7 lg:py-9">
+
+      <!-- =====================================================
+           HERO
+      ====================================================== -->
+
+      <section class="hero rounded-[26px] sm:rounded-[32px] p-5 sm:p-8 lg:p-10 mb-5 sm:mb-7">
+
+        <div class="hero-grid"></div>
+        <div class="hero-orb"></div>
+        <div class="hero-orb-two"></div>
+
+        <div class="relative z-10">
+
+          <div class="flex items-center gap-2 mb-4">
+
+            <span class="w-7 h-px bg-blue-400"></span>
+
+            <span class="text-[9px] sm:text-xs uppercase tracking-[.2em] font-extrabold text-blue-300">
+              Your property schedule
+            </span>
+
+          </div>
+
+
+          <div class="max-w-3xl">
+
+            <h2 class="font-display text-[30px] sm:text-4xl lg:text-[46px] leading-[1.04] tracking-[-.045em] font-extrabold text-white">
+              Your viewings,
+              <span class="text-blue-300">
+                all in one place.
+              </span>
+            </h2>
+
+            <p class="text-sm sm:text-base leading-6 sm:leading-7 text-slate-300 max-w-2xl mt-4">
+              Keep track of upcoming property visits, appointment status and the homes you are planning to see.
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           STATS
+      ====================================================== -->
+
+      <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+
+        <div class="stat-card rounded-2xl p-4">
+
+          <div class="flex items-start justify-between gap-3">
+
+            <div>
+
+              <p class="text-[9px] uppercase tracking-[.15em] font-extrabold text-slate-400">
+                Upcoming
+              </p>
+
+              <p
+                id="statUpcoming"
+                class="font-display text-2xl sm:text-3xl font-extrabold text-slate-950 mt-2"
+              >
+                --
+              </p>
+
+              <p class="text-[10px] text-slate-400 mt-1">
+                Scheduled visits
+              </p>
+
+            </div>
+
+            <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <i class="far fa-calendar-check text-sm"></i>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card rounded-2xl p-4">
+
+          <div class="flex items-start justify-between gap-3">
+
+            <div>
+
+              <p class="text-[9px] uppercase tracking-[.15em] font-extrabold text-slate-400">
+                Pending
+              </p>
+
+              <p
+                id="statPending"
+                class="font-display text-2xl sm:text-3xl font-extrabold text-slate-950 mt-2"
+              >
+                --
+              </p>
+
+              <p class="text-[10px] text-slate-400 mt-1">
+                Awaiting confirmation
+              </p>
+
+            </div>
+
+            <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+              <i class="far fa-clock text-sm"></i>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card rounded-2xl p-4">
+
+          <div class="flex items-start justify-between gap-3">
+
+            <div>
+
+              <p class="text-[9px] uppercase tracking-[.15em] font-extrabold text-slate-400">
+                Confirmed
+              </p>
+
+              <p
+                id="statConfirmed"
+                class="font-display text-2xl sm:text-3xl font-extrabold text-slate-950 mt-2"
+              >
+                --
+              </p>
+
+              <p class="text-[10px] text-slate-400 mt-1">
+                Ready to visit
+              </p>
+
+            </div>
+
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <i class="fas fa-check text-sm"></i>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card rounded-2xl p-4">
+
+          <div class="flex items-start justify-between gap-3">
+
+            <div>
+
+              <p class="text-[9px] uppercase tracking-[.15em] font-extrabold text-slate-400">
+                Total
+              </p>
+
+              <p
+                id="statTotal"
+                class="font-display text-2xl sm:text-3xl font-extrabold text-slate-950 mt-2"
+              >
+                --
+              </p>
+
+              <p class="text-[10px] text-slate-400 mt-1">
+                All appointments
+              </p>
+
+            </div>
+
+            <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+              <i class="fas fa-layer-group text-sm"></i>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           TOOLBAR
+      ====================================================== -->
+
+      <section class="mb-5">
+
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+
           <div>
-            <h1 class="text-lg font-display font-bold text-gray-900">My Saved Viewings</h1>
-            <p class="text-xs text-gray-500 hidden sm:block">Properties you've bookmarked</p>
+
+            <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-primary-600">
+              Appointment centre
+            </p>
+
+            <div class="flex items-center gap-2 mt-1">
+
+              <h2 class="font-display text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
+                Your viewings
+              </h2>
+
+              <span
+                id="liveIndicator"
+                class="hidden items-center gap-1.5 text-[9px] font-extrabold uppercase tracking-wider text-emerald-600"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Live
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="flex flex-col sm:flex-row gap-2">
+
+            <div class="relative">
+
+              <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+
+              <input
+                id="searchInput"
+                type="search"
+                autocomplete="off"
+                placeholder="Search your viewings..."
+                class="w-full sm:w-[250px] h-10 pl-9 pr-3 rounded-xl bg-white border border-slate-200 text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:border-primary-300 focus:ring-2 focus:ring-primary-100 outline-none"
+              >
+
+            </div>
+
+
+            <select
+              id="sortSelect"
+              class="h-10 px-3 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-600 outline-none focus:border-primary-300"
+            >
+              <option value="soonest">Soonest first</option>
+              <option value="latest">Latest first</option>
+              <option value="newest">Recently added</option>
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="filterBar"
+          class="flex items-center gap-2 overflow-x-auto hide-scrollbar mt-4 pb-1"
+        >
+
+          <button
+            type="button"
+            data-filter="all"
+            class="filter-chip active shrink-0 h-9 px-4 rounded-xl border border-slate-200 text-[11px] font-extrabold"
+          >
+            All
+          </button>
+
+          <button
+            type="button"
+            data-filter="upcoming"
+            class="filter-chip shrink-0 h-9 px-4 rounded-xl bg-white border border-slate-200 text-slate-500 text-[11px] font-extrabold"
+          >
+            Upcoming
+          </button>
+
+          <button
+            type="button"
+            data-filter="pending"
+            class="filter-chip shrink-0 h-9 px-4 rounded-xl bg-white border border-slate-200 text-slate-500 text-[11px] font-extrabold"
+          >
+            Pending
+          </button>
+
+          <button
+            type="button"
+            data-filter="confirmed"
+            class="filter-chip shrink-0 h-9 px-4 rounded-xl bg-white border border-slate-200 text-slate-500 text-[11px] font-extrabold"
+          >
+            Confirmed
+          </button>
+
+          <button
+            type="button"
+            data-filter="completed"
+            class="filter-chip shrink-0 h-9 px-4 rounded-xl bg-white border border-slate-200 text-slate-500 text-[11px] font-extrabold"
+          >
+            Completed
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           LOADING
+      ====================================================== -->
+
+      <div
+        id="loadingState"
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+      >
+
+        <div class="bg-white rounded-[22px] border border-slate-200 overflow-hidden">
+          <div class="aspect-[16/9] skeleton"></div>
+          <div class="p-5 space-y-3">
+            <div class="h-4 skeleton rounded w-3/4"></div>
+            <div class="h-3 skeleton rounded w-1/2"></div>
+            <div class="h-3 skeleton rounded w-2/3"></div>
+            <div class="h-10 skeleton rounded-xl mt-5"></div>
           </div>
         </div>
 
-        <div class="flex items-center gap-3">
-          <a href="buyer-browse-property.html" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/30">
-            <i class="fas fa-plus"></i>
-            <span class="hidden sm:inline">Browse More</span>
-          </a>
-          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg shadow-indigo-500/30 cursor-pointer" onclick="window.location.href='settings.html'" id="userAvatar">U</div>
+        <div class="bg-white rounded-[22px] border border-slate-200 overflow-hidden hidden md:block">
+          <div class="aspect-[16/9] skeleton"></div>
+          <div class="p-5 space-y-3">
+            <div class="h-4 skeleton rounded w-3/4"></div>
+            <div class="h-3 skeleton rounded w-1/2"></div>
+            <div class="h-3 skeleton rounded w-2/3"></div>
+            <div class="h-10 skeleton rounded-xl mt-5"></div>
+          </div>
         </div>
-      </div>
-    </div>
-  </header>
 
-  <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <div class="flex items-center justify-between mb-6">
-      <p class="text-sm text-gray-600">
-        Showing <span class="font-semibold text-gray-900" id="resultsCount">0</span> saved properties
-      </p>
-      <div class="flex items-center gap-2 text-sm text-gray-500">
-        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-        Live updates
-      </div>
-    </div>
+        <div class="bg-white rounded-[22px] border border-slate-200 overflow-hidden hidden xl:block">
+          <div class="aspect-[16/9] skeleton"></div>
+          <div class="p-5 space-y-3">
+            <div class="h-4 skeleton rounded w-3/4"></div>
+            <div class="h-3 skeleton rounded w-1/2"></div>
+            <div class="h-3 skeleton rounded w-2/3"></div>
+            <div class="h-10 skeleton rounded-xl mt-5"></div>
+          </div>
+        </div>
 
-    <!-- Properties Grid -->
-    <div id="savedPropertiesGrid" class="property-grid">
-      <!-- Loading Skeleton -->
-      <div class="skeleton h-80 rounded-2xl"></div>
-      <div class="skeleton h-80 rounded-2xl"></div>
-      <div class="skeleton h-80 rounded-2xl"></div>
-      <div class="skeleton h-80 rounded-2xl"></div>
-    </div>
-
-    <!-- Empty State -->
-    <div id="emptyState" class="hidden text-center py-20">
-      <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-        <i class="far fa-heart text-3xl text-gray-400"></i>
       </div>
-      <h3 class="text-lg font-semibold text-gray-900 mb-1">No saved properties yet</h3>
-      <p class="text-gray-500 text-sm mb-6">Start browsing and bookmark properties you love</p>
-      <a href="buyer-browse-property.html" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/30">
-        <i class="fas fa-search"></i> Browse Properties
+
+
+      <!-- =====================================================
+           ERROR
+      ====================================================== -->
+
+      <div
+        id="errorState"
+        class="hidden bg-white border border-rose-100 rounded-[24px] p-8 sm:p-12 text-center"
+      >
+
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mb-4">
+          <i class="fas fa-triangle-exclamation"></i>
+        </div>
+
+        <h3 class="font-display text-base font-extrabold text-slate-950">
+          We couldn't load your viewings
+        </h3>
+
+        <p
+          id="errorMessage"
+          class="text-xs sm:text-sm text-slate-400 max-w-md mx-auto mt-2"
+        >
+          Please check your connection and try again.
+        </p>
+
+        <button
+          type="button"
+          onclick="loadAppointmentsOnce()"
+          class="mt-5 h-10 px-5 rounded-xl bg-slate-950 text-white text-xs font-extrabold"
+        >
+          <i class="fas fa-rotate-right mr-2"></i>
+          Try again
+        </button>
+
+      </div>
+
+
+      <!-- =====================================================
+           VIEWINGS
+      ====================================================== -->
+
+      <div
+        id="viewingsGrid"
+        class="hidden grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+      >
+      </div>
+
+
+      <!-- =====================================================
+           EMPTY
+      ====================================================== -->
+
+      <div
+        id="emptyState"
+        class="hidden bg-white border border-slate-200 rounded-[26px] p-8 sm:p-14 text-center"
+      >
+
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mb-5">
+          <i class="far fa-calendar-check text-xl"></i>
+        </div>
+
+        <h3
+          id="emptyTitle"
+          class="font-display text-lg font-extrabold text-slate-950"
+        >
+          No viewings yet
+        </h3>
+
+        <p
+          id="emptyDescription"
+          class="text-xs sm:text-sm text-slate-400 max-w-md mx-auto mt-2 leading-6"
+        >
+          When you schedule a property viewing, it will appear here.
+        </p>
+
+        <a
+          href="browse-property.html"
+          class="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-slate-950 text-white text-xs font-extrabold mt-5 hover:bg-slate-800 transition"
+        >
+          <i class="fas fa-compass"></i>
+          Browse properties
+        </a>
+
+      </div>
+
+    </main>
+
+  </div>
+
+
+  <!-- =========================================================
+       MOBILE NAV
+  ========================================================== -->
+
+  <nav
+    class="mobile-bottom-nav fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/95 backdrop-blur-xl border-t border-slate-200"
+    aria-label="Mobile navigation"
+  >
+
+    <div class="grid grid-cols-4 h-[64px]">
+
+      <a
+        href="index.html"
+        class="flex flex-col items-center justify-center gap-1 text-slate-400"
+      >
+        <i class="fas fa-table-cells text-sm"></i>
+        <span class="text-[9px] font-bold">
+          Home
+        </span>
       </a>
+
+      <a
+        href="browse-property.html"
+        class="flex flex-col items-center justify-center gap-1 text-slate-400"
+      >
+        <i class="fas fa-compass text-sm"></i>
+        <span class="text-[9px] font-bold">
+          Explore
+        </span>
+      </a>
+
+      <a
+        href="my-viewing.html"
+        class="flex flex-col items-center justify-center gap-1 text-primary-600 relative"
+      >
+        <span class="absolute top-1.5 w-7 h-0.5 rounded-full bg-primary-600"></span>
+        <i class="far fa-calendar-check text-sm mt-2"></i>
+        <span class="text-[9px] font-extrabold">
+          Viewings
+        </span>
+      </a>
+
+      <a
+        href="settings.html"
+        class="flex flex-col items-center justify-center gap-1 text-slate-400"
+      >
+        <i class="fas fa-sliders text-sm"></i>
+        <span class="text-[9px] font-bold">
+          Account
+        </span>
+      </a>
+
     </div>
-  </main>
 
-  <!-- Property Detail Modal -->
-  <div id="propertyModal" class="fixed inset-0 z-[60] hidden">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closePropertyModal()"></div>
-    <div class="absolute inset-y-0 right-0 w-full max-w-2xl bg-white shadow-2xl transform transition-transform duration-300 translate-x-full" id="modalContent">
-      <div id="modalBody" class="h-full overflow-y-auto"></div>
-    </div>
-  </div>
+  </nav>
 
-  <!-- Toast Container -->
-  <div id="toastContainer" class="fixed bottom-4 right-4 z-[70] flex flex-col gap-2"></div>
 
-  <!-- Confirm Modal for Contact -->
-  <div id="confirmModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeContactModal()"></div>
-    <div class="relative bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden">
-      <div class="p-6">
-        <div class="flex items-start gap-4">
-          <div id="confirmIcon" class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0"><i class="fas fa-user-tie text-xl"></i></div>
-          <div class="flex-1">
-            <h3 id="confirmTitle" class="text-lg font-bold text-gray-900">Contact Agent</h3>
-            <p id="confirmMessage" class="text-sm text-gray-600 mt-1">Choose how you want to reach the agent:</p>
-          </div>
-        </div>
+  <!-- =========================================================
+       DRAWER BACKDROP
+  ========================================================== -->
+
+  <div
+    id="drawerBackdrop"
+    class="drawer-backdrop"
+    onclick="closeDetailDrawer()"
+    aria-hidden="true"
+  ></div>
+
+
+  <!-- =========================================================
+       DETAIL DRAWER
+  ========================================================== -->
+
+  <aside
+    id="detailDrawer"
+    class="detail-drawer"
+    aria-label="Viewing details"
+    aria-hidden="true"
+  >
+
+    <div class="h-[68px] shrink-0 px-4 sm:px-5 border-b border-slate-200 flex items-center justify-between">
+
+      <div>
+
+        <p class="text-[9px] uppercase tracking-[.16em] font-extrabold text-slate-400">
+          Appointment
+        </p>
+
+        <h2 class="font-display text-sm font-extrabold text-slate-950">
+          Viewing details
+        </h2>
+
       </div>
-      <div class="p-4 bg-gray-50 flex flex-col gap-2 border-t" id="confirmActions"></div>
-    </div>
-  </div>
-<!-- Load the external script as a module -->
-<script src="js/script.js"></script>
 
+
+      <button
+        type="button"
+        onclick="closeDetailDrawer()"
+        class="w-10 h-10 rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900 transition"
+        aria-label="Close viewing details"
+      >
+        <i class="fas fa-xmark"></i>
+      </button>
+
+    </div>
+
+
+    <div
+      id="drawerBody"
+      class="drawer-scroll flex-1"
+    >
+      <!-- Dynamic -->
+    </div>
+
+  </aside>
+
+
+  <!-- =========================================================
+       TOAST
+  ========================================================== -->
+
+  <div
+    id="toastContainer"
+    class="fixed left-4 right-4 sm:left-auto sm:right-5 bottom-[82px] lg:bottom-5 z-[300] flex flex-col gap-2 items-stretch sm:items-end pointer-events-none"
+  ></div>
+
+
+  <!-- =========================================================
+       EXTERNAL SCRIPT
+  ========================================================== -->
+
+  <script src="js/script.js"></script>
+
+
+  <!-- =========================================================
+       APPLICATION
+  ========================================================== -->
 
   <script>
+
+    /* =========================================================
+       STATE
+    ========================================================= */
+
     let currentUser = null;
-    let savedPropertiesMap = new Map(); // propertyId -> propertyData
 
-    document.addEventListener('DOMContentLoaded', () => {
-      initPage();
-    });
+    let appointments = [];
 
-    async function initPage() {
-      firebase.auth().onAuthStateChanged(async (user) => {
-        if (user) {
-          currentUser = user;
-          document.getElementById('userAvatar').textContent = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
-          loadSavedProperties();
-        } else {
-          window.location.href = 'sign-in.html';
+    let propertyCache = new Map();
+
+    let unsubscribeAppointments = null;
+
+    let activeFilter = 'all';
+
+    let activeSort = 'soonest';
+
+    let currentDrawerAppointmentId = null;
+
+    let loading = false;
+
+    let requestToken = 0;
+
+
+    const FALLBACK_IMAGE =
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85';
+
+
+    /* =========================================================
+       INIT
+    ========================================================= */
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      () => {
+
+        bindControls();
+
+        auth.onAuthStateChanged(
+          async user => {
+
+            if (!user) {
+
+              window.location.href =
+                '../sign-in.html';
+
+              return;
+
+            }
+
+            currentUser = user;
+
+            renderUser();
+
+            await loadAppointmentsOnce();
+
+            subscribeToAppointments();
+
+          }
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       CONTROLS
+    ========================================================= */
+
+    function bindControls() {
+
+      const search =
+        document.getElementById(
+          'searchInput'
+        );
+
+      const sort =
+        document.getElementById(
+          'sortSelect'
+        );
+
+
+      if (search) {
+
+        search.addEventListener(
+          'input',
+          debounce(
+            renderViewings,
+            120
+          )
+        );
+
+      }
+
+
+      if (sort) {
+
+        sort.addEventListener(
+          'change',
+          () => {
+
+            activeSort =
+              sort.value;
+
+            renderViewings();
+
+          }
+        );
+
+      }
+
+
+      document
+        .querySelectorAll(
+          '[data-filter]'
+        )
+        .forEach(button => {
+
+          button.addEventListener(
+            'click',
+            () => {
+
+              activeFilter =
+                button.dataset.filter ||
+                'all';
+
+              document
+                .querySelectorAll(
+                  '[data-filter]'
+                )
+                .forEach(item => {
+
+                  item.classList.toggle(
+                    'active',
+                    item === button
+                  );
+
+                });
+
+              renderViewings();
+
+            }
+          );
+
+        });
+
+
+      document.addEventListener(
+        'keydown',
+        event => {
+
+          if (
+            event.key === 'Escape'
+          ) {
+
+            closeDetailDrawer();
+
+          }
+
         }
-      });
+      );
+
     }
 
-    async function loadSavedProperties() {
-      if (!currentUser) return;
+
+    /* =========================================================
+       USER
+    ========================================================== */
+
+    function renderUser() {
+
+      if (!currentUser) {
+        return;
+      }
+
+
+      const name =
+        currentUser.displayName ||
+        currentUser.email ||
+        'User';
+
+
+      const initial =
+        name
+          .trim()
+          .charAt(0)
+          .toUpperCase() ||
+        'U';
+
+
+      setText(
+        'headerInitials',
+        initial
+      );
+
+
+      const avatar =
+        document.getElementById(
+          'headerAvatar'
+        );
+
+
+      if (
+        avatar &&
+        currentUser.photoURL
+      ) {
+
+        avatar.src =
+          currentUser.photoURL;
+
+        avatar.onload = () => {
+
+          avatar.classList.remove(
+            'hidden'
+          );
+
+          document
+            .getElementById(
+              'headerInitials'
+            )
+            ?.classList.add(
+              'hidden'
+            );
+
+        };
+
+      }
+
+    }
+
+
+    /* =========================================================
+       APPOINTMENT LOADING
+    ========================================================== */
+
+    async function loadAppointmentsOnce() {
+
+      if (!currentUser || loading) {
+        return;
+      }
+
+
+      loading = true;
+
+      const token =
+        ++requestToken;
+
+
+      showLoadingState();
+
 
       try {
-        // 1. Get saved property IDs
-        const savedSnapshot = await firebase.firestore()
-          .collection('savedProperties')
-          .where('userId', '==', currentUser.uid)
-          .orderBy('savedAt', 'desc')
-          .get();
 
-        if (savedSnapshot.empty) {
-          showEmptyState();
+        const snapshot =
+          await db
+            .collection('appointments')
+            .where(
+              'buyerId',
+              '==',
+              currentUser.uid
+            )
+            .get();
+
+
+        if (token !== requestToken) {
           return;
         }
 
-        const propertyIds = savedSnapshot.docs.map(doc => doc.data().propertyId);
-        document.getElementById('resultsCount').textContent = propertyIds.length;
 
-        // 2. Fetch actual property details
-        const grid = document.getElementById('savedPropertiesGrid');
-        grid.innerHTML = ''; // Clear skeletons
+        appointments =
+          snapshot.docs
+            .map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            }));
 
-        // Fetch in batches or individually (Firestore 'in' query supports up to 10, so we chunk if needed, but for simplicity we loop)
-        for (const propId of propertyIds) {
-          try {
-            const propDoc = await firebase.firestore().collection('properties').doc(propId).get();
-            if (propDoc.exists) {
-              const property = { id: propDoc.id, ...propDoc.data() };
-              savedPropertiesMap.set(propId, property);
-              grid.innerHTML += createPropertyCard(property);
-            } else {
-              // Property was deleted by agent, clean up the saved reference
-              await firebase.firestore().collection('savedProperties').doc(savedSnapshot.docs.find(d => d.data().propertyId === propId).id).delete();
+
+        await hydrateProperties(
+          appointments
+        );
+
+
+        if (token !== requestToken) {
+          return;
+        }
+
+
+        hideLoadingState();
+
+        renderViewings();
+
+        setLiveIndicator(true);
+
+      } catch (error) {
+
+        console.error(
+          'Failed to load appointments:',
+          error
+        );
+
+
+        hideLoadingState();
+
+        showErrorState(
+          getFirestoreErrorMessage(
+            error
+          )
+        );
+
+      } finally {
+
+        loading = false;
+
+      }
+
+    }
+
+
+    /* =========================================================
+       REAL-TIME APPOINTMENTS
+    ========================================================== */
+
+    function subscribeToAppointments() {
+
+      if (
+        !currentUser ||
+        unsubscribeAppointments
+      ) {
+        return;
+      }
+
+
+      unsubscribeAppointments =
+        db
+          .collection('appointments')
+          .where(
+            'buyerId',
+            '==',
+            currentUser.uid
+          )
+          .onSnapshot(
+            async snapshot => {
+
+              const incoming =
+                snapshot.docs
+                  .map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                  }));
+
+
+              appointments =
+                incoming;
+
+
+              await hydrateProperties(
+                appointments
+              );
+
+
+              renderViewings();
+
+              setLiveIndicator(true);
+
+            },
+            error => {
+
+              console.error(
+                'Appointment listener error:',
+                error
+              );
+
+
+              setLiveIndicator(false);
+
             }
-          } catch (err) {
-            console.error('Error fetching property:', propId, err);
-          }
-        }
+          );
 
-        if (savedPropertiesMap.size === 0) {
-          showEmptyState();
-        }
-
-      } catch (err) {
-        console.error('Error loading saved properties:', err);
-        showToast('Failed to load saved properties', 'error');
-      }
     }
 
-    function createPropertyCard(property) {
-      const price = formatMoney(property.price);
-      const image = property.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800';
-      
+
+    /* =========================================================
+       PROPERTY HYDRATION
+    ========================================================== */
+
+    async function hydrateProperties(
+      items
+    ) {
+
+      const propertyIds =
+        [
+          ...new Set(
+            items
+              .map(
+                item =>
+                  item.propertyId ||
+                  item.propertyID ||
+                  item.property
+              )
+              .filter(Boolean)
+          )
+        ];
+
+
+      const missingIds =
+        propertyIds.filter(
+          id =>
+            !propertyCache.has(id)
+        );
+
+
+      if (!missingIds.length) {
+        return;
+      }
+
+
+      /*
+       * Firestore "in" queries have limits.
+       * Chunking keeps this safe at scale.
+       */
+
+      const chunks =
+        chunkArray(
+          missingIds,
+          10
+        );
+
+
+      await Promise.all(
+        chunks.map(
+          async chunk => {
+
+            try {
+
+              const snapshot =
+                await db
+                  .collection('properties')
+                  .where(
+                    firebase.firestore.FieldPath.documentId(),
+                    'in',
+                    chunk
+                  )
+                  .get();
+
+
+              snapshot.docs.forEach(
+                doc => {
+
+                  propertyCache.set(
+                    doc.id,
+                    {
+                      id: doc.id,
+                      ...doc.data()
+                    }
+                  );
+
+                }
+              );
+
+            } catch (error) {
+
+              /*
+               * If an "in" query fails because of
+               * a project/index/Firestore limitation,
+               * fall back to parallel individual reads.
+               */
+
+              await Promise.all(
+                chunk.map(
+                  async propertyId => {
+
+                    try {
+
+                      const doc =
+                        await db
+                          .collection('properties')
+                          .doc(propertyId)
+                          .get();
+
+
+                      if (doc.exists) {
+
+                        propertyCache.set(
+                          doc.id,
+                          {
+                            id: doc.id,
+                            ...doc.data()
+                          }
+                        );
+
+                      }
+
+                    } catch (innerError) {
+
+                      console.warn(
+                        'Property fetch failed:',
+                        propertyId,
+                        innerError
+                      );
+
+                    }
+
+                  }
+                )
+              );
+
+            }
+
+          }
+        )
+      );
+
+    }
+
+
+    /* =========================================================
+       RENDER
+    ========================================================== */
+
+    function renderViewings() {
+
+      const grid =
+        document.getElementById(
+          'viewingsGrid'
+        );
+
+
+      if (!grid) {
+        return;
+      }
+
+
+      const search =
+        String(
+          document.getElementById(
+            'searchInput'
+          )?.value ||
+          ''
+        )
+          .trim()
+          .toLowerCase();
+
+
+      let filtered =
+        appointments
+          .map(
+            appointment =>
+              enrichAppointment(
+                appointment
+              )
+          );
+
+
+      filtered =
+        filtered.filter(
+          appointment =>
+            matchesFilter(
+              appointment,
+              activeFilter
+            )
+        );
+
+
+      if (search) {
+
+        filtered =
+          filtered.filter(
+            appointment => {
+
+              const haystack =
+                [
+                  appointment.propertyTitle,
+                  appointment.location,
+                  appointment.propertyType,
+                  appointment.status,
+                  appointment.agentName,
+                  appointment.dateText,
+                  appointment.time
+                ]
+                  .join(' ')
+                  .toLowerCase();
+
+
+              return haystack.includes(
+                search
+              );
+
+            }
+          );
+
+      }
+
+
+      filtered.sort(
+        sortAppointments
+      );
+
+
+      updateStats();
+
+
+      if (!appointments.length) {
+
+        showEmptyState(
+          'none'
+        );
+
+        return;
+
+      }
+
+
+      if (!filtered.length) {
+
+        showEmptyState(
+          'filtered'
+        );
+
+        return;
+
+      }
+
+
+      hideEmptyState();
+
+
+      grid.classList.remove(
+        'hidden'
+      );
+
+
+      grid.innerHTML =
+        filtered
+          .map(
+            appointment =>
+              createViewingCard(
+                appointment
+              )
+          )
+          .join('');
+
+    }
+
+
+    /* =========================================================
+       APPOINTMENT ENRICHMENT
+    ========================================================== */
+
+    function enrichAppointment(
+      appointment
+    ) {
+
+      const propertyId =
+        appointment.propertyId ||
+        appointment.propertyID ||
+        appointment.property ||
+        '';
+
+
+      const property =
+        propertyCache.get(
+          propertyId
+        ) || {};
+
+
+      const date =
+        parseDate(
+          appointment.date ||
+          appointment.viewingDate ||
+          appointment.appointmentDate ||
+          appointment.scheduledDate
+        );
+
+
+      const status =
+        normalizeStatus(
+          appointment.status ||
+          'Pending'
+        );
+
+
+      const time =
+        appointment.time ||
+        appointment.viewingTime ||
+        appointment.appointmentTime ||
+        'Time to be confirmed';
+
+
+      const title =
+        appointment.propertyTitle ||
+        appointment.title ||
+        property.title ||
+        property.name ||
+        'Property Viewing';
+
+
+      const location =
+        appointment.location ||
+        property.location ||
+        property.address ||
+        'Location unavailable';
+
+
+      const image =
+        appointment.propertyImage ||
+        appointment.image ||
+        property.image ||
+        property.coverImage ||
+        FALLBACK_IMAGE;
+
+
+      const agentName =
+        appointment.agentName ||
+        property.agentName ||
+        property.agent ||
+        'Property Agent';
+
+
+      const agentPhone =
+        appointment.agentPhone ||
+        property.agentPhone ||
+        property.phone ||
+        '';
+
+
+      const agentEmail =
+        appointment.agentEmail ||
+        property.agentEmail ||
+        property.email ||
+        '';
+
+
+      return {
+        ...appointment,
+        property,
+        propertyId,
+        date,
+        status,
+        propertyTitle: title,
+        location,
+        image,
+        agentName,
+        agentPhone,
+        agentEmail,
+        time,
+        dateText:
+          date
+            ? formatLongDate(date)
+            : 'Date to be confirmed',
+        timestamp:
+          date
+            ? date.getTime()
+            : 0
+      };
+
+    }
+
+
+    /* =========================================================
+       CARD
+    ========================================================== */
+
+    function createViewingCard(
+      appointment
+    ) {
+
+      const statusClass =
+        getStatusClass(
+          appointment.status
+        );
+
+
+      const image =
+        escapeAttribute(
+          safeImage(
+            appointment.image
+          )
+        );
+
+
+      const propertyTitle =
+        escapeHtml(
+          appointment.propertyTitle
+        );
+
+
+      const location =
+        escapeHtml(
+          appointment.location
+        );
+
+
+      const time =
+        escapeHtml(
+          appointment.time
+        );
+
+
+      const status =
+        escapeHtml(
+          appointment.status
+        );
+
+
+      const id =
+        escapeAttribute(
+          appointment.id
+        );
+
+
+      const upcoming =
+        isUpcoming(
+          appointment
+        );
+
+
+      const propertyId =
+        escapeAttribute(
+          appointment.propertyId
+        );
+
+
       return `
-        <div class="property-card group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl">
-          <div class="property-image-container relative aspect-[4/3]">
-            <img src="${escapeHtml(image)}" alt="${escapeHtml(property.title)}" class="property-image w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800'">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            
-            <div class="absolute top-3 left-3 flex flex-col gap-2">
-              ${property.featured ? `<span class="px-2.5 py-1 bg-amber-500 text-white text-[10px] font-bold rounded-lg shadow-lg flex items-center gap-1"><i class="fas fa-star"></i> FEATURED</span>` : ''}
-              <span class="px-2.5 py-1 bg-white/95 backdrop-blur-sm text-gray-900 text-[10px] font-bold rounded-lg shadow-sm">${escapeHtml(property.status)}</span>
+        <article
+          class="viewing-card rounded-[22px] overflow-hidden fade-up"
+        >
+
+          <div class="relative aspect-[16/9] overflow-hidden bg-slate-100">
+
+            <img
+              src="${image}"
+              alt="${propertyTitle}"
+              class="viewing-image w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+              onerror="this.onerror=null;this.src='${escapeAttribute(FALLBACK_IMAGE)}';"
+            >
+
+
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none"></div>
+
+
+            <div class="absolute top-3 left-3 right-3 flex items-start justify-between gap-2">
+
+              <span class="status-badge inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg ${statusClass} text-[9px] font-extrabold shadow-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                ${status}
+              </span>
+
+
+              ${
+                upcoming
+                  ? `
+                    <span class="px-2.5 py-1.5 rounded-lg bg-slate-950/70 backdrop-blur text-white text-[9px] font-extrabold">
+                      UPCOMING
+                    </span>
+                  `
+                  : ''
+              }
+
             </div>
-            
-            <button onclick="removeSavedProperty('${property.id}')" class="bookmark-btn saved absolute top-3 right-3 w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm shadow-lg flex items-center justify-center text-red-500" title="Remove from saved">
-              <i class="fas fa-heart text-sm"></i>
-            </button>
-            
-            <div class="absolute bottom-3 left-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-              <button onclick="scheduleInspection('${property.id}')" class="flex-1 px-3 py-2 bg-white text-gray-900 text-xs font-semibold rounded-lg shadow-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-1.5">
-                <i class="fas fa-calendar"></i> <span>Inspect</span>
-              </button>
-              <button onclick="contactAgent('${property.id}')" class="flex-1 px-3 py-2 bg-indigo-600 text-white text-xs font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-1.5">
-                <i class="fas fa-phone"></i> <span>Contact</span>
-              </button>
+
+
+            <div class="absolute bottom-3 left-4 right-4">
+
+              <p class="text-white text-xs font-bold flex items-center gap-1.5">
+
+                <i class="far fa-calendar text-blue-300"></i>
+
+                ${escapeHtml(
+                  appointment.dateText
+                )}
+
+              </p>
+
             </div>
+
           </div>
-          
-          <div class="p-4">
-            <h3 class="text-lg font-display font-bold text-gray-900 mb-1">${price}</h3>
-            <p class="text-sm font-semibold text-gray-900 mb-1 line-clamp-1">${escapeHtml(property.title)}</p>
-            <p class="text-xs text-gray-500 mb-3 flex items-center gap-1">
-              <i class="fas fa-map-marker-alt text-gray-400"></i>
-              <span class="line-clamp-1">${escapeHtml(property.location)}</span>
-            </p>
-            
-            <div class="flex items-center gap-3 pt-3 border-t border-gray-100">
-              ${property.beds ? `<div class="flex items-center gap-1 text-xs text-gray-600"><i class="fas fa-bed text-gray-400"></i><span>${property.beds}</span></div>` : ''}
-              <div class="flex items-center gap-1 text-xs text-gray-600"><i class="fas fa-bath text-gray-400"></i><span>${property.baths}</span></div>
-              <div class="flex items-center gap-1 text-xs text-gray-600"><i class="fas fa-ruler-combined text-gray-400"></i><span>${property.area} ft²</span></div>
+
+
+          <div class="p-4 sm:p-5">
+
+            <div class="flex items-start justify-between gap-3">
+
+              <div class="min-w-0">
+
+                <h3 class="font-display text-sm sm:text-base font-extrabold text-slate-950 line-clamp-1">
+                  ${propertyTitle}
+                </h3>
+
+                <p class="flex items-center gap-1.5 text-[11px] text-slate-400 mt-1.5 line-clamp-1">
+
+                  <i class="fas fa-location-dot text-primary-500 text-[9px]"></i>
+
+                  ${location}
+
+                </p>
+
+              </div>
+
+
+              <button
+                type="button"
+                onclick="openDetailDrawer('${id}')"
+                class="w-9 h-9 rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-950 hover:text-white transition shrink-0"
+                aria-label="View appointment details"
+              >
+                <i class="fas fa-arrow-up-right-from-square text-[10px]"></i>
+              </button>
+
             </div>
+
+
+            <div class="grid grid-cols-2 gap-2 mt-4">
+
+              <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+
+                <p class="text-[8px] uppercase tracking-[.13em] font-extrabold text-slate-400">
+                  Date
+                </p>
+
+                <p class="text-[11px] font-extrabold text-slate-800 mt-1 truncate">
+                  ${escapeHtml(
+                    appointment.dateText
+                  )}
+                </p>
+
+              </div>
+
+
+              <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+
+                <p class="text-[8px] uppercase tracking-[.13em] font-extrabold text-slate-400">
+                  Time
+                </p>
+
+                <p class="text-[11px] font-extrabold text-slate-800 mt-1 truncate">
+                  ${time}
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="flex gap-2 mt-4">
+
+              ${
+                propertyId
+                  ? `
+                    <button
+                      type="button"
+                      onclick="openProperty('${propertyId}')"
+                      class="flex-1 h-10 rounded-xl bg-slate-950 text-white text-[10px] font-extrabold hover:bg-slate-800 transition flex items-center justify-center gap-1.5"
+                    >
+                      <i class="fas fa-house text-[9px]"></i>
+                      Property
+                    </button>
+                  `
+                  : ''
+              }
+
+
+              <button
+                type="button"
+                onclick="openDetailDrawer('${id}')"
+                class="${propertyId ? 'flex-1' : 'w-full'} h-10 rounded-xl bg-white border border-slate-200 text-slate-700 text-[10px] font-extrabold hover:border-slate-300 hover:bg-slate-50 transition flex items-center justify-center gap-1.5"
+              >
+                <i class="far fa-calendar-check text-[10px]"></i>
+                Details
+              </button>
+
+            </div>
+
           </div>
-        </div>
+
+        </article>
       `;
+
     }
 
-    async function removeSavedProperty(propertyId) {
-      if (!currentUser) return;
-      
-      try {
-        const snapshot = await firebase.firestore()
-          .collection('savedProperties')
-          .where('userId', '==', currentUser.uid)
-          .where('propertyId', '==', propertyId)
-          .get();
-        
-        const batch = firebase.firestore().batch();
-        snapshot.docs.forEach(doc => batch.delete(doc.ref));
-        await batch.commit();
-        
-        savedPropertiesMap.delete(propertyId);
-        document.getElementById('resultsCount').textContent = savedPropertiesMap.size;
-        
-        // Remove from DOM with animation
-        const cards = document.querySelectorAll('.property-card');
-        cards.forEach(card => {
-          if (card.innerHTML.includes(`scheduleInspection('${propertyId}')`)) {
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-              card.remove();
-              if (savedPropertiesMap.size === 0) showEmptyState();
-            }, 300);
-          }
-        });
-        
-        showToast('Removed from saved viewings', 'info');
-      } catch (err) {
-        console.error('Error removing saved property:', err);
-        showToast('Failed to remove property', 'error');
+
+    /* =========================================================
+       DRAWER
+    ========================================================== */
+
+    function openDetailDrawer(
+      appointmentId
+    ) {
+
+      const appointment =
+        appointments
+          .map(
+            item =>
+              enrichAppointment(
+                item
+              )
+          )
+          .find(
+            item =>
+              item.id === appointmentId
+          );
+
+
+      if (!appointment) {
+        return;
       }
+
+
+      currentDrawerAppointmentId =
+        appointmentId;
+
+
+      const drawer =
+        document.getElementById(
+          'detailDrawer'
+        );
+
+      const backdrop =
+        document.getElementById(
+          'drawerBackdrop'
+        );
+
+      const body =
+        document.getElementById(
+          'drawerBody'
+        );
+
+
+      if (
+        !drawer ||
+        !backdrop ||
+        !body
+      ) {
+        return;
+      }
+
+
+      body.innerHTML =
+        createDrawerContent(
+          appointment
+        );
+
+
+      drawer.classList.add(
+        'open'
+      );
+
+      backdrop.classList.add(
+        'open'
+      );
+
+
+      drawer.setAttribute(
+        'aria-hidden',
+        'false'
+      );
+
+      backdrop.setAttribute(
+        'aria-hidden',
+        'false'
+      );
+
+
+      document.body.classList.add(
+        'drawer-open'
+      );
+
     }
 
-    function scheduleInspection(propertyId) {
-      window.location.href = `schedule-inspection.html?property=${propertyId}`;
+
+    function closeDetailDrawer() {
+
+      const drawer =
+        document.getElementById(
+          'detailDrawer'
+        );
+
+      const backdrop =
+        document.getElementById(
+          'drawerBackdrop'
+        );
+
+
+      if (!drawer || !backdrop) {
+        return;
+      }
+
+
+      drawer.classList.remove(
+        'open'
+      );
+
+      backdrop.classList.remove(
+        'open'
+      );
+
+
+      drawer.setAttribute(
+        'aria-hidden',
+        'true'
+      );
+
+      backdrop.setAttribute(
+        'aria-hidden',
+        'true'
+      );
+
+
+      document.body.classList.remove(
+        'drawer-open'
+      );
+
+
+      currentDrawerAppointmentId =
+        null;
+
     }
 
-    function contactAgent(propertyId) {
-      const property = savedPropertiesMap.get(propertyId);
-      if (!property) return;
-      
-      const agentName = property.agentName || 'Agent';
-      const agentPhone = property.agentPhone || '';
-      const agentEmail = property.agentEmail || '';
-      
-      let actions = '';
-      if (agentPhone) actions += `<button onclick="window.location.href='tel:${agentPhone}'; closeContactModal()" class="w-full btn btn-primary mb-2 flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all"><i class="fas fa-phone"></i> Call ${escapeHtml(agentName)}</button>`;
-      if (agentEmail) actions += `<button onclick="window.location.href='mailto:${agentEmail}?subject=Inquiry about ${encodeURIComponent(property.title)}'; closeContactModal()" class="w-full btn btn-ghost mb-2 flex items-center justify-center gap-2 px-4 py-3 bg-white text-gray-900 font-semibold rounded-xl border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all"><i class="fas fa-envelope"></i> Email Agent</button>`;
-      actions += `<button onclick="closeContactModal()" class="w-full flex items-center justify-center gap-2 px-4 py-3 text-gray-600 font-semibold rounded-xl hover:bg-gray-100 transition-all mt-2">Cancel</button>`;
-      
-      document.getElementById('confirmTitle').textContent = `Contact ${escapeHtml(agentName)}`;
-      document.getElementById('confirmMessage').textContent = `Regarding: ${escapeHtml(property.title)}`;
-      document.getElementById('confirmIcon').innerHTML = '<i class="fas fa-user-tie text-xl"></i>';
-      document.getElementById('confirmIcon').className = 'w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0';
-      document.getElementById('confirmActions').innerHTML = actions;
-      document.getElementById('confirmModal').classList.remove('hidden');
-    }
 
-    function closeContactModal() {
-      document.getElementById('confirmModal').classList.add('hidden');
-    }
+    function createDrawerContent(
+      appointment
+    ) {
 
-    function openPropertyDetail(propertyId) {
-      const property = savedPropertiesMap.get(propertyId);
-      if (!property) return;
-      
-      const modal = document.getElementById('propertyModal');
-      const modalContent = document.getElementById('modalContent');
-      const modalBody = document.getElementById('modalBody');
-      const image = property.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800';
-      
-      modalBody.innerHTML = `
-        <div class="relative">
-          <button onclick="closePropertyModal()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center text-gray-600 hover:text-gray-900 hover:scale-110 transition-all">
-            <i class="fas fa-times"></i>
-          </button>
-          <div class="relative h-64 sm:h-80">
-            <img src="${escapeHtml(image)}" class="w-full h-full object-cover" alt="${escapeHtml(property.title)}">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-              <h2 class="text-2xl sm:text-3xl font-display font-bold mb-2">${escapeHtml(property.title)}</h2>
-              <p class="text-lg font-semibold text-amber-400">${formatMoney(property.price)}</p>
+      const propertyTitle =
+        escapeHtml(
+          appointment.propertyTitle
+        );
+
+
+      const location =
+        escapeHtml(
+          appointment.location
+        );
+
+
+      const image =
+        escapeAttribute(
+          safeImage(
+            appointment.image
+          )
+        );
+
+
+      const status =
+        escapeHtml(
+          appointment.status
+        );
+
+
+      const statusClass =
+        getStatusClass(
+          appointment.status
+        );
+
+
+      const description =
+        appointment.property.description ||
+        appointment.description ||
+        'No additional property description is available.';
+
+
+      const canCancel =
+        canCancelAppointment(
+          appointment
+        );
+
+
+      const canReschedule =
+        canRescheduleAppointment(
+          appointment
+        );
+
+
+      return `
+
+        <div>
+
+          <!-- Image -->
+
+          <div class="relative h-56 sm:h-64 bg-slate-100">
+
+            <img
+              src="${image}"
+              alt="${propertyTitle}"
+              class="w-full h-full object-cover"
+              onerror="this.onerror=null;this.src='${escapeAttribute(FALLBACK_IMAGE)}';"
+            >
+
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+
+
+            <div class="absolute bottom-4 left-5 right-5">
+
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg ${statusClass} text-[9px] font-extrabold mb-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                ${status}
+              </span>
+
+              <h3 class="font-display text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+                ${propertyTitle}
+              </h3>
+
             </div>
+
           </div>
-          <div class="p-6 space-y-6">
-            <div class="grid grid-cols-3 gap-4">
-              <div class="text-center p-3 bg-gray-50 rounded-xl"><i class="fas fa-bed text-indigo-600 text-xl mb-1"></i><p class="text-sm font-semibold text-gray-900">${property.beds || 0} Beds</p></div>
-              <div class="text-center p-3 bg-gray-50 rounded-xl"><i class="fas fa-bath text-indigo-600 text-xl mb-1"></i><p class="text-sm font-semibold text-gray-900">${property.baths || 0} Baths</p></div>
-              <div class="text-center p-3 bg-gray-50 rounded-xl"><i class="fas fa-ruler-combined text-indigo-600 text-xl mb-1"></i><p class="text-sm font-semibold text-gray-900">${property.area || 0} ft²</p></div>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-2">Description</h3>
-              <p class="text-gray-600 text-sm leading-relaxed">${escapeHtml(property.description) || 'No description available.'}</p>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-2">Location</h3>
-              <p class="text-gray-600 text-sm flex items-center gap-2"><i class="fas fa-map-marker-alt text-gray-400"></i> ${escapeHtml(property.location)}</p>
-            </div>
-            <div class="flex gap-3 pt-4 border-t border-gray-200">
-              <button onclick="scheduleInspection('${property.id}'); closePropertyModal();" class="flex-1 px-4 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/30 flex items-center justify-center gap-2">
-                <i class="fas fa-calendar"></i> Schedule Inspection
-              </button>
-              <button onclick="contactAgent('${property.id}'); closePropertyModal();" class="flex-1 px-4 py-3 bg-white text-gray-900 font-semibold rounded-xl border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all flex items-center justify-center gap-2">
-                <i class="fas fa-phone"></i> Contact Agent
-              </button>
-            </div>
+
+
+          <div class="p-5 sm:p-6 space-y-6">
+
+            <!-- Appointment -->
+
+            <section>
+
+              <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-primary-600">
+                Appointment
+              </p>
+
+              <div class="grid grid-cols-2 gap-3 mt-3">
+
+                <div class="rounded-2xl bg-slate-50 border border-slate-100 p-4">
+
+                  <div class="w-8 h-8 rounded-lg bg-white border border-slate-200 text-primary-600 flex items-center justify-center mb-3">
+                    <i class="far fa-calendar text-xs"></i>
+                  </div>
+
+                  <p class="text-[9px] uppercase tracking-wider font-extrabold text-slate-400">
+                    Date
+                  </p>
+
+                  <p class="text-xs font-extrabold text-slate-900 mt-1">
+                    ${escapeHtml(
+                      appointment.dateText
+                    )}
+                  </p>
+
+                </div>
+
+
+                <div class="rounded-2xl bg-slate-50 border border-slate-100 p-4">
+
+                  <div class="w-8 h-8 rounded-lg bg-white border border-slate-200 text-primary-600 flex items-center justify-center mb-3">
+                    <i class="far fa-clock text-xs"></i>
+                  </div>
+
+                  <p class="text-[9px] uppercase tracking-wider font-extrabold text-slate-400">
+                    Time
+                  </p>
+
+                  <p class="text-xs font-extrabold text-slate-900 mt-1">
+                    ${escapeHtml(
+                      appointment.time
+                    )}
+                  </p>
+
+                </div>
+
+              </div>
+
+            </section>
+
+
+            <!-- Location -->
+
+            <section>
+
+              <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+                Location
+              </p>
+
+              <div class="flex items-start gap-3 mt-3 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+
+                <div class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-primary-600 flex items-center justify-center shrink-0">
+                  <i class="fas fa-location-dot text-xs"></i>
+                </div>
+
+                <div class="min-w-0">
+
+                  <p class="text-xs font-extrabold text-slate-900">
+                    ${location}
+                  </p>
+
+                  ${
+                    appointment.property.address
+                      ? `
+                        <p class="text-[10px] text-slate-400 mt-1">
+                          ${escapeHtml(
+                            appointment.property.address
+                          )}
+                        </p>
+                      `
+                      : ''
+                  }
+
+                </div>
+
+              </div>
+
+            </section>
+
+
+            <!-- Property -->
+
+            <section>
+
+              <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+                Property
+              </p>
+
+              <div class="mt-3">
+
+                <p class="text-sm font-extrabold text-slate-950 leading-5">
+                  ${propertyTitle}
+                </p>
+
+                ${
+                  appointment.property.price
+                    ? `
+                      <p class="text-lg font-display font-extrabold text-slate-950 mt-2">
+                        ${formatMoney(
+                          appointment.property.price
+                        )}
+                      </p>
+                    `
+                    : ''
+                }
+
+
+                <div class="flex flex-wrap gap-3 mt-3 text-[10px] font-semibold text-slate-500">
+
+                  ${
+                    appointment.property.beds
+                      ? `
+                        <span class="flex items-center gap-1.5">
+                          <i class="fas fa-bed text-primary-500"></i>
+                          ${escapeHtml(
+                            appointment.property.beds
+                          )} beds
+                        </span>
+                      `
+                      : ''
+                  }
+
+
+                  ${
+                    appointment.property.baths
+                      ? `
+                        <span class="flex items-center gap-1.5">
+                          <i class="fas fa-bath text-primary-500"></i>
+                          ${escapeHtml(
+                            appointment.property.baths
+                          )} baths
+                        </span>
+                      `
+                      : ''
+                  }
+
+
+                  ${
+                    appointment.property.area
+                      ? `
+                        <span class="flex items-center gap-1.5">
+                          <i class="fas fa-ruler-combined text-primary-500"></i>
+                          ${escapeHtml(
+                            appointment.property.area
+                          )} ft²
+                        </span>
+                      `
+                      : ''
+                  }
+
+                </div>
+
+
+                <p class="text-xs text-slate-500 leading-6 mt-4">
+                  ${escapeHtml(
+                    String(description)
+                  )}
+                </p>
+
+              </div>
+
+            </section>
+
+
+            <!-- Agent -->
+
+            <section>
+
+              <p class="text-[9px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+                Your contact
+              </p>
+
+              <div class="mt-3 p-4 rounded-2xl border border-slate-200 flex items-center gap-3">
+
+                <div class="w-11 h-11 rounded-full bg-slate-950 text-white flex items-center justify-center font-extrabold text-sm shrink-0">
+                  ${escapeHtml(
+                    getInitials(
+                      appointment.agentName
+                    )
+                  )}
+                </div>
+
+                <div class="min-w-0 flex-1">
+
+                  <p class="text-xs font-extrabold text-slate-900">
+                    ${escapeHtml(
+                      appointment.agentName
+                    )}
+                  </p>
+
+                  <p class="text-[10px] text-slate-400 mt-1">
+                    Property agent
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              <div class="grid grid-cols-2 gap-2 mt-3">
+
+                ${
+                  appointment.agentPhone
+                    ? `
+                      <a
+                        href="tel:${escapeAttribute(
+                          sanitizePhone(
+                            appointment.agentPhone
+                          )
+                        )}"
+                        class="h-10 rounded-xl bg-slate-950 text-white text-[10px] font-extrabold flex items-center justify-center gap-2"
+                      >
+                        <i class="fas fa-phone text-[9px]"></i>
+                        Call
+                      </a>
+                    `
+                    : ''
+                }
+
+
+                ${
+                  appointment.agentPhone
+                    ? `
+                      <a
+                        href="${createWhatsAppUrl(
+                          appointment.agentPhone,
+                          appointment.propertyTitle
+                        )}"
+                        target="_blank"
+                        rel="noopener"
+                        class="h-10 rounded-xl bg-emerald-600 text-white text-[10px] font-extrabold flex items-center justify-center gap-2"
+                      >
+                        <i class="fab fa-whatsapp text-xs"></i>
+                        WhatsApp
+                      </a>
+                    `
+                    : ''
+                }
+
+
+                ${
+                  appointment.agentEmail
+                    ? `
+                      <a
+                        href="mailto:${escapeAttribute(
+                          appointment.agentEmail
+                        )}?subject=${encodeURIComponent(
+                          'MoonLat viewing - ' +
+                          appointment.propertyTitle
+                        )}"
+                        class="col-span-2 h-10 rounded-xl bg-white border border-slate-200 text-slate-700 text-[10px] font-extrabold flex items-center justify-center gap-2"
+                      >
+                        <i class="far fa-envelope text-[10px]"></i>
+                        Email agent
+                      </a>
+                    `
+                    : ''
+                }
+
+              </div>
+
+            </section>
+
+
+            <!-- Actions -->
+
+            <section class="pt-2 border-t border-slate-100">
+
+              <div class="grid grid-cols-1 gap-2">
+
+                ${
+                  appointment.propertyId
+                    ? `
+                      <button
+                        type="button"
+                        onclick="openProperty('${escapeAttribute(
+                          appointment.propertyId
+                        )}')"
+                        class="h-11 rounded-xl bg-slate-950 text-white text-xs font-extrabold flex items-center justify-center gap-2"
+                      >
+                        <i class="fas fa-house text-[10px]"></i>
+                        View property
+                      </button>
+                    `
+                    : ''
+                }
+
+
+                ${
+                  canReschedule
+                    ? `
+                      <button
+                        type="button"
+                        onclick="rescheduleViewing('${escapeAttribute(
+                          appointment.id
+                        )}')"
+                        class="h-11 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-extrabold flex items-center justify-center gap-2"
+                      >
+                        <i class="fas fa-calendar-days text-[10px]"></i>
+                        Reschedule viewing
+                      </button>
+                    `
+                    : ''
+                }
+
+
+                ${
+                  canCancel
+                    ? `
+                      <button
+                        type="button"
+                        onclick="cancelViewing('${escapeAttribute(
+                          appointment.id
+                        )}')"
+                        class="h-11 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 text-xs font-extrabold flex items-center justify-center gap-2"
+                      >
+                        <i class="fas fa-calendar-xmark text-[10px]"></i>
+                        Cancel viewing
+                      </button>
+                    `
+                    : ''
+                }
+
+              </div>
+
+            </section>
+
           </div>
+
         </div>
+
       `;
-      
-      modal.classList.remove('hidden');
-      setTimeout(() => modalContent.classList.remove('translate-x-full'), 10);
+
     }
 
-    function closePropertyModal() {
-      const modal = document.getElementById('propertyModal');
-      const modalContent = document.getElementById('modalContent');
-      modalContent.classList.add('translate-x-full');
-      setTimeout(() => modal.classList.add('hidden'), 300);
+
+    /* =========================================================
+       STATS
+    ========================================================== */
+
+    function updateStats() {
+
+      const upcoming =
+        appointments.filter(
+          item =>
+            isUpcoming(
+              enrichAppointment(
+                item
+              )
+            )
+        );
+
+
+      const pending =
+        appointments.filter(
+          item =>
+            normalizeStatus(
+              item.status
+            ).toLowerCase() ===
+            'pending'
+        );
+
+
+      const confirmed =
+        appointments.filter(
+          item => {
+
+            const status =
+              normalizeStatus(
+                item.status
+              ).toLowerCase();
+
+            return (
+              status === 'confirmed' ||
+              status === 'approved'
+            );
+
+          }
+        );
+
+
+      setText(
+        'statUpcoming',
+        upcoming.length
+      );
+
+      setText(
+        'statPending',
+        pending.length
+      );
+
+      setText(
+        'statConfirmed',
+        confirmed.length
+      );
+
+      setText(
+        'statTotal',
+        appointments.length
+      );
+
     }
 
-    function showEmptyState() {
-      document.getElementById('savedPropertiesGrid').innerHTML = '';
-      document.getElementById('emptyState').classList.remove('hidden');
-      document.getElementById('resultsCount').textContent = '0';
+
+    /* =========================================================
+       FILTERING
+    ========================================================== */
+
+    function matchesFilter(
+      appointment,
+      filter
+    ) {
+
+      const status =
+        appointment.status
+          .toLowerCase();
+
+
+      if (filter === 'all') {
+        return true;
+      }
+
+
+      if (filter === 'upcoming') {
+
+        return isUpcoming(
+          appointment
+        );
+
+      }
+
+
+      if (filter === 'pending') {
+
+        return status ===
+          'pending';
+
+      }
+
+
+      if (filter === 'confirmed') {
+
+        return (
+          status === 'confirmed' ||
+          status === 'approved'
+        );
+
+      }
+
+
+      if (filter === 'completed') {
+
+        return status ===
+          'completed';
+
+      }
+
+
+      return true;
+
     }
 
-    function formatMoney(amount) {
-      if (!amount) return '₦0';
-      return '₦' + Number(amount).toLocaleString();
+
+    /* =========================================================
+       SORT
+    ========================================================== */
+
+    function sortAppointments(
+      a,
+      b
+    ) {
+
+      if (
+        activeSort ===
+        'latest'
+      ) {
+
+        return (
+          b.timestamp -
+          a.timestamp
+        );
+
+      }
+
+
+      if (
+        activeSort ===
+        'newest'
+      ) {
+
+        const aCreated =
+          parseDate(
+            a.createdAt
+          )?.getTime() || 0;
+
+        const bCreated =
+          parseDate(
+            b.createdAt
+          )?.getTime() || 0;
+
+
+        return (
+          bCreated -
+          aCreated
+        );
+
+      }
+
+
+      return (
+        a.timestamp -
+        b.timestamp
+      );
+
     }
 
-    function escapeHtml(text) {
-      if (!text) return '';
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
+
+    /* =========================================================
+       APPOINTMENT ACTIONS
+    ========================================================== */
+
+    async function cancelViewing(
+      appointmentId
+    ) {
+
+      const appointment =
+        appointments.find(
+          item =>
+            item.id === appointmentId
+        );
+
+
+      if (!appointment) {
+        return;
+      }
+
+
+      const confirmed =
+        window.confirm(
+          'Cancel this viewing appointment?'
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      try {
+
+        await db
+          .collection('appointments')
+          .doc(appointmentId)
+          .update({
+            status: 'Cancelled',
+            cancelledAt:
+              firebase.firestore.FieldValue
+                .serverTimestamp(),
+            cancelledBy:
+              'buyer'
+          });
+
+
+        closeDetailDrawer();
+
+
+        showToast(
+          'Viewing cancelled.',
+          'success'
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          'Cancel viewing error:',
+          error
+        );
+
+
+        showToast(
+          'Unable to cancel this viewing.',
+          'error'
+        );
+
+      }
+
     }
 
-    function showToast(message, type = 'info') {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      const colors = { success: 'bg-green-500', error: 'bg-red-500', info: 'bg-indigo-600' };
-      const icons = { success: 'fa-check', error: 'fa-times', info: 'fa-info' };
-      
-      toast.className = `toast flex items-center gap-3 px-4 py-3 ${colors[type]} text-white rounded-xl shadow-lg min-w-[300px]`;
-      toast.innerHTML = `<i class="fas ${icons[type]}"></i><span class="font-medium text-sm">${message}</span>`;
-      
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(100%)';
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
+
+    function rescheduleViewing(
+      appointmentId
+    ) {
+
+      const appointment =
+        appointments.find(
+          item =>
+            item.id === appointmentId
+        );
+
+
+      if (!appointment) {
+        return;
+      }
+
+
+      const propertyId =
+        appointment.propertyId ||
+        appointment.propertyID ||
+        '';
+
+
+      if (!propertyId) {
+
+        showToast(
+          'This viewing cannot be rescheduled from here.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      window.location.href =
+        `schedule-inspection.html?property=${encodeURIComponent(
+          propertyId
+        )}&reschedule=${encodeURIComponent(
+          appointmentId
+        )}`;
+
     }
+
+
+    /* =========================================================
+       PROPERTY
+    ========================================================== */
+
+    function openProperty(
+      propertyId
+    ) {
+
+      if (!propertyId) {
+        return;
+      }
+
+
+      closeDetailDrawer();
+
+
+      window.location.href =
+        `property-detail.html?id=${encodeURIComponent(
+          propertyId
+        )}`;
+
+    }
+
+
+    /* =========================================================
+       STATES
+    ========================================================== */
+
+    function showLoadingState() {
+
+      document
+        .getElementById(
+          'loadingState'
+        )
+        ?.classList.remove(
+          'hidden'
+        );
+
+
+      document
+        .getElementById(
+          'viewingsGrid'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+
+      document
+        .getElementById(
+          'emptyState'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+
+      document
+        .getElementById(
+          'errorState'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+    }
+
+
+    function hideLoadingState() {
+
+      document
+        .getElementById(
+          'loadingState'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+    }
+
+
+    function showErrorState(
+      message
+    ) {
+
+      document
+        .getElementById(
+          'viewingsGrid'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+
+      document
+        .getElementById(
+          'emptyState'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+
+      const error =
+        document.getElementById(
+          'errorState'
+        );
+
+
+      const text =
+        document.getElementById(
+          'errorMessage'
+        );
+
+
+      if (text) {
+        text.textContent =
+          message;
+      }
+
+
+      error?.classList.remove(
+        'hidden'
+      );
+
+    }
+
+
+    function showEmptyState(
+      type
+    ) {
+
+      const grid =
+        document.getElementById(
+          'viewingsGrid'
+        );
+
+
+      const empty =
+        document.getElementById(
+          'emptyState'
+        );
+
+
+      const title =
+        document.getElementById(
+          'emptyTitle'
+        );
+
+
+      const description =
+        document.getElementById(
+          'emptyDescription'
+        );
+
+
+      grid?.classList.add(
+        'hidden'
+      );
+
+
+      empty?.classList.remove(
+        'hidden'
+      );
+
+
+      if (
+        type ===
+        'filtered'
+      ) {
+
+        if (title) {
+
+          title.textContent =
+            'No matching viewings';
+
+        }
+
+
+        if (description) {
+
+          description.textContent =
+            'Try another search or choose a different appointment filter.';
+
+        }
+
+      } else {
+
+        if (title) {
+
+          title.textContent =
+            'No viewings yet';
+
+        }
+
+
+        if (description) {
+
+          description.textContent =
+            'When you schedule a property viewing, it will appear here automatically.';
+
+        }
+
+      }
+
+    }
+
+
+    function hideEmptyState() {
+
+      document
+        .getElementById(
+          'emptyState'
+        )
+        ?.classList.add(
+          'hidden'
+        );
+
+    }
+
+
+    function setLiveIndicator(
+      active
+    ) {
+
+      const element =
+        document.getElementById(
+          'liveIndicator'
+        );
+
+
+      if (!element) {
+        return;
+      }
+
+
+      if (active) {
+
+        element.classList.remove(
+          'hidden'
+        );
+
+        element.classList.add(
+          'inline-flex'
+        );
+
+      } else {
+
+        element.classList.add(
+          'hidden'
+        );
+
+        element.classList.remove(
+          'inline-flex'
+        );
+
+      }
+
+    }
+
+
+    /* =========================================================
+       STATUS
+    ========================================================== */
+
+    function normalizeStatus(
+      status
+    ) {
+
+      const value =
+        String(
+          status ||
+          'Pending'
+        )
+          .trim()
+          .toLowerCase();
+
+
+      if (
+        value ===
+        'approved'
+      ) {
+        return 'Confirmed';
+      }
+
+
+      if (
+        value ===
+        'confirm'
+      ) {
+        return 'Confirmed';
+      }
+
+
+      if (
+        value ===
+        'cancelled'
+      ) {
+        return 'Cancelled';
+      }
+
+
+      if (
+        value ===
+        'canceled'
+      ) {
+        return 'Cancelled';
+      }
+
+
+      if (
+        value ===
+        'decline'
+      ) {
+        return 'Declined';
+      }
+
+
+      if (
+        value ===
+        'rejected'
+      ) {
+        return 'Rejected';
+      }
+
+
+      if (
+        value ===
+        'complete'
+      ) {
+        return 'Completed';
+      }
+
+
+      if (
+        value ===
+        'reschedule'
+      ) {
+        return 'Rescheduled';
+      }
+
+
+      return (
+        value.charAt(0).toUpperCase() +
+        value.slice(1)
+      );
+
+    }
+
+
+    function getStatusClass(
+      status
+    ) {
+
+      const normalized =
+        String(
+          status ||
+          ''
+        ).toLowerCase();
+
+
+      if (
+        normalized ===
+          'confirmed' ||
+        normalized ===
+          'approved'
+      ) {
+
+        return 'bg-emerald-50 text-emerald-700 border border-emerald-100';
+
+      }
+
+
+      if (
+        normalized ===
+          'cancelled' ||
+        normalized ===
+          'canceled' ||
+        normalized ===
+          'declined' ||
+        normalized ===
+          'rejected'
+      ) {
+
+        return 'bg-rose-50 text-rose-700 border border-rose-100';
+
+      }
+
+
+      if (
+        normalized ===
+        'completed'
+      ) {
+
+        return 'bg-slate-100 text-slate-600 border border-slate-200';
+
+      }
+
+
+      if (
+        normalized ===
+        'rescheduled'
+      ) {
+
+        return 'bg-blue-50 text-blue-700 border border-blue-100';
+
+      }
+
+
+      return 'bg-amber-50 text-amber-700 border border-amber-100';
+
+    }
+
+
+    /* =========================================================
+       APPOINTMENT RULES
+    ========================================================== */
+
+    function isUpcoming(
+      appointment
+    ) {
+
+      if (!appointment.date) {
+        return false;
+      }
+
+
+      const status =
+        appointment.status
+          .toLowerCase();
+
+
+      const excluded = [
+        'cancelled',
+        'canceled',
+        'declined',
+        'rejected',
+        'completed',
+        'expired'
+      ];
+
+
+      if (
+        excluded.includes(
+          status
+        )
+      ) {
+        return false;
+      }
+
+
+      return (
+        appointment.date.getTime() >=
+        Date.now()
+      );
+
+    }
+
+
+    function canCancelAppointment(
+      appointment
+    ) {
+
+      const status =
+        appointment.status
+          .toLowerCase();
+
+
+      if (
+        [
+          'cancelled',
+          'canceled',
+          'completed',
+          'declined',
+          'rejected',
+          'expired'
+        ].includes(
+          status
+        )
+      ) {
+        return false;
+      }
+
+
+      return isUpcoming(
+        appointment
+      );
+
+    }
+
+
+    function canRescheduleAppointment(
+      appointment
+    ) {
+
+      const status =
+        appointment.status
+          .toLowerCase();
+
+
+      if (
+        [
+          'cancelled',
+          'canceled',
+          'completed',
+          'declined',
+          'rejected',
+          'expired'
+        ].includes(
+          status
+        )
+      ) {
+        return false;
+      }
+
+
+      return Boolean(
+        appointment.propertyId
+      );
+
+    }
+
+
+    /* =========================================================
+       DATE HANDLING
+    ========================================================== */
+
+    function parseDate(
+      value
+    ) {
+
+      if (!value) {
+        return null;
+      }
+
+
+      if (
+        typeof value.toDate ===
+        'function'
+      ) {
+
+        const date =
+          value.toDate();
+
+
+        return isValidDate(
+          date
+        )
+          ? date
+          : null;
+
+      }
+
+
+      if (
+        typeof value.seconds ===
+        'number'
+      ) {
+
+        const date =
+          new Date(
+            value.seconds * 1000
+          );
+
+
+        return isValidDate(
+          date
+        )
+          ? date
+          : null;
+
+      }
+
+
+      if (
+        typeof value._seconds ===
+        'number'
+      ) {
+
+        const date =
+          new Date(
+            value._seconds * 1000
+          );
+
+
+        return isValidDate(
+          date
+        )
+          ? date
+          : null;
+
+      }
+
+
+      const parsed =
+        new Date(
+          value
+        );
+
+
+      return isValidDate(
+        parsed
+      )
+        ? parsed
+        : null;
+
+    }
+
+
+    function formatLongDate(
+      date
+    ) {
+
+      if (
+        !isValidDate(
+          date
+        )
+      ) {
+        return 'Date TBD';
+      }
+
+
+      return date.toLocaleDateString(
+        'en-NG',
+        {
+          weekday: 'short',
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric'
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       MONEY
+    ========================================================== */
+
+    function formatMoney(
+      amount
+    ) {
+
+      const numeric =
+        Number(
+          amount
+        );
+
+
+      if (
+        !Number.isFinite(
+          numeric
+        )
+      ) {
+        return '₦0';
+      }
+
+
+      return (
+        '₦' +
+        numeric.toLocaleString(
+          'en-NG'
+        )
+      );
+
+    }
+
+
+    /* =========================================================
+       IMAGES
+    ========================================================== */
+
+    function safeImage(
+      value
+    ) {
+
+      const image =
+        String(
+          value ||
+          ''
+        )
+          .trim();
+
+
+      if (
+        image.startsWith(
+          'https://'
+        ) ||
+        image.startsWith(
+          'http://'
+        ) ||
+        image.startsWith(
+          '/'
+        ) ||
+        image.startsWith(
+          './'
+        ) ||
+        image.startsWith(
+          '../'
+        )
+      ) {
+
+        return image;
+
+      }
+
+
+      return FALLBACK_IMAGE;
+
+    }
+
+
+    /* =========================================================
+       CONTACT
+    ========================================================== */
+
+    function sanitizePhone(
+      phone
+    ) {
+
+      return String(
+        phone ||
+        ''
+      )
+        .replace(
+          /[^\d+]/g,
+          ''
+        );
+
+    }
+
+
+    function createWhatsAppUrl(
+      phone,
+      propertyTitle
+    ) {
+
+      let number =
+        sanitizePhone(
+          phone
+        );
+
+
+      if (
+        number.startsWith(
+          '0'
+        )
+      ) {
+
+        number =
+          '234' +
+          number.slice(1);
+
+      }
+
+
+      const message =
+        `Hello, I am interested in my MoonLat viewing for ${propertyTitle}.`;
+
+
+      return (
+        'https://wa.me/' +
+        number +
+        '?text=' +
+        encodeURIComponent(
+          message
+        )
+      );
+
+    }
+
+
+    /* =========================================================
+       UTILITIES
+    ========================================================== */
+
+    function setText(
+      id,
+      value
+    ) {
+
+      const element =
+        document.getElementById(
+          id
+        );
+
+
+      if (element) {
+        element.textContent =
+          String(
+            value
+          );
+      }
+
+    }
+
+
+    function isValidDate(
+      date
+    ) {
+
+      return (
+        date instanceof Date &&
+        !Number.isNaN(
+          date.getTime()
+        )
+      );
+
+    }
+
+
+    function escapeHtml(
+      value
+    ) {
+
+      return String(
+        value ??
+        ''
+      )
+        .replace(
+          /&/g,
+          '&amp;'
+        )
+        .replace(
+          /</g,
+          '&lt;'
+        )
+        .replace(
+          />/g,
+          '&gt;'
+        )
+        .replace(
+          /"/g,
+          '&quot;'
+        )
+        .replace(
+          /'/g,
+          '&#039;'
+        );
+
+    }
+
+
+    function escapeAttribute(
+      value
+    ) {
+
+      return String(
+        value ??
+        ''
+      )
+        .replace(
+          /\\/g,
+          '\\\\'
+        )
+        .replace(
+          /'/g,
+          "\\'"
+        )
+        .replace(
+          /"/g,
+          '&quot;'
+        );
+
+    }
+
+
+    function getInitials(
+      value
+    ) {
+
+      const words =
+        String(
+          value ||
+          'Agent'
+        )
+          .trim()
+          .split(
+            /\s+/
+          );
+
+
+      if (
+        words.length ===
+        1
+      ) {
+
+        return (
+          words[0]
+            .slice(0, 2)
+            .toUpperCase()
+        );
+
+      }
+
+
+      return (
+        (
+          words[0][0] +
+          words[words.length - 1][0]
+        )
+          .toUpperCase()
+      );
+
+    }
+
+
+    function chunkArray(
+      array,
+      size
+    ) {
+
+      const result = [];
+
+
+      for (
+        let i = 0;
+        i < array.length;
+        i += size
+      ) {
+
+        result.push(
+          array.slice(
+            i,
+            i + size
+          )
+        );
+
+      }
+
+
+      return result;
+
+    }
+
+
+    function debounce(
+      callback,
+      delay
+    ) {
+
+      let timer;
+
+
+      return function (...args) {
+
+        clearTimeout(
+          timer
+        );
+
+
+        timer =
+          setTimeout(
+            () => {
+              callback(
+                ...args
+              );
+            },
+            delay
+          );
+
+      };
+
+    }
+
+
+    function getFirestoreErrorMessage(
+      error
+    ) {
+
+      if (!error) {
+        return 'Please try again.';
+      }
+
+
+      if (
+        error.code ===
+        'permission-denied'
+      ) {
+
+        return 'You do not currently have permission to access your viewing appointments.';
+
+      }
+
+
+      if (
+        error.code ===
+        'failed-precondition'
+      ) {
+
+        return 'The viewing data query needs a Firestore configuration update.';
+
+      }
+
+
+      if (
+        error.code ===
+        'unavailable'
+      ) {
+
+        return 'MoonLat could not reach the database. Check your connection and try again.';
+
+      }
+
+
+      return (
+        error.message ||
+        'Please check your connection and try again.'
+      );
+
+    }
+
+
+    /* =========================================================
+       NAVIGATION
+    ========================================================== */
+
+    function goBack() {
+
+      if (
+        document.referrer &&
+        document.referrer
+          .includes(
+            window.location.host
+          )
+      ) {
+
+        window.history.back();
+
+      } else {
+
+        window.location.href =
+          'index.html';
+
+      }
+
+    }
+
+
+    /* =========================================================
+       TOAST
+    ========================================================== */
+
+    function showToast(
+      message,
+      type = 'success'
+    ) {
+
+      const container =
+        document.getElementById(
+          'toastContainer'
+        );
+
+
+      if (!container) {
+        return;
+      }
+
+
+      const toast =
+        document.createElement(
+          'div'
+        );
+
+
+      const config = {
+        success: {
+          icon: 'fa-check',
+          iconClass:
+            'bg-emerald-50 text-emerald-600'
+        },
+
+        error: {
+          icon:
+            'fa-triangle-exclamation',
+          iconClass:
+            'bg-rose-50 text-rose-600'
+        },
+
+        info: {
+          icon: 'fa-info',
+          iconClass:
+            'bg-blue-50 text-blue-600'
+        }
+      };
+
+
+      const selected =
+        config[type] ||
+        config.info;
+
+
+      toast.className =
+        'toast pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl bg-white border border-slate-200 shadow-premium max-w-[420px]';
+
+
+      toast.innerHTML = `
+
+        <span class="w-8 h-8 rounded-xl ${selected.iconClass} flex items-center justify-center shrink-0">
+
+          <i class="fas ${selected.icon} text-[10px]"></i>
+
+        </span>
+
+        <span class="text-xs font-bold text-slate-800">
+          ${escapeHtml(
+            message
+          )}
+        </span>
+
+      `;
+
+
+      container.appendChild(
+        toast
+      );
+
+
+      setTimeout(
+        () => {
+
+          toast.style.opacity =
+            '0';
+
+          toast.style.transform =
+            'translateY(8px)';
+
+          toast.style.transition =
+            'opacity .2s ease, transform .2s ease';
+
+
+          setTimeout(
+            () => {
+              toast.remove();
+            },
+            220
+          );
+
+        },
+        3000
+      );
+
+    }
+
   </script>
+
 </body>
 </html>
