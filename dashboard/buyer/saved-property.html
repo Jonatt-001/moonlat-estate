@@ -2,13 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saved Properties - MoonLat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#f7f8fa">
+    <meta name="description" content="View and manage your saved MoonLat properties.">
+    <title>Saved Properties — MoonLat</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Firebase -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
@@ -17,11 +26,26 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
-                    colors: { primary: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' } }
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a'
+                        }
+                    }
                 }
             }
-        }
+        };
 
         const firebaseConfig = {
             apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
@@ -31,222 +55,1862 @@
             messagingSenderId: "289878951289",
             appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
         };
+
         firebase.initializeApp(firebaseConfig);
+
         const db = firebase.firestore();
         const auth = firebase.auth();
     </script>
-</head>
-<body class="bg-slate-50 text-slate-900 font-sans pb-12">
 
-    <!-- Simple Nav -->
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
-            <button onclick="window.history.back()" class="text-slate-500 hover:text-slate-900 transition flex items-center gap-2">
-                <i class="fas fa-arrow-left"></i> <span class="hidden sm:inline">Back</span>
-            </button>
-            <h1 class="text-xl font-bold text-slate-900">MoonLat</h1>
-            <div class="w-8"></div> <!-- Spacer for centering -->
-        </div>
-    </nav>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    <div class="max-w-7xl mx-auto p-4 md:p-8 mt-4">
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
-            <div>
-                <h1 class="text-3xl font-bold text-slate-900">Saved Properties</h1>
-                <p class="text-slate-500 mt-1">Properties you've bookmarked for later</p>
-            </div>
-            <a href="browse-property.html" class="inline-flex items-center justify-center px-6 py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition shadow-sm hover:shadow active:scale-95">
-                <i class="fas fa-search mr-2"></i> Browse More
-            </a>
-        </div>
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
 
-        <div id="savedPropertiesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Skeleton Loading State -->
-            <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm animate-pulse">
-                <div class="aspect-[4/3] bg-slate-200"></div>
-                <div class="p-5">
-                    <div class="h-5 bg-slate-200 rounded w-3/4 mb-3"></div>
-                    <div class="h-4 bg-slate-200 rounded w-1/2 mb-4"></div>
-                    <div class="flex gap-3 pt-3 border-t border-slate-100">
-                        <div class="h-4 bg-slate-200 rounded w-8"></div>
-                        <div class="h-4 bg-slate-200 rounded w-8"></div>
-                        <div class="h-4 bg-slate-200 rounded w-12"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm animate-pulse hidden sm:block">
-                <div class="aspect-[4/3] bg-slate-200"></div>
-                <div class="p-5">
-                    <div class="h-5 bg-slate-200 rounded w-3/4 mb-3"></div>
-                    <div class="h-4 bg-slate-200 rounded w-1/2 mb-4"></div>
-                    <div class="flex gap-3 pt-3 border-t border-slate-100">
-                        <div class="h-4 bg-slate-200 rounded w-8"></div>
-                        <div class="h-4 bg-slate-200 rounded w-8"></div>
-                        <div class="h-4 bg-slate-200 rounded w-12"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at 88% -8%,
+                    rgba(37, 99, 235, .055),
+                    transparent 28%
+                ),
+                #f7f8fa;
+            color: #0f172a;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            padding-bottom: calc(24px + env(safe-area-inset-bottom));
+        }
 
-    <script>
-        let currentUser = null;
-        let savedProperties = [];
+        body.modal-open {
+            overflow: hidden;
+        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            auth.onAuthStateChanged(async (user) => {
-                if (user) {
-                    currentUser = user;
-                    await loadSavedProperties();
-                } else {
-                    // Save the intended destination so they can return after logging in
-                    sessionStorage.setItem('redirectAfterLogin', window.location.href);
-                    window.location.href = '../sign-in.html';
-                }
-            });
-        });
+        button,
+        input {
+            font: inherit;
+        }
 
-        async function loadSavedProperties() {
-            try {
-                const snapshot = await db.collection('users')
-                    .doc(currentUser.uid)
-                    .collection('savedProperties')
-                    .orderBy('savedAt', 'desc')
-                    .get();
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, .2);
+            outline-offset: 2px;
+        }
 
-                savedProperties = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
+        .glass {
+            background: rgba(255, 255, 255, .9);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
 
-                renderSavedProperties();
-            } catch (error) {
-                console.error('Error loading saved properties:', error);
-                
-                // Fallback rendering on error
-                document.getElementById('savedPropertiesList').innerHTML = `
-                    <div class="col-span-full text-center py-16 bg-white rounded-2xl border border-slate-200">
-                        <i class="fas fa-exclamation-circle text-rose-400 text-4xl mb-3"></i>
-                        <h3 class="text-lg font-bold text-slate-900">Failed to load properties</h3>
-                        <p class="text-slate-500 mb-4">Please check your connection and try again.</p>
-                        <button onclick="loadSavedProperties()" class="text-primary-600 font-semibold hover:underline">Try Again</button>
-                    </div>`;
-                showToast('Error connecting to database', 'error');
+        .page-shell {
+            width: 100%;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .property-card {
+            background: #fff;
+            border: 1px solid #e7ebf0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, .035);
+            transition:
+                transform .25s ease,
+                box-shadow .25s ease,
+                border-color .25s ease;
+        }
+
+        .property-card:hover {
+            transform: translateY(-3px);
+            border-color: #dbe3ec;
+            box-shadow: 0 18px 42px rgba(15, 23, 42, .085);
+        }
+
+        .property-image-wrap {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            background: #eef2f6;
+            cursor: pointer;
+        }
+
+        .property-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .55s cubic-bezier(.2, .8, .2, 1);
+        }
+
+        .property-card:hover .property-image {
+            transform: scale(1.045);
+        }
+
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to top,
+                rgba(2, 6, 23, .7),
+                rgba(2, 6, 23, .08) 55%,
+                transparent
+            );
+            pointer-events: none;
+        }
+
+        .favorite-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .94);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e11d48;
+            box-shadow: 0 7px 18px rgba(2, 6, 23, .15);
+            transition:
+                transform .2s ease,
+                background .2s ease,
+                color .2s ease;
+        }
+
+        .favorite-btn:hover {
+            transform: scale(1.05);
+            background: #e11d48;
+            color: #fff;
+        }
+
+        .favorite-btn:active {
+            transform: scale(.94);
+        }
+
+        .property-action {
+            min-height: 40px;
+            border-radius: 11px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            font-size: 11px;
+            font-weight: 800;
+            transition: .2s ease;
+        }
+
+        .skeleton {
+            position: relative;
+            overflow: hidden;
+            background: #e9edf2;
+        }
+
+        .skeleton::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, .55),
+                transparent
+            );
+            animation: skeletonShimmer 1.25s infinite;
+        }
+
+        @keyframes skeletonShimmer {
+            to {
+                transform: translateX(100%);
             }
         }
 
-        function renderSavedProperties() {
-            const container = document.getElementById('savedPropertiesList');
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            transition: opacity .25s ease;
+        }
 
-            if (savedProperties.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-24 bg-white rounded-3xl border border-dashed border-slate-300">
-                        <div class="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-5">
-                            <i class="fas fa-heart-broken text-rose-400 text-3xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">No saved properties yet</h3>
-                        <p class="text-slate-500 mb-6 max-w-sm mx-auto">You haven't bookmarked any properties. Start browsing to find your dream home.</p>
-                        <a href="browse-property.html" class="text-primary-600 font-semibold hover:text-primary-700 hover:underline">Explore Properties →</a>
-                    </div>`;
-                return;
+        .page-loader.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #dbeafe;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .empty-state {
+            animation: stateIn .25s ease-out both;
+        }
+
+        @keyframes stateIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
             }
 
-            container.innerHTML = savedProperties.map(prop => `
-                <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative flex flex-col h-full">
-                    
-                    <button onclick="removeFromSaved(event, '${prop.id}')" 
-                            class="absolute top-3 right-3 z-10 w-9 h-9 bg-white/90 backdrop-blur text-rose-500 rounded-full flex items-center justify-center hover:bg-rose-500 hover:text-white transition shadow-sm" 
-                            title="Remove from saved">
-                        <i class="fas fa-heart text-sm"></i>
-                    </button>
-                    
-                    <div class="relative aspect-[4/3] cursor-pointer bg-slate-100 overflow-hidden" onclick="window.location.href='property-detail.html?id=${prop.id}'">
-                        <img src="${prop.image || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'}" 
-                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                             alt="${prop.title || 'Property Image'}"
-                             onerror="this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'">
-                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
-                            <p class="text-white font-bold text-xl">₦${formatPrice(prop.price)}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="p-5 flex flex-col flex-grow">
-                        <h4 class="font-bold text-slate-900 mb-1 cursor-pointer hover:text-primary-600 line-clamp-1" onclick="window.location.href='property-detail.html?id=${prop.id}'">
-                            ${prop.title || 'Untitled Property'}
-                        </h4>
-                        <p class="text-sm text-slate-500 mb-4 line-clamp-1">
-                            <i class="fas fa-map-marker-alt text-slate-400 mr-1"></i> ${prop.location || 'Location not specified'}
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-backdrop {
+            background: rgba(2, 6, 23, .56);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .confirm-dialog {
+            animation: dialogIn .22s cubic-bezier(.22, 1, .36, 1);
+        }
+
+        @keyframes dialogIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .toast {
+            animation: toastIn .28s cubic-bezier(.22, 1, .36, 1);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .remove-animation {
+            opacity: 0 !important;
+            transform: scale(.94) !important;
+            pointer-events: none !important;
+        }
+
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        @media (max-width: 639px) {
+            .page-shell {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .property-card {
+                border-radius: 17px;
+            }
+
+            .property-action {
+                min-height: 42px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PAGE LOADER -->
+    <div id="pageLoader" class="page-loader">
+        <div class="text-center">
+            <div class="w-12 h-12 rounded-2xl bg-slate-950 text-white flex items-center justify-center mx-auto mb-4 shadow-xl">
+                <i class="fas fa-house text-sm"></i>
+            </div>
+
+            <div class="spinner mx-auto mb-3"></div>
+
+            <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+                MoonLat
+            </p>
+
+            <p class="text-xs text-slate-400 mt-1">
+                Loading saved properties
+            </p>
+        </div>
+    </div>
+
+
+    <!-- HEADER -->
+    <header class="glass sticky top-0 z-50 border-b border-slate-200/70">
+
+        <div class="page-shell px-4 sm:px-6 lg:px-8">
+
+            <div class="h-[68px] sm:h-[76px] flex items-center justify-between gap-4">
+
+                <div class="flex items-center gap-3 min-w-0">
+
+                    <a
+                        href="index.html"
+                        class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-slate-950 hover:border-slate-300 transition shrink-0"
+                        aria-label="Back to dashboard"
+                    >
+                        <i class="fas fa-arrow-left text-sm"></i>
+                    </a>
+
+                    <div class="min-w-0">
+
+                        <p class="hidden sm:block text-[9px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+                            Buyer dashboard
                         </p>
-                        
-                        <div class="mt-auto">
-                            <div class="flex items-center gap-4 text-sm text-slate-600 pt-4 border-t border-slate-100">
-                                <span class="flex items-center gap-1.5" title="Bedrooms"><i class="fas fa-bed text-slate-400"></i> ${prop.beds || 0}</span>
-                                <span class="flex items-center gap-1.5" title="Bathrooms"><i class="fas fa-bath text-slate-400"></i> ${prop.baths || 0}</span>
-                                <span class="flex items-center gap-1.5" title="Area"><i class="fas fa-vector-square text-slate-400"></i> ${prop.area || 0}m²</span>
+
+                        <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-950 truncate">
+                            Saved properties
+                        </h1>
+
+                    </div>
+
+                </div>
+
+
+                <div class="flex items-center gap-2 shrink-0">
+
+                    <a
+                        href="my-viewing.html"
+                        class="hidden sm:inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-white border border-slate-200 text-xs font-extrabold text-slate-600 hover:text-slate-950 hover:border-slate-300 transition"
+                    >
+                        <i class="far fa-calendar-check"></i>
+                        My Viewings
+                    </a>
+
+                    <a
+                        href="browse-property.html"
+                        class="inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-slate-950 text-white text-xs font-extrabold hover:bg-slate-800 transition"
+                    >
+                        <i class="fas fa-search text-[10px]"></i>
+                        <span class="hidden sm:inline">Browse</span>
+                    </a>
+
+                    <a
+                        href="settings.html"
+                        id="userAvatar"
+                        class="w-10 h-10 rounded-xl bg-primary-600 text-white flex items-center justify-center text-xs font-extrabold shadow-sm overflow-hidden"
+                        aria-label="Account settings"
+                    >
+                        U
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+    <main class="page-shell px-4 sm:px-6 lg:px-8 py-6 sm:py-9">
+
+        <!-- INTRO -->
+        <section class="mb-6 sm:mb-8">
+
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+
+                <div>
+
+                    <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-primary-600">
+                        Your collection
+                    </p>
+
+                    <h2 class="text-2xl sm:text-3xl font-extrabold tracking-[-.035em] text-slate-950 mt-1">
+                        Properties you saved
+                    </h2>
+
+                    <p class="text-xs sm:text-sm text-slate-500 mt-2 max-w-xl leading-6">
+                        Keep track of properties you want to revisit, compare or arrange a viewing for.
+                    </p>
+
+                </div>
+
+
+                <div class="flex items-center gap-2 shrink-0">
+
+                    <div class="px-3 py-2 rounded-xl bg-white border border-slate-200 text-[11px] font-bold text-slate-500">
+                        <span id="savedCount">0</span>
+                        <span class="ml-1">saved</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONTENT -->
+        <section>
+
+            <!-- LOADING SKELETONS -->
+            <div
+                id="loadingState"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5"
+            >
+
+                <div class="bg-white rounded-[20px] overflow-hidden border border-slate-200">
+                    <div class="skeleton aspect-[4/3]"></div>
+                    <div class="p-4">
+                        <div class="skeleton h-5 rounded-lg w-3/4 mb-3"></div>
+                        <div class="skeleton h-3.5 rounded-lg w-1/2 mb-5"></div>
+                        <div class="border-t border-slate-100 pt-4">
+                            <div class="flex gap-3">
+                                <div class="skeleton h-3 rounded w-10"></div>
+                                <div class="skeleton h-3 rounded w-10"></div>
+                                <div class="skeleton h-3 rounded w-14"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-            `).join('');
-        }
 
-        async function removeFromSaved(event, propertyId) {
-            event.stopPropagation(); // Prevents the card click event from firing
+                <div class="bg-white rounded-[20px] overflow-hidden border border-slate-200 hidden sm:block">
+                    <div class="skeleton aspect-[4/3]"></div>
+                    <div class="p-4">
+                        <div class="skeleton h-5 rounded-lg w-3/4 mb-3"></div>
+                        <div class="skeleton h-3.5 rounded-lg w-1/2 mb-5"></div>
+                        <div class="border-t border-slate-100 pt-4">
+                            <div class="flex gap-3">
+                                <div class="skeleton h-3 rounded w-10"></div>
+                                <div class="skeleton h-3 rounded w-10"></div>
+                                <div class="skeleton h-3 rounded w-14"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            // Find the card element to animate it out
-            const button = event.currentTarget;
-            const card = button.closest('.group');
+                <div class="bg-white rounded-[20px] overflow-hidden border border-slate-200 hidden lg:block">
+                    <div class="skeleton aspect-[4/3]"></div>
+                    <div class="p-4">
+                        <div class="skeleton h-5 rounded-lg w-3/4 mb-3"></div>
+                        <div class="skeleton h-3.5 rounded-lg w-1/2 mb-5"></div>
+                        <div class="border-t border-slate-100 pt-4">
+                            <div class="flex gap-3">
+                                <div class="skeleton h-3 rounded w-10"></div>
+                                <div class="skeleton h-3 rounded w-10"></div>
+                                <div class="skeleton h-3 rounded w-14"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            // Optimistic UI update: fade out immediately for better feel
-            card.style.opacity = '0.5';
-            card.style.pointerEvents = 'none';
+                <div class="bg-white rounded-[20px] overflow-hidden border border-slate-200 hidden xl:block">
+                    <div class="skeleton aspect-[4/3]"></div>
+                    <div class="p-4">
+                        <div class="skeleton h-5 rounded-lg w-3/4 mb-3"></div>
+                        <div class="skeleton h-3.5 rounded-lg w-1/2 mb-5"></div>
+                        <div class="border-t border-slate-100 pt-4">
+                            <div class="flex gap-3">
+                                <div class="skeleton h-3 rounded w-10"></div>
+                                <div class="skeleton h-3 rounded w-10"></div>
+                                <div class="skeleton h-3 rounded w-14"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- SAVED PROPERTIES -->
+            <div
+                id="savedPropertiesList"
+                class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5"
+            ></div>
+
+
+            <!-- EMPTY STATE -->
+            <div
+                id="emptyState"
+                class="hidden empty-state"
+            >
+
+                <div class="bg-white border border-dashed border-slate-300 rounded-[24px] p-8 sm:p-14 text-center">
+
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-[22px] bg-primary-50 text-primary-600 flex items-center justify-center mx-auto mb-5">
+                        <i class="far fa-heart text-2xl sm:text-3xl"></i>
+                    </div>
+
+                    <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-slate-400">
+                        Your collection is empty
+                    </p>
+
+                    <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950 mt-2">
+                        Nothing saved yet
+                    </h3>
+
+                    <p class="text-xs sm:text-sm text-slate-500 leading-6 max-w-md mx-auto mt-2">
+                        When you find a property you like, save it here so you can quickly return to it later.
+                    </p>
+
+                    <a
+                        href="browse-property.html"
+                        class="inline-flex items-center justify-center gap-2 min-h-11 px-6 mt-6 rounded-xl bg-slate-950 text-white text-xs font-extrabold hover:bg-slate-800 transition"
+                    >
+                        <i class="fas fa-search text-[10px]"></i>
+                        Explore properties
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- ERROR STATE -->
+            <div
+                id="errorState"
+                class="hidden"
+            >
+
+                <div class="bg-white border border-rose-200 rounded-[24px] p-8 sm:p-12 text-center">
+
+                    <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-triangle-exclamation"></i>
+                    </div>
+
+                    <h3 class="text-lg font-extrabold text-slate-950">
+                        We couldn't load your saved properties
+                    </h3>
+
+                    <p class="text-xs text-slate-500 mt-2 max-w-md mx-auto leading-5">
+                        Check your connection and try again. Your saved properties have not been removed.
+                    </p>
+
+                    <button
+                        type="button"
+                        onclick="loadSavedProperties()"
+                        class="inline-flex items-center gap-2 min-h-10 px-5 mt-5 rounded-xl bg-slate-950 text-white text-xs font-extrabold hover:bg-slate-800 transition"
+                    >
+                        <i class="fas fa-rotate-right text-[10px]"></i>
+                        Try again
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- REMOVE CONFIRMATION -->
+    <div
+        id="confirmModal"
+        class="hidden fixed inset-0 z-[2000] items-center justify-center p-4"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirmTitle"
+    >
+
+        <div
+            class="modal-backdrop absolute inset-0"
+            onclick="closeConfirmModal()"
+        ></div>
+
+        <div class="confirm-dialog relative w-full max-w-sm bg-white rounded-[24px] shadow-2xl overflow-hidden">
+
+            <div class="p-5 sm:p-6">
+
+                <div class="flex items-start gap-4">
+
+                    <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+                        <i class="fas fa-heart text-sm"></i>
+                    </div>
+
+                    <div>
+
+                        <h3
+                            id="confirmTitle"
+                            class="text-base font-extrabold text-slate-950"
+                        >
+                            Remove saved property?
+                        </h3>
+
+                        <p class="text-xs text-slate-500 leading-5 mt-1">
+                            This property will be removed from your saved collection.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="p-4 bg-slate-50 border-t border-slate-100 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+
+                <button
+                    type="button"
+                    onclick="closeConfirmModal()"
+                    class="h-11 px-5 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-extrabold hover:bg-slate-50 transition"
+                >
+                    Keep property
+                </button>
+
+                <button
+                    type="button"
+                    id="confirmRemoveBtn"
+                    class="h-11 px-5 rounded-xl bg-rose-600 text-white text-xs font-extrabold hover:bg-rose-700 transition"
+                >
+                    Remove
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TOAST -->
+    <div
+        id="toastContainer"
+        class="fixed bottom-5 left-1/2 z-[3000] pointer-events-none"
+    ></div>
+
+
+    <script>
+        let currentUser = null;
+        let savedProperties = [];
+        let pendingRemovalId = null;
+        let isRemoving = false;
+
+
+        const FALLBACK_IMAGE =
+            'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1000';
+
+
+        /* =========================================================
+           INITIALIZATION
+        ========================================================== */
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            auth.onAuthStateChanged(async (user) => {
+
+                if (!user) {
+
+                    sessionStorage.setItem(
+                        'redirectAfterLogin',
+                        window.location.href
+                    );
+
+                    window.location.replace(
+                        '../sign-in.html'
+                    );
+
+                    return;
+                }
+
+
+                currentUser = user;
+
+                updateUserAvatar(user);
+
+                await loadSavedProperties();
+
+            });
+
+        });
+
+
+        /* =========================================================
+           LOAD
+        ========================================================== */
+
+        async function loadSavedProperties() {
+
+            if (!currentUser) {
+                return;
+            }
+
+
+            setLoadingState(true);
+
 
             try {
-                await db.collection('users')
+
+                const snapshot =
+                    await db
+                        .collection('users')
+                        .doc(currentUser.uid)
+                        .collection('savedProperties')
+                        .orderBy('savedAt', 'desc')
+                        .get();
+
+
+                savedProperties =
+                    snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+
+
+                renderSavedProperties();
+
+
+            } catch (error) {
+
+                console.error(
+                    'Error loading saved properties:',
+                    error
+                );
+
+                showErrorState();
+
+                showToast(
+                    getErrorMessage(
+                        error,
+                        'Unable to load saved properties.'
+                    ),
+                    'error'
+                );
+
+            } finally {
+
+                setLoadingState(false);
+
+            }
+
+        }
+
+
+        /* =========================================================
+           RENDER
+        ========================================================== */
+
+        function renderSavedProperties() {
+
+            const container =
+                document.getElementById(
+                    'savedPropertiesList'
+                );
+
+            const emptyState =
+                document.getElementById(
+                    'emptyState'
+                );
+
+            const errorState =
+                document.getElementById(
+                    'errorState'
+                );
+
+
+            errorState.classList.add(
+                'hidden'
+            );
+
+
+            setText(
+                'savedCount',
+                savedProperties.length
+            );
+
+
+            if (
+                savedProperties.length === 0
+            ) {
+
+                container.innerHTML = '';
+
+                container.classList.add(
+                    'hidden'
+                );
+
+                emptyState.classList.remove(
+                    'hidden'
+                );
+
+                return;
+
+            }
+
+
+            emptyState.classList.add(
+                'hidden'
+            );
+
+            container.classList.remove(
+                'hidden'
+            );
+
+
+            container.innerHTML =
+                savedProperties
+                    .map(
+                        createPropertyCard
+                    )
+                    .join('');
+
+        }
+
+
+        function createPropertyCard(
+            property
+        ) {
+
+            const id =
+                escapeAttribute(
+                    property.id
+                );
+
+            const title =
+                property.title ||
+                'Untitled Property';
+
+            const location =
+                property.location ||
+                'Location not specified';
+
+            const image =
+                property.image ||
+                FALLBACK_IMAGE;
+
+            const price =
+                formatPrice(
+                    property.price
+                );
+
+
+            const beds =
+                normalizeValue(
+                    property.beds
+                );
+
+            const baths =
+                normalizeValue(
+                    property.baths
+                );
+
+            const area =
+                normalizeValue(
+                    property.area
+                );
+
+
+            const status =
+                property.status ||
+                'Available';
+
+
+            return `
+                <article
+                    class="property-card flex flex-col"
+                    data-property-id="${id}"
+                >
+
+                    <!-- IMAGE -->
+                    <div
+                        class="property-image-wrap"
+                        onclick="openProperty('${id}')"
+                        role="link"
+                        tabindex="0"
+                        onkeydown="handleCardKey(event, '${id}')"
+                        aria-label="View ${escapeAttribute(title)}"
+                    >
+
+                        <img
+                            src="${escapeAttribute(image)}"
+                            alt="${escapeAttribute(title)}"
+                            class="property-image"
+                            loading="lazy"
+                            decoding="async"
+                            onerror="handleImageError(this)"
+                        >
+
+                        <div class="image-overlay"></div>
+
+
+                        <!-- STATUS -->
+                        <div class="absolute top-3 left-3">
+
+                            <span class="inline-flex items-center h-7 px-2.5 rounded-lg bg-white/95 backdrop-blur text-[9px] uppercase tracking-wide font-extrabold text-slate-800 shadow-sm">
+                                ${escapeHtml(status)}
+                            </span>
+
+                        </div>
+
+
+                        <!-- REMOVE -->
+                        <button
+                            type="button"
+                            class="favorite-btn absolute top-3 right-3"
+                            onclick="removeFromSaved(event, '${id}')"
+                            title="Remove from saved properties"
+                            aria-label="Remove ${escapeAttribute(title)} from saved properties"
+                        >
+                            <i class="fas fa-heart text-sm"></i>
+                        </button>
+
+
+                        <!-- PRICE -->
+                        <div class="absolute left-4 right-4 bottom-3 pointer-events-none">
+
+                            <p class="text-white text-xl font-extrabold tracking-tight drop-shadow-sm">
+                                ₦${price}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CONTENT -->
+                    <div class="p-4 flex flex-col flex-1">
+
+                        <button
+                            type="button"
+                            onclick="openProperty('${id}')"
+                            class="text-left block w-full"
+                        >
+
+                            <h3 class="text-sm font-extrabold text-slate-950 line-clamp-1 hover:text-primary-600 transition">
+                                ${escapeHtml(title)}
+                            </h3>
+
+                            <p class="text-[11px] text-slate-500 mt-1.5 line-clamp-1">
+                                <i class="fas fa-location-dot text-slate-400 mr-1"></i>
+                                ${escapeHtml(location)}
+                            </p>
+
+                        </button>
+
+
+                        <!-- SPECS -->
+                        <div class="mt-4 pt-3 border-t border-slate-100">
+
+                            <div class="flex items-center gap-4 text-[10px] font-bold text-slate-500">
+
+                                <span class="inline-flex items-center gap-1.5">
+                                    <i class="fas fa-bed text-slate-400"></i>
+                                    ${escapeHtml(beds)}
+                                </span>
+
+                                <span class="inline-flex items-center gap-1.5">
+                                    <i class="fas fa-bath text-slate-400"></i>
+                                    ${escapeHtml(baths)}
+                                </span>
+
+                                <span class="inline-flex items-center gap-1.5">
+                                    <i class="fas fa-vector-square text-slate-400"></i>
+                                    ${escapeHtml(area)}m²
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ACTIONS -->
+                        <div class="grid grid-cols-2 gap-2 mt-4">
+
+                            <button
+                                type="button"
+                                onclick="openProperty('${id}')"
+                                class="property-action bg-slate-100 text-slate-700 hover:bg-slate-200"
+                            >
+                                <i class="far fa-eye text-[10px]"></i>
+                                View property
+                            </button>
+
+                            <button
+                                type="button"
+                                onclick="scheduleViewing('${id}')"
+                                class="property-action bg-primary-600 text-white hover:bg-primary-700"
+                            >
+                                <i class="far fa-calendar text-[10px]"></i>
+                                Book viewing
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+            `;
+
+        }
+
+
+        /* =========================================================
+           REMOVE
+        ========================================================== */
+
+        function removeFromSaved(
+            event,
+            propertyId
+        ) {
+
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+
+            if (
+                !currentUser ||
+                isRemoving
+            ) {
+                return;
+            }
+
+
+            const property =
+                savedProperties.find(
+                    item =>
+                        item.id === propertyId
+                );
+
+
+            if (!property) {
+                return;
+            }
+
+
+            pendingRemovalId =
+                propertyId;
+
+
+            openConfirmModal();
+
+        }
+
+
+        function openConfirmModal() {
+
+            const modal =
+                document.getElementById(
+                    'confirmModal'
+                );
+
+
+            modal.classList.remove(
+                'hidden'
+            );
+
+            modal.classList.add(
+                'flex'
+            );
+
+
+            document.body.classList.add(
+                'modal-open'
+            );
+
+
+            setTimeout(() => {
+
+                document
+                    .getElementById(
+                        'confirmRemoveBtn'
+                    )
+                    .focus();
+
+            }, 30);
+
+        }
+
+
+        function closeConfirmModal() {
+
+            const modal =
+                document.getElementById(
+                    'confirmModal'
+                );
+
+
+            modal.classList.add(
+                'hidden'
+            );
+
+            modal.classList.remove(
+                'flex'
+            );
+
+
+            document.body.classList.remove(
+                'modal-open'
+            );
+
+
+            pendingRemovalId =
+                null;
+
+        }
+
+
+        document
+            .getElementById(
+                'confirmRemoveBtn'
+            )
+            .addEventListener(
+                'click',
+                confirmRemoval
+            );
+
+
+        async function confirmRemoval() {
+
+            const propertyId =
+                pendingRemovalId;
+
+
+            if (
+                !propertyId ||
+                !currentUser ||
+                isRemoving
+            ) {
+                return;
+            }
+
+
+            isRemoving = true;
+
+
+            const button =
+                document.getElementById(
+                    'confirmRemoveBtn'
+                );
+
+
+            button.disabled = true;
+
+            button.innerHTML = `
+                <span class="inline-flex items-center gap-2">
+                    <div class="spinner w-3.5 h-3.5 border-[1.5px] border-rose-300 border-t-white"></div>
+                    Removing
+                </span>
+            `;
+
+
+            const card =
+                document.querySelector(
+                    `[data-property-id="${CSS.escape(propertyId)}"]`
+                );
+
+
+            try {
+
+                await db
+                    .collection('users')
                     .doc(currentUser.uid)
                     .collection('savedProperties')
                     .doc(propertyId)
                     .delete();
 
-                // Remove from local array
-                savedProperties = savedProperties.filter(p => p.id !== propertyId);
-                
-                // Re-render
+
+                if (card) {
+
+                    card.classList.add(
+                        'remove-animation'
+                    );
+
+                    await wait(
+                        220
+                    );
+
+                }
+
+
+                savedProperties =
+                    savedProperties.filter(
+                        property =>
+                            property.id !==
+                            propertyId
+                    );
+
+
+                closeConfirmModal();
+
                 renderSavedProperties();
-                showToast('Removed from favorites');
+
+                showToast(
+                    'Property removed from saved.'
+                );
+
+
             } catch (error) {
-                console.error('Error removing property:', error);
-                // Revert optimistic UI on failure
-                card.style.opacity = '1';
-                card.style.pointerEvents = 'auto';
-                showToast('Failed to remove property', 'error');
+
+                console.error(
+                    'Error removing saved property:',
+                    error
+                );
+
+                showToast(
+                    getErrorMessage(
+                        error,
+                        'Unable to remove property.'
+                    ),
+                    'error'
+                );
+
+            } finally {
+
+                isRemoving = false;
+
+                button.disabled = false;
+
+                button.textContent =
+                    'Remove';
+
             }
+
         }
 
-        function formatPrice(price) {
-            if (!price) return '0';
-            // Handles both string and number inputs safely
-            return Number(price.toString().replace(/,/g, '')).toLocaleString(); 
+
+        /* =========================================================
+           NAVIGATION
+        ========================================================== */
+
+        function openProperty(
+            propertyId
+        ) {
+
+            if (!propertyId) {
+                return;
+            }
+
+
+            window.location.href =
+                `property-detail.html?id=${encodeURIComponent(propertyId)}`;
+
         }
 
-        function showToast(message, type = 'success') {
-            // Remove existing toasts to prevent stacking
-            const existingToast = document.querySelector('.custom-toast');
-            if (existingToast) existingToast.remove();
 
-            const toast = document.createElement('div');
-            toast.className = `custom-toast fixed bottom-6 left-1/2 -translate-x-1/2 z-[2000] px-6 py-3 rounded-full shadow-xl text-white font-medium text-sm flex items-center gap-2 transition-all duration-300 transform translate-y-0 opacity-100 ${type === 'success' ? 'bg-slate-900' : 'bg-rose-600'}`;
-            
-            const icon = type === 'success' ? '<i class="fas fa-check-circle text-emerald-400"></i>' : '<i class="fas fa-exclamation-circle"></i>';
-            toast.innerHTML = `${icon} ${message}`;
-            
-            document.body.appendChild(toast);
-            
+        function scheduleViewing(
+            propertyId
+        ) {
+
+            if (!propertyId) {
+                return;
+            }
+
+
+            window.location.href =
+                `schedule-inspection.html?property=${encodeURIComponent(propertyId)}`;
+
+        }
+
+
+        function handleCardKey(
+            event,
+            propertyId
+        ) {
+
+            if (
+                event.key === 'Enter' ||
+                event.key === ' '
+            ) {
+
+                event.preventDefault();
+
+                openProperty(
+                    propertyId
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           USER AVATAR
+        ========================================================== */
+
+        function updateUserAvatar(
+            user
+        ) {
+
+            const avatar =
+                document.getElementById(
+                    'userAvatar'
+                );
+
+
+            if (!avatar) {
+                return;
+            }
+
+
+            if (user.photoURL) {
+
+                avatar.innerHTML = `
+                    <img
+                        src="${escapeAttribute(user.photoURL)}"
+                        alt="Account"
+                        class="w-full h-full object-cover"
+                        onerror="this.remove(); this.parentElement.textContent='${escapeAttribute(
+                            getInitial(
+                                user.displayName ||
+                                user.email
+                            )
+                        )}'"
+                    >
+                `;
+
+                return;
+
+            }
+
+
+            avatar.textContent =
+                getInitial(
+                    user.displayName ||
+                    user.email
+                );
+
+        }
+
+
+        function getInitial(
+            value
+        ) {
+
+            const text =
+                String(
+                    value || 'U'
+                ).trim();
+
+
+            return (
+                text.charAt(0) ||
+                'U'
+            ).toUpperCase();
+
+        }
+
+
+        /* =========================================================
+           STATES
+        ========================================================== */
+
+        function setLoadingState(
+            loading
+        ) {
+
+            const loadingState =
+                document.getElementById(
+                    'loadingState'
+                );
+
+            const list =
+                document.getElementById(
+                    'savedPropertiesList'
+                );
+
+            const empty =
+                document.getElementById(
+                    'emptyState'
+                );
+
+            const error =
+                document.getElementById(
+                    'errorState'
+                );
+
+
+            if (loading) {
+
+                loadingState.classList.remove(
+                    'hidden'
+                );
+
+                list.classList.add(
+                    'hidden'
+                );
+
+                empty.classList.add(
+                    'hidden'
+                );
+
+                error.classList.add(
+                    'hidden'
+                );
+
+                return;
+
+            }
+
+
+            loadingState.classList.add(
+                'hidden'
+            );
+
+        }
+
+
+        function showErrorState() {
+
+            document
+                .getElementById(
+                    'loadingState'
+                )
+                .classList.add(
+                    'hidden'
+                );
+
+            document
+                .getElementById(
+                    'savedPropertiesList'
+                )
+                .classList.add(
+                    'hidden'
+                );
+
+            document
+                .getElementById(
+                    'emptyState'
+                )
+                .classList.add(
+                    'hidden'
+                );
+
+            document
+                .getElementById(
+                    'errorState'
+                )
+                .classList.remove(
+                    'hidden'
+                );
+
+        }
+
+
+        /* =========================================================
+           IMAGE
+        ========================================================== */
+
+        function handleImageError(
+            image
+        ) {
+
+            if (
+                image.dataset.fallbackApplied
+            ) {
+                return;
+            }
+
+
+            image.dataset.fallbackApplied =
+                'true';
+
+            image.src =
+                FALLBACK_IMAGE;
+
+        }
+
+
+        /* =========================================================
+           FORMATTING
+        ========================================================== */
+
+        function formatPrice(
+            price
+        ) {
+
+            if (
+                price === null ||
+                price === undefined ||
+                price === ''
+            ) {
+                return '0';
+            }
+
+
+            const numeric =
+                Number(
+                    String(price)
+                        .replace(
+                            /,/g,
+                            ''
+                        )
+                        .replace(
+                            /₦/g,
+                            ''
+                        )
+                        .trim()
+                );
+
+
+            if (
+                !Number.isFinite(
+                    numeric
+                )
+            ) {
+                return '0';
+            }
+
+
+            return numeric.toLocaleString(
+                'en-NG'
+            );
+
+        }
+
+
+        function normalizeValue(
+            value
+        ) {
+
+            if (
+                value === null ||
+                value === undefined ||
+                value === ''
+            ) {
+                return '0';
+            }
+
+
+            return String(
+                value
+            );
+
+        }
+
+
+        /* =========================================================
+           UTILITY
+        ========================================================== */
+
+        function wait(
+            milliseconds
+        ) {
+
+            return new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        milliseconds
+                    )
+            );
+
+        }
+
+
+        function setText(
+            id,
+            value
+        ) {
+
+            const element =
+                document.getElementById(
+                    id
+                );
+
+
+            if (element) {
+                element.textContent =
+                    String(
+                        value ?? ''
+                    );
+            }
+
+        }
+
+
+        function escapeHtml(
+            value
+        ) {
+
+            return String(
+                value ?? ''
+            )
+                .replace(
+                    /&/g,
+                    '&amp;'
+                )
+                .replace(
+                    /</g,
+                    '&lt;'
+                )
+                .replace(
+                    />/g,
+                    '&gt;'
+                )
+                .replace(
+                    /"/g,
+                    '&quot;'
+                )
+                .replace(
+                    /'/g,
+                    '&#039;'
+                );
+
+        }
+
+
+        function escapeAttribute(
+            value
+        ) {
+
+            return escapeHtml(
+                value
+            );
+
+        }
+
+
+        function getErrorMessage(
+            error,
+            fallback
+        ) {
+
+            const code =
+                String(
+                    error?.code || ''
+                );
+
+
+            const messages = {
+                'permission-denied':
+                    'You do not have permission to access your saved properties.',
+                'unavailable':
+                    'MoonLat is temporarily unavailable. Please try again.',
+                'failed-precondition':
+                    'Your saved properties could not be loaded right now.',
+                'network-request-failed':
+                    'Network connection failed. Please try again.'
+            };
+
+
+            return (
+                messages[code] ||
+                fallback
+            );
+
+        }
+
+
+        /* =========================================================
+           TOAST
+        ========================================================== */
+
+        function showToast(
+            message,
+            type = 'success'
+        ) {
+
+            const container =
+                document.getElementById(
+                    'toastContainer'
+                );
+
+
+            if (!container) {
+                return;
+            }
+
+
+            container
+                .querySelectorAll(
+                    '.toast'
+                )
+                .forEach(
+                    toast =>
+                        toast.remove()
+                );
+
+
+            const toast =
+                document.createElement(
+                    'div'
+                );
+
+
+            const error =
+                type === 'error';
+
+
+            toast.className = `
+                toast
+                pointer-events-auto
+                flex
+                items-center
+                gap-3
+                min-w-[min(320px,calc(100vw-32px))]
+                max-w-[calc(100vw-32px)]
+                px-4
+                py-3
+                rounded-2xl
+                shadow-2xl
+                text-white
+                text-xs
+                font-bold
+                ${error
+                    ? 'bg-rose-600'
+                    : 'bg-slate-950'}
+            `;
+
+
+            toast.innerHTML = `
+                <span class="w-7 h-7 rounded-lg ${
+                    error
+                        ? 'bg-white/15'
+                        : 'bg-emerald-500/15'
+                } flex items-center justify-center shrink-0">
+                    <i class="fas ${
+                        error
+                            ? 'fa-triangle-exclamation'
+                            : 'fa-check'
+                    } text-[10px]"></i>
+                </span>
+
+                <span class="leading-5">
+                    ${escapeHtml(message)}
+                </span>
+            `;
+
+
+            container.appendChild(
+                toast
+            );
+
+
             setTimeout(() => {
-                toast.classList.add('translate-y-4', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
+
+                toast.style.opacity =
+                    '0';
+
+                toast.style.transform =
+                    'translate(-50%, 8px)';
+
+                toast.style.transition =
+                    'opacity .2s ease, transform .2s ease';
+
+
+                setTimeout(
+                    () => toast.remove(),
+                    220
+                );
+
             }, 3000);
+
         }
+
+
+        /* =========================================================
+           KEYBOARD
+        ========================================================== */
+
+        document.addEventListener(
+            'keydown',
+            event => {
+
+                if (
+                    event.key === 'Escape'
+                ) {
+
+                    const modal =
+                        document.getElementById(
+                            'confirmModal'
+                        );
+
+
+                    if (
+                        modal &&
+                        modal.classList.contains(
+                            'flex'
+                        )
+                    ) {
+
+                        closeConfirmModal();
+
+                    }
+
+                }
+
+            }
+        );
+
+
+        /* =========================================================
+           LOADER
+        ========================================================== */
+
+        window.addEventListener(
+            'load',
+            () => {
+
+                const loader =
+                    document.getElementById(
+                        'pageLoader'
+                    );
+
+
+                if (!loader) {
+                    return;
+                }
+
+
+                setTimeout(
+                    () => {
+
+                        loader.classList.add(
+                            'hide'
+                        );
+
+
+                        setTimeout(
+                            () => loader.remove(),
+                            280
+                        );
+
+                    },
+                    120
+                );
+
+            }
+        );
+
     </script>
+
 </body>
 </html>
