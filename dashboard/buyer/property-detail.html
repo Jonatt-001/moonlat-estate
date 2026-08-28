@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Property Details - MoonLat</title>
-    <meta name="description" content="View property details, amenities, pricing and schedule a viewing on MoonLat.">
+    <meta name="description" content="View property details, amenities, pricing and contact the property agent on MoonLat.">
     <meta name="theme-color" content="#0f172a">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -62,855 +62,3591 @@
     </script>
 
     <style>
-        * { -webkit-tap-highlight-color: transparent; }
-        html { scroll-behavior: smooth; }
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            background: radial-gradient(circle at 50% -10%, rgba(37, 99, 235, 0.045), transparent 32%), #f8fafc;
+            background:
+                radial-gradient(
+                    circle at 50% -10%,
+                    rgba(37, 99, 235, 0.045),
+                    transparent 32%
+                ),
+                #f8fafc;
         }
-        ::selection { background: rgba(37, 99, 235, 0.18); }
-        .glass { background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+
+        ::selection {
+            background: rgba(37, 99, 235, 0.18);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
         .image-overlay {
-            background: linear-gradient(to top, rgba(2, 6, 23, 0.65), rgba(2, 6, 23, 0.08) 55%, rgba(2, 6, 23, 0.12));
+            background:
+                linear-gradient(
+                    to top,
+                    rgba(2, 6, 23, 0.65),
+                    rgba(2, 6, 23, 0.08) 55%,
+                    rgba(2, 6, 23, 0.12)
+                );
         }
-        .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        
-        .modal-backdrop { background: rgba(2, 6, 23, 0.62); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-        .modal-enter { animation: modalEnter 0.22s ease-out; }
-        @keyframes modalEnter {
-            from { opacity: 0; transform: translateY(18px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+
+        .hide-scrollbar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-        .toast-enter { animation: toastEnter 0.25s ease-out; }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .modal-backdrop {
+            background: rgba(2, 6, 23, 0.62);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .sheet-enter {
+            animation: sheetEnter 0.28s cubic-bezier(.2,.8,.2,1);
+        }
+
+        @keyframes sheetEnter {
+            from {
+                opacity: 0;
+                transform: translateY(100%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toast-enter {
+            animation: toastEnter 0.25s ease-out;
+        }
+
         @keyframes toastEnter {
-            from { opacity: 0; transform: translate(-50%, -10px); }
-            to { opacity: 1; transform: translate(-50%, 0); }
+            from {
+                opacity: 0;
+                transform: translate(-50%, -10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
         }
+
         .skeleton {
-            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 37%, #e2e8f0 63%);
+            background:
+                linear-gradient(
+                    90deg,
+                    #e2e8f0 25%,
+                    #f1f5f9 37%,
+                    #e2e8f0 63%
+                );
             background-size: 400% 100%;
             animation: skeleton 1.4s ease infinite;
         }
+
         @keyframes skeleton {
-            0% { background-position: 100% 0; }
-            100% { background-position: -100% 0; }
+            0% {
+                background-position: 100% 0;
+            }
+
+            100% {
+                background-position: -100% 0;
+            }
         }
+
         .favorite-active {
             color: #e11d48 !important;
             background: #fff1f2 !important;
             border-color: #fecdd3 !important;
         }
-        
-        /* Smooth expand animation for agent info */
-        .agent-info-content {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 0.3s ease;
+
+        .contact-option {
+            transition:
+                transform .18s ease,
+                border-color .18s ease,
+                background .18s ease,
+                box-shadow .18s ease;
         }
-        .agent-info-content.expanded {
-            grid-template-rows: 1fr;
+
+        .contact-option:active {
+            transform: scale(.985);
         }
-        .agent-info-inner { overflow: hidden; }
 
         @media (max-width: 1023px) {
-            body { padding-bottom: 84px; }
+            body {
+                padding-bottom: 82px;
+            }
+        }
+
+        @media (min-width: 640px) {
+            .sheet-mobile-width {
+                max-width: 560px;
+            }
         }
     </style>
 </head>
+
 <body class="text-slate-900 font-sans antialiased">
 
     <!-- Header -->
     <header class="sticky top-0 z-50 glass border-b border-slate-200/70">
         <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="h-[68px] flex items-center justify-between gap-4">
-                <a href="browse-property.html" class="inline-flex items-center gap-2.5 text-sm font-semibold text-slate-600 hover:text-slate-950 transition">
+
+                <a
+                    href="browse-property.html"
+                    class="inline-flex items-center gap-2.5 text-sm font-semibold text-slate-600 hover:text-slate-950 transition"
+                >
                     <span class="w-9 h-9 rounded-full border border-slate-200 bg-white flex items-center justify-center shadow-sm">
                         <i class="fas fa-arrow-left text-xs"></i>
                     </span>
-                    <span class="hidden sm:inline">Back to Search</span>
+
+                    <span class="hidden sm:inline">
+                        Back to Search
+                    </span>
                 </a>
+
                 <div class="flex items-center gap-2">
-                    <button onclick="shareProperty()" class="w-10 h-10 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-primary-600 hover:border-primary-200 transition flex items-center justify-center" aria-label="Share property">
+
+                    <button
+                        onclick="shareProperty()"
+                        class="w-10 h-10 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-primary-600 hover:border-primary-200 transition flex items-center justify-center"
+                        aria-label="Share property"
+                    >
                         <i class="fas fa-share-nodes text-sm"></i>
                     </button>
-                    <button onclick="toggleSaveProperty()" id="headerSaveBtn" class="w-10 h-10 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-rose-600 hover:border-rose-200 transition flex items-center justify-center" aria-label="Save property">
+
+                    <button
+                        onclick="toggleSaveProperty()"
+                        id="headerSaveBtn"
+                        class="w-10 h-10 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-rose-600 hover:border-rose-200 transition flex items-center justify-center"
+                        aria-label="Save property"
+                    >
                         <i class="far fa-heart text-sm"></i>
                     </button>
+
                 </div>
             </div>
         </div>
     </header>
 
+
     <!-- Main -->
     <main class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7 lg:py-9">
+
         <div id="propertyContent">
+
             <!-- Loading -->
             <div class="space-y-6">
+
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:h-[560px]">
+
                     <div class="lg:col-span-8 h-[330px] sm:h-[440px] lg:h-full rounded-[28px] skeleton"></div>
+
                     <div class="hidden lg:grid lg:col-span-4 grid-rows-2 gap-3">
+
                         <div class="rounded-[28px] skeleton"></div>
+
                         <div class="rounded-[28px] skeleton"></div>
+
                     </div>
+
                 </div>
+
                 <div class="bg-white rounded-[28px] border border-slate-200 p-6 sm:p-8">
+
                     <div class="w-2/3 h-8 skeleton rounded-lg mb-4"></div>
+
                     <div class="w-1/3 h-5 skeleton rounded-lg"></div>
+
                 </div>
+
             </div>
+
         </div>
+
     </main>
 
+
     <!-- Mobile Action Bar -->
-    <div id="mobileActionBar" class="hidden fixed bottom-0 left-0 right-0 z-[100] bg-white/95 backdrop-blur-xl border-t border-slate-200 px-4 py-3 shadow-[0_-12px_35px_rgba(15,23,42,0.08)]">
+    <div
+        id="mobileActionBar"
+        class="hidden fixed bottom-0 left-0 right-0 z-[900] bg-white/95 backdrop-blur-xl border-t border-slate-200 px-4 py-3 shadow-[0_-12px_35px_rgba(15,23,42,0.08)]"
+    >
+
         <div class="max-w-[1440px] mx-auto flex gap-2.5">
-            <button onclick="toggleSaveProperty()" id="mobileSaveBtn" class="w-12 h-12 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-600 shrink-0">
+
+            <button
+                onclick="toggleSaveProperty()"
+                id="mobileSaveBtn"
+                class="w-12 h-12 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-600 shrink-0"
+                aria-label="Save property"
+            >
                 <i class="far fa-heart"></i>
             </button>
-            <button onclick="contactAgent()" class="flex-1 h-12 rounded-xl border border-slate-200 bg-white text-slate-800 font-bold text-sm hover:border-primary-300 hover:text-primary-600 transition">
-                Message
+
+            <button
+                onclick="openContactSheet()"
+                class="flex-1 h-12 rounded-xl bg-slate-950 text-white font-extrabold text-sm shadow-lg shadow-slate-900/15 hover:bg-slate-800 transition flex items-center justify-center gap-2"
+            >
+                <i class="fas fa-address-card"></i>
+                Contact Agent
             </button>
-            <button onclick="openViewingModal()" class="flex-[1.4] h-12 rounded-xl bg-slate-950 text-white font-bold text-sm shadow-lg shadow-slate-900/15 hover:bg-slate-800 transition">
-                Schedule Viewing
-            </button>
+
         </div>
+
     </div>
 
-    <!-- Viewing Modal -->
-    <div id="viewingModal" class="hidden fixed inset-0 z-[1000] modal-backdrop items-end sm:items-center justify-center p-0 sm:p-5">
-        <div class="modal-enter w-full sm:max-w-lg bg-white sm:rounded-[28px] rounded-t-[28px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="px-5 sm:px-7 pt-5 sm:pt-7 pb-4 border-b border-slate-100 flex items-center justify-between shrink-0">
-                <div>
-                    <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-600 mb-1">Private Viewing</p>
-                    <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">Schedule a viewing</h3>
+
+    <!-- Contact Agent Sheet -->
+    <div
+        id="contactSheet"
+        class="hidden fixed inset-0 z-[1100] modal-backdrop items-end sm:items-center justify-center p-0 sm:p-5"
+        aria-hidden="true"
+    >
+
+        <div
+            class="sheet-enter sheet-mobile-width w-full bg-white sm:rounded-[30px] rounded-t-[30px] shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
+        >
+
+            <!-- Sheet Header -->
+            <div class="px-5 sm:px-7 pt-4 sm:pt-6 pb-4 border-b border-slate-100 shrink-0">
+
+                <div class="flex justify-center sm:hidden mb-4">
+                    <span class="w-11 h-1.5 rounded-full bg-slate-200"></span>
                 </div>
-                <button onclick="closeViewingModal()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition">
-                    <i class="fas fa-xmark"></i>
-                </button>
-            </div>
-            <div class="overflow-y-auto p-5 sm:p-7 flex-1 hide-scrollbar">
-                <form id="viewingForm" onsubmit="submitViewingRequest(event)">
-                    <div class="bg-slate-50 rounded-2xl p-4 mb-5 flex gap-3">
-                        <div class="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center shrink-0">
-                            <i class="fas fa-house"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <p id="modalPropertyTitle" class="font-bold text-slate-900 truncate">Property</p>
-                            <p id="modalPropertyLocation" class="text-xs text-slate-500 mt-1 truncate">Location</p>
-                        </div>
+
+                <div class="flex items-start justify-between gap-4">
+
+                    <div class="min-w-0">
+
+                        <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600 mb-1">
+                            Property Agent
+                        </p>
+
+                        <h3
+                            id="contactSheetTitle"
+                            class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950 truncate"
+                        >
+                            Contact Agent
+                        </h3>
+
+                        <p
+                            id="contactSheetSubtitle"
+                            class="text-xs sm:text-sm text-slate-500 mt-1 truncate"
+                        >
+                            Choose how you would like to connect.
+                        </p>
+
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Preferred Date</label>
-                            <input type="date" id="viewingDate" required class="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Preferred Time</label>
-                            <input type="time" id="viewingTime" required class="w-full h-12 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition">
-                        </div>
-                    </div>
-                    <div class="mt-5">
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Additional Note <span class="font-normal normal-case tracking-normal">(optional)</span></label>
-                        <textarea id="viewingNote" rows="3" placeholder="Anything the agent should know..." class="w-full rounded-xl border border-slate-200 bg-white p-4 text-sm outline-none resize-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition"></textarea>
-                    </div>
-                    <button id="submitViewingBtn" type="submit" class="w-full mt-5 h-13 py-3.5 rounded-xl bg-slate-950 text-white font-bold hover:bg-slate-800 transition flex items-center justify-center gap-2">
-                        <i class="fas fa-calendar-check"></i> Send Viewing Request
+
+                    <button
+                        onclick="closeContactSheet()"
+                        class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition shrink-0"
+                        aria-label="Close contact options"
+                    >
+                        <i class="fas fa-xmark"></i>
                     </button>
-                    <p class="text-center text-[11px] text-slate-400 mt-3">Your request will be sent to the property agent for confirmation.</p>
-                </form>
-            </div>
-        </div>
-    </div>
 
-    <!-- Message Modal (Fallback if no WhatsApp) -->
-    <div id="messageModal" class="hidden fixed inset-0 z-[1000] modal-backdrop items-end sm:items-center justify-center p-0 sm:p-5">
-        <div class="modal-enter w-full sm:max-w-lg bg-white sm:rounded-[28px] rounded-t-[28px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="px-5 sm:px-7 pt-5 sm:pt-7 pb-4 border-b border-slate-100 flex items-center justify-between shrink-0">
-                <div>
-                    <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-600 mb-1">Direct Message</p>
-                    <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">Contact Agent</h3>
                 </div>
-                <button onclick="closeMessageModal()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition">
-                    <i class="fas fa-xmark"></i>
-                </button>
+
             </div>
-            <div class="overflow-y-auto p-5 sm:p-7 flex-1 hide-scrollbar">
-                <form id="messageForm" onsubmit="submitMessageRequest(event)">
+
+
+            <!-- Contact Options -->
+            <div
+                id="contactOptionsView"
+                class="overflow-y-auto p-5 sm:p-7 hide-scrollbar"
+            >
+
+                <!-- Agent Identity -->
+                <div class="flex items-center gap-3.5 mb-5">
+
+                    <div
+                        id="contactAgentAvatar"
+                        class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-lg font-extrabold shadow-lg shadow-primary-500/20 shrink-0"
+                    >
+                        A
+                    </div>
+
+                    <div class="min-w-0">
+
+                        <p
+                            id="contactAgentName"
+                            class="font-extrabold text-slate-950 truncate"
+                        >
+                            Property Agent
+                        </p>
+
+                        <p class="text-xs text-slate-500 mt-1">
+                            Available to help with this property
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Call -->
+                <button
+                    onclick="callAgent()"
+                    class="contact-option w-full flex items-center gap-4 p-4 rounded-2xl border border-slate-200 bg-white hover:border-primary-200 hover:bg-primary-50/40 mb-3 text-left"
+                >
+
+                    <span class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                        <i class="fas fa-phone"></i>
+                    </span>
+
+                    <span class="flex-1 min-w-0">
+
+                        <span
+                            id="callAgentLabel"
+                            class="block font-extrabold text-slate-900"
+                        >
+                            Call Agent
+                        </span>
+
+                        <span
+                            id="callAgentNumber"
+                            class="block text-xs text-slate-500 mt-1"
+                        >
+                            Call directly
+                        </span>
+
+                    </span>
+
+                    <i class="fas fa-chevron-right text-xs text-slate-300"></i>
+
+                </button>
+
+
+                <!-- WhatsApp -->
+                <button
+                    onclick="whatsappAgent()"
+                    class="contact-option w-full flex items-center gap-4 p-4 rounded-2xl border border-slate-200 bg-white hover:border-emerald-200 hover:bg-emerald-50/40 mb-3 text-left"
+                >
+
+                    <span class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                        <i class="fab fa-whatsapp text-xl"></i>
+                    </span>
+
+                    <span class="flex-1 min-w-0">
+
+                        <span
+                            id="whatsappAgentLabel"
+                            class="block font-extrabold text-slate-900"
+                        >
+                            WhatsApp Agent
+                        </span>
+
+                        <span class="block text-xs text-slate-500 mt-1">
+                            Continue privately on WhatsApp
+                        </span>
+
+                    </span>
+
+                    <i class="fas fa-chevron-right text-xs text-slate-300"></i>
+
+                </button>
+
+
+                <!-- Schedule -->
+                <button
+                    onclick="showScheduleFromContact()"
+                    class="contact-option w-full flex items-center gap-4 p-4 rounded-2xl border border-slate-200 bg-white hover:border-primary-200 hover:bg-primary-50/40 text-left"
+                >
+
+                    <span class="w-12 h-12 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0">
+                        <i class="fas fa-calendar-check"></i>
+                    </span>
+
+                    <span class="flex-1 min-w-0">
+
+                        <span class="block font-extrabold text-slate-900">
+                            Schedule a Viewing
+                        </span>
+
+                        <span class="block text-xs text-slate-500 mt-1">
+                            Choose a date and preferred time
+                        </span>
+
+                    </span>
+
+                    <i class="fas fa-chevron-right text-xs text-slate-300"></i>
+
+                </button>
+
+
+                <div class="mt-5 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+
+                    <div class="flex items-start gap-3">
+
+                        <span class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-500 shrink-0">
+                            <i class="fas fa-shield-halved text-xs"></i>
+                        </span>
+
+                        <p class="text-[11px] leading-5 text-slate-500">
+                            Keep communication and viewing arrangements clear.
+                            Verify property ownership and documentation before making payments.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Schedule View -->
+            <div
+                id="scheduleView"
+                class="hidden overflow-y-auto p-5 sm:p-7 hide-scrollbar"
+            >
+
+                <button
+                    onclick="backToContactOptions()"
+                    class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 mb-5"
+                >
+                    <i class="fas fa-arrow-left"></i>
+                    Back to contact options
+                </button>
+
+
+                <div class="bg-slate-50 rounded-2xl p-4 mb-5 flex gap-3">
+
+                    <div class="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center shrink-0">
+                        <i class="fas fa-house"></i>
+                    </div>
+
+                    <div class="min-w-0">
+
+                        <p
+                            id="schedulePropertyTitle"
+                            class="font-bold text-slate-900 truncate"
+                        >
+                            Property
+                        </p>
+
+                        <p
+                            id="schedulePropertyLocation"
+                            class="text-xs text-slate-500 mt-1 truncate"
+                        >
+                            Location
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form
+                    id="viewingForm"
+                    onsubmit="submitViewingRequest(event)"
+                >
+
                     <div class="mb-5">
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Your Message</label>
-                        <textarea id="directMessageContent" rows="4" required placeholder="Hi, I am interested in this property..." class="w-full rounded-xl border border-slate-200 bg-white p-4 text-sm outline-none resize-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition"></textarea>
+
+                        <label
+                            for="viewingDate"
+                            class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2"
+                        >
+                            Select date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="viewingDate"
+                            required
+                            class="w-full h-13 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition"
+                        >
+
+                        <p class="text-[11px] text-slate-400 mt-2">
+                            Select the day you would like to visit the property.
+                        </p>
+
                     </div>
-                    <button id="submitMessageBtn" type="submit" class="w-full h-13 py-3.5 rounded-xl bg-slate-950 text-white font-bold hover:bg-slate-800 transition flex items-center justify-center gap-2">
-                        <i class="fas fa-paper-plane"></i> Send Message
+
+
+                    <div class="mb-5">
+
+                        <label
+                            for="viewingTime"
+                            class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2"
+                        >
+                            Preferred time
+                        </label>
+
+                        <input
+                            type="time"
+                            id="viewingTime"
+                            required
+                            class="w-full h-13 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition"
+                        >
+
+                        <p class="text-[11px] text-slate-400 mt-2">
+                            The agent will confirm the requested time.
+                        </p>
+
+                    </div>
+
+
+                    <div class="mb-5">
+
+                        <label
+                            for="viewingNote"
+                            class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2"
+                        >
+                            Note
+                            <span class="font-normal normal-case tracking-normal">
+                                (optional)
+                            </span>
+                        </label>
+
+                        <textarea
+                            id="viewingNote"
+                            rows="3"
+                            maxlength="500"
+                            placeholder="Anything the agent should know?"
+                            class="w-full rounded-2xl border border-slate-200 bg-white p-4 text-sm outline-none resize-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition"
+                        ></textarea>
+
+                    </div>
+
+
+                    <button
+                        id="submitViewingBtn"
+                        type="submit"
+                        class="w-full h-13 py-3.5 rounded-2xl bg-slate-950 text-white font-extrabold hover:bg-slate-800 transition flex items-center justify-center gap-2"
+                    >
+                        <i class="fas fa-calendar-check"></i>
+                        Request Viewing
                     </button>
-                    <p class="text-center text-[11px] text-slate-400 mt-3">The agent will receive this message on their dashboard.</p>
+
+
+                    <p class="text-center text-[11px] text-slate-400 mt-3">
+                        Your request will appear in the agent's appointments.
+                    </p>
+
                 </form>
+
             </div>
+
         </div>
+
     </div>
+
 
     <script>
+
         let currentUser = null;
         let propertyId = null;
         let propertyData = null;
         let agentData = null;
         let isSaved = false;
 
-        const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&q=85';
+        const FALLBACK_IMAGE =
+            'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&q=85';
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            propertyId = urlParams.get('id');
 
-            if (!propertyId) {
-                window.location.href = 'browse-property.html';
-                return;
-            }
+        /*
+         * =========================
+         * INITIALIZATION
+         * =========================
+         */
 
-            auth.onAuthStateChanged(async (user) => {
-                if (user) {
-                    currentUser = user;
-                    await loadProperty();
-                    await checkIfSaved();
-                } else {
-                    window.location.href = '../sign-in.html';
-                }
-            });
-        });
+        document.addEventListener(
+            'DOMContentLoaded',
+            async () => {
 
-        async function loadProperty() {
-            try {
-                const doc = await db.collection('properties').doc(propertyId).get();
-                if (!doc.exists) {
-                    window.location.href = 'browse-property.html';
+                const urlParams =
+                    new URLSearchParams(
+                        window.location.search
+                    );
+
+                propertyId =
+                    urlParams.get('id');
+
+                if (!propertyId) {
+
+                    window.location.href =
+                        'browse-property.html';
+
                     return;
                 }
 
-                propertyData = { id: doc.id, ...doc.data() };
-                
-                // Fetch Agent/Owner details automatically
-                const agentId = propertyData.agentId || propertyData.ownerId || propertyData.userId;
-                if (agentId) {
-                    try {
-                        const agentDoc = await db.collection('users').doc(agentId).get();
-                        if (agentDoc.exists) {
-                            agentData = { id: agentDoc.id, ...agentDoc.data() };
+
+                auth.onAuthStateChanged(
+                    async (user) => {
+
+                        if (user) {
+
+                            currentUser =
+                                user;
+
+                            await loadProperty();
+
+                            await checkIfSaved();
+
+                        } else {
+
+                            window.location.href =
+                                '../sign-in.html';
+
                         }
-                    } catch (err) {
-                        console.error('Could not fetch agent profile', err);
+
                     }
+                );
+
+            }
+        );
+
+
+        /*
+         * =========================
+         * PROPERTY LOADING
+         * =========================
+         */
+
+        async function loadProperty() {
+
+            try {
+
+                const doc =
+                    await db
+                        .collection('properties')
+                        .doc(propertyId)
+                        .get();
+
+
+                if (!doc.exists) {
+
+                    window.location.href =
+                        'browse-property.html';
+
+                    return;
                 }
 
+
+                propertyData = {
+                    id: doc.id,
+                    ...doc.data()
+                };
+
+
+                const agentId =
+                    propertyData.agentId ||
+                    propertyData.ownerId ||
+                    propertyData.userId;
+
+
+                if (agentId) {
+
+                    try {
+
+                        const agentDoc =
+                            await db
+                                .collection('users')
+                                .doc(agentId)
+                                .get();
+
+
+                        if (agentDoc.exists) {
+
+                            agentData = {
+                                id: agentDoc.id,
+                                ...agentDoc.data()
+                            };
+
+                        }
+
+                    } catch (err) {
+
+                        console.error(
+                            'Could not fetch agent profile',
+                            err
+                        );
+
+                    }
+
+                }
+
+
                 renderProperty();
-                document.getElementById('mobileActionBar').classList.remove('hidden');
+
+                document
+                    .getElementById(
+                        'mobileActionBar'
+                    )
+                    .classList
+                    .remove('hidden');
+
 
             } catch (error) {
-                console.error('Error loading property:', error);
-                document.getElementById('propertyContent').innerHTML = `
-                    <div class="max-w-xl mx-auto py-24 text-center">
-                        <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center">
-                            <i class="fas fa-triangle-exclamation text-xl"></i>
+
+                console.error(
+                    'Error loading property:',
+                    error
+                );
+
+
+                document
+                    .getElementById(
+                        'propertyContent'
+                    )
+                    .innerHTML = `
+
+                        <div class="max-w-xl mx-auto py-24 text-center">
+
+                            <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center">
+
+                                <i class="fas fa-triangle-exclamation text-xl"></i>
+
+                            </div>
+
+                            <h2 class="text-2xl font-extrabold text-slate-950">
+                                Unable to load property
+                            </h2>
+
+                            <p class="text-slate-500 mt-2 mb-7">
+                                Something went wrong while retrieving this property.
+                            </p>
+
+                            <a
+                                href="browse-property.html"
+                                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-950 text-white font-bold text-sm"
+                            >
+                                <i class="fas fa-arrow-left"></i>
+                                Back to Search
+                            </a>
+
                         </div>
-                        <h2 class="text-2xl font-extrabold text-slate-950">Unable to load property</h2>
-                        <p class="text-slate-500 mt-2 mb-7">Something went wrong while retrieving this property.</p>
-                        <a href="browse-property.html" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-950 text-white font-bold text-sm"><i class="fas fa-arrow-left"></i> Back to Search</a>
-                    </div>
-                `;
-                showToast('Error loading property', 'error');
+
+                    `;
+
+
+                showToast(
+                    'Error loading property',
+                    'error'
+                );
+
             }
+
         }
+
+
+        /*
+         * =========================
+         * SAVED PROPERTY
+         * =========================
+         */
 
         async function checkIfSaved() {
+
             if (!currentUser || !propertyId) return;
+
+
             try {
-                const doc = await db.collection('users').doc(currentUser.uid).collection('savedProperties').doc(propertyId).get();
-                isSaved = doc.exists;
+
+                const doc =
+                    await db
+                        .collection('users')
+                        .doc(currentUser.uid)
+                        .collection('savedProperties')
+                        .doc(propertyId)
+                        .get();
+
+
+                isSaved =
+                    doc.exists;
+
+
                 updateFavoriteButton();
+
             } catch (error) {
-                console.error('Error checking saved:', error);
+
+                console.error(
+                    'Error checking saved:',
+                    error
+                );
+
             }
+
         }
+
 
         function getPropertyImages(p) {
+
             const images = [];
+
+
             if (Array.isArray(p.images)) {
-                p.images.forEach(image => {
-                    if (image && typeof image === 'string') {
-                        images.push(image);
+
+                p.images.forEach(
+                    image => {
+
+                        if (
+                            image &&
+                            typeof image === 'string'
+                        ) {
+
+                            images.push(image);
+
+                        }
+
                     }
-                });
+                );
+
             }
-            if (p.image && !images.includes(p.image)) { images.unshift(p.image); }
-            if (!images.length) { images.push(FALLBACK_IMAGE); }
-            return [...new Set(images)].slice(0, 5);
+
+
+            if (
+                p.image &&
+                !images.includes(p.image)
+            ) {
+
+                images.unshift(p.image);
+
+            }
+
+
+            if (!images.length) {
+
+                images.push(
+                    FALLBACK_IMAGE
+                );
+
+            }
+
+
+            return [
+                ...new Set(images)
+            ].slice(0, 5);
+
         }
 
+
+        /*
+         * =========================
+         * PROPERTY RENDER
+         * =========================
+         */
+
         function renderProperty() {
-            const p = propertyData;
-            const images = getPropertyImages(p);
-            const container = document.getElementById('propertyContent');
 
-            const price = Number(p.price || 0);
-            const area = Number(p.area || 0);
-            const pricePerMeter = area > 0 ? Math.round(price / area) : 0;
-            const title = escapeHtml(p.title || 'Untitled Property');
-            const location = escapeHtml(p.location || 'Location unavailable');
-            const description = escapeHtml(p.description || 'No description is available for this property.');
-            
-            // Dynamic Agent Handling
-            const ownerName = escapeHtml(agentData?.displayName || agentData?.name || p.ownerName || 'Property Agent');
-            const ownerInitial = ownerName.charAt(0).toUpperCase();
-            const ownerAvatar = agentData?.photoURL || p.ownerPhoto || null;
-            const propertyType = escapeHtml(p.type || 'Residential');
+            const p =
+                propertyData;
 
-            const avatarMarkup = ownerAvatar 
-                ? `<img src="${escapeAttribute(ownerAvatar)}" alt="Agent" class="w-full h-full object-cover rounded-2xl">`
-                : `${ownerInitial}`;
+            const images =
+                getPropertyImages(p);
+
+            const container =
+                document.getElementById(
+                    'propertyContent'
+                );
+
+
+            const price =
+                Number(
+                    p.price || 0
+                );
+
+
+            const area =
+                Number(
+                    p.area || 0
+                );
+
+
+            const pricePerMeter =
+                area > 0
+                    ? Math.round(
+                        price / area
+                    )
+                    : 0;
+
+
+            const title =
+                escapeHtml(
+                    p.title ||
+                    'Untitled Property'
+                );
+
+
+            const location =
+                escapeHtml(
+                    p.location ||
+                    'Location unavailable'
+                );
+
+
+            const description =
+                escapeHtml(
+                    p.description ||
+                    'No description is available for this property.'
+                );
+
+
+            const ownerName =
+                escapeHtml(
+                    agentData?.displayName ||
+                    agentData?.name ||
+                    p.ownerName ||
+                    'Property Agent'
+                );
+
+
+            const ownerInitial =
+                ownerName
+                    .charAt(0)
+                    .toUpperCase();
+
+
+            const ownerAvatar =
+                agentData?.photoURL ||
+                p.ownerPhoto ||
+                null;
+
+
+            const propertyType =
+                escapeHtml(
+                    p.type ||
+                    'Residential'
+                );
+
+
+            const avatarMarkup =
+                ownerAvatar
+
+                    ? `
+                        <img
+                            src="${escapeAttribute(ownerAvatar)}"
+                            alt="Agent"
+                            class="w-full h-full object-cover rounded-2xl"
+                        >
+                    `
+
+                    : ownerInitial;
+
 
             container.innerHTML = `
+
                 <!-- Breadcrumb -->
                 <div class="flex items-center gap-2 text-xs sm:text-sm text-slate-500 mb-5 overflow-hidden">
-                    <a href="browse-property.html" class="hover:text-slate-900 transition shrink-0">Properties</a>
+
+                    <a
+                        href="browse-property.html"
+                        class="hover:text-slate-900 transition shrink-0"
+                    >
+                        Properties
+                    </a>
+
                     <i class="fas fa-chevron-right text-[9px] text-slate-300"></i>
-                    <span class="truncate text-slate-700 font-medium">${title}</span>
+
+                    <span class="truncate text-slate-700 font-medium">
+                        ${title}
+                    </span>
+
                 </div>
+
 
                 <!-- Gallery -->
                 <section class="mb-7">
+
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:h-[580px]">
+
                         <!-- Main Image -->
                         <div class="lg:col-span-8 relative group overflow-hidden rounded-[26px] sm:rounded-[30px] bg-slate-900 min-h-[330px] sm:min-h-[460px] lg:min-h-0">
-                            <img id="mainPropertyImage" src="${images[0]}" alt="${title}" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-[1.025]" onerror="this.src='${FALLBACK_IMAGE}'">
+
+                            <img
+                                id="mainPropertyImage"
+                                src="${images[0]}"
+                                alt="${title}"
+                                class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-[1.025]"
+                                onerror="this.src='${FALLBACK_IMAGE}'"
+                            >
+
                             <div class="absolute inset-0 image-overlay pointer-events-none"></div>
+
+
                             <div class="absolute top-4 left-4 sm:top-5 sm:left-5 flex flex-wrap gap-2">
-                                ${p.featured ? `<span class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/95 text-slate-900 text-[11px] font-extrabold tracking-wide shadow-lg backdrop-blur"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>FEATURED</span>` : ''}
-                                <span class="inline-flex items-center px-3.5 py-2 rounded-full bg-slate-950/75 text-white text-[11px] font-bold backdrop-blur">${propertyType}</span>
+
+                                ${
+                                    p.featured
+
+                                        ? `
+                                            <span class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/95 text-slate-900 text-[11px] font-extrabold tracking-wide shadow-lg backdrop-blur">
+
+                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+
+                                                FEATURED
+
+                                            </span>
+                                        `
+
+                                        : ''
+                                }
+
+
+                                <span class="inline-flex items-center px-3.5 py-2 rounded-full bg-slate-950/75 text-white text-[11px] font-bold backdrop-blur">
+
+                                    ${propertyType}
+
+                                </span>
+
                             </div>
+
+
                             <div class="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 flex items-end justify-between gap-4">
+
                                 <div class="text-white min-w-0">
-                                    <p class="text-[11px] uppercase tracking-[0.18em] font-bold text-white/65 mb-2">Property Preview</p>
-                                    <p class="text-sm sm:text-base font-semibold truncate max-w-[75vw]">${title}</p>
+
+                                    <p class="text-[11px] uppercase tracking-[0.18em] font-bold text-white/65 mb-2">
+                                        Property Preview
+                                    </p>
+
+                                    <p class="text-sm sm:text-base font-semibold truncate max-w-[75vw]">
+                                        ${title}
+                                    </p>
+
                                 </div>
-                                <button onclick="openGallery()" class="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/95 text-slate-900 text-xs font-extrabold shadow-xl hover:bg-white transition">
-                                    <i class="fas fa-images"></i><span>${images.length} Photos</span>
+
+
+                                <button
+                                    onclick="openGallery()"
+                                    class="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/95 text-slate-900 text-xs font-extrabold shadow-xl hover:bg-white transition"
+                                >
+
+                                    <i class="fas fa-images"></i>
+
+                                    <span>
+                                        ${images.length} Photos
+                                    </span>
+
                                 </button>
+
                             </div>
+
                         </div>
+
+
                         <!-- Secondary Images -->
                         <div class="hidden lg:grid lg:col-span-4 grid-rows-2 gap-3">
-                            ${images[1] ? `<button onclick="setMainImage('${escapeAttribute(images[1])}')" class="relative overflow-hidden rounded-[26px] bg-slate-200 group text-left"><img src="${images[1]}" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-105" onerror="this.src='${FALLBACK_IMAGE}'"><div class="absolute inset-0 bg-slate-950/5 group-hover:bg-slate-950/0 transition"></div></button>` : `<div class="rounded-[26px] bg-slate-100 flex items-center justify-center text-slate-300"><i class="fas fa-image text-3xl"></i></div>`}
-                            ${images[2] ? `<button onclick="setMainImage('${escapeAttribute(images[2])}')" class="relative overflow-hidden rounded-[26px] bg-slate-200 group text-left"><img src="${images[2]}" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-105" onerror="this.src='${FALLBACK_IMAGE}'">${images.length > 3 ? `<div class="absolute inset-0 bg-slate-950/45 flex items-center justify-center"><span class="px-4 py-2.5 rounded-xl bg-white/95 text-slate-900 text-xs font-extrabold">View ${images.length - 2} more</span></div>` : ''}</button>` : `<div class="rounded-[26px] bg-slate-100 flex items-center justify-center text-slate-300"><i class="fas fa-image text-3xl"></i></div>`}
+
+                            ${
+                                images[1]
+
+                                    ? `
+                                        <button
+                                            onclick="setMainImage('${escapeAttribute(images[1])}')"
+                                            class="relative overflow-hidden rounded-[26px] bg-slate-200 group text-left"
+                                        >
+
+                                            <img
+                                                src="${images[1]}"
+                                                class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-105"
+                                                onerror="this.src='${FALLBACK_IMAGE}'"
+                                            >
+
+                                            <div class="absolute inset-0 bg-slate-950/5 group-hover:bg-slate-950/0 transition"></div>
+
+                                        </button>
+                                    `
+
+                                    : `
+                                        <div class="rounded-[26px] bg-slate-100 flex items-center justify-center text-slate-300">
+                                            <i class="fas fa-image text-3xl"></i>
+                                        </div>
+                                    `
+                            }
+
+
+                            ${
+                                images[2]
+
+                                    ? `
+                                        <button
+                                            onclick="setMainImage('${escapeAttribute(images[2])}')"
+                                            class="relative overflow-hidden rounded-[26px] bg-slate-200 group text-left"
+                                        >
+
+                                            <img
+                                                src="${images[2]}"
+                                                class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-105"
+                                                onerror="this.src='${FALLBACK_IMAGE}'"
+                                            >
+
+                                            ${
+                                                images.length > 3
+
+                                                    ? `
+                                                        <div class="absolute inset-0 bg-slate-950/45 flex items-center justify-center">
+
+                                                            <span class="px-4 py-2.5 rounded-xl bg-white/95 text-slate-900 text-xs font-extrabold">
+
+                                                                View ${images.length - 2} more
+
+                                                            </span>
+
+                                                        </div>
+                                                    `
+
+                                                    : ''
+                                            }
+
+                                        </button>
+                                    `
+
+                                    : `
+                                        <div class="rounded-[26px] bg-slate-100 flex items-center justify-center text-slate-300">
+                                            <i class="fas fa-image text-3xl"></i>
+                                        </div>
+                                    `
+                            }
+
                         </div>
+
                     </div>
+
+
                     <!-- Mobile gallery thumbnails -->
-                    ${images.length > 1 ? `<div class="flex gap-2.5 overflow-x-auto hide-scrollbar mt-3 lg:hidden">${images.map((image, index) => `<button onclick="setMainImage('${escapeAttribute(image)}')" class="relative w-[82px] h-[64px] rounded-xl overflow-hidden shrink-0 border-2 ${index === 0 ? 'border-primary-500' : 'border-transparent'}"><img src="${image}" class="w-full h-full object-cover" onerror="this.src='${FALLBACK_IMAGE}'"></button>`).join('')}</div>` : ''}
+                    ${
+                        images.length > 1
+
+                            ? `
+                                <div class="flex gap-2.5 overflow-x-auto hide-scrollbar mt-3 lg:hidden">
+
+                                    ${
+                                        images
+                                            .map(
+                                                (image, index) => `
+
+                                                    <button
+                                                        onclick="setMainImage('${escapeAttribute(image)}')"
+                                                        class="relative w-[82px] h-[64px] rounded-xl overflow-hidden shrink-0 border-2 ${
+                                                            index === 0
+                                                                ? 'border-primary-500'
+                                                                : 'border-transparent'
+                                                        }"
+                                                    >
+
+                                                        <img
+                                                            src="${image}"
+                                                            class="w-full h-full object-cover"
+                                                            onerror="this.src='${FALLBACK_IMAGE}'"
+                                                        >
+
+                                                    </button>
+
+                                                `
+                                            )
+                                            .join('')
+                                    }
+
+                                </div>
+                            `
+
+                            : ''
+                    }
+
                 </section>
+
 
                 <!-- Main Content Grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-9">
+
+
                     <!-- Main Details -->
                     <div class="lg:col-span-8 space-y-6">
+
+
                         <!-- Property Heading -->
                         <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft p-5 sm:p-7 lg:p-8">
+
                             <div class="flex flex-col gap-5">
+
                                 <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5">
+
                                     <div class="min-w-0">
+
                                         <div class="flex items-center gap-2 mb-3">
-                                            <span class="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-[0.14em] text-emerald-700 bg-emerald-50 px-2.5 py-1.5 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Available</span>
-                                            ${p.verified ? `<span class="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-extrabold text-primary-700 bg-primary-50 px-2.5 py-1.5 rounded-full"><i class="fas fa-circle-check"></i>Verified</span>` : ''}
+
+                                            <span class="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-[0.14em] text-emerald-700 bg-emerald-50 px-2.5 py-1.5 rounded-full">
+
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+
+                                                Available
+
+                                            </span>
+
+
+                                            ${
+                                                p.verified
+
+                                                    ? `
+                                                        <span class="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-extrabold text-primary-700 bg-primary-50 px-2.5 py-1.5 rounded-full">
+
+                                                            <i class="fas fa-circle-check"></i>
+
+                                                            Verified
+
+                                                        </span>
+                                                    `
+
+                                                    : ''
+                                            }
+
                                         </div>
-                                        <h1 class="text-[25px] sm:text-3xl lg:text-[38px] leading-[1.12] font-extrabold tracking-[-0.035em] text-slate-950">${title}</h1>
+
+
+                                        <h1 class="text-[25px] sm:text-3xl lg:text-[38px] leading-[1.12] font-extrabold tracking-[-0.035em] text-slate-950">
+
+                                            ${title}
+
+                                        </h1>
+
+
                                         <div class="flex items-start gap-2 mt-3 text-slate-500">
+
                                             <i class="fas fa-location-dot text-primary-500 mt-1 shrink-0"></i>
-                                            <span class="text-sm sm:text-[15px] leading-6">${location}</span>
+
+                                            <span class="text-sm sm:text-[15px] leading-6">
+                                                ${location}
+                                            </span>
+
                                         </div>
+
                                     </div>
+
+
                                     <div class="sm:text-right shrink-0">
-                                        <p class="text-[28px] sm:text-3xl font-extrabold tracking-tight text-slate-950">₦${formatPrice(price)}</p>
-                                        ${pricePerMeter > 0 ? `<p class="text-xs sm:text-sm text-slate-400 mt-1">₦${formatPrice(pricePerMeter)} / m²</p>` : ''}
+
+                                        <p class="text-[28px] sm:text-3xl font-extrabold tracking-tight text-slate-950">
+
+                                            ₦${formatPrice(price)}
+
+                                        </p>
+
+
+                                        ${
+                                            pricePerMeter > 0
+
+                                                ? `
+                                                    <p class="text-xs sm:text-sm text-slate-400 mt-1">
+                                                        ₦${formatPrice(pricePerMeter)} / m²
+                                                    </p>
+                                                `
+
+                                                : ''
+                                        }
+
                                     </div>
+
                                 </div>
+
+
                                 <!-- Stats -->
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-5 border-t border-slate-100">
+
                                     ${statCard('fa-bed', p.beds || 0, 'Bedrooms')}
+
                                     ${statCard('fa-bath', p.baths || 0, 'Bathrooms')}
+
                                     ${statCard('fa-ruler-combined', p.area ? `${formatPrice(p.area)}` : '—', 'Square metres')}
+
                                     ${statCard('fa-house', propertyType, 'Property type')}
+
                                 </div>
+
                             </div>
+
                         </section>
+
 
                         <!-- Description -->
                         <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft p-5 sm:p-7 lg:p-8">
+
                             <div class="flex items-center justify-between mb-5">
+
                                 <div>
-                                    <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600 mb-1">Property Overview</p>
-                                    <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">About this property</h2>
+
+                                    <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600 mb-1">
+                                        Property Overview
+                                    </p>
+
+                                    <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
+                                        About this property
+                                    </h2>
+
                                 </div>
+
                             </div>
-                            <p id="propertyDescription" class="text-[14px] sm:text-[15px] leading-7 text-slate-600 whitespace-pre-line line-clamp-2">${description}</p>
-                            ${(p.description || '').length > 300 ? `<button id="descriptionToggle" onclick="toggleDescription()" class="mt-4 text-sm font-bold text-primary-600 hover:text-primary-700">Read more</button>` : ''}
+
+
+                            <p
+                                id="propertyDescription"
+                                class="text-[14px] sm:text-[15px] leading-7 text-slate-600 whitespace-pre-line line-clamp-2"
+                            >
+                                ${description}
+                            </p>
+
+
+                            ${
+                                (p.description || '').length > 300
+
+                                    ? `
+                                        <button
+                                            id="descriptionToggle"
+                                            onclick="toggleDescription()"
+                                            class="mt-4 text-sm font-bold text-primary-600 hover:text-primary-700"
+                                        >
+                                            Read more
+                                        </button>
+                                    `
+
+                                    : ''
+                            }
+
                         </section>
 
+
                         <!-- Amenities -->
-                        ${p.amenities && p.amenities.length > 0 ? `
-                            <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft p-5 sm:p-7 lg:p-8">
-                                <div class="mb-6">
-                                    <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600 mb-1">Features</p>
-                                    <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">Amenities & features</h2>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                    ${p.amenities.map(amenity => `
-                                        <div class="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-slate-50/80 border border-slate-100">
-                                            <span class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-emerald-600 shrink-0"><i class="fas fa-check text-xs"></i></span>
-                                            <span class="text-sm font-semibold text-slate-700">${escapeHtml(amenity)}</span>
+                        ${
+                            p.amenities &&
+                            p.amenities.length > 0
+
+                                ? `
+                                    <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft p-5 sm:p-7 lg:p-8">
+
+                                        <div class="mb-6">
+
+                                            <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600 mb-1">
+                                                Features
+                                            </p>
+
+                                            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
+                                                Amenities & features
+                                            </h2>
+
                                         </div>
-                                    `).join('')}
-                                </div>
-                            </section>
-                        ` : ''}
+
+
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+
+                                            ${
+                                                p.amenities
+                                                    .map(
+                                                        amenity => `
+
+                                                            <div class="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-slate-50/80 border border-slate-100">
+
+                                                                <span class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-emerald-600 shrink-0">
+
+                                                                    <i class="fas fa-check text-xs"></i>
+
+                                                                </span>
+
+                                                                <span class="text-sm font-semibold text-slate-700">
+                                                                    ${escapeHtml(amenity)}
+                                                                </span>
+
+                                                            </div>
+
+                                                        `
+                                                    )
+                                                    .join('')
+                                            }
+
+                                        </div>
+
+                                    </section>
+                                `
+
+                                : ''
+                        }
+
 
                         <!-- Location -->
                         <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft overflow-hidden">
+
                             <div class="p-5 sm:p-7 lg:p-8">
-                                <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600 mb-1">Location</p>
-                                <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">Property location</h2>
+
+                                <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-600 mb-1">
+                                    Location
+                                </p>
+
+                                <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
+                                    Property location
+                                </h2>
+
+
                                 <div class="flex items-start gap-3 mt-4">
-                                    <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0"><i class="fas fa-location-dot"></i></div>
+
+                                    <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0">
+                                        <i class="fas fa-location-dot"></i>
+                                    </div>
+
                                     <div>
-                                        <p class="text-sm font-bold text-slate-800">${location}</p>
-                                        <p class="text-xs text-slate-400 mt-1">Exact location details may be provided by the agent.</p>
+
+                                        <p class="text-sm font-bold text-slate-800">
+                                            ${location}
+                                        </p>
+
+                                        <p class="text-xs text-slate-400 mt-1">
+                                            Exact location details may be provided by the agent.
+                                        </p>
+
                                     </div>
+
                                 </div>
+
                             </div>
+
+
                             <div class="h-[180px] sm:h-[230px] bg-slate-100 relative overflow-hidden">
-                                <div class="absolute inset-0 opacity-[0.55]" style="background-image: linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+                                <div
+                                    class="absolute inset-0 opacity-[0.55]"
+                                    style="background-image: linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px); background-size: 40px 40px;"
+                                ></div>
+
+
                                 <div class="absolute inset-0 flex items-center justify-center">
+
                                     <div class="flex flex-col items-center">
+
                                         <div class="w-14 h-14 rounded-full bg-white shadow-xl flex items-center justify-center text-primary-600 relative">
+
                                             <div class="absolute inset-0 rounded-full bg-primary-500/10 animate-ping"></div>
+
                                             <i class="fas fa-location-dot relative"></i>
+
                                         </div>
-                                        <div class="mt-3 px-4 py-2 rounded-xl bg-white/95 shadow-lg text-xs font-bold text-slate-700">${location}</div>
+
+
+                                        <div class="mt-3 px-4 py-2 rounded-xl bg-white/95 shadow-lg text-xs font-bold text-slate-700">
+                                            ${location}
+                                        </div>
+
                                     </div>
+
                                 </div>
+
                             </div>
+
                         </section>
+
                     </div>
+
 
                     <!-- Sidebar -->
                     <aside class="lg:col-span-4">
+
                         <div class="lg:sticky lg:top-[92px] space-y-4">
-                            <!-- Inquiry Card -->
+
+
+                            <!-- Decision / Trust Card -->
                             <section class="bg-slate-950 rounded-[28px] p-5 sm:p-6 shadow-premium text-white overflow-hidden relative">
+
                                 <div class="absolute -right-16 -top-16 w-44 h-44 rounded-full bg-primary-500/20 blur-2xl"></div>
+
+
                                 <div class="relative">
-                                    <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-300 mb-2">Interested?</p>
-                                    <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Make this property yours.</h2>
-                                    <p class="text-sm leading-6 text-slate-400 mt-2 mb-6">Connect with the property agent to ask questions or arrange a private viewing.</p>
-                                    <button onclick="openViewingModal()" class="w-full h-12 rounded-xl bg-white text-slate-950 font-extrabold text-sm hover:bg-slate-100 transition flex items-center justify-center gap-2">
-                                        <i class="fas fa-calendar-check text-primary-600"></i> Schedule Viewing
-                                    </button>
-                                    <button onclick="contactAgent()" class="w-full h-12 rounded-xl border border-white/15 text-white font-bold text-sm hover:bg-white/5 transition flex items-center justify-center gap-2 mt-2.5">
-                                        <i class="fas fa-message"></i> Message Agent
-                                    </button>
+
+                                    <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-primary-300 mb-2">
+                                        Before you proceed
+                                    </p>
+
+
+                                    <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">
+                                        Make an informed decision.
+                                    </h2>
+
+
+                                    <p class="text-sm leading-6 text-slate-400 mt-2 mb-6">
+                                        Review the property details, confirm availability with the agent and verify documentation before making any payment.
+                                    </p>
+
+
+                                    <div class="space-y-3">
+
+
+                                        <div class="flex items-start gap-3">
+
+                                            <span class="w-8 h-8 rounded-lg bg-white/10 text-primary-300 flex items-center justify-center shrink-0">
+                                                <i class="fas fa-circle-check text-xs"></i>
+                                            </span>
+
+                                            <div>
+
+                                                <p class="text-sm font-bold text-white">
+                                                    Confirm availability
+                                                </p>
+
+                                                <p class="text-[11px] leading-5 text-slate-500 mt-0.5">
+                                                    Ask the agent whether the property is still available.
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="flex items-start gap-3">
+
+                                            <span class="w-8 h-8 rounded-lg bg-white/10 text-primary-300 flex items-center justify-center shrink-0">
+                                                <i class="fas fa-file-shield text-xs"></i>
+                                            </span>
+
+                                            <div>
+
+                                                <p class="text-sm font-bold text-white">
+                                                    Verify documentation
+                                                </p>
+
+                                                <p class="text-[11px] leading-5 text-slate-500 mt-0.5">
+                                                    Review ownership and property documents before payment.
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="flex items-start gap-3">
+
+                                            <span class="w-8 h-8 rounded-lg bg-white/10 text-primary-300 flex items-center justify-center shrink-0">
+                                                <i class="fas fa-user-tie text-xs"></i>
+                                            </span>
+
+                                            <div>
+
+                                                <p class="text-sm font-bold text-white">
+                                                    Work with the listed agent
+                                                </p>
+
+                                                <p class="text-[11px] leading-5 text-slate-500 mt-0.5">
+                                                    Contact the agent directly from the profile below.
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
                                 </div>
+
                             </section>
+
 
                             <!-- Agent -->
-                            <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft p-5 sm:p-6 cursor-pointer hover:shadow-lg transition-shadow" onclick="toggleAgentInfo()">
-                                <div class="flex items-center justify-between mb-5 pointer-events-none">
-                                    <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-slate-400">Listed by</p>
-                                    ${p.verified ? `<span class="text-[10px] font-extrabold text-primary-600 flex items-center gap-1"><i class="fas fa-circle-check"></i>VERIFIED</span>` : ''}
-                                </div>
-                                <div class="flex items-center gap-3.5 pointer-events-none">
-                                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-lg font-extrabold shadow-lg shadow-primary-500/20">
-                                        ${avatarMarkup}
-                                    </div>
-                                    <div class="min-w-0 flex-1">
-                                        <h3 class="font-extrabold text-slate-950 truncate">${ownerName}</h3>
-                                        <p class="text-xs text-slate-500 mt-1">Property Agent</p>
-                                    </div>
-                                    <div class="text-slate-300">
-                                        <i id="agentExpandIcon" class="fas fa-chevron-down text-sm transition-transform duration-300"></i>
-                                    </div>
-                                </div>
-                                
-                                <!-- Expandable Agent Info -->
-                                <div id="agentExtendedInfo" class="agent-info-content">
-                                    <div class="agent-info-inner pt-4 mt-4 border-t border-slate-100">
-                                        <p class="text-sm text-slate-600">
-                                            ${agentData?.bio ? escapeHtml(agentData.bio) : 'No additional information provided by this agent yet.'}
-                                        </p>
-                                        ${agentData?.email ? `<p class="text-xs text-slate-400 mt-2"><i class="fas fa-envelope mr-1"></i> ${escapeHtml(agentData.email)}</p>` : ''}
-                                    </div>
+                            <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft p-5 sm:p-6">
+
+                                <div class="flex items-center justify-between mb-5">
+
+                                    <p class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-slate-400">
+                                        Listed by
+                                    </p>
+
+
+                                    ${
+                                        p.verified
+
+                                            ? `
+                                                <span class="text-[10px] font-extrabold text-primary-600 flex items-center gap-1">
+
+                                                    <i class="fas fa-circle-check"></i>
+
+                                                    VERIFIED
+
+                                                </span>
+                                            `
+
+                                            : ''
+                                    }
+
                                 </div>
 
-                                <div class="grid grid-cols-2 gap-2.5 mt-5">
-                                    <button onclick="event.stopPropagation(); contactAgent();" class="h-11 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:border-primary-300 hover:text-primary-600 transition">
-                                        <i class="fas fa-message mr-1"></i> Message
-                                    </button>
-                                    <button onclick="event.stopPropagation(); toggleSaveProperty();" id="sidebarSaveBtn" class="h-11 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:border-rose-200 hover:text-rose-600 transition">
-                                        <i class="far fa-heart mr-1"></i> Save
-                                    </button>
+
+                                <div class="flex items-center gap-3.5">
+
+                                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-lg font-extrabold shadow-lg shadow-primary-500/20 shrink-0">
+
+                                        ${avatarMarkup}
+
+                                    </div>
+
+
+                                    <div class="min-w-0 flex-1">
+
+                                        <h3 class="font-extrabold text-slate-950 truncate">
+                                            ${ownerName}
+                                        </h3>
+
+                                        <p class="text-xs text-slate-500 mt-1">
+                                            Property Agent
+                                        </p>
+
+                                    </div>
+
                                 </div>
+
+
+                                ${
+                                    agentData?.bio
+
+                                        ? `
+                                            <p class="text-xs leading-5 text-slate-500 mt-4">
+                                                ${escapeHtml(agentData.bio)}
+                                            </p>
+                                        `
+
+                                        : ''
+                                }
+
+
+                                <!-- Contact Agent -->
+                                <button
+                                    onclick="openContactSheet()"
+                                    class="w-full h-12 rounded-xl bg-slate-950 text-white font-extrabold text-sm hover:bg-slate-800 transition flex items-center justify-center gap-2 mt-5"
+                                >
+
+                                    <i class="fas fa-address-card"></i>
+
+                                    Contact Agent
+
+                                </button>
+
+
+                                <!-- Save -->
+                                <button
+                                    onclick="toggleSaveProperty()"
+                                    id="sidebarSaveBtn"
+                                    class="w-full h-11 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:border-rose-200 hover:text-rose-600 transition mt-2.5"
+                                >
+
+                                    <i class="far fa-heart mr-1"></i>
+
+                                    Save
+
+                                </button>
+
                             </section>
+
 
                             <!-- Trust -->
                             <section class="bg-white rounded-[28px] border border-slate-200/80 shadow-soft p-5 sm:p-6">
+
                                 <div class="flex gap-3.5">
-                                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i class="fas fa-shield-halved"></i></div>
-                                    <div>
-                                        <h3 class="text-sm font-extrabold text-slate-900">Shop with confidence</h3>
-                                        <p class="text-xs leading-5 text-slate-500 mt-1">Always verify property ownership and documentation before making payments.</p>
+
+                                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                                        <i class="fas fa-shield-halved"></i>
                                     </div>
+
+                                    <div>
+
+                                        <h3 class="text-sm font-extrabold text-slate-900">
+                                            Shop with confidence
+                                        </h3>
+
+                                        <p class="text-xs leading-5 text-slate-500 mt-1">
+                                            Always verify property ownership and documentation before making payments.
+                                        </p>
+
+                                    </div>
+
                                 </div>
+
                             </section>
+
+
                         </div>
+
                     </aside>
+
                 </div>
+
             `;
 
-            document.getElementById('modalPropertyTitle').textContent = p.title || 'Property';
-            document.getElementById('modalPropertyLocation').textContent = p.location || 'Location unavailable';
-            
-            // Sync initial state of sidebar favorite button
+
+            updateContactUI();
+
+            updateScheduleUI();
+
             updateFavoriteButton();
+
         }
 
-        function statCard(icon, value, label) {
+
+        function statCard(
+            icon,
+            value,
+            label
+        ) {
+
             return `
+
                 <div class="rounded-2xl bg-slate-50 border border-slate-100 px-3 py-4 min-w-0">
+
                     <div class="flex items-center gap-2.5">
-                        <span class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-primary-600 flex items-center justify-center shrink-0"><i class="fas ${icon} text-xs"></i></span>
+
+                        <span class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-primary-600 flex items-center justify-center shrink-0">
+
+                            <i class="fas ${icon} text-xs"></i>
+
+                        </span>
+
+
                         <div class="min-w-0">
-                            <p class="text-sm font-extrabold text-slate-900 truncate">${escapeHtml(String(value))}</p>
-                            <p class="text-[10px] sm:text-[11px] text-slate-400 font-semibold truncate">${escapeHtml(label)}</p>
+
+                            <p class="text-sm font-extrabold text-slate-900 truncate">
+                                ${escapeHtml(String(value))}
+                            </p>
+
+                            <p class="text-[10px] sm:text-[11px] text-slate-400 font-semibold truncate">
+                                ${escapeHtml(label)}
+                            </p>
+
                         </div>
+
                     </div>
+
                 </div>
+
             `;
+
         }
+
 
         function setMainImage(image) {
-            const mainImage = document.getElementById('mainPropertyImage');
-            if (mainImage) mainImage.src = image;
-        }
 
-        function toggleAgentInfo() {
-            const infoDiv = document.getElementById('agentExtendedInfo');
-            const icon = document.getElementById('agentExpandIcon');
-            if(infoDiv && icon) {
-                if (infoDiv.classList.contains('expanded')) {
-                    infoDiv.classList.remove('expanded');
-                    icon.style.transform = 'rotate(0deg)';
-                } else {
-                    infoDiv.classList.add('expanded');
-                    icon.style.transform = 'rotate(180deg)';
-                }
+            const mainImage =
+                document.getElementById(
+                    'mainPropertyImage'
+                );
+
+
+            if (mainImage) {
+
+                mainImage.src =
+                    image;
+
             }
+
         }
 
-        function openGallery() {
-            const images = getPropertyImages(propertyData);
-            if (!images.length) return;
-            const gallery = document.createElement('div');
-            gallery.id = 'galleryOverlay';
-            gallery.className = 'fixed inset-0 z-[1200] bg-slate-950/95 flex items-center justify-center p-4 sm:p-8';
-            gallery.innerHTML = `
-                <button onclick="closeGallery()" class="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"><i class="fas fa-xmark"></i></button>
-                <div class="w-full max-w-6xl h-full flex flex-col items-center justify-center">
-                    <div class="flex-1 w-full flex items-center justify-center min-h-0">
-                        <img id="galleryMainImage" src="${images[0]}" class="max-h-full max-w-full object-contain rounded-xl" alt="${escapeHtml(propertyData.title || 'Property')}">
-                    </div>
-                    <div class="w-full overflow-x-auto hide-scrollbar mt-4">
-                        <div class="flex justify-center gap-2.5 min-w-max px-2">
-                            ${images.map((image, index) => `<button onclick="document.getElementById('galleryMainImage').src='${escapeAttribute(image)}'" class="w-20 h-14 rounded-lg overflow-hidden border border-white/10 hover:border-white/50 transition shrink-0"><img src="${image}" class="w-full h-full object-cover" alt=""></button>`).join('')}
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(gallery);
-            document.body.style.overflow = 'hidden';
-        }
 
-        function closeGallery() {
-            const gallery = document.getElementById('galleryOverlay');
-            if (gallery) gallery.remove();
-            document.body.style.overflow = '';
-        }
+        /*
+         * =========================
+         * CONTACT CENTER
+         * =========================
+         */
 
-        async function toggleSaveProperty() {
-            if (!currentUser || !propertyId) return;
-            try {
-                if (isSaved) {
-                    await db.collection('users').doc(currentUser.uid).collection('savedProperties').doc(propertyId).delete();
-                    isSaved = false;
-                    showToast('Removed from saved properties');
-                } else {
-                    await db.collection('users').doc(currentUser.uid).collection('savedProperties').doc(propertyId).set({
-                        ...propertyData,
-                        savedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    isSaved = true;
-                    showToast('Property saved');
-                }
-                updateFavoriteButton();
-            } catch (error) {
-                console.error('Error saving:', error);
-                showToast('Unable to update saved property', 'error');
-            }
-        }
+        function updateContactUI() {
 
-        function updateFavoriteButton() {
-            const buttons = [
-                document.getElementById('headerSaveBtn'),
-                document.getElementById('mobileSaveBtn'),
-                document.getElementById('sidebarSaveBtn')
-            ];
-
-            buttons.forEach(btn => {
-                if (!btn) return;
-                if (isSaved) {
-                    btn.classList.add('favorite-active');
-                    if (btn.id === 'sidebarSaveBtn') {
-                        btn.innerHTML = '<i class="fas fa-heart mr-1"></i> Saved';
-                    } else {
-                        btn.innerHTML = '<i class="fas fa-heart"></i>';
-                    }
-                } else {
-                    btn.classList.remove('favorite-active');
-                    if (btn.id === 'sidebarSaveBtn') {
-                        btn.innerHTML = '<i class="far fa-heart mr-1"></i> Save';
-                    } else {
-                        btn.innerHTML = '<i class="far fa-heart"></i>';
-                    }
-                }
-            });
-        }
-
-        function openViewingModal() {
             if (!propertyData) return;
-            const modal = document.getElementById('viewingModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
 
-            const dateInput = document.getElementById('viewingDate');
-            const today = new Date();
-            const localDate = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().split('T')[0];
-            dateInput.min = localDate;
+
+            const agentName =
+                agentData?.displayName ||
+                agentData?.name ||
+                propertyData.ownerName ||
+                'Property Agent';
+
+
+            const phone =
+                getAgentPhone();
+
+
+            const avatar =
+                agentData?.photoURL ||
+                propertyData.ownerPhoto ||
+                null;
+
+
+            const title =
+                document.getElementById(
+                    'contactSheetTitle'
+                );
+
+
+            const subtitle =
+                document.getElementById(
+                    'contactSheetSubtitle'
+                );
+
+
+            const name =
+                document.getElementById(
+                    'contactAgentName'
+                );
+
+
+            const avatarEl =
+                document.getElementById(
+                    'contactAgentAvatar'
+                );
+
+
+            const callLabel =
+                document.getElementById(
+                    'callAgentLabel'
+                );
+
+
+            const callNumber =
+                document.getElementById(
+                    'callAgentNumber'
+                );
+
+
+            const whatsappLabel =
+                document.getElementById(
+                    'whatsappAgentLabel'
+                );
+
+
+            if (title) {
+
+                title.textContent =
+                    `Contact ${agentName}`;
+
+            }
+
+
+            if (subtitle) {
+
+                subtitle.textContent =
+                    'Choose how you would like to connect.';
+
+            }
+
+
+            if (name) {
+
+                name.textContent =
+                    agentName;
+
+            }
+
+
+            if (avatarEl) {
+
+                if (avatar) {
+
+                    avatarEl.innerHTML =
+                        `
+                            <img
+                                src="${escapeAttribute(avatar)}"
+                                alt=""
+                                class="w-full h-full object-cover rounded-2xl"
+                            >
+                        `;
+
+                } else {
+
+                    avatarEl.textContent =
+                        agentName
+                            .charAt(0)
+                            .toUpperCase();
+
+                }
+
+            }
+
+
+            if (callLabel) {
+
+                callLabel.textContent =
+                    `Call ${agentName}`;
+
+            }
+
+
+            if (callNumber) {
+
+                callNumber.textContent =
+                    phone
+                        ? formatPhoneForDisplay(phone)
+                        : 'Phone number unavailable';
+
+            }
+
+
+            if (whatsappLabel) {
+
+                whatsappLabel.textContent =
+                    `WhatsApp ${agentName}`;
+
+            }
+
         }
 
-        function closeViewingModal() {
-            const modal = document.getElementById('viewingModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.style.overflow = '';
+
+        function getAgentPhone() {
+
+            if (!agentData) return '';
+
+
+            return (
+                agentData.phone ||
+                agentData.phoneNumber ||
+                agentData.mobile ||
+                agentData.telephone ||
+                agentData.whatsapp ||
+                ''
+            );
+
         }
 
-        async function submitViewingRequest(event) {
-            event.preventDefault();
-            
-            if (!currentUser || !propertyId || !propertyData) {
-                showToast('Please sign in to continue', 'error');
+
+        function getAgentWhatsApp() {
+
+            if (!agentData) return '';
+
+
+            return (
+                agentData.whatsapp ||
+                agentData.whatsappNumber ||
+                agentData.phone ||
+                agentData.phoneNumber ||
+                agentData.mobile ||
+                ''
+            );
+
+        }
+
+
+        function normalizePhoneNumber(
+            phone
+        ) {
+
+            let normalized =
+                String(
+                    phone || ''
+                )
+                .replace(
+                    /[^0-9+]/g,
+                    ''
+                );
+
+
+            if (
+                normalized.startsWith('+')
+            ) {
+
+                normalized =
+                    normalized.substring(1);
+
+            }
+
+
+            /*
+             * Nigerian convenience:
+             * 08012345678 -> 2348012345678
+             */
+            if (
+                normalized.startsWith('0') &&
+                normalized.length === 11
+            ) {
+
+                normalized =
+                    '234' +
+                    normalized.substring(1);
+
+            }
+
+
+            return normalized;
+
+        }
+
+
+        function formatPhoneForDisplay(
+            phone
+        ) {
+
+            const normalized =
+                normalizePhoneNumber(
+                    phone
+                );
+
+
+            if (
+                normalized.startsWith('234') &&
+                normalized.length === 13
+            ) {
+
+                return (
+                    '+234 ' +
+                    normalized.substring(3, 6) +
+                    ' ' +
+                    normalized.substring(6, 9) +
+                    ' ' +
+                    normalized.substring(9)
+                );
+
+            }
+
+
+            return phone || '';
+
+        }
+
+
+        function openContactSheet() {
+
+            if (!propertyData) {
+
+                showToast(
+                    'Property information is still loading.',
+                    'error'
+                );
+
                 return;
             }
 
-            const date = document.getElementById('viewingDate').value;
-            const time = document.getElementById('viewingTime').value;
-            const note = document.getElementById('viewingNote').value.trim();
+
+            updateContactUI();
+
+            document
+                .getElementById(
+                    'contactOptionsView'
+                )
+                .classList
+                .remove('hidden');
+
+
+            document
+                .getElementById(
+                    'scheduleView'
+                )
+                .classList
+                .add('hidden');
+
+
+            const modal =
+                document.getElementById(
+                    'contactSheet'
+                );
+
+
+            modal.classList.remove(
+                'hidden'
+            );
+
+
+            modal.classList.add(
+                'flex'
+            );
+
+
+            modal.setAttribute(
+                'aria-hidden',
+                'false'
+            );
+
+
+            document.body.style.overflow =
+                'hidden';
+
+        }
+
+
+        function closeContactSheet() {
+
+            const modal =
+                document.getElementById(
+                    'contactSheet'
+                );
+
+
+            modal.classList.add(
+                'hidden'
+            );
+
+
+            modal.classList.remove(
+                'flex'
+            );
+
+
+            modal.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+
+            document.body.style.overflow =
+                '';
+
+        }
+
+
+        function callAgent() {
+
+            const rawPhone =
+                getAgentPhone();
+
+
+            const phone =
+                normalizePhoneNumber(
+                    rawPhone
+                );
+
+
+            if (!phone) {
+
+                showToast(
+                    'This agent has not provided a phone number.',
+                    'error'
+                );
+
+                return;
+
+            }
+
+
+            const agentName =
+                agentData?.displayName ||
+                agentData?.name ||
+                propertyData?.ownerName ||
+                'Agent';
+
+
+            closeContactSheet();
+
+
+            window.location.href =
+                `tel:+${phone}`;
+
+
+            console.log(
+                'MoonLat direct call:',
+                {
+                    agent:
+                        agentName,
+                    phone:
+                        phone,
+                    propertyId:
+                        propertyId
+                }
+            );
+
+        }
+
+
+        /*
+         * =========================
+         * DIRECT WHATSAPP
+         * =========================
+         */
+
+        function whatsappAgent() {
+
+            if (!propertyData) {
+
+                showToast(
+                    'Property information is still loading.',
+                    'error'
+                );
+
+                return;
+            }
+
+
+            const rawWhatsApp =
+                getAgentWhatsApp();
+
+
+            const whatsappNumber =
+                normalizePhoneNumber(
+                    rawWhatsApp
+                );
+
+
+            if (!whatsappNumber) {
+
+                showToast(
+                    'This agent has not provided a WhatsApp number.',
+                    'error'
+                );
+
+                return;
+            }
+
+
+            const propertyTitle =
+                propertyData.title ||
+                'this property';
+
+
+            const propertyLocation =
+                propertyData.location ||
+                propertyData.address ||
+                '';
+
+
+            /*
+             * Always construct the public MoonLat property URL
+             * from the current production origin and property ID.
+             */
+            const propertyUrl =
+                new URL(
+                    'property-detail.html',
+                    window.location.origin +
+                    window.location.pathname
+                );
+
+
+            propertyUrl.searchParams.set(
+                'id',
+                propertyId
+            );
+
+
+            const greeting =
+                getTimeBasedGreeting();
+
+
+            const agentName =
+                agentData?.displayName ||
+                agentData?.name ||
+                propertyData.ownerName ||
+                'Agent';
+
+
+            /*
+             * Deliberately use the agent's actual name without
+             * guessing Mr/Mrs when gender/title is not stored.
+             */
+            const message =
+                `${greeting} ${agentName},
+
+I'm interested in "${propertyTitle}" listed on MoonLat${propertyLocation ? ` in ${propertyLocation}` : ''}.
+
+Property link:
+${propertyUrl.toString()}
+
+Please share more details about the property and its availability. Thank you.`;
+
+
+            const whatsappUrl =
+                `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+
+            console.log(
+                'MoonLat WhatsApp:',
+                {
+                    agent:
+                        agentName,
+                    normalizedWhatsApp:
+                        whatsappNumber,
+                    propertyId:
+                        propertyId,
+                    propertyUrl:
+                        propertyUrl.toString(),
+                    message:
+                        message
+                }
+            );
+
+
+            closeContactSheet();
+
+
+            /*
+             * Use location.href rather than an iframe/window
+             * so iOS Safari/WhatsApp handles the handoff cleanly.
+             */
+            window.location.href =
+                whatsappUrl;
+
+        }
+
+
+        function getTimeBasedGreeting() {
+
+            const now =
+                new Date();
+
+
+            const hour =
+                now.getHours();
+
+
+            if (
+                hour >= 5 &&
+                hour < 12
+            ) {
+
+                return 'Good morning';
+
+            }
+
+
+            if (
+                hour >= 12 &&
+                hour < 17
+            ) {
+
+                return 'Good afternoon';
+
+            }
+
+
+            return 'Good evening';
+
+        }
+
+
+        /*
+         * =========================
+         * VIEWING SCHEDULING
+         * =========================
+         */
+
+        function updateScheduleUI() {
+
+            if (!propertyData) return;
+
+
+            const title =
+                document.getElementById(
+                    'schedulePropertyTitle'
+                );
+
+
+            const location =
+                document.getElementById(
+                    'schedulePropertyLocation'
+                );
+
+
+            if (title) {
+
+                title.textContent =
+                    propertyData.title ||
+                    'Property';
+
+            }
+
+
+            if (location) {
+
+                location.textContent =
+                    propertyData.location ||
+                    'Location unavailable';
+
+            }
+
+        }
+
+
+        function showScheduleFromContact() {
+
+            if (!propertyData) return;
+
+
+            updateScheduleUI();
+
+
+            document
+                .getElementById(
+                    'contactOptionsView'
+                )
+                .classList
+                .add('hidden');
+
+
+            document
+                .getElementById(
+                    'scheduleView'
+                )
+                .classList
+                .remove('hidden');
+
+
+            prepareViewingCalendar();
+
+        }
+
+
+        function backToContactOptions() {
+
+            document
+                .getElementById(
+                    'scheduleView'
+                )
+                .classList
+                .add('hidden');
+
+
+            document
+                .getElementById(
+                    'contactOptionsView'
+                )
+                .classList
+                .remove('hidden');
+
+        }
+
+
+        function prepareViewingCalendar() {
+
+            const dateInput =
+                document.getElementById(
+                    'viewingDate'
+                );
+
+
+            const timeInput =
+                document.getElementById(
+                    'viewingTime'
+                );
+
+
+            if (!dateInput) return;
+
+
+            const now =
+                new Date();
+
+
+            const localDate =
+                new Date(
+                    now.getTime() -
+                    now.getTimezoneOffset() *
+                    60000
+                )
+                .toISOString()
+                .split('T')[0];
+
+
+            dateInput.min =
+                localDate;
+
+
+            /*
+             * If the currently selected date is before today,
+             * reset it to today.
+             */
+            if (
+                !dateInput.value ||
+                dateInput.value < localDate
+            ) {
+
+                dateInput.value =
+                    localDate;
+
+            }
+
+
+            if (
+                timeInput &&
+                !timeInput.value
+            ) {
+
+                timeInput.value =
+                    '10:00';
+
+            }
+
+        }
+
+
+        async function submitViewingRequest(
+            event
+        ) {
+
+            event.preventDefault();
+
+
+            if (
+                !currentUser ||
+                !propertyId ||
+                !propertyData
+            ) {
+
+                showToast(
+                    'Please sign in to continue.',
+                    'error'
+                );
+
+                return;
+            }
+
+
+            const agentId =
+                propertyData.agentId ||
+                propertyData.ownerId ||
+                propertyData.userId ||
+                agentData?.id ||
+                '';
+
+
+            if (!agentId) {
+
+                showToast(
+                    'This property does not have an assigned agent.',
+                    'error'
+                );
+
+                return;
+            }
+
+
+            const date =
+                document
+                    .getElementById(
+                        'viewingDate'
+                    )
+                    .value;
+
+
+            const time =
+                document
+                    .getElementById(
+                        'viewingTime'
+                    )
+                    .value;
+
+
+            const note =
+                document
+                    .getElementById(
+                        'viewingNote'
+                    )
+                    .value
+                    .trim();
+
 
             if (!date || !time) {
-                showToast('Please select a date and time', 'error');
+
+                showToast(
+                    'Please select a date and time.',
+                    'error'
+                );
+
                 return;
             }
 
-            const button = document.getElementById('submitViewingBtn');
-            const originalHTML = button.innerHTML;
-            button.disabled = true;
-            button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending Request...`;
+
+            /*
+             * Prevent past date/time submissions.
+             */
+            const requestedDateTime =
+                new Date(
+                    `${date}T${time}`
+                );
+
+
+            if (
+                Number.isNaN(
+                    requestedDateTime.getTime()
+                )
+            ) {
+
+                showToast(
+                    'Please choose a valid viewing date and time.',
+                    'error'
+                );
+
+                return;
+            }
+
+
+            const now =
+                new Date();
+
+
+            if (
+                requestedDateTime <
+                now
+            ) {
+
+                showToast(
+                    'Please choose a future viewing time.',
+                    'error'
+                );
+
+                return;
+            }
+
+
+            const button =
+                document.getElementById(
+                    'submitViewingBtn'
+                );
+
+
+            const originalHTML =
+                button.innerHTML;
+
+
+            button.disabled =
+                true;
+
+
+            button.innerHTML =
+                `
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Sending Request...
+                `;
+
 
             try {
-                // IMPORTANT: Included agentId so the agent's dashboard can actually query/see it
-                await db.collection('appointments').add({
-                    propertyId: propertyId,
-                    propertyTitle: propertyData.title || '',
-                    propertyLocation: propertyData.location || '',
-                    agentId: propertyData.agentId || propertyData.ownerId || propertyData.userId || '',
-                    buyerId: currentUser.uid,
-                    buyerName: currentUser.displayName || currentUser.email || 'User',
-                    buyerEmail: currentUser.email || '',
-                    date: date,
-                    time: time,
-                    note: note,
-                    status: 'Pending',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
 
-                closeViewingModal();
-                document.getElementById('viewingForm').reset();
-                showToast('Viewing request sent successfully');
+                const agentName =
+                    agentData?.displayName ||
+                    agentData?.name ||
+                    propertyData.ownerName ||
+                    'Property Agent';
+
+
+                const buyerName =
+                    currentUser.displayName ||
+                    currentUser.email ||
+                    'Buyer';
+
+
+                /*
+                 * Create the appointment directly.
+                 *
+                 * Chat/messages are intentionally not involved.
+                 */
+                const appointmentRef =
+                    db
+                        .collection('appointments')
+                        .doc();
+
+
+                const appointmentData = {
+
+                    id:
+                        appointmentRef.id,
+
+                    propertyId:
+                        propertyId,
+
+                    propertyTitle:
+                        propertyData.title ||
+                        '',
+
+                    propertyLocation:
+                        propertyData.location ||
+                        '',
+
+                    propertyImage:
+                        propertyData.image ||
+                        (
+                            Array.isArray(
+                                propertyData.images
+                            )
+                                ? propertyData.images[0] || ''
+                                : ''
+                        ),
+
+                    agentId:
+                        agentId,
+
+                    agentName:
+                        agentName,
+
+                    buyerId:
+                        currentUser.uid,
+
+                    buyerName:
+                        buyerName,
+
+                    buyerEmail:
+                        currentUser.email ||
+                        '',
+
+                    date:
+                        date,
+
+                    time:
+                        time,
+
+                    note:
+                        note,
+
+                    status:
+                        'Pending',
+
+                    source:
+                        'buyer_property_detail',
+
+                    createdAt:
+                        firebase.firestore
+                            .FieldValue
+                            .serverTimestamp()
+
+                };
+
+
+                await appointmentRef.set(
+                    appointmentData
+                );
+
+
+                /*
+                 * Reset form after successful persistence.
+                 */
+                document
+                    .getElementById(
+                        'viewingForm'
+                    )
+                    .reset();
+
+
+                prepareViewingCalendar();
+
+
+                backToContactOptions();
+
+
+                showToast(
+                    'Viewing request sent to the agent.'
+                );
+
+
+                console.log(
+                    'MoonLat appointment created:',
+                    {
+                        appointmentId:
+                            appointmentRef.id,
+                        agentId:
+                            agentId,
+                        buyerId:
+                            currentUser.uid,
+                        propertyId:
+                            propertyId
+                    }
+                );
+
+
             } catch (error) {
-                console.error('Error scheduling:', error);
-                showToast('Unable to send viewing request', 'error');
+
+                console.error(
+                    'Error scheduling:',
+                    error
+                );
+
+
+                showToast(
+                    'Unable to send viewing request.',
+                    'error'
+                );
+
+
             } finally {
-                button.disabled = false;
-                button.innerHTML = originalHTML;
+
+                button.disabled =
+                    false;
+
+
+                button.innerHTML =
+                    originalHTML;
+
             }
+
         }
 
-        function contactAgent() {
-            if (!currentUser) {
-                showToast('Please sign in to contact the agent', 'error');
+
+        function formatDateForDisplay(
+            date
+        ) {
+
+            const parsed =
+                new Date(
+                    `${date}T00:00:00`
+                );
+
+
+            if (
+                Number.isNaN(
+                    parsed.getTime()
+                )
+            ) {
+
+                return date;
+
+            }
+
+
+            return parsed.toLocaleDateString(
+                'en-NG',
+                {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }
+            );
+
+        }
+
+
+        /*
+         * =========================
+         * FAVORITES
+         * =========================
+         */
+
+        async function toggleSaveProperty() {
+
+            if (
+                !currentUser ||
+                !propertyId
+            ) {
+
                 return;
+
             }
-            // Check if agent has WhatsApp setup
-            if (agentData && agentData.whatsapp) {
-                let phone = agentData.whatsapp.replace(/[^0-9]/g, '');
-                let text = encodeURIComponent(`Hi, I am interested in ${propertyData.title} located at ${propertyData.location}. (Ref: ${propertyId})`);
-                window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
-            } else {
-                openMessageModal();
-            }
-        }
 
-        function openMessageModal() {
-            const modal = document.getElementById('messageModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeMessageModal() {
-            const modal = document.getElementById('messageModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.style.overflow = '';
-        }
-
-        async function submitMessageRequest(event) {
-            event.preventDefault();
-            if (!currentUser || !propertyId || !propertyData) return;
-
-            const messageContent = document.getElementById('directMessageContent').value.trim();
-            if (!messageContent) return;
-
-            const button = document.getElementById('submitMessageBtn');
-            const originalHTML = button.innerHTML;
-            button.disabled = true;
-            button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending...`;
 
             try {
-                const agentId = propertyData.agentId || propertyData.ownerId || propertyData.userId || '';
-                await db.collection('messages').add({
-                    propertyId: propertyId,
-                    propertyTitle: propertyData.title || '',
-                    senderId: currentUser.uid,
-                    senderName: currentUser.displayName || 'User',
-                    receiverId: agentId,
-                    message: messageContent,
-                    read: false,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
 
-                closeMessageModal();
-                document.getElementById('messageForm').reset();
-                showToast('Message sent to agent');
-            } catch(error) {
-                console.error('Error sending message:', error);
-                showToast('Unable to send message', 'error');
-            } finally {
-                button.disabled = false;
-                button.innerHTML = originalHTML;
+                if (isSaved) {
+
+                    await db
+                        .collection('users')
+                        .doc(currentUser.uid)
+                        .collection('savedProperties')
+                        .doc(propertyId)
+                        .delete();
+
+
+                    isSaved =
+                        false;
+
+
+                    showToast(
+                        'Removed from saved properties'
+                    );
+
+
+                } else {
+
+                    await db
+                        .collection('users')
+                        .doc(currentUser.uid)
+                        .collection('savedProperties')
+                        .doc(propertyId)
+                        .set({
+
+                            ...propertyData,
+
+                            savedAt:
+                                firebase.firestore
+                                    .FieldValue
+                                    .serverTimestamp()
+
+                        });
+
+
+                    isSaved =
+                        true;
+
+
+                    showToast(
+                        'Property saved'
+                    );
+
+                }
+
+
+                updateFavoriteButton();
+
+
+            } catch (error) {
+
+                console.error(
+                    'Error saving:',
+                    error
+                );
+
+
+                showToast(
+                    'Unable to update saved property',
+                    'error'
+                );
+
             }
+
         }
+
+
+        function updateFavoriteButton() {
+
+            const buttons = [
+
+                document.getElementById(
+                    'headerSaveBtn'
+                ),
+
+                document.getElementById(
+                    'mobileSaveBtn'
+                ),
+
+                document.getElementById(
+                    'sidebarSaveBtn'
+                )
+
+            ];
+
+
+            buttons.forEach(
+                btn => {
+
+                    if (!btn) return;
+
+
+                    if (isSaved) {
+
+                        btn.classList.add(
+                            'favorite-active'
+                        );
+
+
+                        if (
+                            btn.id ===
+                            'sidebarSaveBtn'
+                        ) {
+
+                            btn.innerHTML =
+                                `
+                                    <i class="fas fa-heart mr-1"></i>
+                                    Saved
+                                `;
+
+                        } else {
+
+                            btn.innerHTML =
+                                `
+                                    <i class="fas fa-heart"></i>
+                                `;
+
+                        }
+
+                    } else {
+
+                        btn.classList.remove(
+                            'favorite-active'
+                        );
+
+
+                        if (
+                            btn.id ===
+                            'sidebarSaveBtn'
+                        ) {
+
+                            btn.innerHTML =
+                                `
+                                    <i class="far fa-heart mr-1"></i>
+                                    Save
+                                `;
+
+                        } else {
+
+                            btn.innerHTML =
+                                `
+                                    <i class="far fa-heart"></i>
+                                `;
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /*
+         * =========================
+         * GALLERY
+         * =========================
+         */
+
+        function openGallery() {
+
+            const images =
+                getPropertyImages(
+                    propertyData
+                );
+
+
+            if (!images.length) return;
+
+
+            const gallery =
+                document.createElement(
+                    'div'
+                );
+
+
+            gallery.id =
+                'galleryOverlay';
+
+
+            gallery.className =
+                'fixed inset-0 z-[1300] bg-slate-950/95 flex items-center justify-center p-4 sm:p-8';
+
+
+            gallery.innerHTML =
+                `
+
+                    <button
+                        onclick="closeGallery()"
+                        class="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
+                    >
+                        <i class="fas fa-xmark"></i>
+                    </button>
+
+
+                    <div class="w-full max-w-6xl h-full flex flex-col items-center justify-center">
+
+                        <div class="flex-1 w-full flex items-center justify-center min-h-0">
+
+                            <img
+                                id="galleryMainImage"
+                                src="${images[0]}"
+                                class="max-h-full max-w-full object-contain rounded-xl"
+                                alt="${escapeHtml(propertyData.title || 'Property')}"
+                            >
+
+                        </div>
+
+
+                        <div class="w-full overflow-x-auto hide-scrollbar mt-4">
+
+                            <div class="flex justify-center gap-2.5 min-w-max px-2">
+
+                                ${
+                                    images
+                                        .map(
+                                            (
+                                                image
+                                            ) => `
+
+                                                <button
+                                                    onclick="document.getElementById('galleryMainImage').src='${escapeAttribute(image)}'"
+                                                    class="w-20 h-14 rounded-lg overflow-hidden border border-white/10 hover:border-white/50 transition shrink-0"
+                                                >
+
+                                                    <img
+                                                        src="${image}"
+                                                        class="w-full h-full object-cover"
+                                                        alt=""
+                                                    >
+
+                                                </button>
+
+                                            `
+                                        )
+                                        .join('')
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+
+            document.body.appendChild(
+                gallery
+            );
+
+
+            document.body.style.overflow =
+                'hidden';
+
+        }
+
+
+        function closeGallery() {
+
+            const gallery =
+                document.getElementById(
+                    'galleryOverlay'
+                );
+
+
+            if (gallery) {
+
+                gallery.remove();
+
+            }
+
+
+            if (
+                !document
+                    .getElementById(
+                        'contactSheet'
+                    )
+                    ?.classList
+                    .contains('flex')
+            ) {
+
+                document.body.style.overflow =
+                    '';
+
+            }
+
+        }
+
+
+        /*
+         * =========================
+         * SHARE
+         * =========================
+         */
 
         async function shareProperty() {
-            const url = window.location.href;
+
+            if (!propertyData) return;
+
+
+            const url =
+                new URL(
+                    'property-detail.html',
+                    window.location.origin +
+                    window.location.pathname
+                );
+
+
+            url.searchParams.set(
+                'id',
+                propertyId
+            );
+
+
             try {
-                if (navigator.share) {
+
+                if (
+                    navigator.share
+                ) {
+
                     await navigator.share({
-                        title: propertyData?.title || 'Property on MoonLat',
-                        text: 'Check out this property on MoonLat.',
-                        url: url
+
+                        title:
+                            propertyData.title ||
+                            'Property on MoonLat',
+
+                        text:
+                            'Check out this property on MoonLat.',
+
+                        url:
+                            url.toString()
+
                     });
-                } else if (navigator.clipboard) {
-                    await navigator.clipboard.writeText(url);
-                    showToast('Property link copied');
+
+                } else if (
+                    navigator.clipboard
+                ) {
+
+                    await navigator.clipboard.writeText(
+                        url.toString()
+                    );
+
+
+                    showToast(
+                        'Property link copied'
+                    );
+
                 } else {
-                    showToast('Unable to share property', 'error');
+
+                    showToast(
+                        'Unable to share property',
+                        'error'
+                    );
+
                 }
+
             } catch (error) {
-                if (error.name !== 'AbortError') console.error('Share error:', error);
+
+                if (
+                    error.name !==
+                    'AbortError'
+                ) {
+
+                    console.error(
+                        'Share error:',
+                        error
+                    );
+
+                }
+
             }
+
         }
+
+
+        /*
+         * =========================
+         * DESCRIPTION
+         * =========================
+         */
 
         function toggleDescription() {
-            const description = document.getElementById('propertyDescription');
-            const button = document.getElementById('descriptionToggle');
-            if (!description || !button) return;
 
-            if (description.classList.contains('line-clamp-2')) {
-                description.classList.remove('line-clamp-2');
-                button.textContent = 'Show less';
+            const description =
+                document.getElementById(
+                    'propertyDescription'
+                );
+
+
+            const button =
+                document.getElementById(
+                    'descriptionToggle'
+                );
+
+
+            if (
+                !description ||
+                !button
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                description.classList.contains(
+                    'line-clamp-2'
+                )
+            ) {
+
+                description.classList.remove(
+                    'line-clamp-2'
+                );
+
+
+                button.textContent =
+                    'Show less';
+
             } else {
-                description.classList.add('line-clamp-2');
-                button.textContent = 'Read more';
+
+                description.classList.add(
+                    'line-clamp-2'
+                );
+
+
+                button.textContent =
+                    'Read more';
+
             }
+
         }
 
-        function formatPrice(price) {
+
+        /*
+         * =========================
+         * UTILITIES
+         * =========================
+         */
+
+        function formatPrice(
+            price
+        ) {
+
             if (!price) return '0';
-            return Number(price).toLocaleString('en-NG');
+
+
+            return Number(
+                price
+            ).toLocaleString(
+                'en-NG'
+            );
+
         }
 
-        function escapeHtml(value) {
-            return String(value)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
+
+        function escapeHtml(
+            value
+        ) {
+
+            return String(
+                value
+            )
+            .replace(
+                /&/g,
+                '&amp;'
+            )
+            .replace(
+                /</g,
+                '&lt;'
+            )
+            .replace(
+                />/g,
+                '&gt;'
+            )
+            .replace(
+                /"/g,
+                '&quot;'
+            )
+            .replace(
+                /'/g,
+                '&#039;'
+            );
+
         }
 
-        function escapeAttribute(value) {
-            return String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+        function escapeAttribute(
+            value
+        ) {
+
+            return String(
+                value
+            )
+            .replace(
+                /\\/g,
+                '\\\\'
+            )
+            .replace(
+                /'/g,
+                "\\'"
+            )
+            .replace(
+                /"/g,
+                '&quot;'
+            );
+
         }
 
-        function showToast(message, type = 'success') {
-            const existing = document.getElementById('moonlatToast');
-            if (existing) existing.remove();
 
-            const toast = document.createElement('div');
-            toast.id = 'moonlatToast';
-            toast.className = `fixed top-5 left-1/2 -translate-x-1/2 z-[3000] flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl text-white text-sm font-bold toast-enter ${type === 'success' ? 'bg-slate-950' : 'bg-rose-600'}`;
-            toast.innerHTML = `<span class="w-7 h-7 rounded-lg ${type === 'success' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-white/15 text-white'} flex items-center justify-center shrink-0"><i class="fas ${type === 'success' ? 'fa-check' : 'fa-triangle-exclamation'} text-xs"></i></span><span>${escapeHtml(message)}</span>`;
-            
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translate(-50%, -8px)';
-                toast.style.transition = 'all .2s ease';
-                setTimeout(() => toast.remove(), 200);
-            }, 3000);
-        }
+        function showToast(
+            message,
+            type = 'success'
+        ) {
 
-        document.getElementById('viewingModal').addEventListener('click', function(event) {
-            if (event.target === this) closeViewingModal();
-        });
-        document.getElementById('messageModal').addEventListener('click', function(event) {
-            if (event.target === this) closeMessageModal();
-        });
+            const existing =
+                document.getElementById(
+                    'moonlatToast'
+                );
 
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeViewingModal();
-                closeMessageModal();
-                closeGallery();
+
+            if (existing) {
+
+                existing.remove();
+
             }
-        });
+
+
+            const toast =
+                document.createElement(
+                    'div'
+                );
+
+
+            toast.id =
+                'moonlatToast';
+
+
+            toast.className =
+                `
+                    fixed
+                    top-5
+                    left-1/2
+                    -translate-x-1/2
+                    z-[3000]
+                    flex
+                    items-center
+                    gap-3
+                    px-4
+                    py-3
+                    rounded-2xl
+                    shadow-2xl
+                    text-white
+                    text-sm
+                    font-bold
+                    toast-enter
+                    ${
+                        type === 'success'
+                            ? 'bg-slate-950'
+                            : 'bg-rose-600'
+                    }
+                `;
+
+
+            toast.innerHTML =
+                `
+
+                    <span
+                        class="w-7 h-7 rounded-lg ${
+                            type === 'success'
+                                ? 'bg-emerald-500/15 text-emerald-400'
+                                : 'bg-white/15 text-white'
+                        } flex items-center justify-center shrink-0"
+                    >
+
+                        <i
+                            class="fas ${
+                                type === 'success'
+                                    ? 'fa-check'
+                                    : 'fa-triangle-exclamation'
+                            } text-xs"
+                        ></i>
+
+                    </span>
+
+
+                    <span>
+                        ${escapeHtml(message)}
+                    </span>
+
+                `;
+
+
+            document.body.appendChild(
+                toast
+            );
+
+
+            setTimeout(
+                () => {
+
+                    toast.style.opacity =
+                        '0';
+
+                    toast.style.transform =
+                        'translate(-50%, -8px)';
+
+                    toast.style.transition =
+                        'all .2s ease';
+
+
+                    setTimeout(
+                        () => {
+
+                            toast.remove();
+
+                        },
+                        200
+                    );
+
+                },
+                3000
+            );
+
+        }
+
+
+        /*
+         * =========================
+         * MODAL BACKDROP
+         * =========================
+         */
+
+        document
+            .getElementById(
+                'contactSheet'
+            )
+            .addEventListener(
+                'click',
+                function(event) {
+
+                    if (
+                        event.target ===
+                        this
+                    ) {
+
+                        closeContactSheet();
+
+                    }
+
+                }
+            );
+
+
+        /*
+         * =========================
+         * ESCAPE HANDLING
+         * =========================
+         */
+
+        document.addEventListener(
+            'keydown',
+            event => {
+
+                if (
+                    event.key !==
+                    'Escape'
+                ) {
+
+                    return;
+
+                }
+
+
+                const gallery =
+                    document.getElementById(
+                        'galleryOverlay'
+                    );
+
+
+                if (gallery) {
+
+                    closeGallery();
+
+                    return;
+
+                }
+
+
+                const contact =
+                    document.getElementById(
+                        'contactSheet'
+                    );
+
+
+                if (
+                    contact &&
+                    contact.classList.contains(
+                        'flex'
+                    )
+                ) {
+
+                    closeContactSheet();
+
+                }
+
+            }
+        );
+
     </script>
+
 </body>
 </html>
