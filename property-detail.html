@@ -17,12 +17,6 @@
     content="#09063d"
 >
 
-<!-- =========================================================
-     OPEN GRAPH
-     Default values are replaced dynamically after the
-     Firebase property has been loaded.
-     ========================================================= -->
-
 <meta
     property="og:type"
     content="website"
@@ -36,11 +30,13 @@
 <meta
     property="og:title"
     content="Property Details | MoonLat"
+    id="ogTitle"
 >
 
 <meta
     property="og:description"
     content="View detailed information about this verified property on MoonLat."
+    id="ogDescription"
 >
 
 <meta
@@ -51,7 +47,7 @@
 
 <meta
     property="og:image"
-    content="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&auto=format&fit=crop"
+    content=""
     id="ogImage"
 >
 
@@ -64,6 +60,7 @@
 <meta
     property="og:image:type"
     content="image/jpeg"
+    id="ogImageType"
 >
 
 <meta
@@ -75,10 +72,6 @@
     property="og:image:height"
     content="630"
 >
-
-<!-- =========================================================
-     TWITTER / X
-     ========================================================= -->
 
 <meta
     name="twitter:card"
@@ -99,7 +92,7 @@
 
 <meta
     name="twitter:image"
-    content="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&auto=format&fit=crop"
+    content=""
     id="twitterImage"
 >
 
@@ -109,16 +102,11 @@
     id="twitterImageAlt"
 >
 
-<!-- =========================================================
-     CANONICAL
-     ========================================================= -->
-
 <link
     rel="canonical"
     href="https://www.moonlat.top/property-detail.html"
     id="canonicalUrl"
 >
-
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -198,13 +186,93 @@
     overflow: hidden;
 }
 
+.moonlat-image-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 220px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f3f4f6 0%,
+            #e5e7eb 100%
+        );
+
+    color: #6b7280;
+}
+
+.moonlat-image-placeholder svg {
+    width: 42px;
+    height: 42px;
+}
+
+.gallery-main img,
+.gallery-thumb img,
+.property-image img,
+.agent-avatar img {
+    display: block;
+}
+
+.gallery-main img,
+.gallery-thumb img,
+.property-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-main {
+    overflow: hidden;
+}
+
+.gallery-main img {
+    transition:
+        opacity 0.25s ease,
+        transform 0.35s ease;
+}
+
+.gallery-main:hover img {
+    transform: scale(1.015);
+}
+
+.gallery-thumb {
+    overflow: hidden;
+}
+
+.gallery-thumb img {
+    transition:
+        transform 0.25s ease,
+        opacity 0.25s ease;
+}
+
+.gallery-thumb:hover img {
+    transform: scale(1.04);
+}
+
+.property-image {
+    overflow: hidden;
+}
+
+.property-image img {
+    transition:
+        transform 0.3s ease,
+        opacity 0.25s ease;
+}
+
+.property-card:hover .property-image img {
+    transform: scale(1.025);
+}
+
 </style>
 
 </head>
 
 <body>
 
-<!-- DRAWER -->
 <div class="drawer-overlay"></div>
 
 <aside class="app-drawer">
@@ -486,7 +554,6 @@
 </aside>
 
 
-<!-- HEADER -->
 <header class="header">
 
     <div class="container header__container">
@@ -537,7 +604,6 @@
 </main>
 
 
-<!-- FOOTER -->
 <footer class="footer">
 
     <div class="footer-container">
@@ -769,7 +835,6 @@
         </div>
 
 
-        <!-- FOOTER CREDIT - KAALI NG -->
         <div class="footer-credit">
 
             <div class="credit-content">
@@ -779,7 +844,7 @@
                 </span>
 
                 <a
-                    href="kaali.space"
+                    href="https://kaali.space"
                     class="credit-logo"
                     title="KAALI NG - Crafting Digital Excellence"
                 >
@@ -790,6 +855,7 @@
                             viewBox="0 0 24 24"
                             fill="none"
                         >
+
                             <path
                                 d="M12 2L2 7v10l10 5 10-5V7L12 2z"
                                 stroke="currentColor"
@@ -838,7 +904,6 @@
 </footer>
 
 
-<!-- TOAST -->
 <div
     class="toast"
     id="toast"
@@ -869,7 +934,6 @@
 </div>
 
 
-<!-- LIGHTBOX -->
 <div
     class="lightbox"
     id="lightbox"
@@ -880,6 +944,7 @@
         <button
             class="lightbox-close"
             onclick="closeLightbox()"
+            type="button"
         >
             ✕
         </button>
@@ -887,6 +952,8 @@
         <button
             class="lightbox-nav lightbox-prev"
             onclick="navigateLightbox(-1)"
+            type="button"
+            aria-label="Previous image"
         >
 
             <svg
@@ -915,6 +982,8 @@
         <button
             class="lightbox-nav lightbox-next"
             onclick="navigateLightbox(1)"
+            type="button"
+            aria-label="Next image"
         >
 
             <svg
@@ -943,7 +1012,6 @@
 </div>
 
 
-<!-- CONTACT CHOICE MODAL -->
 <div
     class="contact-modal"
     id="contactModal"
@@ -1131,7 +1199,6 @@
 </div>
 
 
-<!-- MOBILE STICKY ACTION BAR -->
 <div
     class="mobile-action-bar"
     id="mobileActionBar"
@@ -1143,6 +1210,7 @@
         id="mobileSaveBtn"
         onclick="toggleSave()"
         aria-label="Save"
+        type="button"
     >
 
         <svg
@@ -1165,6 +1233,7 @@
         class="mobile-share-btn"
         onclick="shareProperty()"
         aria-label="Share"
+        type="button"
     >
 
         <svg
@@ -1210,6 +1279,7 @@
     <button
         class="mobile-contact-btn"
         onclick="openContactModal()"
+        type="button"
     >
 
         <svg
@@ -1234,7 +1304,6 @@
 </div>
 
 
-<!-- NEWSLETTER MODAL -->
 <div
     class="modal-overlay"
     id="newsletterModal"
@@ -1245,6 +1314,8 @@
         <button
             class="modal-close"
             onclick="closeNewsletterModal()"
+            type="button"
+            aria-label="Close newsletter modal"
         >
             ✕
         </button>
@@ -1253,7 +1324,7 @@
         <div
             class="modal-loading-content"
             id="modalLoading"
-            style="display: none;"
+            style="display:none;"
         >
 
             <div class="loading-icon">
@@ -1343,7 +1414,7 @@
         <div
             class="modal-success-content"
             id="modalSuccess"
-            style="display: none;"
+            style="display:none;"
         >
 
             <div class="success-header">
@@ -1398,6 +1469,7 @@
                 <button
                     class="btn-continue"
                     onclick="closeNewsletterModal()"
+                    type="button"
                 >
                     Continue
                 </button>
@@ -1410,7 +1482,7 @@
         <div
             class="modal-error-content"
             id="modalError"
-            style="display: none;"
+            style="display:none;"
         >
 
             <div class="error-icon">
@@ -1435,6 +1507,7 @@
             <button
                 class="btn-retry"
                 onclick="retrySubscription()"
+                type="button"
             >
                 Try Again
             </button>
@@ -1445,7 +1518,7 @@
         <div
             class="modal-already-content"
             id="modalAlready"
-            style="display: none;"
+            style="display:none;"
         >
 
             <div class="already-icon">
@@ -1462,7 +1535,7 @@
 
             <div
                 class="error-details"
-                style="background: #fef3c7; color: #92400e;"
+                style="background:#fef3c7;color:#92400e;"
             >
                 You're already part of our community! Check your inbox for our latest updates.
             </div>
@@ -1470,6 +1543,7 @@
             <button
                 class="btn-ok"
                 onclick="closeNewsletterModal()"
+                type="button"
             >
                 OK, Got it
             </button>
@@ -1481,7 +1555,6 @@
 </div>
 
 
-<!-- Leaflet JS -->
 <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -1506,7 +1579,7 @@ import {
     query,
     where,
     limit,
-    onSnapshot,
+    getDocs,
     doc,
     getDoc,
     updateDoc,
@@ -1526,14 +1599,21 @@ const firebaseConfig = {
     appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
 };
 
+
 const app =
-    initializeApp(firebaseConfig);
+    initializeApp(
+        firebaseConfig
+    );
 
 const auth =
-    getAuth(app);
+    getAuth(
+        app
+    );
 
 const db =
-    getFirestore(app);
+    getFirestore(
+        app
+    );
 
 
 // =================== STATE ===================
@@ -1549,15 +1629,91 @@ let propertyMapInstance = null;
 let mapInitializationPromise = null;
 
 
-const DEFAULT_IMAGE =
-    'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&auto=format&fit=crop';
-
-
 const LEAFLET_JS_URL =
-    'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
 
 
-// Get property ID from URL
+const PROPERTY_IMAGE_KEYS = [
+    "image",
+    "imageUrl",
+    "imageURL",
+    "coverImage",
+    "coverImageUrl",
+    "coverImageURL",
+    "featuredImage",
+    "featuredImageUrl",
+    "featuredImageURL",
+    "thumbnail",
+    "thumbnailUrl",
+    "thumbnailURL",
+    "photo",
+    "photoUrl",
+    "photoURL",
+    "mainImage",
+    "mainImageUrl",
+    "mainImageURL"
+];
+
+
+const PROPERTY_IMAGE_ARRAY_KEYS = [
+    "images",
+    "photos",
+    "gallery",
+    "galleryImages",
+    "propertyImages",
+    "media",
+    "mediaUrls",
+    "photoUrls",
+    "imageUrls"
+];
+
+
+const NO_IMAGE_PLACEHOLDER = `
+
+    <div
+        class="moonlat-image-placeholder"
+        aria-label="Property image unavailable"
+    >
+
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+        >
+
+            <rect
+                x="3"
+                y="3"
+                width="18"
+                height="18"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.6"
+            />
+
+            <circle
+                cx="8.5"
+                cy="8.5"
+                r="1.5"
+                stroke="currentColor"
+                stroke-width="1.6"
+            />
+
+            <path
+                d="M21 15l-5-5L5 21"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+
+        </svg>
+
+    </div>
+
+`;
+
+
+// =================== URL ===================
 
 const urlParams =
     new URLSearchParams(
@@ -1565,7 +1721,9 @@ const urlParams =
     );
 
 const propertyId =
-    urlParams.get('id');
+    urlParams.get(
+        "id"
+    );
 
 
 // =================== AUTH ===================
@@ -1574,7 +1732,8 @@ onAuthStateChanged(
     auth,
     async (user) => {
 
-        currentUser = user;
+        currentUser =
+            user;
 
         if (user) {
 
@@ -1584,38 +1743,57 @@ onAuthStateChanged(
                     await getDoc(
                         doc(
                             db,
-                            'users',
+                            "users",
                             user.uid
                         )
                     );
 
-                if (userDoc.exists()) {
+                if (
+                    userDoc.exists()
+                ) {
+
+                    const userData =
+                        userDoc.data() || {};
 
                     savedPropertyIds =
-                        userDoc.data()
-                            .savedPropertyIds || [];
+                        Array.isArray(
+                            userData.savedPropertyIds
+                        )
+                            ? userData.savedPropertyIds
+                            : [];
+
+                } else {
+
+                    savedPropertyIds =
+                        [];
 
                 }
 
             } catch (err) {
 
                 console.error(
-                    'Error loading user data:',
+                    "Error loading user data:",
                     err
                 );
+
+                savedPropertyIds =
+                    [];
 
             }
 
         } else {
 
-            savedPropertyIds = [];
+            savedPropertyIds =
+                [];
 
         }
 
         updateAuthUI();
 
         if (currentProperty) {
+
             updateSaveUI();
+
         }
 
     }
@@ -1626,17 +1804,17 @@ function updateAuthUI() {
 
     const link =
         document.getElementById(
-            'drawerAuthLink'
+            "drawerAuthLink"
         );
 
     const title =
         document.getElementById(
-            'drawerAuthTitle'
+            "drawerAuthTitle"
         );
 
     const subtitle =
         document.getElementById(
-            'drawerAuthSubtitle'
+            "drawerAuthSubtitle"
         );
 
     if (
@@ -1644,117 +1822,391 @@ function updateAuthUI() {
         !title ||
         !subtitle
     ) {
+
         return;
+
     }
+
 
     if (currentUser) {
 
         const name =
             currentUser.displayName ||
-            currentUser.email?.split('@')[0] ||
-            'Dashboard';
+            currentUser.email?.split("@")[0] ||
+            "Dashboard";
 
         title.textContent =
             name;
 
         subtitle.textContent =
-            'Go to your dashboard';
+            "Go to your dashboard";
 
         link.href =
-            'dashboard/dashboard.html';
+            "dashboard/dashboard.html";
 
     } else {
 
         title.textContent =
-            'Login / Sign Up';
+            "Login / Sign Up";
 
         subtitle.textContent =
-            'Access your saved properties';
+            "Access your saved properties";
 
         link.href =
-            'dashboard/sign-in.html';
+            "dashboard/sign-in.html";
 
     }
+
+}
+
+
+// =========================================================
+// PROPERTY IMAGE ENGINE
+// Resolves the actual image stored in Firestore.
+// Supports common MoonLat image structures without
+// introducing stock/fake property photography.
+// =========================================================
+
+function isValidImageUrl(value) {
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        typeof value !== "string"
+    ) {
+
+        return false;
+
+    }
+
+
+    const url =
+        value.trim();
+
+    if (!url) {
+
+        return false;
+
+    }
+
+
+    if (
+        url.startsWith("data:image/")
+    ) {
+
+        return true;
+
+    }
+
+
+    if (
+        url.startsWith("blob:")
+    ) {
+
+        return true;
+
+    }
+
+
+    try {
+
+        const parsed =
+            new URL(
+                url,
+                window.location.origin
+            );
+
+        return (
+            parsed.protocol === "http:" ||
+            parsed.protocol === "https:"
+        );
+
+    } catch {
+
+        return false;
+
+    }
+
+}
+
+
+function extractImageUrl(value) {
+
+    if (
+        typeof value === "string"
+    ) {
+
+        const trimmed =
+            value.trim();
+
+        return isValidImageUrl(
+            trimmed
+        )
+            ? trimmed
+            : "";
+
+    }
+
+
+    if (
+        !value ||
+        typeof value !== "object"
+    ) {
+
+        return "";
+
+    }
+
+
+    const nestedKeys = [
+        "url",
+        "src",
+        "downloadURL",
+        "downloadUrl",
+        "image",
+        "imageUrl",
+        "imageURL",
+        "secure_url",
+        "secureUrl"
+    ];
+
+
+    for (
+        const key of nestedKeys
+    ) {
+
+        if (
+            typeof value[key] === "string" &&
+            isValidImageUrl(
+                value[key]
+            )
+        ) {
+
+            return value[key].trim();
+
+        }
+
+    }
+
+
+    return "";
+
+}
+
+
+function collectPropertyImages(property) {
+
+    if (!property) {
+
+        return [];
+
+    }
+
+
+    const images = [];
+
+
+    function addImage(value) {
+
+        const image =
+            extractImageUrl(
+                value
+            );
+
+        if (
+            image &&
+            !images.includes(
+                image
+            )
+        ) {
+
+            images.push(
+                image
+            );
+
+        }
+
+    }
+
+
+    PROPERTY_IMAGE_KEYS.forEach(
+        key => {
+
+            if (
+                property[key]
+            ) {
+
+                addImage(
+                    property[key]
+                );
+
+            }
+
+        }
+    );
+
+
+    PROPERTY_IMAGE_ARRAY_KEYS.forEach(
+        key => {
+
+            const collectionValue =
+                property[key];
+
+            if (
+                Array.isArray(
+                    collectionValue
+                )
+            ) {
+
+                collectionValue.forEach(
+                    item => {
+
+                        addImage(
+                            item
+                        );
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
+
+    if (
+        property.media &&
+        typeof property.media === "object" &&
+        !Array.isArray(
+            property.media
+        )
+    ) {
+
+        Object.values(
+            property.media
+        ).forEach(
+            value => {
+
+                if (
+                    Array.isArray(value)
+                ) {
+
+                    value.forEach(
+                        item =>
+                            addImage(
+                                item
+                            )
+                    );
+
+                } else {
+
+                    addImage(
+                        value
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    return images;
+
+}
+
+
+function getPropertyPrimaryImage(property) {
+
+    const images =
+        collectPropertyImages(
+            property
+        );
+
+    return (
+        images[0] ||
+        ""
+    );
+
+}
+
+
+function createImagePlaceholderHtml() {
+
+    return NO_IMAGE_PLACEHOLDER;
+
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHtml(
+        value
+    );
 
 }
 
 
 // =================== DYNAMIC PROPERTY SEO ===================
 
-function getPropertyPrimaryImage(property) {
-
-    if (!property) {
-        return DEFAULT_IMAGE;
-    }
-
-    let images = [];
-
-    if (
-        Array.isArray(property.images) &&
-        property.images.length > 0
-    ) {
-
-        images =
-            [...property.images];
-
-    } else if (
-        Array.isArray(property.photos) &&
-        property.photos.length > 0
-    ) {
-
-        images =
-            [...property.photos];
-
-    }
-
-    if (
-        property.image &&
-        !images.includes(property.image)
-    ) {
-
-        images.unshift(
-            property.image
-        );
-
-    }
-
-    return (
-        images[0] ||
-        DEFAULT_IMAGE
-    );
-
-}
-
-
 function createSeoDescription(property) {
 
     if (!property) {
 
-        return 'View detailed information about this verified property on MoonLat.';
+        return "View detailed information about this verified property on MoonLat.";
 
     }
 
+
     const title =
-        property.title ||
-        'Property';
+        getFirstValidValue(
+            property.title,
+            property.name
+        ) ||
+        "Property";
+
 
     const location =
-        property.location ||
-        property.address ||
-        property.city ||
-        'Nigeria';
+        getFirstValidValue(
+            property.location,
+            property.address,
+            property.city,
+            property.area,
+            property.state
+        ) ||
+        "Nigeria";
+
 
     const description =
-        property.description ||
-        '';
+        getFirstValidValue(
+            property.description,
+            property.summary,
+            property.shortDescription
+        );
+
 
     const price =
-        property.price
-            ? formatPrice(property.price)
-            : '';
+        property.price !== undefined &&
+        property.price !== null &&
+        property.price !== ""
+            ? formatPrice(
+                property.price
+            )
+            : "";
+
 
     let text =
         `${title} in ${location}.`;
+
 
     if (price) {
 
@@ -1763,6 +2215,7 @@ function createSeoDescription(property) {
 
     }
 
+
     if (description) {
 
         text +=
@@ -1770,10 +2223,71 @@ function createSeoDescription(property) {
 
     }
 
+
     return text
-        .replace(/\s+/g, ' ')
+        .replace(
+            /\s+/g,
+            " "
+        )
         .trim()
-        .substring(0, 300);
+        .substring(
+            0,
+            300
+        );
+
+}
+
+
+function getAbsolutePropertyUrl(property) {
+
+    const id =
+        property?.id ||
+        propertyId;
+
+
+    const url =
+        new URL(
+            window.location.pathname,
+            window.location.origin
+        );
+
+
+    if (id) {
+
+        url.searchParams.set(
+            "id",
+            id
+        );
+
+    }
+
+
+    return url.toString();
+
+}
+
+
+function updateMetaTag(selector, content) {
+
+    const element =
+        document.querySelector(
+            selector
+        );
+
+    if (
+        element &&
+        content !== undefined &&
+        content !== null
+    ) {
+
+        element.setAttribute(
+            "content",
+            String(
+                content
+            )
+        );
+
+    }
 
 }
 
@@ -1781,205 +2295,125 @@ function createSeoDescription(property) {
 function updatePropertyMeta(property) {
 
     if (!property) {
+
         return;
+
     }
 
+
     const title =
-        property.title ||
-        'Property Details';
+        getFirstValidValue(
+            property.title,
+            property.name
+        ) ||
+        "Property Details";
+
 
     const fullTitle =
         `${title} | MoonLat`;
+
 
     const description =
         createSeoDescription(
             property
         );
 
+
     const image =
         getPropertyPrimaryImage(
             property
         );
 
+
     const propertyUrl =
-        `${window.location.origin}${window.location.pathname}?id=${encodeURIComponent(property.id)}`;
+        getAbsolutePropertyUrl(
+            property
+        );
 
 
     document.title =
         fullTitle;
 
 
-    const descriptionMeta =
-        document.querySelector(
-            'meta[name="description"]'
-        );
-
-    if (descriptionMeta) {
-
-        descriptionMeta.setAttribute(
-            'content',
-            description
-        );
-
-    }
+    updateMetaTag(
+        'meta[name="description"]',
+        description
+    );
 
 
-    const ogTitle =
-        document.querySelector(
-            'meta[property="og:title"]'
-        );
-
-    if (ogTitle) {
-
-        ogTitle.setAttribute(
-            'content',
-            fullTitle
-        );
-
-    }
+    updateMetaTag(
+        'meta[property="og:title"]',
+        fullTitle
+    );
 
 
-    const ogDescription =
-        document.querySelector(
-            'meta[property="og:description"]'
-        );
-
-    if (ogDescription) {
-
-        ogDescription.setAttribute(
-            'content',
-            description
-        );
-
-    }
+    updateMetaTag(
+        'meta[property="og:description"]',
+        description
+    );
 
 
-    const ogUrl =
-        document.getElementById(
-            'ogUrl'
-        );
-
-    if (ogUrl) {
-
-        ogUrl.setAttribute(
-            'content',
-            propertyUrl
-        );
-
-    }
+    updateMetaTag(
+        'meta[property="og:url"]',
+        propertyUrl
+    );
 
 
-    const ogImage =
-        document.getElementById(
-            'ogImage'
-        );
-
-    if (ogImage) {
-
-        ogImage.setAttribute(
-            'content',
-            image
-        );
-
-    }
+    updateMetaTag(
+        'meta[property="og:image"]',
+        image
+    );
 
 
-    const ogImageAlt =
-        document.getElementById(
-            'ogImageAlt'
-        );
-
-    if (ogImageAlt) {
-
-        ogImageAlt.setAttribute(
-            'content',
-            title
-        );
-
-    }
+    updateMetaTag(
+        'meta[property="og:image:alt"]',
+        title
+    );
 
 
-    const twitterTitle =
-        document.getElementById(
-            'twitterTitle'
-        );
-
-    if (twitterTitle) {
-
-        twitterTitle.setAttribute(
-            'content',
-            fullTitle
-        );
-
-    }
+    updateMetaTag(
+        'meta[name="twitter:title"]',
+        fullTitle
+    );
 
 
-    const twitterDescription =
-        document.getElementById(
-            'twitterDescription'
-        );
-
-    if (twitterDescription) {
-
-        twitterDescription.setAttribute(
-            'content',
-            description
-        );
-
-    }
+    updateMetaTag(
+        'meta[name="twitter:description"]',
+        description
+    );
 
 
-    const twitterImage =
-        document.getElementById(
-            'twitterImage'
-        );
-
-    if (twitterImage) {
-
-        twitterImage.setAttribute(
-            'content',
-            image
-        );
-
-    }
+    updateMetaTag(
+        'meta[name="twitter:image"]',
+        image
+    );
 
 
-    const twitterImageAlt =
-        document.getElementById(
-            'twitterImageAlt'
-        );
-
-    if (twitterImageAlt) {
-
-        twitterImageAlt.setAttribute(
-            'content',
-            title
-        );
-
-    }
+    updateMetaTag(
+        'meta[name="twitter:image:alt"]',
+        title
+    );
 
 
     const canonical =
         document.getElementById(
-            'canonicalUrl'
+            "canonicalUrl"
         );
+
 
     if (canonical) {
 
         canonical.setAttribute(
-            'href',
+            "href",
             propertyUrl
         );
 
     }
 
 
-    /*
-     * Dynamic JSON-LD for the property.
-     */
     let structuredData =
         document.getElementById(
-            'moonlatPropertyStructuredData'
+            "moonlatPropertyStructuredData"
         );
 
 
@@ -1987,14 +2421,14 @@ function updatePropertyMeta(property) {
 
         structuredData =
             document.createElement(
-                'script'
+                "script"
             );
 
         structuredData.type =
-            'application/ld+json';
+            "application/ld+json";
 
         structuredData.id =
-            'moonlatPropertyStructuredData';
+            "moonlatPropertyStructuredData";
 
         document.head.appendChild(
             structuredData
@@ -2005,11 +2439,11 @@ function updatePropertyMeta(property) {
 
     const schema = {
 
-        '@context':
-            'https://schema.org',
+        "@context":
+            "https://schema.org",
 
-        '@type':
-            'RealEstateListing',
+        "@type":
+            "RealEstateListing",
 
         name:
             title,
@@ -2020,36 +2454,52 @@ function updatePropertyMeta(property) {
         url:
             propertyUrl,
 
-        image: [
-            image
-        ],
+        ...(image
+            ? {
+                image: [
+                    image
+                ]
+            }
+            : {}),
 
-        ...(property.location
+        ...(getFirstValidValue(
+            property.location,
+            property.city,
+            property.state
+        )
             ? {
                 address: {
-                    '@type':
-                        'PostalAddress',
+                    "@type":
+                        "PostalAddress",
 
                     addressLocality:
-                        property.location,
+                        getFirstValidValue(
+                            property.location,
+                            property.city,
+                            property.state
+                        ),
 
                     addressCountry:
-                        'NG'
+                        "NG"
                 }
             }
             : {}),
 
-        ...(property.price
+        ...(property.price !== undefined &&
+        property.price !== null &&
+        property.price !== ""
             ? {
                 offers: {
-                    '@type':
-                        'Offer',
+                    "@type":
+                        "Offer",
 
                     price:
-                        property.price,
+                        Number(
+                            property.price
+                        ) || property.price,
 
                     priceCurrency:
-                        'NGN',
+                        "NGN",
 
                     url:
                         propertyUrl
@@ -2060,7 +2510,9 @@ function updatePropertyMeta(property) {
         ...(property.type
             ? {
                 additionalType:
-                    property.type
+                    String(
+                        property.type
+                    )
             }
             : {})
 
@@ -2074,7 +2526,7 @@ function updatePropertyMeta(property) {
 
 
     console.log(
-        'MoonLat SEO Metadata Updated:',
+        "MoonLat Property SEO Updated:",
         {
             title:
                 fullTitle,
@@ -2083,7 +2535,8 @@ function updatePropertyMeta(property) {
                 description,
 
             image:
-                image,
+                image ||
+                "No property image",
 
             url:
                 propertyUrl
@@ -2100,13 +2553,15 @@ async function loadProperty() {
     if (!propertyId) {
 
         showError(
-            'Property Not Found',
-            'No property ID was provided.',
+            "Property Not Found",
+            "No property ID was provided.",
             true
         );
 
         return;
+
     }
+
 
     try {
 
@@ -2114,37 +2569,55 @@ async function loadProperty() {
             await getDoc(
                 doc(
                     db,
-                    'properties',
+                    "properties",
                     propertyId
                 )
             );
 
-        if (!propertyDoc.exists()) {
+
+        if (
+            !propertyDoc.exists()
+        ) {
 
             showError(
-                'Property Not Found',
-                'This property may have been removed or the link is incorrect.',
+                "Property Not Found",
+                "This property may have been removed or the link is incorrect.",
                 true
             );
 
             return;
+
         }
 
+
         currentProperty = {
-            id: propertyDoc.id,
+
+            id:
+                propertyDoc.id,
+
             ...propertyDoc.data()
+
         };
+
 
         updatePropertyMeta(
             currentProperty
         );
 
-        agentData = null;
+
+        agentData =
+            null;
+
 
         const agentId =
-            currentProperty.agentId ||
-            currentProperty.ownerId ||
-            currentProperty.userId;
+            getFirstValidValue(
+                currentProperty.agentId,
+                currentProperty.ownerId,
+                currentProperty.userId,
+                currentProperty.agentUID,
+                currentProperty.agentUid
+            );
+
 
         if (agentId) {
 
@@ -2154,27 +2627,35 @@ async function loadProperty() {
                     await getDoc(
                         doc(
                             db,
-                            'users',
+                            "users",
                             agentId
                         )
                     );
 
-                if (agentDoc.exists()) {
+
+                if (
+                    agentDoc.exists()
+                ) {
 
                     agentData = {
-                        id: agentDoc.id,
+
+                        id:
+                            agentDoc.id,
+
                         ...agentDoc.data()
+
                     };
 
+
                     console.log(
-                        'MoonLat Agent Data:',
+                        "MoonLat Agent Data:",
                         agentData
                     );
 
                 } else {
 
                     console.warn(
-                        'Agent user document not found:',
+                        "Agent user document not found:",
                         agentId
                     );
 
@@ -2183,7 +2664,7 @@ async function loadProperty() {
             } catch (err) {
 
                 console.error(
-                    'Error fetching agent data:',
+                    "Error fetching agent data:",
                     err
                 );
 
@@ -2191,23 +2672,24 @@ async function loadProperty() {
 
         }
 
-        loadSimilarProperties();
+
+        await loadSimilarProperties();
+
 
         renderPropertyDetail();
 
-        document.title =
-            `${currentProperty.title || 'Property'} | MoonLat`;
 
     } catch (err) {
 
         console.error(
-            'Error loading property:',
+            "Error loading property:",
             err
         );
 
+
         showError(
-            'Error Loading Property',
-            'Something went wrong. Please try again.',
+            "Error Loading Property",
+            "Something went wrong. Please try again.",
             true
         );
 
@@ -2224,141 +2706,257 @@ async function loadSimilarProperties() {
             query(
                 collection(
                     db,
-                    'properties'
+                    "properties"
                 ),
                 where(
-                    'status',
-                    '==',
-                    'Active'
+                    "status",
+                    "==",
+                    "Active"
                 ),
-                limit(20)
+                limit(
+                    30
+                )
             );
+
 
         const snapshot =
-            await new Promise(
-                (resolve, reject) => {
-
-                    onSnapshot(
-                        similarQuery,
-                        resolve,
-                        reject
-                    );
-
-                }
+            await getDocs(
+                similarQuery
             );
+
 
         allProperties =
             snapshot.docs.map(
                 d => ({
-                    id: d.id,
+
+                    id:
+                        d.id,
+
                     ...d.data()
+
                 })
             );
+
 
     } catch (err) {
 
         console.error(
-            'Error loading similar properties:',
+            "Error loading similar properties:",
             err
         );
+
+        allProperties =
+            [];
 
     }
 
 }
 
 
-// =================== RENDER ===================
+// =================== FORMAT ===================
 
 function formatPrice(price) {
 
-    if (!price || price === 0) {
-        return 'Contact for price';
+    const numericPrice =
+        Number(
+            price
+        );
+
+
+    if (
+        !Number.isFinite(
+            numericPrice
+        ) ||
+        numericPrice <= 0
+    ) {
+
+        return "Contact for price";
+
     }
 
-    if (price >= 1000000) {
+
+    if (
+        numericPrice >= 1000000
+    ) {
 
         const m =
-            price / 1000000;
+            numericPrice /
+            1000000;
 
-        return '₦' +
+
+        return (
+            "₦" +
             (
                 m % 1 === 0
                     ? m.toFixed(0)
                     : m.toFixed(1)
             ) +
-            'M';
+            "M"
+        );
+
     }
 
-    if (price >= 1000) {
+
+    if (
+        numericPrice >= 1000
+    ) {
 
         const k =
-            price / 1000;
+            numericPrice /
+            1000;
 
-        return '₦' +
+
+        return (
+            "₦" +
             k.toFixed(0) +
-            'K';
+            "K"
+        );
+
     }
 
-    return '₦' +
-        price.toLocaleString();
+
+    return (
+        "₦" +
+        numericPrice.toLocaleString(
+            "en-NG"
+        )
+    );
+
 }
 
 
 function getBadge(property) {
 
-    if (property.type === 'Shortlet') {
-        return 'Shortlet';
-    }
+    const type =
+        String(
+            property?.type ||
+            ""
+        ).toLowerCase();
+
+
+    const status =
+        String(
+            property?.status ||
+            ""
+        ).toLowerCase();
+
 
     if (
-        property.type === 'Office' ||
-        property.type === 'Commercial'
+        type === "shortlet"
     ) {
-        return 'For Lease';
+
+        return "Shortlet";
+
     }
 
-    if (property.status === 'Rented') {
-        return 'For Rent';
+
+    if (
+        type === "office" ||
+        type === "commercial"
+    ) {
+
+        return "For Lease";
+
     }
 
-    if (property.status === 'Sold') {
-        return 'Sold';
+
+    if (
+        status === "rented"
+    ) {
+
+        return "For Rent";
+
     }
 
-    return 'For Sale';
+
+    if (
+        status === "sold"
+    ) {
+
+        return "Sold";
+
+    }
+
+
+    return "For Sale";
+
 }
 
 
 function getPeriod(property) {
 
-    if (property.type === 'Shortlet') {
-        return '/ Night';
-    }
+    const type =
+        String(
+            property?.type ||
+            ""
+        ).toLowerCase();
+
+
+    const status =
+        String(
+            property?.status ||
+            ""
+        ).toLowerCase();
+
 
     if (
-        property.status === 'Rented' ||
-        property.type === 'Office' ||
-        property.type === 'Commercial'
+        type === "shortlet"
     ) {
-        return '/ Year';
+
+        return "/ Night";
+
     }
 
-    return '';
+
+    if (
+        status === "rented" ||
+        type === "office" ||
+        type === "commercial"
+    ) {
+
+        return "/ Year";
+
+    }
+
+
+    return "";
+
 }
 
 
 function escapeHtml(str) {
 
-    if (!str) return '';
+    if (
+        str === undefined ||
+        str === null
+    ) {
 
-    return String(str).replace(
+        return "";
+
+    }
+
+
+    return String(
+        str
+    ).replace(
         /[&<>"']/g,
         m => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
+
+            "&":
+                "&amp;",
+
+            "<":
+                "&lt;",
+
+            ">":
+                "&gt;",
+
+            '"':
+                "&quot;",
+
+            "'":
+                "&#39;"
+
         }[m])
     );
 
@@ -2367,14 +2965,60 @@ function escapeHtml(str) {
 
 function getInitials(name) {
 
-    if (!name) return 'A';
+    if (!name) {
 
-    return name
-        .split(' ')
-        .map(n => n[0])
-        .join('')
-        .substring(0, 2)
+        return "A";
+
+    }
+
+
+    return String(
+        name
+    )
+        .trim()
+        .split(
+            /\s+/
+        )
+        .filter(
+            Boolean
+        )
+        .map(
+            n => n[0]
+        )
+        .join("")
+        .substring(
+            0,
+            2
+        )
         .toUpperCase();
+
+}
+
+
+function getFirstValidValue(...values) {
+
+    for (
+        const value of values
+    ) {
+
+        if (
+            value !== undefined &&
+            value !== null &&
+            String(
+                value
+            ).trim() !== ""
+        ) {
+
+            return String(
+                value
+            ).trim();
+
+        }
+
+    }
+
+
+    return "";
 
 }
 
@@ -2412,74 +3056,66 @@ function getMLEstateAvatar() {
 
 function renderAgentAvatar(agentPhoto) {
 
-    if (agentPhoto) {
+    if (
+        isValidImageUrl(
+            agentPhoto
+        )
+    ) {
+
+        const safePhoto =
+            escapeAttribute(
+                agentPhoto
+            );
+
 
         return `
 
             <img
-                src="${escapeHtml(agentPhoto)}"
+                src="${safePhoto}"
                 alt="Agent profile"
-                onerror="this.onerror=null;this.parentElement.innerHTML=getMLEstateAvatar();"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+                onerror="this.onerror=null;this.style.display='none';this.insertAdjacentHTML('afterend',${JSON.stringify(getMLEstateAvatar())})"
             >
 
         `;
 
     }
 
+
     return getMLEstateAvatar();
 
 }
 
 
-// =================== AGENT CONTACT RESOLUTION ===================
-
-function getFirstValidValue(...values) {
-
-    for (const value of values) {
-
-        if (
-            value !== undefined &&
-            value !== null &&
-            String(value).trim() !== ''
-        ) {
-            return String(value).trim();
-        }
-
-    }
-
-    return '';
-
-}
-
+// =================== AGENT CONTACT ===================
 
 function getAgentPhone() {
 
-    const phone =
-        getFirstValidValue(
+    return getFirstValidValue(
 
-            agentData?.phoneNumber,
-            agentData?.phone,
-            agentData?.mobileNumber,
-            agentData?.mobile,
-            agentData?.contactPhone,
-            agentData?.telephone,
+        agentData?.phoneNumber,
+        agentData?.phone,
+        agentData?.mobileNumber,
+        agentData?.mobile,
+        agentData?.contactPhone,
+        agentData?.telephone,
 
-            agentData?.contact?.phone,
-            agentData?.contact?.phoneNumber,
-            agentData?.contact?.mobile,
+        agentData?.contact?.phone,
+        agentData?.contact?.phoneNumber,
+        agentData?.contact?.mobile,
 
-            currentProperty?.agentPhone,
-            currentProperty?.ownerPhone,
-            currentProperty?.phoneNumber,
-            currentProperty?.phone,
-            currentProperty?.mobileNumber,
-            currentProperty?.mobile,
-            currentProperty?.contactPhone,
+        currentProperty?.agentPhone,
+        currentProperty?.ownerPhone,
+        currentProperty?.phoneNumber,
+        currentProperty?.phone,
+        currentProperty?.mobileNumber,
+        currentProperty?.mobile,
+        currentProperty?.contactPhone,
 
-            currentUser?.phoneNumber
-        );
+        currentUser?.phoneNumber
 
-    return phone;
+    );
 
 }
 
@@ -2510,65 +3146,99 @@ function getAgentWhatsApp() {
             currentProperty?.whatsappNumber,
             currentProperty?.whatsappPhone,
             currentProperty?.whatsapp
+
         );
 
+
     if (explicitWhatsApp) {
+
         return explicitWhatsApp;
+
     }
+
 
     const sameAsPhone =
         agentData?.whatsappSameAsPhone === true ||
-        agentData?.whatsappSameAsPhone === 'true' ||
+        agentData?.whatsappSameAsPhone === "true" ||
         agentData?.sameWhatsAppAsPhone === true ||
-        agentData?.sameWhatsAppAsPhone === 'true' ||
+        agentData?.sameWhatsAppAsPhone === "true" ||
         agentData?.whatsappIsSameAsPhone === true ||
-        agentData?.whatsappIsSameAsPhone === 'true' ||
+        agentData?.whatsappIsSameAsPhone === "true" ||
         currentProperty?.whatsappSameAsPhone === true ||
-        currentProperty?.whatsappSameAsPhone === 'true';
+        currentProperty?.whatsappSameAsPhone === "true";
+
 
     if (sameAsPhone) {
+
         return getAgentPhone();
+
     }
 
-    return '';
+
+    return "";
 
 }
 
 
 function normalizePhoneNumber(phone) {
 
-    if (!phone) return '';
+    if (!phone) {
+
+        return "";
+
+    }
+
 
     let normalized =
-        String(phone)
+        String(
+            phone
+        )
             .trim()
-            .replace(/[^\d+]/g, '');
+            .replace(
+                /[^\d+]/g,
+                ""
+            );
+
 
     if (!normalized) {
-        return '';
+
+        return "";
+
     }
+
 
     normalized =
         normalized.replace(
             /^\+/,
-            ''
+            ""
         );
 
-    if (
-        normalized.startsWith('0') &&
-        normalized.length === 11
-    ) {
-        normalized =
-            '234' +
-            normalized.substring(1);
-    }
 
     if (
-        normalized.startsWith('00')
+        normalized.startsWith("00")
     ) {
+
         normalized =
-            normalized.substring(2);
+            normalized.substring(
+                2
+            );
+
     }
+
+
+    if (
+        normalized.startsWith("0") &&
+        normalized.length === 11
+    ) {
+
+        normalized =
+            "234" +
+            normalized.substring(
+                1
+            );
+
+    }
+
 
     return normalized;
 
@@ -2576,20 +3246,25 @@ function normalizePhoneNumber(phone) {
 
 
 function getAgentDisplayPhone() {
+
     return getAgentPhone();
+
 }
 
 
 function getAgentDisplayWhatsApp() {
+
     return getAgentWhatsApp();
+
 }
 
 
 function logAgentContactResolution() {
 
     console.log(
-        'MoonLat Contact Resolution:',
+        "MoonLat Contact Resolution:",
         {
+
             agentId:
                 agentData?.id ||
                 currentProperty?.agentId ||
@@ -2600,12 +3275,12 @@ function logAgentContactResolution() {
                 agentData?.displayName ||
                 currentProperty?.agentName ||
                 currentProperty?.ownerName ||
-                'Verified Agent',
+                "Verified Agent",
 
-            phoneSource:
+            phone:
                 getAgentDisplayPhone(),
 
-            whatsappSource:
+            whatsapp:
                 getAgentDisplayWhatsApp(),
 
             normalizedPhone:
@@ -2617,6 +3292,7 @@ function logAgentContactResolution() {
                 normalizePhoneNumber(
                     getAgentDisplayWhatsApp()
                 )
+
         }
     );
 
@@ -2630,96 +3306,92 @@ function renderPropertyDetail() {
     const p =
         currentProperty;
 
+
     const price =
-        formatPrice(p.price);
-
-    const period =
-        getPeriod(p);
-
-    const badge =
-        getBadge(p);
-
-    propertyImages = [];
-
-    if (
-        p.images &&
-        Array.isArray(p.images) &&
-        p.images.length > 0
-    ) {
-
-        propertyImages =
-            [...p.images];
-
-    } else if (
-        p.photos &&
-        Array.isArray(p.photos) &&
-        p.photos.length > 0
-    ) {
-
-        propertyImages =
-            [...p.photos];
-
-    }
-
-    if (
-        p.image &&
-        !propertyImages.includes(p.image)
-    ) {
-
-        propertyImages.unshift(
-            p.image
+        formatPrice(
+            p.price
         );
 
-    }
 
-    if (
-        propertyImages.length === 0
-    ) {
+    const period =
+        getPeriod(
+            p
+        );
 
-        propertyImages = [
-            DEFAULT_IMAGE
-        ];
 
-    }
+    const badge =
+        getBadge(
+            p
+        );
+
+
+    propertyImages =
+        collectPropertyImages(
+            p
+        );
+
 
     console.log(
-        'Property Images:',
+        "MoonLat Property Images:",
         propertyImages
     );
 
-    console.log(
-        'p.images:',
-        p.images
-    );
 
     console.log(
-        'p.photos:',
-        p.photos
+        "MoonLat Property Image Sources:",
+        {
+
+            image:
+                p.image,
+
+            imageUrl:
+                p.imageUrl,
+
+            coverImage:
+                p.coverImage,
+
+            featuredImage:
+                p.featuredImage,
+
+            images:
+                p.images,
+
+            photos:
+                p.photos,
+
+            gallery:
+                p.gallery
+
+        }
     );
 
-    console.log(
-        'p.image:',
-        p.image
+
+    updatePropertyMeta(
+        p
     );
 
-    updatePropertyMeta({
-        ...p,
-        image:
-            propertyImages[0]
-    });
 
     logAgentContactResolution();
 
+
     const mainImage =
-        propertyImages[0];
+        propertyImages[0] ||
+        "";
+
 
     const amenities =
-        p.amenities || [];
+        p.amenities ||
+        p.features ||
+        [];
+
 
     const amenitiesList =
-        Array.isArray(amenities)
+        Array.isArray(
+            amenities
+        )
             ? amenities
             : [];
+
 
     const similar =
         allProperties
@@ -2731,29 +3403,62 @@ function renderPropertyDetail() {
                         prop.location === p.location
                     )
             )
-            .slice(0, 3);
+            .slice(
+                0,
+                3
+            );
+
 
     const agentName =
         agentData?.displayName ||
         agentData?.name ||
         p.agentName ||
         p.ownerName ||
-        'Verified Agent';
+        "Verified Agent";
+
 
     const agentPhoto =
         agentData?.photoURL ||
         agentData?.profileImage ||
         agentData?.avatar ||
         p.agentPhoto ||
+        p.agentPhotoURL ||
+        p.agentProfileImage ||
         null;
 
+
     const agentType =
-        'Verified Agent';
+        "Verified Agent";
+
+
+    const safeMainImage =
+        mainImage
+            ? escapeAttribute(
+                mainImage
+            )
+            : "";
+
+
+    const mainImageMarkup =
+        mainImage
+            ? `
+
+                <img
+                    id="mainPropertyImage"
+                    src="${safeMainImage}"
+                    alt="${escapeAttribute(p.title || "MoonLat property")}"
+                    decoding="async"
+                    fetchpriority="high"
+                    referrerpolicy="no-referrer"
+                    onerror="handlePropertyImageError(this)"
+                >
+
+            `
+            : createImagePlaceholderHtml();
 
 
     const html = `
 
-    <!-- DETAIL HEADER -->
     <section class="detail-header">
 
         <div class="container">
@@ -2777,13 +3482,16 @@ function renderPropertyDetail() {
                 </span>
 
                 <span class="current">
-                    ${escapeHtml(p.type || 'Property')}
+                    ${escapeHtml(p.type || "Property")}
                 </span>
 
             </div>
 
             <h1 class="detail-title">
-                ${escapeHtml(p.title)}
+                ${escapeHtml(
+                    p.title ||
+                    "Property Details"
+                )}
             </h1>
 
             <div class="detail-location">
@@ -2806,7 +3514,11 @@ function renderPropertyDetail() {
                 </svg>
 
                 <span>
-                    ${escapeHtml(p.location || 'Nigeria')}
+                    ${escapeHtml(
+                        p.location ||
+                        p.address ||
+                        "Nigeria"
+                    )}
                 </span>
 
             </div>
@@ -2816,7 +3528,6 @@ function renderPropertyDetail() {
     </section>
 
 
-    <!-- GALLERY -->
     <section class="gallery-section">
 
         <div class="container">
@@ -2828,14 +3539,13 @@ function renderPropertyDetail() {
                     <div
                         class="gallery-main"
                         onclick="openLightbox(0)"
+                        role="button"
+                        tabindex="0"
+                        aria-label="Open property photos"
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openLightbox(0)}"
                     >
 
-                        <img
-                            id="mainPropertyImage"
-                            src="${escapeHtml(mainImage)}"
-                            alt="${escapeHtml(p.title)}"
-                            onerror="this.src='${DEFAULT_IMAGE}'"
-                        >
+                        ${mainImageMarkup}
 
                         <span class="gallery-badge">
                             ${escapeHtml(badge)}
@@ -2874,7 +3584,8 @@ function renderPropertyDetail() {
                             </svg>
 
                             <span>
-                                ${propertyImages.length} Photos
+                                ${propertyImages.length}
+                                ${propertyImages.length === 1 ? "Photo" : "Photos"}
                             </span>
 
                         </div>
@@ -2887,30 +3598,42 @@ function renderPropertyDetail() {
                 ${
                     propertyImages.length > 1
                     ? `
+
                     <div class="gallery-thumbnails">
 
                         ${propertyImages.map(
                             (img, index) => `
 
                             <div
-                                class="gallery-thumb ${index === 0 ? 'active' : ''}"
+                                class="gallery-thumb ${index === 0 ? "active" : ""}"
                                 onclick="changeMainImage(${index})"
+                                role="button"
+                                tabindex="0"
+                                aria-label="View photo ${index + 1}"
+                                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();changeMainImage(${index})}"
                             >
 
                                 <img
-                                    src="${escapeHtml(img)}"
-                                    alt="Photo ${index + 1}"
-                                    onerror="this.src='${DEFAULT_IMAGE}'"
+                                    src="${escapeAttribute(img)}"
+                                    alt="${escapeAttribute(
+                                        p.title ||
+                                        "Property"
+                                    )} - Photo ${index + 1}"
+                                    loading="${index < 3 ? "eager" : "lazy"}"
+                                    decoding="async"
+                                    referrerpolicy="no-referrer"
+                                    onerror="handlePropertyImageError(this)"
                                 >
 
                             </div>
 
                         `
-                        ).join('')}
+                        ).join("")}
 
                     </div>
+
                     `
-                    : ''
+                    : ""
                 }
 
             </div>
@@ -2920,17 +3643,14 @@ function renderPropertyDetail() {
     </section>
 
 
-    <!-- DETAIL LAYOUT -->
     <section class="detail-layout">
 
         <div class="container">
 
             <div class="detail-grid">
 
-                <!-- LEFT: Property Info -->
                 <div class="property-info">
 
-                    <!-- Price & Overview -->
                     <div class="info-card">
 
                         <div class="price-overview">
@@ -2938,7 +3658,7 @@ function renderPropertyDetail() {
                             <div class="price-block">
 
                                 <div class="price-label">
-                                    ${period ? 'Starting From' : 'Price'}
+                                    ${period ? "Starting From" : "Price"}
                                 </div>
 
                                 <div class="price-value">
@@ -2948,11 +3668,13 @@ function renderPropertyDetail() {
                                 ${
                                     period
                                     ? `
+
                                     <div class="price-period">
                                         ${period}
                                     </div>
+
                                     `
-                                    : ''
+                                    : ""
                                 }
 
                             </div>
@@ -2975,7 +3697,10 @@ function renderPropertyDetail() {
                                     </svg>
 
                                     <span>
-                                        ${escapeHtml(p.type || 'Property')}
+                                        ${escapeHtml(
+                                            p.type ||
+                                            "Property"
+                                        )}
                                     </span>
 
                                 </div>
@@ -3007,7 +3732,17 @@ function renderPropertyDetail() {
                                     </svg>
 
                                     <span>
-                                        ID: ${p.id.substring(0, 8).toUpperCase()}
+                                        ID:
+                                        ${escapeHtml(
+                                            String(
+                                                p.id
+                                            )
+                                                .substring(
+                                                    0,
+                                                    8
+                                                )
+                                                .toUpperCase()
+                                        )}
                                     </span>
 
                                 </div>
@@ -3017,7 +3752,6 @@ function renderPropertyDetail() {
                         </div>
 
 
-                        <!-- Desktop Action Buttons -->
                         <div
                             class="action-buttons"
                             style="display:none;"
@@ -3028,6 +3762,7 @@ function renderPropertyDetail() {
                                 class="action-btn"
                                 id="desktopSaveBtn"
                                 onclick="toggleSave()"
+                                type="button"
                             >
 
                                 <svg
@@ -3053,6 +3788,7 @@ function renderPropertyDetail() {
                             <button
                                 class="action-btn"
                                 onclick="shareProperty()"
+                                type="button"
                             >
 
                                 <svg
@@ -3103,7 +3839,6 @@ function renderPropertyDetail() {
                     </div>
 
 
-                    <!-- Key Features -->
                     <div class="info-card">
 
                         <h3 class="info-card-title">
@@ -3154,11 +3889,13 @@ function renderPropertyDetail() {
                                 </svg>
 
                                 <div class="feature-value">
-                                    ${p.beds || 0}
+                                    ${escapeHtml(
+                                        p.beds ?? 0
+                                    )}
                                 </div>
 
                                 <div class="feature-label">
-                                    Bedroom${p.beds !== 1 ? 's' : ''}
+                                    Bedroom${Number(p.beds) !== 1 ? "s" : ""}
                                 </div>
 
                             </div>
@@ -3180,11 +3917,39 @@ function renderPropertyDetail() {
                                 </svg>
 
                                 <div class="feature-value">
-                                    ${p.baths || (p.beds ? Math.max(1, Math.floor(p.beds / 2)) : 0)}
+                                    ${escapeHtml(
+                                        p.baths ??
+                                        (
+                                            p.beds
+                                                ? Math.max(
+                                                    1,
+                                                    Math.floor(
+                                                        Number(
+                                                            p.beds
+                                                        ) / 2
+                                                    )
+                                                )
+                                                : 0
+                                        )
+                                    )}
                                 </div>
 
                                 <div class="feature-label">
-                                    Bath${(p.baths || 1) !== 1 ? 's' : ''}
+                                    Bath${Number(
+                                        p.baths ??
+                                        (
+                                            p.beds
+                                                ? Math.max(
+                                                    1,
+                                                    Math.floor(
+                                                        Number(
+                                                            p.beds
+                                                        ) / 2
+                                                    )
+                                                )
+                                                : 0
+                                        )
+                                    ) !== 1 ? "s" : ""}
                                 </div>
 
                             </div>
@@ -3216,7 +3981,11 @@ function renderPropertyDetail() {
                                 </svg>
 
                                 <div class="feature-value">
-                                    ${p.area || 'N/A'}
+                                    ${escapeHtml(
+                                        p.area ??
+                                        p.size ??
+                                        "N/A"
+                                    )}
                                 </div>
 
                                 <div class="feature-label">
@@ -3248,7 +4017,10 @@ function renderPropertyDetail() {
                                 </svg>
 
                                 <div class="feature-value">
-                                    ${escapeHtml(p.type || 'N/A')}
+                                    ${escapeHtml(
+                                        p.type ||
+                                        "N/A"
+                                    )}
                                 </div>
 
                                 <div class="feature-label">
@@ -3262,10 +4034,10 @@ function renderPropertyDetail() {
                     </div>
 
 
-                    <!-- Description -->
                     ${
                         p.description
                         ? `
+
                         <div class="info-card">
 
                             <h3 class="info-card-title">
@@ -3297,13 +4069,16 @@ function renderPropertyDetail() {
                                 class="description-text collapsed"
                                 id="descriptionText"
                             >
-                                ${escapeHtml(p.description)}
+                                ${escapeHtml(
+                                    p.description
+                                )}
                             </div>
 
                             <button
                                 class="read-more-btn"
                                 id="readMoreBtn"
                                 onclick="toggleDescription()"
+                                type="button"
                             >
 
                                 <span>
@@ -3329,15 +4104,16 @@ function renderPropertyDetail() {
                             </button>
 
                         </div>
+
                         `
-                        : ''
+                        : ""
                     }
 
 
-                    <!-- Amenities -->
                     ${
                         amenitiesList.length > 0
                         ? `
+
                         <div class="info-card">
 
                             <h3 class="info-card-title">
@@ -3388,17 +4164,17 @@ function renderPropertyDetail() {
                                     </div>
 
                                 `
-                                ).join('')}
+                                ).join("")}
 
                             </div>
 
                         </div>
+
                         `
-                        : ''
+                        : ""
                     }
 
 
-                    <!-- Location -->
                     <div class="info-card">
 
                         <h3 class="info-card-title">
@@ -3455,13 +4231,18 @@ function renderPropertyDetail() {
                             <div class="location-text">
 
                                 <strong>
-                                    ${escapeHtml(p.location || 'Nigeria')}
+                                    ${escapeHtml(
+                                        p.location ||
+                                        p.city ||
+                                        p.state ||
+                                        "Nigeria"
+                                    )}
                                 </strong>
 
                                 <span>
                                     ${escapeHtml(
                                         p.address ||
-                                        'Exact location shared upon request'
+                                        "Exact location shared upon request"
                                     )}
                                 </span>
 
@@ -3493,20 +4274,17 @@ function renderPropertyDetail() {
                 </div>
 
 
-                <!-- RIGHT: Sidebar -->
                 <aside class="detail-sidebar">
 
-
-                    <!-- Agent Card -->
                     <div class="agent-card">
 
                         <div class="agent-header">
 
-                            <div
-                                class="agent-avatar"
-                            >
+                            <div class="agent-avatar">
 
-                                ${renderAgentAvatar(agentPhoto)}
+                                ${renderAgentAvatar(
+                                    agentPhoto
+                                )}
 
                             </div>
 
@@ -3515,7 +4293,9 @@ function renderPropertyDetail() {
 
                                 <div class="agent-name">
 
-                                    ${escapeHtml(agentName)}
+                                    ${escapeHtml(
+                                        agentName
+                                    )}
 
                                     <span class="agent-verified">
 
@@ -3552,7 +4332,6 @@ function renderPropertyDetail() {
                         </div>
 
 
-                        <!-- SINGLE PRIMARY CONTACT ACTION -->
                         <button
                             class="agent-contact-btn"
                             onclick="openContactModal()"
@@ -3579,7 +4358,6 @@ function renderPropertyDetail() {
                     </div>
 
 
-                    <!-- Safety Tips -->
                     <div
                         class="info-card"
                         style="background:linear-gradient(135deg,#eef7ff 0%,#f8f9fc 100%);border-color:#d1e3ff;"
@@ -3669,10 +4447,10 @@ function renderPropertyDetail() {
     </section>
 
 
-    <!-- SIMILAR PROPERTIES -->
     ${
         similar.length > 0
         ? `
+
         <section class="similar-section">
 
             <div class="container">
@@ -3684,7 +4462,9 @@ function renderPropertyDetail() {
                     </h2>
 
                     <a
-                        href="properties.html?type=${encodeURIComponent(p.type || '')}"
+                        href="properties.html?type=${encodeURIComponent(
+                            p.type || ""
+                        )}"
                     >
 
                         View all
@@ -3712,46 +4492,68 @@ function renderPropertyDetail() {
 
                 <div class="similar-grid">
 
-                    ${similar.map(renderPropertyCard).join('')}
+                    ${similar.map(
+                        renderPropertyCard
+                    ).join("")}
 
                 </div>
 
             </div>
 
         </section>
+
         `
-        : ''
+        : ""
     }
 
     `;
 
 
-    document.getElementById(
-        'mainContent'
-    ).innerHTML = html;
+    const mainContent =
+        document.getElementById(
+            "mainContent"
+        );
+
+
+    if (!mainContent) {
+
+        return;
+
+    }
+
+
+    mainContent.innerHTML =
+        html;
 
 
     const mobileActionBar =
         document.getElementById(
-            'mobileActionBar'
+            "mobileActionBar"
         );
 
+
     if (mobileActionBar) {
-        mobileActionBar.style.display = '';
+
+        mobileActionBar.style.display =
+            "";
+
     }
 
 
-    if (window.innerWidth >= 1024) {
+    if (
+        window.innerWidth >= 1024
+    ) {
 
         const desktopActions =
             document.getElementById(
-                'desktopActions'
+                "desktopActions"
             );
+
 
         if (desktopActions) {
 
             desktopActions.style.display =
-                'flex';
+                "flex";
 
         }
 
@@ -3780,54 +4582,144 @@ function renderPropertyDetail() {
 }
 
 
+// =================== IMAGE ERROR HANDLING ===================
+
+window.handlePropertyImageError =
+    function(img) {
+
+        if (!img) {
+
+            return;
+
+        }
+
+
+        const parent =
+            img.parentElement;
+
+
+        if (!parent) {
+
+            return;
+
+        }
+
+
+        img.onerror =
+            null;
+
+
+        img.style.display =
+            "none";
+
+
+        if (
+            !parent.querySelector(
+                ".moonlat-image-placeholder"
+            )
+        ) {
+
+            parent.insertAdjacentHTML(
+                "beforeend",
+                createImagePlaceholderHtml()
+            );
+
+        }
+
+    };
+
+
+// =================== PROPERTY CARD ===================
+
 function renderPropertyCard(p) {
 
     const badge =
-        getBadge(p);
-
-    const price =
-        formatPrice(p.price);
-
-    const period =
-        getPeriod(p);
-
-    const image =
-        p.image ||
-        (
-            Array.isArray(p.images) &&
-            p.images.length > 0
-                ? p.images[0]
-                : DEFAULT_IMAGE
+        getBadge(
+            p
         );
 
+
+    const price =
+        formatPrice(
+            p.price
+        );
+
+
+    const period =
+        getPeriod(
+            p
+        );
+
+
+    const images =
+        collectPropertyImages(
+            p
+        );
+
+
+    const image =
+        images[0] ||
+        "";
+
+
     const photoCount =
-        (p.photos && p.photos.length) ||
-        (p.images && p.images.length) ||
-        5;
+        images.length;
+
+
+    const imageMarkup =
+        image
+            ? `
+
+                <img
+                    src="${escapeAttribute(image)}"
+                    alt="${escapeAttribute(
+                        p.title ||
+                        "MoonLat property"
+                    )}"
+                    loading="lazy"
+                    decoding="async"
+                    referrerpolicy="no-referrer"
+                    onerror="handlePropertyImageError(this)"
+                >
+
+            `
+            : createImagePlaceholderHtml();
+
 
     return `
 
         <article
             class="property-card"
-            onclick="viewProperty('${p.id}')"
+            onclick="viewProperty('${escapeAttribute(
+                p.id
+            )}')"
+            role="link"
+            tabindex="0"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();viewProperty('${escapeAttribute(
+                p.id
+            )}')}"
         >
 
             <div class="property-image">
 
-                <img
-                    src="${escapeHtml(image)}"
-                    alt="${escapeHtml(p.title)}"
-                    onerror="this.src='${DEFAULT_IMAGE}'"
-                    loading="lazy"
-                >
+                ${imageMarkup}
 
                 <span class="property-badge">
                     ${escapeHtml(badge)}
                 </span>
 
-                <span class="property-count">
-                    +${photoCount} Photos
-                </span>
+                ${
+                    photoCount > 0
+                    ? `
+
+                    <span class="property-count">
+                        ${photoCount}
+                        ${photoCount === 1 ? "Photo" : "Photos"}
+                    </span>
+
+                    `
+                    : ""
+                }
 
             </div>
 
@@ -3835,7 +4727,10 @@ function renderPropertyCard(p) {
             <div class="property-body">
 
                 <h3 class="property-title">
-                    ${escapeHtml(p.title)}
+                    ${escapeHtml(
+                        p.title ||
+                        "Property"
+                    )}
                 </h3>
 
 
@@ -3863,7 +4758,11 @@ function renderPropertyCard(p) {
                     </svg>
 
                     <span>
-                        ${escapeHtml(p.location || 'Nigeria')}
+                        ${escapeHtml(
+                            p.location ||
+                            p.address ||
+                            "Nigeria"
+                        )}
                     </span>
 
                 </div>
@@ -3887,7 +4786,10 @@ function renderPropertyCard(p) {
                         </svg>
 
                         <span>
-                            ${escapeHtml(p.type || 'Property')}
+                            ${escapeHtml(
+                                p.type ||
+                                "Property"
+                            )}
                         </span>
 
                     </div>
@@ -3909,7 +4811,14 @@ function renderPropertyCard(p) {
                         </svg>
 
                         <span>
-                            ${p.area ? p.area + ' sqm' : 'N/A'}
+                            ${
+                                p.area ||
+                                p.size
+                                    ? escapeHtml(
+                                        `${p.area || p.size} sqm`
+                                    )
+                                    : "N/A"
+                            }
                         </span>
 
                     </div>
@@ -3931,8 +4840,11 @@ function renderPropertyCard(p) {
                         </svg>
 
                         <span>
-                            ${p.beds || 0}
-                            Bed${p.beds !== 1 ? 's' : ''}
+                            ${escapeHtml(
+                                p.beds ??
+                                0
+                            )}
+                            Bed${Number(p.beds) !== 1 ? "s" : ""}
                         </span>
 
                     </div>
@@ -3945,7 +4857,7 @@ function renderPropertyCard(p) {
                     <div>
 
                         <span class="price-label">
-                            ${period ? 'Starting From' : 'Price'}
+                            ${period ? "Starting From" : "Price"}
                         </span>
 
                         <div class="price">
@@ -3958,11 +4870,13 @@ function renderPropertyCard(p) {
                     ${
                         period
                         ? `
+
                         <div class="price-period">
                             ${period}
                         </div>
+
                         `
-                        : ''
+                        : ""
                     }
 
                 </div>
@@ -3980,23 +4894,36 @@ function checkDescription() {
 
     const desc =
         document.getElementById(
-            'descriptionText'
+            "descriptionText"
         );
+
 
     const btn =
         document.getElementById(
-            'readMoreBtn'
+            "readMoreBtn"
         );
 
-    if (!desc || !btn) return;
 
-    if (desc.scrollHeight <= 200) {
+    if (
+        !desc ||
+        !btn
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        desc.scrollHeight <= 200
+    ) {
 
         btn.style.display =
-            'none';
+            "none";
+
 
         desc.classList.remove(
-            'collapsed'
+            "collapsed"
         );
 
     }
@@ -4004,48 +4931,62 @@ function checkDescription() {
 }
 
 
-// =================== INTERACTIONS ===================
+// =================== SAVE ===================
 
 window.toggleSave =
     async function() {
 
-        if (!currentProperty) return;
+        if (
+            !currentProperty
+        ) {
+
+            return;
+
+        }
+
 
         if (!currentUser) {
 
             showToast(
-                'error',
-                'Sign In Required',
-                'Please sign in to save properties'
+                "error",
+                "Sign In Required",
+                "Please sign in to save properties"
             );
+
 
             setTimeout(
                 () => {
 
                     window.location.href =
-                        'dashboard/sign-in.html';
+                        "dashboard/sign-in.html";
 
                 },
                 1500
             );
 
+
             return;
+
         }
 
-        const propertyId =
+
+        const id =
             currentProperty.id;
+
 
         const isSaved =
             savedPropertyIds.includes(
-                propertyId
+                id
             );
+
 
         const userRef =
             doc(
                 db,
-                'users',
+                "users",
                 currentUser.uid
             );
+
 
         try {
 
@@ -4054,62 +4995,104 @@ window.toggleSave =
                 await updateDoc(
                     userRef,
                     {
+
                         savedPropertyIds:
                             arrayRemove(
-                                propertyId
+                                id
                             )
+
                     }
                 );
+
 
                 savedPropertyIds =
                     savedPropertyIds.filter(
-                        id =>
-                            id !== propertyId
+                        savedId =>
+                            savedId !== id
                     );
 
+
                 showToast(
-                    'info',
-                    'Removed',
-                    'Property removed from saved list'
+                    "info",
+                    "Removed",
+                    "Property removed from saved list"
                 );
+
 
             } else {
 
-                await updateDoc(
-                    userRef,
-                    {
-                        savedPropertyIds:
-                            arrayUnion(
-                                propertyId
-                            )
+                try {
+
+                    await updateDoc(
+                        userRef,
+                        {
+
+                            savedPropertyIds:
+                                arrayUnion(
+                                    id
+                                )
+
+                        }
+                    );
+
+                } catch (updateError) {
+
+                    if (
+                        updateError?.code !==
+                        "not-found"
+                    ) {
+
+                        throw updateError;
+
                     }
-                );
+
+
+                    await setDoc(
+                        userRef,
+                        {
+
+                            savedPropertyIds:
+                                [id]
+
+                        },
+                        {
+                            merge:
+                                true
+                        }
+                    );
+
+                }
+
 
                 savedPropertyIds.push(
-                    propertyId
+                    id
                 );
 
+
                 showToast(
-                    'success',
-                    'Saved!',
-                    'Property added to your saved list'
+                    "success",
+                    "Saved!",
+                    "Property added to your saved list"
                 );
 
             }
 
+
             updateSaveUI();
+
 
         } catch (err) {
 
             console.error(
-                'Save error:',
+                "Save error:",
                 err
             );
 
+
             showToast(
-                'error',
-                'Error',
-                'Failed to save property. Please try again.'
+                "error",
+                "Error",
+                "Failed to save property. Please try again."
             );
 
         }
@@ -4119,78 +5102,88 @@ window.toggleSave =
 
 function updateSaveUI() {
 
-    if (!currentProperty) return;
+    if (
+        !currentProperty
+    ) {
+
+        return;
+
+    }
+
 
     const isSaved =
         savedPropertyIds.includes(
             currentProperty.id
         );
 
+
     const mobileBtn =
         document.getElementById(
-            'mobileSaveBtn'
+            "mobileSaveBtn"
         );
+
 
     if (mobileBtn) {
 
         mobileBtn.classList.toggle(
-            'saved',
+            "saved",
             isSaved
         );
 
-        if (isSaved) {
 
-            mobileBtn.innerHTML =
-                '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12v18l-6-4-6 4V3z" stroke="currentColor" stroke-width="2"/></svg>';
+        mobileBtn.innerHTML =
+            isSaved
 
-        } else {
+                ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12v18l-6-4-6 4V3z" stroke="currentColor" stroke-width="2"/></svg>'
 
-            mobileBtn.innerHTML =
-                '<svg viewBox="0 0 24 24" fill="none"><path d="M6 3h12v18l-6-4-6 4V3z" stroke="currentColor" stroke-width="2"/></svg>';
-
-        }
+                : '<svg viewBox="0 0 24 24" fill="none"><path d="M6 3h12v18l-6-4-6 4V3z" stroke="currentColor" stroke-width="2"/></svg>';
 
     }
 
 
     const desktopBtn =
         document.getElementById(
-            'desktopSaveBtn'
+            "desktopSaveBtn"
         );
+
 
     if (desktopBtn) {
 
         desktopBtn.classList.toggle(
-            'saved',
+            "saved",
             isSaved
         );
 
+
         const label =
             desktopBtn.querySelector(
-                'span'
+                "span"
             );
+
 
         const icon =
             desktopBtn.querySelector(
-                'svg'
+                "svg"
             );
+
 
         if (label) {
 
             label.textContent =
                 isSaved
-                    ? 'Saved'
-                    : 'Save';
+                    ? "Saved"
+                    : "Save";
 
         }
+
 
         if (icon) {
 
             icon.setAttribute(
-                'fill',
+                "fill",
                 isSaved
-                    ? 'currentColor'
-                    : 'none'
+                    ? "currentColor"
+                    : "none"
             );
 
         }
@@ -4200,18 +5193,40 @@ function updateSaveUI() {
 }
 
 
+// =================== SHARE ===================
+
 window.shareProperty =
     async function() {
 
-        if (!currentProperty) return;
+        if (
+            !currentProperty
+        ) {
+
+            return;
+
+        }
+
 
         const url =
-            `${window.location.origin}${window.location.pathname}?id=${encodeURIComponent(currentProperty.id)}`;
+            getAbsolutePropertyUrl(
+                currentProperty
+            );
+
 
         const text =
-            `Check out this property: ${currentProperty.title || 'Property'} - ${formatPrice(currentProperty.price)}`;
+            `Check out this property: ${
+                currentProperty.title ||
+                "Property"
+            } - ${
+                formatPrice(
+                    currentProperty.price
+                )
+            }`;
 
-        if (navigator.share) {
+
+        if (
+            navigator.share
+        ) {
 
             try {
 
@@ -4219,7 +5234,7 @@ window.shareProperty =
 
                     title:
                         currentProperty.title ||
-                        'Property on MoonLat',
+                        "Property on MoonLat",
 
                     text:
                         text,
@@ -4229,38 +5244,91 @@ window.shareProperty =
 
                 });
 
+
             } catch (err) {
 
-                console.log(
-                    'Share cancelled'
-                );
+                if (
+                    err?.name !==
+                    "AbortError"
+                ) {
 
-            }
-
-        } else {
-
-            try {
-
-                await navigator.clipboard
-                    .writeText(
-                        url
+                    console.log(
+                        "Share error:",
+                        err
                     );
 
-                showToast(
-                    'success',
-                    'Link Copied!',
-                    'Property link copied to clipboard'
-                );
-
-            } catch (err) {
-
-                showToast(
-                    'error',
-                    'Error',
-                    'Could not copy link'
-                );
+                }
 
             }
+
+
+            return;
+
+        }
+
+
+        try {
+
+            if (
+                navigator.clipboard &&
+                window.isSecureContext
+            ) {
+
+                await navigator.clipboard.writeText(
+                    url
+                );
+
+            } else {
+
+                const textarea =
+                    document.createElement(
+                        "textarea"
+                    );
+
+                textarea.value =
+                    url;
+
+                textarea.style.position =
+                    "fixed";
+
+                textarea.style.opacity =
+                    "0";
+
+                document.body.appendChild(
+                    textarea
+                );
+
+                textarea.select();
+
+                document.execCommand(
+                    "copy"
+                );
+
+                textarea.remove();
+
+            }
+
+
+            showToast(
+                "success",
+                "Link Copied!",
+                "Property link copied to clipboard"
+            );
+
+
+        } catch (err) {
+
+            console.error(
+                "Copy error:",
+                err
+            );
+
+
+            showToast(
+                "error",
+                "Error",
+                "Could not copy link"
+            );
 
         }
 
@@ -4270,68 +5338,87 @@ window.shareProperty =
 window.viewProperty =
     function(id) {
 
+        if (!id) {
+
+            return;
+
+        }
+
+
         window.location.href =
-            `property-detail.html?id=${encodeURIComponent(id)}`;
+            `property-detail.html?id=${encodeURIComponent(
+                id
+            )}`;
 
     };
 
 
-// =========================================================
-// CONTACT AGENT
-// PUBLIC ACTION
-// =========================================================
+// =================== CONTACT ===================
 
 window.openContactModal =
     function() {
 
-        if (!currentProperty) {
+        if (
+            !currentProperty
+        ) {
 
             showToast(
-                'error',
-                'Unavailable',
-                'Property information is still loading.'
+                "error",
+                "Unavailable",
+                "Property information is still loading."
             );
 
             return;
+
         }
+
 
         const modal =
             document.getElementById(
-                'contactModal'
+                "contactModal"
             );
+
 
         const propertyLabel =
             document.getElementById(
-                'contactModalProperty'
+                "contactModalProperty"
             );
+
 
         const agentName =
             agentData?.displayName ||
             agentData?.name ||
             currentProperty.agentName ||
             currentProperty.ownerName ||
-            'Verified Agent';
+            "Verified Agent";
+
 
         if (propertyLabel) {
 
             propertyLabel.textContent =
-                `${agentName} · ${currentProperty.title || 'This property'}`;
+                `${agentName} · ${
+                    currentProperty.title ||
+                    "This property"
+                }`;
 
         }
+
 
         if (modal) {
 
             modal.classList.add(
-                'show'
+                "show"
             );
+
 
             modal.setAttribute(
-                'aria-hidden',
-                'false'
+                "aria-hidden",
+                "false"
             );
 
+
             document.body.style.overflow =
-                'hidden';
+                "hidden";
 
         }
 
@@ -4343,55 +5430,73 @@ window.closeContactModal =
 
         const modal =
             document.getElementById(
-                'contactModal'
+                "contactModal"
             );
+
 
         if (modal) {
 
             modal.classList.remove(
-                'show'
+                "show"
             );
 
+
             modal.setAttribute(
-                'aria-hidden',
-                'true'
+                "aria-hidden",
+                "true"
             );
 
         }
 
-        document.body.style.overflow =
-            '';
+
+        if (
+            !document.getElementById(
+                "lightbox"
+            )?.classList.contains(
+                "show"
+            )
+        ) {
+
+            document.body.style.overflow =
+                "";
+
+        }
 
     };
 
 
-// =================== DIRECT AGENT CALL ===================
-
 window.callAgent =
     function() {
 
-        if (!currentProperty) {
+        if (
+            !currentProperty
+        ) {
 
             showToast(
-                'error',
-                'Unavailable',
-                'Property information is still loading.'
+                "error",
+                "Unavailable",
+                "Property information is still loading."
             );
 
             return;
+
         }
+
 
         const rawPhone =
             getAgentPhone();
+
 
         const phone =
             normalizePhoneNumber(
                 rawPhone
             );
 
+
         console.log(
-            'MoonLat Call Agent:',
+            "MoonLat Call Agent:",
             {
+
                 rawPhone:
                     rawPhone,
 
@@ -4400,21 +5505,26 @@ window.callAgent =
 
                 agent:
                     agentData
+
             }
         );
+
 
         if (!phone) {
 
             showToast(
-                'info',
-                'Phone Unavailable',
-                'This agent has not provided a phone number.'
+                "info",
+                "Phone Unavailable",
+                "This agent has not provided a phone number."
             );
 
             return;
+
         }
 
+
         closeContactModal();
+
 
         window.location.href =
             `tel:+${phone}`;
@@ -4422,105 +5532,102 @@ window.callAgent =
     };
 
 
-// =================== DIRECT WHATSAPP ===================
-
 window.whatsappAgent =
     function() {
 
-        if (!currentProperty) {
+        if (
+            !currentProperty
+        ) {
 
             showToast(
-                'error',
-                'Unavailable',
-                'Property information is still loading.'
+                "error",
+                "Unavailable",
+                "Property information is still loading."
             );
 
             return;
+
         }
+
 
         const rawWhatsApp =
             getAgentWhatsApp();
+
 
         const whatsappNumber =
             normalizePhoneNumber(
                 rawWhatsApp
             );
 
+
         console.log(
-            'MoonLat WhatsApp Agent:',
+            "MoonLat WhatsApp Agent:",
             {
+
                 rawWhatsApp:
                     rawWhatsApp,
+
                 normalizedWhatsApp:
                     whatsappNumber,
+
                 agent:
                     agentData
+
             }
         );
+
 
         if (!whatsappNumber) {
 
             showToast(
-                'info',
-                'WhatsApp Unavailable',
-                'This agent has not provided a WhatsApp number.'
+                "info",
+                "WhatsApp Unavailable",
+                "This agent has not provided a WhatsApp number."
             );
 
             return;
+
         }
+
 
         const propertyTitle =
             currentProperty.title ||
-            'this property';
+            "this property";
+
 
         const propertyLocation =
             currentProperty.location ||
             currentProperty.address ||
-            '';
+            "";
+
 
         const propertyUrl =
-            new URL(
-                'property-detail.html',
-                window.location.origin + window.location.pathname
+            getAbsolutePropertyUrl(
+                currentProperty
             );
 
-        propertyUrl.searchParams.set(
-            'id',
-            currentProperty.id
-        );
 
         const message =
-            `Hi, I'm interested in "${propertyTitle}" listed on MoonLat${propertyLocation ? ` in ${propertyLocation}` : ''}.
+            `Hi, I'm interested in "${propertyTitle}" listed on MoonLat${
+                propertyLocation
+                    ? ` in ${propertyLocation}`
+                    : ""
+            }.
 
 Property link:
-${propertyUrl.toString()}
+${propertyUrl}
 
 Please share more details.`;
 
+
         const whatsappUrl =
-            `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+                message
+            )}`;
 
-        console.log(
-            'MoonLat WhatsApp Message:',
-            {
-                property:
-                    propertyTitle,
-
-                propertyId:
-                    currentProperty.id,
-
-                propertyUrl:
-                    propertyUrl.toString(),
-
-                message:
-                    message,
-
-                whatsappUrl:
-                    whatsappUrl
-            }
-        );
 
         closeContactModal();
+
 
         window.location.href =
             whatsappUrl;
@@ -4528,51 +5635,67 @@ Please share more details.`;
     };
 
 
+// =================== DESCRIPTION ===================
+
 window.toggleDescription =
     function() {
 
         const desc =
             document.getElementById(
-                'descriptionText'
+                "descriptionText"
             );
+
 
         const btn =
             document.getElementById(
-                'readMoreBtn'
+                "readMoreBtn"
             );
 
-        if (!desc || !btn) return;
+
+        if (
+            !desc ||
+            !btn
+        ) {
+
+            return;
+
+        }
+
 
         const isCollapsed =
             desc.classList.toggle(
-                'collapsed'
+                "collapsed"
             );
+
 
         const label =
             btn.querySelector(
-                'span'
+                "span"
             );
+
 
         const icon =
             btn.querySelector(
-                'svg'
+                "svg"
             );
+
 
         if (label) {
 
             label.textContent =
                 isCollapsed
-                    ? 'Read more'
-                    : 'Show less';
+                    ? "Read more"
+                    : "Show less";
 
         }
+
 
         if (icon) {
 
             icon.style.transform =
                 isCollapsed
-                    ? 'rotate(0)'
-                    : 'rotate(180deg)';
+                    ? "rotate(0)"
+                    : "rotate(180deg)";
 
         }
 
@@ -4584,26 +5707,45 @@ window.toggleDescription =
 window.openLightbox =
     function(index) {
 
+        if (
+            !propertyImages.length
+        ) {
+
+            return;
+
+        }
+
+
         currentImageIndex =
-            index;
+            Math.max(
+                0,
+                Math.min(
+                    Number(index) || 0,
+                    propertyImages.length - 1
+                )
+            );
+
 
         updateLightboxImage();
 
+
         const lightbox =
             document.getElementById(
-                'lightbox'
+                "lightbox"
             );
+
 
         if (lightbox) {
 
             lightbox.classList.add(
-                'show'
+                "show"
             );
 
         }
 
+
         document.body.style.overflow =
-            'hidden';
+            "hidden";
 
     };
 
@@ -4613,19 +5755,31 @@ window.closeLightbox =
 
         const lightbox =
             document.getElementById(
-                'lightbox'
+                "lightbox"
             );
+
 
         if (lightbox) {
 
             lightbox.classList.remove(
-                'show'
+                "show"
             );
 
         }
 
-        document.body.style.overflow =
-            '';
+
+        if (
+            !document.getElementById(
+                "contactModal"
+            )?.classList.contains(
+                "show"
+            )
+        ) {
+
+            document.body.style.overflow =
+                "";
+
+        }
 
     };
 
@@ -4633,8 +5787,20 @@ window.closeLightbox =
 window.navigateLightbox =
     function(direction) {
 
+        if (
+            propertyImages.length <= 1
+        ) {
+
+            return;
+
+        }
+
+
         currentImageIndex +=
-            direction;
+            Number(
+                direction
+            ) || 0;
+
 
         if (
             currentImageIndex < 0
@@ -4644,6 +5810,7 @@ window.navigateLightbox =
                 propertyImages.length - 1;
 
         }
+
 
         if (
             currentImageIndex >=
@@ -4655,6 +5822,7 @@ window.navigateLightbox =
 
         }
 
+
         updateLightboxImage();
 
     };
@@ -4664,21 +5832,59 @@ function updateLightboxImage() {
 
     const img =
         document.getElementById(
-            'lightboxImage'
+            "lightboxImage"
         );
+
 
     const counter =
         document.getElementById(
-            'lightboxCounter'
+            "lightboxCounter"
         );
 
-    if (!img || !counter) return;
 
-    img.src =
+    if (
+        !img ||
+        !counter
+    ) {
+
+        return;
+
+    }
+
+
+    const image =
         propertyImages[
             currentImageIndex
-        ] ||
-        DEFAULT_IMAGE;
+        ];
+
+
+    if (image) {
+
+        img.style.display =
+            "block";
+
+        img.src =
+            image;
+
+        img.alt =
+            `${
+                currentProperty?.title ||
+                "Property"
+            } - Photo ${
+                currentImageIndex + 1
+            }`;
+
+    } else {
+
+        img.removeAttribute(
+            "src"
+        );
+
+        img.style.display =
+            "none";
+
+    }
+
 
     counter.textContent =
         `${currentImageIndex + 1} / ${propertyImages.length}`;
@@ -4687,18 +5893,19 @@ function updateLightboxImage() {
 
 
 document.addEventListener(
-    'keydown',
-    (e) => {
+    "keydown",
+    e => {
 
         const lightbox =
             document.getElementById(
-                'lightbox'
+                "lightbox"
             );
+
 
         if (
             !lightbox ||
             !lightbox.classList.contains(
-                'show'
+                "show"
             )
         ) {
 
@@ -4706,16 +5913,35 @@ document.addEventListener(
 
         }
 
-        if (e.key === 'Escape') {
+
+        if (
+            e.key === "Escape"
+        ) {
+
             closeLightbox();
+
         }
 
-        if (e.key === 'ArrowLeft') {
-            navigateLightbox(-1);
+
+        if (
+            e.key === "ArrowLeft"
+        ) {
+
+            navigateLightbox(
+                -1
+            );
+
         }
 
-        if (e.key === 'ArrowRight') {
-            navigateLightbox(1);
+
+        if (
+            e.key === "ArrowRight"
+        ) {
+
+            navigateLightbox(
+                1
+            );
+
         }
 
     }
@@ -4724,18 +5950,19 @@ document.addEventListener(
 
 const lightboxElement =
     document.getElementById(
-        'lightbox'
+        "lightbox"
     );
+
 
 if (lightboxElement) {
 
     lightboxElement.addEventListener(
-        'click',
-        (e) => {
+        "click",
+        e => {
 
             if (
                 e.target.id ===
-                'lightbox'
+                "lightbox"
             ) {
 
                 closeLightbox();
@@ -4748,22 +5975,21 @@ if (lightboxElement) {
 }
 
 
-// =================== CONTACT MODAL BACKDROP ===================
-
 const contactModalElement =
     document.getElementById(
-        'contactModal'
+        "contactModal"
     );
+
 
 if (contactModalElement) {
 
     contactModalElement.addEventListener(
-        'click',
-        (e) => {
+        "click",
+        e => {
 
             if (
                 e.target.id ===
-                'contactModal'
+                "contactModal"
             ) {
 
                 closeContactModal();
@@ -4776,73 +6002,93 @@ if (contactModalElement) {
 }
 
 
-// =================== CHANGE MAIN IMAGE ===================
+// =================== MAIN IMAGE ===================
 
 window.changeMainImage =
     function(index) {
 
+        if (
+            !propertyImages.length
+        ) {
+
+            return;
+
+        }
+
+
+        const safeIndex =
+            Math.max(
+                0,
+                Math.min(
+                    Number(index) || 0,
+                    propertyImages.length - 1
+                )
+            );
+
+
         currentImageIndex =
-            index;
+            safeIndex;
+
 
         const mainImg =
             document.getElementById(
-                'mainPropertyImage'
+                "mainPropertyImage"
             );
+
 
         const thumbnails =
             document.querySelectorAll(
-                '.gallery-thumb'
+                ".gallery-thumb"
             );
 
-        if (mainImg) {
 
-            mainImg.src =
-                propertyImages[index] ||
-                DEFAULT_IMAGE;
+        if (
+            mainImg &&
+            propertyImages[safeIndex]
+        ) {
+
+            mainImg.style.opacity =
+                "0";
+
+
+            setTimeout(
+                () => {
+
+                    mainImg.src =
+                        propertyImages[
+                            safeIndex
+                        ];
+
+                    mainImg.style.opacity =
+                        "1";
+
+                },
+                120
+            );
 
         }
+
 
         thumbnails.forEach(
             (thumb, i) => {
 
-                if (i === index) {
-
-                    thumb.classList.add(
-                        'active'
-                    );
-
-                } else {
-
-                    thumb.classList.remove(
-                        'active'
-                    );
-
-                }
+                thumb.classList.toggle(
+                    "active",
+                    i === safeIndex
+                );
 
             }
         );
 
-        const galleryWrapper =
-            document.querySelector(
-                '.gallery-wrapper'
-            );
 
-        if (galleryWrapper) {
-
-            galleryWrapper.scrollIntoView({
-                behavior:
-                    'smooth',
-
-                block:
-                    'start'
-            });
-
-        }
+        updatePropertyMeta(
+            currentProperty
+        );
 
     };
 
 
-// =================== ERROR STATE ===================
+// =================== ERROR ===================
 
 function showError(
     title,
@@ -4852,10 +6098,16 @@ function showError(
 
     const mainContent =
         document.getElementById(
-            'mainContent'
+            "mainContent"
         );
 
-    if (!mainContent) return;
+
+    if (!mainContent) {
+
+        return;
+
+    }
+
 
     mainContent.innerHTML = `
 
@@ -4892,6 +6144,7 @@ function showError(
             </p>
 
             <button
+                type="button"
                 onclick="window.location.href='properties.html'"
             >
                 Browse Properties
@@ -4904,24 +6157,34 @@ function showError(
 }
 
 
+// =================== AUTH GATE ===================
+
 window.requireAuth =
     function(event, feature) {
 
-        if (!currentUser) {
+        if (
+            !currentUser
+        ) {
 
-            event.preventDefault();
+            if (event) {
+
+                event.preventDefault();
+
+            }
+
 
             showToast(
-                'error',
-                'Sign In Required',
+                "error",
+                "Sign In Required",
                 `Please sign in to access ${feature}`
             );
+
 
             setTimeout(
                 () => {
 
                     window.location.href =
-                        'dashboard/sign-in.html';
+                        "dashboard/sign-in.html";
 
                 },
                 1500
@@ -4942,28 +6205,38 @@ function showToast(
 
     const toast =
         document.getElementById(
-            'toast'
+            "toast"
         );
+
 
     const icon =
         document.querySelector(
-            '.toast-icon'
+            ".toast-icon"
         );
 
-    if (!toast) return;
+
+    if (!toast) {
+
+        return;
+
+    }
+
 
     toast.className =
         `toast ${type}`;
 
+
     const titleElement =
         document.getElementById(
-            'toastTitle'
+            "toastTitle"
         );
+
 
     const messageElement =
         document.getElementById(
-            'toastMessage'
+            "toastMessage"
         );
+
 
     if (titleElement) {
 
@@ -4972,6 +6245,7 @@ function showToast(
 
     }
 
+
     if (messageElement) {
 
         messageElement.textContent =
@@ -4979,33 +6253,51 @@ function showToast(
 
     }
 
+
     const icons = {
-        success: '✓',
-        error: '✕',
-        info: 'ℹ'
+
+        success:
+            "✓",
+
+        error:
+            "✕",
+
+        info:
+            "ℹ"
+
     };
+
 
     if (icon) {
 
         icon.textContent =
-            icons[type] || 'ℹ';
+            icons[type] ||
+            "ℹ";
 
     }
 
+
     toast.classList.add(
-        'show'
+        "show"
     );
 
-    setTimeout(
-        () => {
 
-            toast.classList.remove(
-                'show'
-            );
-
-        },
-        4000
+    clearTimeout(
+        window.__moonlatToastTimer
     );
+
+
+    window.__moonlatToastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            4000
+        );
 
 }
 
@@ -5013,29 +6305,33 @@ function showToast(
 // =================== DRAWER ===================
 
 document.addEventListener(
-    'DOMContentLoaded',
+    "DOMContentLoaded",
     () => {
 
         loadProperty();
 
+
         const menuBtn =
             document.querySelector(
-                '.menu-btn'
+                ".menu-btn"
             );
+
 
         const drawer =
             document.querySelector(
-                '.app-drawer'
+                ".app-drawer"
             );
+
 
         const overlay =
             document.querySelector(
-                '.drawer-overlay'
+                ".drawer-overlay"
             );
+
 
         const closeBtn =
             document.querySelector(
-                '.drawer-close'
+                ".drawer-close"
             );
 
 
@@ -5044,21 +6340,23 @@ document.addEventListener(
             if (drawer) {
 
                 drawer.classList.add(
-                    'show'
+                    "show"
                 );
 
             }
+
 
             if (overlay) {
 
                 overlay.classList.add(
-                    'show'
+                    "show"
                 );
 
             }
 
+
             document.body.style.overflow =
-                'hidden';
+                "hidden";
 
         }
 
@@ -5068,21 +6366,43 @@ document.addEventListener(
             if (drawer) {
 
                 drawer.classList.remove(
-                    'show'
+                    "show"
                 );
 
             }
+
 
             if (overlay) {
 
                 overlay.classList.remove(
-                    'show'
+                    "show"
                 );
 
             }
 
-            document.body.style.overflow =
-                '';
+
+            if (
+                !document.getElementById(
+                    "lightbox"
+                )?.classList.contains(
+                    "show"
+                ) &&
+                !document.getElementById(
+                    "contactModal"
+                )?.classList.contains(
+                    "show"
+                ) &&
+                !document.getElementById(
+                    "newsletterModal"
+                )?.classList.contains(
+                    "show"
+                )
+            ) {
+
+                document.body.style.overflow =
+                    "";
+
+            }
 
         }
 
@@ -5090,7 +6410,7 @@ document.addEventListener(
         if (menuBtn) {
 
             menuBtn.addEventListener(
-                'click',
+                "click",
                 openDrawer
             );
 
@@ -5100,7 +6420,7 @@ document.addEventListener(
         if (closeBtn) {
 
             closeBtn.addEventListener(
-                'click',
+                "click",
                 closeDrawer
             );
 
@@ -5110,7 +6430,7 @@ document.addEventListener(
         if (overlay) {
 
             overlay.addEventListener(
-                'click',
+                "click",
                 closeDrawer
             );
 
@@ -5118,28 +6438,36 @@ document.addEventListener(
 
 
         document.addEventListener(
-            'keydown',
-            (e) => {
+            "keydown",
+            e => {
 
-                if (e.key === 'Escape') {
+                if (
+                    e.key !==
+                    "Escape"
+                ) {
 
-                    closeDrawer();
+                    return;
 
-                    const contactModal =
-                        document.getElementById(
-                            'contactModal'
-                        );
+                }
 
-                    if (
-                        contactModal &&
-                        contactModal.classList.contains(
-                            'show'
-                        )
-                    ) {
 
-                        closeContactModal();
+                closeDrawer();
 
-                    }
+
+                const contactModal =
+                    document.getElementById(
+                        "contactModal"
+                    );
+
+
+                if (
+                    contactModal &&
+                    contactModal.classList.contains(
+                        "show"
+                    )
+                ) {
+
+                    closeContactModal();
 
                 }
 
@@ -5152,41 +6480,12 @@ document.addEventListener(
 
 // =========================================================
 // NEWSLETTER
-// SECURE DETERMINISTIC SUBSCRIPTION WORKFLOW
 // =========================================================
-//
-// Flow:
-//
-// 1. Normalize email.
-// 2. Validate email.
-// 3. Correct common domain typos.
-// 4. SHA-256 hash normalized email.
-// 5. Use hash as deterministic document ID.
-// 6. Write with setDoc().
-// 7. No public getDocs() duplicate lookup.
-// 8. Firestore security rules determine whether the
-//    deterministic document can be created.
-//
-// Document:
-// newsletter/{sha256(email)}
-//
-// Payload:
-// {
-//     email,
-//     subscribedAt,
-//     source
-// }
-//
-// Source:
-// property_details_page
-//
-// =========================================================
-
 
 function normalizeNewsletterEmail(email) {
 
     return String(
-        email || ''
+        email || ""
     )
         .trim()
         .toLowerCase();
@@ -5199,9 +6498,12 @@ function validateNewsletterEmail(email) {
     const emailRegex =
         /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
 
+
     return (
         Boolean(email) &&
-        emailRegex.test(email)
+        emailRegex.test(
+            email
+        )
     );
 
 }
@@ -5210,56 +6512,65 @@ function validateNewsletterEmail(email) {
 function correctNewsletterEmailTypo(email) {
 
     const parts =
-        email.split('@');
+        email.split(
+            "@"
+        );
+
 
     if (
         parts.length !== 2
     ) {
 
         return {
-            email,
-            corrected: false
+
+            email:
+                email,
+
+            corrected:
+                false
+
         };
 
     }
 
+
     const commonTypos = {
 
-        'gmai.com':
-            'gmail.com',
+        "gmai.com":
+            "gmail.com",
 
-        'gmal.com':
-            'gmail.com',
+        "gmal.com":
+            "gmail.com",
 
-        'gmial.com':
-            'gmail.com',
+        "gmial.com":
+            "gmail.com",
 
-        'gnail.com':
-            'gmail.com',
+        "gnail.com":
+            "gmail.com",
 
-        'gmail.co':
-            'gmail.com',
+        "gmail.co":
+            "gmail.com",
 
-        'yaho.com':
-            'yahoo.com',
+        "yaho.com":
+            "yahoo.com",
 
-        'yahooo.com':
-            'yahoo.com',
+        "yahooo.com":
+            "yahoo.com",
 
-        'yhoo.com':
-            'yahoo.com',
+        "yhoo.com":
+            "yahoo.com",
 
-        'hotmal.com':
-            'hotmail.com',
+        "hotmal.com":
+            "hotmail.com",
 
-        'hotmial.com':
-            'hotmail.com',
+        "hotmial.com":
+            "hotmail.com",
 
-        'outlok.com':
-            'outlook.com',
+        "outlok.com":
+            "outlook.com",
 
-        'outloo.com':
-            'outlook.com'
+        "outloo.com":
+            "outlook.com"
 
     };
 
@@ -5270,11 +6581,18 @@ function correctNewsletterEmailTypo(email) {
         ];
 
 
-    if (!correctedDomain) {
+    if (
+        !correctedDomain
+    ) {
 
         return {
-            email,
-            corrected: false
+
+            email:
+                email,
+
+            corrected:
+                false
+
         };
 
     }
@@ -5298,16 +6616,19 @@ async function sha256Hex(value) {
     const encoder =
         new TextEncoder();
 
+
     const data =
         encoder.encode(
             value
         );
 
+
     const hashBuffer =
         await crypto.subtle.digest(
-            'SHA-256',
+            "SHA-256",
             data
         );
+
 
     const hashArray =
         Array.from(
@@ -5316,14 +6637,18 @@ async function sha256Hex(value) {
             )
         );
 
+
     return hashArray
         .map(
             byte =>
                 byte
                     .toString(16)
-                    .padStart(2, '0')
+                    .padStart(
+                        2,
+                        "0"
+                    )
         )
-        .join('');
+        .join("");
 
 }
 
@@ -5335,13 +6660,17 @@ async function createNewsletterDocumentId(email) {
             email
         );
 
-    if (!normalizedEmail) {
+
+    if (
+        !normalizedEmail
+    ) {
 
         throw new Error(
-            'Unable to generate newsletter subscription ID.'
+            "Unable to generate newsletter subscription ID."
         );
 
     }
+
 
     return sha256Hex(
         normalizedEmail
@@ -5354,15 +6683,22 @@ function initializeNewsletter() {
 
     const newsletterForm =
         document.getElementById(
-            'newsletterForm'
+            "newsletterForm"
         );
 
+
     if (!newsletterForm) {
+
         return;
+
     }
 
-    let lastEmail = '';
-    let isSubmitting = false;
+
+    let lastEmail =
+        "";
+
+    let isSubmitting =
+        false;
 
 
     window.closeNewsletterModal =
@@ -5370,150 +6706,207 @@ function initializeNewsletter() {
 
             const modal =
                 document.getElementById(
-                    'newsletterModal'
+                    "newsletterModal"
                 );
+
 
             if (modal) {
 
                 modal.classList.remove(
-                    'show'
+                    "show"
                 );
 
+            }
+
+
+            if (
+                !document.getElementById(
+                    "lightbox"
+                )?.classList.contains(
+                    "show"
+                ) &&
+                !document.getElementById(
+                    "contactModal"
+                )?.classList.contains(
+                    "show"
+                ) &&
+                !document.querySelector(
+                    ".app-drawer.show"
+                )
+            ) {
+
                 document.body.style.overflow =
-                    '';
-
-                document.body.style.position =
-                    '';
-
-                document.body.style.width =
-                    '';
+                    "";
 
             }
+
+
+            document.body.style.position =
+                "";
+
+            document.body.style.width =
+                "";
 
         };
 
 
     function showNewsletterModal(
         state,
-        errorMessage = ''
+        errorMessage = ""
     ) {
 
         const modal =
             document.getElementById(
-                'newsletterModal'
+                "newsletterModal"
             );
 
-        if (!modal) return;
+
+        if (!modal) {
+
+            return;
+
+        }
+
 
         const loading =
             document.getElementById(
-                'modalLoading'
+                "modalLoading"
             );
+
 
         const success =
             document.getElementById(
-                'modalSuccess'
+                "modalSuccess"
             );
+
 
         const error =
             document.getElementById(
-                'modalError'
+                "modalError"
             );
+
 
         const already =
             document.getElementById(
-                'modalAlready'
+                "modalAlready"
             );
 
 
         if (loading) {
+
             loading.style.display =
-                'none';
+                "none";
+
         }
+
 
         if (success) {
+
             success.style.display =
-                'none';
+                "none";
+
         }
+
 
         if (error) {
+
             error.style.display =
-                'none';
+                "none";
+
         }
 
+
         if (already) {
+
             already.style.display =
-                'none';
+                "none";
+
         }
 
 
         if (
-            state === 'loading' &&
+            state ===
+            "loading" &&
             loading
         ) {
 
             loading.style.display =
-                'block';
+                "block";
 
             resetProgress();
 
-        } else if (
-            state === 'success' &&
+        }
+
+
+        if (
+            state ===
+            "success" &&
             success
         ) {
 
             success.style.display =
-                'block';
+                "block";
 
             setTimeout(
                 createConfetti,
                 100
             );
 
-        } else if (
-            state === 'error' &&
+        }
+
+
+        if (
+            state ===
+            "error" &&
             error
         ) {
 
             error.style.display =
-                'block';
+                "block";
+
 
             const errorDetails =
                 document.getElementById(
-                    'errorDetails'
+                    "errorDetails"
                 );
+
 
             if (errorDetails) {
 
                 errorDetails.textContent =
                     errorMessage ||
-                    'An unexpected error occurred.';
+                    "An unexpected error occurred.";
 
             }
 
-        } else if (
-            state === 'already' &&
+        }
+
+
+        if (
+            state ===
+            "already" &&
             already
         ) {
 
             already.style.display =
-                'block';
+                "block";
 
         }
 
 
         modal.classList.add(
-            'show'
+            "show"
         );
 
+
         document.body.style.overflow =
-            'hidden';
+            "hidden";
 
         document.body.style.position =
-            'fixed';
+            "fixed";
 
         document.body.style.width =
-            '100%';
+            "100%";
 
     }
 
@@ -5523,13 +6916,15 @@ function initializeNewsletter() {
 
             window.closeNewsletterModal();
 
+
             setTimeout(
                 () => {
 
                     const emailInput =
                         document.getElementById(
-                            'newsletterEmail'
+                            "newsletterEmail"
                         );
+
 
                     if (
                         lastEmail &&
@@ -5543,15 +6938,18 @@ function initializeNewsletter() {
 
                     }
 
+
                     newsletterForm.dispatchEvent(
                         new Event(
-                            'submit',
+                            "submit",
                             {
+
                                 bubbles:
                                     true,
 
                                 cancelable:
                                     true
+
                             }
                         )
                     );
@@ -5576,25 +6974,28 @@ function initializeNewsletter() {
                     `step${i}`
                 );
 
+
             if (stepEl) {
 
                 stepEl.classList.remove(
-                    'active'
+                    "active"
                 );
 
                 stepEl.classList.add(
-                    'completed'
+                    "completed"
                 );
+
 
                 const icon =
                     stepEl.querySelector(
-                        '.progress-step-icon'
+                        ".progress-step-icon"
                     );
+
 
                 if (icon) {
 
                     icon.textContent =
-                        '✓';
+                        "✓";
 
                 }
 
@@ -5602,18 +7003,21 @@ function initializeNewsletter() {
 
         }
 
+
         const currentStep =
             document.getElementById(
                 `step${step}`
             );
 
+
         if (currentStep) {
 
             currentStep.classList.add(
-                'active'
+                "active"
             );
 
         }
+
 
         await new Promise(
             resolve =>
@@ -5639,17 +7043,20 @@ function initializeNewsletter() {
                     `step${i}`
                 );
 
+
             if (stepEl) {
 
                 stepEl.classList.remove(
-                    'active',
-                    'completed'
+                    "active",
+                    "completed"
                 );
+
 
                 const icon =
                     stepEl.querySelector(
-                        '.progress-step-icon'
+                        ".progress-step-icon"
                     );
+
 
                 if (icon) {
 
@@ -5669,24 +7076,34 @@ function initializeNewsletter() {
 
         const container =
             document.getElementById(
-                'confettiContainer'
+                "confettiContainer"
             );
 
-        if (!container) return;
+
+        if (!container) {
+
+            return;
+
+        }
+
 
         container.innerHTML =
-            '';
+            "";
+
 
         const colors = [
-            '#667eea',
-            '#764ba2',
-            '#f093fb',
-            '#f5576c',
-            '#4facfe',
-            '#00f2fe',
-            '#43e97b',
-            '#fa709a'
+
+            "#667eea",
+            "#764ba2",
+            "#f093fb",
+            "#f5576c",
+            "#4facfe",
+            "#00f2fe",
+            "#43e97b",
+            "#fa709a"
+
         ];
+
 
         for (
             let i = 0;
@@ -5696,16 +7113,19 @@ function initializeNewsletter() {
 
             const confetti =
                 document.createElement(
-                    'div'
+                    "div"
                 );
 
+
             confetti.className =
-                'confetti';
+                "confetti";
+
 
             confetti.style.left =
                 Math.random() *
                 100 +
-                '%';
+                "%";
+
 
             confetti.style.backgroundColor =
                 colors[
@@ -5715,10 +7135,12 @@ function initializeNewsletter() {
                     )
                 ];
 
+
             confetti.style.animationDelay =
                 Math.random() *
                 1.5 +
-                's';
+                "s";
+
 
             confetti.style.animationDuration =
                 (
@@ -5726,7 +7148,8 @@ function initializeNewsletter() {
                     1.5 +
                     1.5
                 ) +
-                's';
+                "s";
+
 
             if (
                 Math.random() <
@@ -5734,7 +7157,7 @@ function initializeNewsletter() {
             ) {
 
                 confetti.style.borderRadius =
-                    '50%';
+                    "50%";
 
             } else if (
                 Math.random() <
@@ -5742,12 +7165,13 @@ function initializeNewsletter() {
             ) {
 
                 confetti.style.width =
-                    '5px';
+                    "5px";
 
                 confetti.style.height =
-                    '12px';
+                    "12px";
 
             }
+
 
             container.appendChild(
                 confetti
@@ -5759,12 +7183,12 @@ function initializeNewsletter() {
 
 
     document.addEventListener(
-        'click',
-        function(e) {
+        "click",
+        e => {
 
             if (
                 e.target.id ===
-                'newsletterModal'
+                "newsletterModal"
             ) {
 
                 window.closeNewsletterModal();
@@ -5776,26 +7200,33 @@ function initializeNewsletter() {
 
 
     document.addEventListener(
-        'keydown',
-        function(e) {
+        "keydown",
+        e => {
 
-            if (e.key === 'Escape') {
+            if (
+                e.key !==
+                "Escape"
+            ) {
 
-                const modal =
-                    document.getElementById(
-                        'newsletterModal'
-                    );
+                return;
 
-                if (
-                    modal &&
-                    modal.classList.contains(
-                        'show'
-                    )
-                ) {
+            }
 
-                    window.closeNewsletterModal();
 
-                }
+            const modal =
+                document.getElementById(
+                    "newsletterModal"
+                );
+
+
+            if (
+                modal &&
+                modal.classList.contains(
+                    "show"
+                )
+            ) {
+
+                window.closeNewsletterModal();
 
             }
 
@@ -5804,24 +7235,38 @@ function initializeNewsletter() {
 
 
     newsletterForm.addEventListener(
-        'submit',
-        async (e) => {
+        "submit",
+        async e => {
 
             e.preventDefault();
 
-            if (isSubmitting) {
+
+            if (
+                isSubmitting
+            ) {
+
                 return;
+
             }
+
 
             const emailInput =
                 document.getElementById(
-                    'newsletterEmail'
+                    "newsletterEmail"
                 );
+
 
             const btn =
                 document.getElementById(
-                    'newsletterBtn'
+                    "newsletterBtn"
                 );
+
+
+            if (!emailInput) {
+
+                return;
+
+            }
 
 
             let email =
@@ -5832,16 +7277,20 @@ function initializeNewsletter() {
 
             if (
                 !email ||
-                !validateNewsletterEmail(email)
+                !validateNewsletterEmail(
+                    email
+                )
             ) {
 
                 showToast(
-                    'error',
-                    'Invalid Email',
-                    'Please enter a valid email address (e.g., name@example.com).'
+                    "error",
+                    "Invalid Email",
+                    "Please enter a valid email address (e.g., name@example.com)."
                 );
 
+
                 emailInput.focus();
+
 
                 return;
 
@@ -5861,12 +7310,14 @@ function initializeNewsletter() {
                 email =
                     typoResult.email;
 
+
                 emailInput.value =
                     email;
 
+
                 showToast(
-                    'info',
-                    'Email Corrected',
+                    "info",
+                    "Email Corrected",
                     `We corrected the email address to ${email}.`
                 );
 
@@ -5880,16 +7331,20 @@ function initializeNewsletter() {
 
 
             if (
-                !validateNewsletterEmail(email)
+                !validateNewsletterEmail(
+                    email
+                )
             ) {
 
                 showToast(
-                    'error',
-                    'Invalid Email',
-                    'Please enter a valid email address.'
+                    "error",
+                    "Invalid Email",
+                    "Please enter a valid email address."
                 );
 
+
                 emailInput.focus();
+
 
                 return;
 
@@ -5899,8 +7354,10 @@ function initializeNewsletter() {
             isSubmitting =
                 true;
 
+
             lastEmail =
                 email;
+
 
             if (btn) {
 
@@ -5908,34 +7365,23 @@ function initializeNewsletter() {
                     true;
 
                 btn.textContent =
-                    'Verifying...';
+                    "Verifying...";
 
             }
 
 
             showNewsletterModal(
-                'loading'
+                "loading"
             );
 
 
             try {
 
-                /*
-                 * Stage 1
-                 * Validate the normalized email.
-                 */
                 await updateProgress(
                     1
                 );
 
 
-                /*
-                 * Stage 2
-                 * Generate the deterministic SHA-256
-                 * document ID.
-                 *
-                 * No email lookup is performed.
-                 */
                 await updateProgress(
                     2
                 );
@@ -5950,22 +7396,11 @@ function initializeNewsletter() {
                 const newsletterRef =
                     doc(
                         db,
-                        'newsletter',
+                        "newsletter",
                         emailHash
                     );
 
 
-                /*
-                 * Stage 3
-                 * Deterministic Firestore create.
-                 *
-                 * The security rules must permit public
-                 * creation but deny updates to an existing
-                 * deterministic document.
-                 *
-                 * Therefore there is no public getDocs()
-                 * duplicate check here.
-                 */
                 await updateProgress(
                     3
                 );
@@ -5982,55 +7417,43 @@ function initializeNewsletter() {
                             serverTimestamp(),
 
                         source:
-                            'property_details_page'
+                            "property_details_page"
 
                     }
                 );
 
 
-                /*
-                 * Stage 4
-                 * Subscription successfully confirmed.
-                 */
                 await updateProgress(
                     4
                 );
 
 
                 showNewsletterModal(
-                    'success'
+                    "success"
                 );
 
+
                 emailInput.value =
-                    '';
+                    "";
 
 
             } catch (err) {
 
                 console.error(
-                    'Newsletter subscription error:',
+                    "Newsletter subscription error:",
                     err
                 );
 
 
-                /*
-                 * With deterministic IDs and create-only
-                 * Firestore rules, an existing subscription
-                 * can surface as permission-denied because
-                 * the existing document cannot be overwritten.
-                 *
-                 * This is intentional and avoids exposing
-                 * a public read/lookup endpoint for the
-                 * newsletter collection.
-                 */
                 if (
                     err?.code ===
-                    'permission-denied'
+                    "permission-denied"
                 ) {
 
                     showNewsletterModal(
-                        'already'
+                        "already"
                     );
+
 
                     return;
 
@@ -6038,26 +7461,26 @@ function initializeNewsletter() {
 
 
                 let errorMsg =
-                    'Failed to subscribe. Please check your internet connection and try again.';
+                    "Failed to subscribe. Please check your internet connection and try again.";
 
 
                 if (
                     err?.code ===
-                    'unavailable'
+                    "unavailable"
                 ) {
 
                     errorMsg =
-                        'The newsletter service is temporarily unavailable. Please try again.';
+                        "The newsletter service is temporarily unavailable. Please try again.";
 
                 } else if (
                     err?.code ===
-                    'network-request-failed' ||
+                    "network-request-failed" ||
                     err?.code ===
-                    'network-error'
+                    "network-error"
                 ) {
 
                     errorMsg =
-                        'Network error. Please check your connection and try again.';
+                        "Network error. Please check your connection and try again.";
 
                 } else if (
                     err?.message
@@ -6070,14 +7493,16 @@ function initializeNewsletter() {
 
 
                 showNewsletterModal(
-                    'error',
+                    "error",
                     errorMsg
                 );
+
 
             } finally {
 
                 isSubmitting =
                     false;
+
 
                 if (btn) {
 
@@ -6085,7 +7510,7 @@ function initializeNewsletter() {
                         false;
 
                     btn.textContent =
-                        'Subscribe';
+                        "Subscribe";
 
                 }
 
@@ -6099,11 +7524,11 @@ function initializeNewsletter() {
 
 if (
     document.readyState ===
-    'loading'
+    "loading"
 ) {
 
     document.addEventListener(
-        'DOMContentLoaded',
+        "DOMContentLoaded",
         initializeNewsletter
     );
 
@@ -6122,7 +7547,7 @@ async function ensureLeafletLoaded() {
 
     if (
         typeof window.L !==
-        'undefined'
+        "undefined"
     ) {
 
         return true;
@@ -6149,10 +7574,13 @@ async function ensureLeafletLoaded() {
                     );
 
 
-                if (existingScript) {
+                if (
+                    existingScript
+                ) {
 
                     let checks =
                         0;
+
 
                     const interval =
                         setInterval(
@@ -6160,7 +7588,7 @@ async function ensureLeafletLoaded() {
 
                                 if (
                                     typeof window.L !==
-                                    'undefined'
+                                    "undefined"
                                 ) {
 
                                     clearInterval(
@@ -6191,21 +7619,24 @@ async function ensureLeafletLoaded() {
 
                                     const fallbackScript =
                                         document.createElement(
-                                            'script'
+                                            "script"
                                         );
+
 
                                     fallbackScript.src =
                                         LEAFLET_JS_URL;
 
+
                                     fallbackScript.async =
                                         true;
+
 
                                     fallbackScript.onload =
                                         () => {
 
                                             if (
                                                 typeof window.L !==
-                                                'undefined'
+                                                "undefined"
                                             ) {
 
                                                 resolve(
@@ -6216,7 +7647,7 @@ async function ensureLeafletLoaded() {
 
                                                 reject(
                                                     new Error(
-                                                        'Leaflet loaded but window.L is unavailable.'
+                                                        "Leaflet loaded but window.L is unavailable."
                                                     )
                                                 );
 
@@ -6224,16 +7655,18 @@ async function ensureLeafletLoaded() {
 
                                         };
 
+
                                     fallbackScript.onerror =
                                         () => {
 
                                             reject(
                                                 new Error(
-                                                    'Leaflet fallback script failed to load.'
+                                                    "Leaflet fallback script failed to load."
                                                 )
                                             );
 
                                         };
+
 
                                     document.head.appendChild(
                                         fallbackScript
@@ -6245,6 +7678,7 @@ async function ensureLeafletLoaded() {
                             100
                         );
 
+
                     return;
 
                 }
@@ -6252,21 +7686,24 @@ async function ensureLeafletLoaded() {
 
                 const script =
                     document.createElement(
-                        'script'
+                        "script"
                     );
+
 
                 script.src =
                     LEAFLET_JS_URL;
 
+
                 script.async =
                     true;
+
 
                 script.onload =
                     () => {
 
                         if (
                             typeof window.L !==
-                            'undefined'
+                            "undefined"
                         ) {
 
                             resolve(
@@ -6277,7 +7714,7 @@ async function ensureLeafletLoaded() {
 
                             reject(
                                 new Error(
-                                    'Leaflet loaded but window.L is unavailable.'
+                                    "Leaflet loaded but window.L is unavailable."
                                 )
                             );
 
@@ -6285,16 +7722,18 @@ async function ensureLeafletLoaded() {
 
                     };
 
+
                 script.onerror =
                     () => {
 
                         reject(
                             new Error(
-                                'Unable to load Leaflet.'
+                                "Unable to load Leaflet."
                             )
                         );
 
                     };
+
 
                 document.head.appendChild(
                     script
@@ -6322,7 +7761,7 @@ async function ensureLeafletLoaded() {
 }
 
 
-// =================== COORDINATE RESOLUTION ===================
+// =================== COORDINATES ===================
 
 function parseCoordinate(value) {
 
@@ -6330,26 +7769,40 @@ function parseCoordinate(value) {
         value === undefined ||
         value === null
     ) {
+
         return null;
+
     }
 
+
     if (
-        typeof value === 'string' &&
-        value.trim() === ''
+        typeof value === "string" &&
+        value.trim() === ""
     ) {
+
         return null;
+
     }
+
 
     const parsed =
         Number(
-            String(value).trim()
+            String(
+                value
+            ).trim()
         );
 
+
     if (
-        !Number.isFinite(parsed)
+        !Number.isFinite(
+            parsed
+        )
     ) {
+
         return null;
+
     }
+
 
     return parsed;
 
@@ -6359,7 +7812,9 @@ function parseCoordinate(value) {
 function getPropertyCoordinates(property) {
 
     if (!property) {
+
         return null;
+
     }
 
 
@@ -6401,8 +7856,11 @@ function getPropertyCoordinates(property) {
     ];
 
 
-    let lat = null;
-    let lng = null;
+    let lat =
+        null;
+
+    let lng =
+        null;
 
 
     for (
@@ -6413,6 +7871,7 @@ function getPropertyCoordinates(property) {
             parseCoordinate(
                 candidate
             );
+
 
         if (
             parsed !== null
@@ -6436,6 +7895,7 @@ function getPropertyCoordinates(property) {
             parseCoordinate(
                 candidate
             );
+
 
         if (
             parsed !== null
@@ -6474,14 +7934,19 @@ function getPropertyCoordinates(property) {
 
 
     return {
-        lat,
-        lng
+
+        lat:
+            lat,
+
+        lng:
+            lng
+
     };
 
 }
 
 
-// =================== PROPERTY MAP INITIALIZATION ===================
+// =================== MAP ===================
 
 async function initPropertyMap() {
 
@@ -6517,9 +7982,10 @@ async function initializePropertyMapInternal() {
     const p =
         currentProperty;
 
+
     const mapContainer =
         document.getElementById(
-            'propertyMap'
+            "propertyMap"
         );
 
 
@@ -6543,9 +8009,10 @@ async function initializePropertyMapInternal() {
                 true
             );
 
+
             return;
 
-        } catch (err) {
+        } catch {
 
             propertyMapInstance =
                 null;
@@ -6577,13 +8044,15 @@ async function initializePropertyMapInternal() {
     } catch (err) {
 
         console.error(
-            'MoonLat Leaflet Load Error:',
+            "MoonLat Leaflet Load Error:",
             err
         );
 
+
         showMapPlaceholder(
-            'Map service could not be loaded'
+            "Map service could not be loaded"
         );
+
 
         return;
 
@@ -6628,7 +8097,7 @@ async function initializePropertyMapInternal() {
             } catch (err) {
 
                 console.error(
-                    'MoonLat Geocoding Error:',
+                    "MoonLat Geocoding Error:",
                     err
                 );
 
@@ -6642,8 +8111,9 @@ async function initializePropertyMapInternal() {
     if (!coordinates) {
 
         showMapPlaceholder(
-            'Location coordinates are not available'
+            "Location coordinates are not available"
         );
+
 
         return;
 
@@ -6653,6 +8123,7 @@ async function initializePropertyMapInternal() {
     const lat =
         coordinates.lat;
 
+
     const lng =
         coordinates.lng;
 
@@ -6660,7 +8131,7 @@ async function initializePropertyMapInternal() {
     try {
 
         mapContainer.innerHTML =
-            '';
+            "";
 
 
         if (
@@ -6671,12 +8142,10 @@ async function initializePropertyMapInternal() {
 
                 delete mapContainer._leaflet_id;
 
-            } catch (err) {
+            } catch {
 
-                console.warn(
-                    'MoonLat could not clear previous Leaflet container state.',
-                    err
-                );
+                mapContainer.innerHTML =
+                    "";
 
             }
 
@@ -6688,6 +8157,7 @@ async function initializePropertyMapInternal() {
                 .map(
                     mapContainer,
                     {
+
                         zoomControl:
                             true,
 
@@ -6699,6 +8169,7 @@ async function initializePropertyMapInternal() {
 
                         tap:
                             true
+
                     }
                 )
                 .setView(
@@ -6714,44 +8185,45 @@ async function initializePropertyMapInternal() {
             map;
 
 
-        const tileLayer =
-            window.L
-                .tileLayer(
-                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    {
+        window.L
+            .tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
 
-                        attribution:
-                            '',
+                    attribution:
+                        "",
 
-                        maxZoom:
-                            19,
+                    maxZoom:
+                        19,
 
-                        minZoom:
-                            3,
+                    minZoom:
+                        3,
 
-                        detectRetina:
-                            true
-                    }
-                );
+                    detectRetina:
+                        true
 
-
-        tileLayer.addTo(
-            map
-        );
+                }
+            )
+            .addTo(
+                map
+            );
 
 
         const attribution =
             document.createElement(
-                'div'
+                "div"
             );
 
+
         attribution.className =
-            'moonlat-map-attribution';
+            "moonlat-map-attribution";
+
 
         attribution.setAttribute(
-            'aria-label',
-            'MoonLat Maps. OpenStreetMap contributors.'
+            "aria-label",
+            "MoonLat Maps. OpenStreetMap contributors."
         );
+
 
         attribution.innerHTML = `
 
@@ -6768,6 +8240,7 @@ async function initializePropertyMapInternal() {
             </span>
 
         `;
+
 
         mapContainer.appendChild(
             attribution
@@ -6790,11 +8263,11 @@ async function initializePropertyMapInternal() {
         marker.bindPopup(
             `<b>${escapeHtml(
                 p.title ||
-                'Property'
+                "Property"
             )}</b><br>${escapeHtml(
                 p.location ||
                 p.address ||
-                'Property location'
+                "Property location"
             )}`
         );
 
@@ -6811,14 +8284,7 @@ async function initializePropertyMapInternal() {
                         true
                     );
 
-                } catch (err) {
-
-                    console.warn(
-                        'MoonLat Map invalidateSize warning:',
-                        err
-                    );
-
-                }
+                } catch {}
 
             }
         );
@@ -6833,14 +8299,7 @@ async function initializePropertyMapInternal() {
                         true
                     );
 
-                } catch (err) {
-
-                    console.warn(
-                        'MoonLat Map refresh warning:',
-                        err
-                    );
-
-                }
+                } catch {}
 
             },
             300
@@ -6856,14 +8315,7 @@ async function initializePropertyMapInternal() {
                         true
                     );
 
-                } catch (err) {
-
-                    console.warn(
-                        'MoonLat Map final refresh warning:',
-                        err
-                    );
-
-                }
+                } catch {}
 
             },
             1000
@@ -6887,14 +8339,7 @@ async function initializePropertyMapInternal() {
                                 true
                             );
 
-                        } catch (err) {
-
-                            console.warn(
-                                'MoonLat Map resize warning:',
-                                err
-                            );
-
-                        }
+                        } catch {}
 
                     }
 
@@ -6902,7 +8347,7 @@ async function initializePropertyMapInternal() {
 
 
             window.addEventListener(
-                'resize',
+                "resize",
                 window.__moonlatMapResizeHandler,
                 {
                     passive:
@@ -6914,57 +8359,46 @@ async function initializePropertyMapInternal() {
 
 
         if (
-            window.visualViewport
+            window.visualViewport &&
+            !window.__moonlatViewportHandler
         ) {
 
-            if (
-                !window.__moonlatViewportHandler
-            ) {
+            window.__moonlatViewportHandler =
+                function() {
 
-                window.__moonlatViewportHandler =
-                    function() {
+                    if (
+                        propertyMapInstance
+                    ) {
 
-                        if (
-                            propertyMapInstance
-                        ) {
+                        try {
 
-                            try {
+                            propertyMapInstance.invalidateSize(
+                                true
+                            );
 
-                                propertyMapInstance.invalidateSize(
-                                    true
-                                );
+                        } catch {}
 
-                            } catch (err) {
-
-                                console.warn(
-                                    'MoonLat VisualViewport map warning:',
-                                    err
-                                );
-
-                            }
-
-                        }
-
-                    };
-
-
-                window.visualViewport.addEventListener(
-                    'resize',
-                    window.__moonlatViewportHandler,
-                    {
-                        passive:
-                            true
                     }
-                );
 
-            }
+                };
+
+
+            window.visualViewport.addEventListener(
+                "resize",
+                window.__moonlatViewportHandler,
+                {
+                    passive:
+                        true
+                }
+            );
 
         }
 
 
         console.log(
-            'MoonLat Live Map Loaded:',
+            "MoonLat Live Map Loaded:",
             {
+
                 propertyId:
                     p.id,
 
@@ -6975,9 +8409,12 @@ async function initializePropertyMapInternal() {
                     lng,
 
                 source:
-                    getPropertyCoordinates(p)
-                        ? 'Firestore coordinates'
-                        : 'Geocoded address/location'
+                    getPropertyCoordinates(
+                        p
+                    )
+                        ? "Firestore coordinates"
+                        : "Geocoded address/location"
+
             }
         );
 
@@ -6985,9 +8422,10 @@ async function initializePropertyMapInternal() {
     } catch (err) {
 
         console.error(
-            'MoonLat Map Initialization Error:',
+            "MoonLat Map Initialization Error:",
             err
         );
+
 
         propertyMapInstance =
             null;
@@ -6995,11 +8433,13 @@ async function initializePropertyMapInternal() {
 
         if (
             String(
-                err?.message || ''
-            ).toLowerCase()
-            .includes(
-                'already initialized'
+                err?.message ||
+                ""
             )
+                .toLowerCase()
+                .includes(
+                    "already initialized"
+                )
         ) {
 
             try {
@@ -7012,8 +8452,9 @@ async function initializePropertyMapInternal() {
 
                 }
 
+
                 mapContainer.innerHTML =
-                    '';
+                    "";
 
 
                 const retryMap =
@@ -7040,16 +8481,18 @@ async function initializePropertyMapInternal() {
 
                 window.L
                     .tileLayer(
-                        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                         {
+
                             attribution:
-                                '',
+                                "",
 
                             maxZoom:
                                 19,
 
                             detectRetina:
                                 true
+
                         }
                     )
                     .addTo(
@@ -7059,16 +8502,19 @@ async function initializePropertyMapInternal() {
 
                 const retryAttribution =
                     document.createElement(
-                        'div'
+                        "div"
                     );
 
+
                 retryAttribution.className =
-                    'moonlat-map-attribution';
+                    "moonlat-map-attribution";
+
 
                 retryAttribution.setAttribute(
-                    'aria-label',
-                    'MoonLat Maps. OpenStreetMap contributors.'
+                    "aria-label",
+                    "MoonLat Maps. OpenStreetMap contributors."
                 );
+
 
                 retryAttribution.innerHTML = `
 
@@ -7085,6 +8531,7 @@ async function initializePropertyMapInternal() {
                     </span>
 
                 `;
+
 
                 mapContainer.appendChild(
                     retryAttribution
@@ -7104,11 +8551,11 @@ async function initializePropertyMapInternal() {
                     .bindPopup(
                         `<b>${escapeHtml(
                             p.title ||
-                            'Property'
+                            "Property"
                         )}</b><br>${escapeHtml(
                             p.location ||
                             p.address ||
-                            'Property location'
+                            "Property location"
                         )}`
                     )
                     .openPopup();
@@ -7117,9 +8564,13 @@ async function initializePropertyMapInternal() {
                 setTimeout(
                     () => {
 
-                        retryMap.invalidateSize(
-                            true
-                        );
+                        try {
+
+                            retryMap.invalidateSize(
+                                true
+                            );
+
+                        } catch {}
 
                     },
                     300
@@ -7131,7 +8582,7 @@ async function initializePropertyMapInternal() {
             } catch (retryError) {
 
                 console.error(
-                    'MoonLat Map Retry Error:',
+                    "MoonLat Map Retry Error:",
                     retryError
                 );
 
@@ -7141,7 +8592,7 @@ async function initializePropertyMapInternal() {
 
 
         showMapPlaceholder(
-            'Map could not be loaded'
+            "Map could not be loaded"
         );
 
     }
@@ -7154,48 +8605,61 @@ async function initializePropertyMapInternal() {
 async function geocodeAddress(address) {
 
     if (!address) {
+
         return null;
+
     }
 
 
     try {
 
         const cleanAddress =
-            String(address)
-                .trim();
+            String(
+                address
+            ).trim();
 
 
         if (!cleanAddress) {
+
             return null;
+
         }
 
 
-        const query =
+        const searchQuery =
             cleanAddress
                 .toLowerCase()
-                .includes('nigeria')
+                .includes(
+                    "nigeria"
+                )
             ? cleanAddress
             : `${cleanAddress}, Nigeria`;
 
 
         const url =
-            `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=1&q=${encodeURIComponent(query)}`;
+            `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=1&q=${encodeURIComponent(
+                searchQuery
+            )}`;
 
 
         const response =
             await fetch(
                 url,
                 {
+
                     method:
-                        'GET',
+                        "GET",
 
                     headers: {
-                        'Accept':
-                            'application/json'
+
+                        Accept:
+                            "application/json"
+
                     },
 
                     cache:
-                        'no-store'
+                        "no-store"
+
                 }
             );
 
@@ -7227,6 +8691,7 @@ async function geocodeAddress(address) {
             parseFloat(
                 data[0].lat
             );
+
 
         const longitude =
             parseFloat(
@@ -7261,16 +8726,18 @@ async function geocodeAddress(address) {
 
 
         console.log(
-            'MoonLat Geocoded Location:',
+            "MoonLat Geocoded Location:",
             {
+
                 query:
-                    query,
+                    searchQuery,
 
                 latitude:
                     latitude,
 
                 longitude:
                     longitude
+
             }
         );
 
@@ -7289,9 +8756,10 @@ async function geocodeAddress(address) {
     } catch (err) {
 
         console.error(
-            'Geocoding error:',
+            "Geocoding error:",
             err
         );
+
 
         return null;
 
@@ -7306,11 +8774,14 @@ function showMapPlaceholder(message) {
 
     const mapContainer =
         document.getElementById(
-            'propertyMap'
+            "propertyMap"
         );
 
+
     if (!mapContainer) {
+
         return;
+
     }
 
 
@@ -7344,7 +8815,9 @@ function showMapPlaceholder(message) {
             </svg>
 
             <p class="map-placeholder-main">
-                ${escapeHtml(message)}
+                ${escapeHtml(
+                    message
+                )}
             </p>
 
             <p class="map-placeholder-sub">
