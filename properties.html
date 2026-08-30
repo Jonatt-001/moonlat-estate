@@ -1596,8 +1596,6 @@
 
             <div class="success-header">
 
-                <!-- Decorative layers -->
-
                 <div class="grid-pattern"></div>
 
                 <div class="noise-overlay"></div>
@@ -1769,7 +1767,6 @@ import {
     collection,
     query,
     where,
-    orderBy,
     limit,
     onSnapshot,
     doc,
@@ -1967,6 +1964,36 @@ function loadFiltersFromURL() {
     }
 
 
+    if (params.get('status')) {
+
+        filters.statuses =
+            params
+                .get('status')
+                .split(',');
+
+
+        filters.statuses.forEach(
+            status => {
+
+                const checkbox =
+                    document.querySelector(
+                        `#statusFilters input[value="${status}"]`
+                    );
+
+
+                if (checkbox) {
+
+                    checkbox.checked =
+                        true;
+
+                }
+
+            }
+        );
+
+    }
+
+
     if (params.get('sort')) {
 
         filters.sort =
@@ -2009,7 +2036,7 @@ function updateURL() {
     }
 
 
-    if (filters.priceMin) {
+    if (filters.priceMin !== null) {
 
         params.set(
             'minPrice',
@@ -2019,7 +2046,7 @@ function updateURL() {
     }
 
 
-    if (filters.priceMax) {
+    if (filters.priceMax !== null) {
 
         params.set(
             'maxPrice',
@@ -2034,6 +2061,16 @@ function updateURL() {
         params.set(
             'beds',
             filters.beds
+        );
+
+    }
+
+
+    if (filters.statuses.length) {
+
+        params.set(
+            'status',
+            filters.statuses.join(',')
         );
 
     }
@@ -2112,8 +2149,16 @@ onAuthStateChanged(
 
         }
 
+        else {
+
+            savedPropertyIds = [];
+
+        }
+
 
         updateAuthUI();
+
+        renderProperties();
 
     }
 );
@@ -2219,8 +2264,8 @@ onSnapshot(
 
         allProperties.sort(
             (a, b) =>
-                (b.createdAt || 0) -
-                (a.createdAt || 0)
+                getTimestampValue(b.createdAt) -
+                getTimestampValue(a.createdAt)
         );
 
 
@@ -2293,6 +2338,481 @@ onSnapshot(
 );
 
 
+// =================== DATA HELPERS ===================
+
+function getTimestampValue(value) {
+
+    if (!value) {
+
+        return 0;
+
+    }
+
+
+    if (
+        typeof value === 'number'
+    ) {
+
+        return value;
+
+    }
+
+
+    if (
+        value instanceof Date
+    ) {
+
+        return value.getTime();
+
+    }
+
+
+    if (
+        typeof value.toMillis === 'function'
+    ) {
+
+        return value.toMillis();
+
+    }
+
+
+    if (
+        typeof value.seconds === 'number'
+    ) {
+
+        return (
+            value.seconds * 1000 +
+            (
+                value.nanoseconds
+                    ? value.nanoseconds / 1000000
+                    : 0
+            )
+        );
+
+    }
+
+
+    const parsed =
+        Date.parse(
+            String(value)
+        );
+
+
+    return Number.isNaN(parsed)
+        ? 0
+        : parsed;
+
+}
+
+
+/*
+ * Resolve the real property image used by the
+ * property details page.
+ *
+ * The previous listing code only checked:
+ *
+ *     p.image
+ *
+ * which meant properties whose real gallery lived
+ * inside photos/images/gallery/imageUrls/etc. fell
+ * back to the generic Unsplash house image.
+ *
+ * This resolver intentionally checks the gallery
+ * fields first, then the individual cover fields.
+ */
+function getPropertyImage(property) {
+
+    if (!property) {
+
+        return DEFAULT_IMAGE;
+
+    }
+
+
+    const imageCandidates = [];
+
+
+    const addCandidate =
+        value => {
+
+            if (!value) {
+
+                return;
+
+            }
+
+
+            if (
+                typeof value === 'string'
+            ) {
+
+                const clean =
+                    value.trim();
+
+
+                if (clean) {
+
+                    imageCandidates.push(
+                        clean
+                    );
+
+                }
+
+                return;
+
+            }
+
+
+            if (
+                typeof value === 'object'
+            ) {
+
+                const nested =
+                    value.url ||
+                    value.src ||
+                    value.image ||
+                    value.imageUrl ||
+                    value.downloadURL ||
+                    value.downloadUrl ||
+                    value.secure_url ||
+                    value.secureUrl ||
+                    value.path;
+
+
+                if (
+                    typeof nested === 'string' &&
+                    nested.trim()
+                ) {
+
+                    imageCandidates.push(
+                        nested.trim()
+                    );
+
+                }
+
+            }
+
+        };
+
+
+    /*
+     * IMPORTANT:
+     * Gallery fields are checked BEFORE p.image.
+     * This is the key fix for properties whose actual
+     * property-details image is stored in photos.
+     */
+
+    const galleryFields = [
+
+        property.photos,
+
+        property.images,
+
+        property.gallery,
+
+        property.imageUrls,
+
+        property.imageURLs,
+
+        property.propertyImages,
+
+        property.propertyPhotos,
+
+        property.media
+
+    ];
+
+
+    galleryFields.forEach(
+        gallery => {
+
+            if (
+                Array.isArray(gallery)
+            ) {
+
+                gallery.forEach(
+                    addCandidate
+                );
+
+            }
+
+            else {
+
+                addCandidate(
+                    gallery
+                );
+
+            }
+
+        }
+    );
+
+
+    /*
+     * Individual image fields used by different
+     * property creation/editing flows.
+     */
+
+    [
+
+        property.coverImage,
+
+        property.featuredImage,
+
+        property.mainImage,
+
+        property.primaryImage,
+
+        property.thumbnail,
+
+        property.thumbnailUrl,
+
+        property.imageUrl,
+
+        property.imageURL,
+
+        property.image,
+
+        property.photo
+
+    ].forEach(
+        addCandidate
+    );
+
+
+    /*
+     * Remove the known generic placeholder and other
+     * obvious placeholder values. If a property already
+     * has a real image, it will therefore always win.
+     */
+
+    const usable =
+        imageCandidates.find(
+            url =>
+                !isPlaceholderImage(url)
+        );
+
+
+    return (
+        usable ||
+        DEFAULT_IMAGE
+    );
+
+}
+
+
+function isPlaceholderImage(url) {
+
+    if (!url) {
+
+        return true;
+
+    }
+
+
+    const normalized =
+        String(url)
+            .trim()
+            .toLowerCase();
+
+
+    if (!normalized) {
+
+        return true;
+
+    }
+
+
+    if (
+        normalized ===
+        DEFAULT_IMAGE.toLowerCase()
+    ) {
+
+        return true;
+
+    }
+
+
+    const placeholderPatterns = [
+
+        'photo-1560518883-ce09059eeffa',
+
+        'placeholder',
+
+        'placehold.co',
+
+        'placehold.it',
+
+        'via.placeholder.com',
+
+        'default-property',
+
+        'default-property-image',
+
+        'no-image',
+
+        'no_image',
+
+        'noimage'
+
+    ];
+
+
+    return placeholderPatterns.some(
+        pattern =>
+            normalized.includes(
+                pattern
+            )
+    );
+
+}
+
+
+function getPropertyPhotos(property) {
+
+    if (!property) {
+
+        return [];
+
+    }
+
+
+    const sources = [
+
+        property.photos,
+
+        property.images,
+
+        property.gallery,
+
+        property.imageUrls,
+
+        property.imageURLs,
+
+        property.propertyImages,
+
+        property.propertyPhotos,
+
+        property.media
+
+    ];
+
+
+    for (
+        const source of sources
+    ) {
+
+        if (
+            Array.isArray(source) &&
+            source.length
+        ) {
+
+            const valid =
+                source
+                    .map(
+                        item => {
+
+                            if (
+                                typeof item ===
+                                'string'
+                            ) {
+
+                                return item.trim();
+
+                            }
+
+
+                            if (
+                                item &&
+                                typeof item ===
+                                'object'
+                            ) {
+
+                                return (
+                                    item.url ||
+                                    item.src ||
+                                    item.image ||
+                                    item.imageUrl ||
+                                    item.downloadURL ||
+                                    item.downloadUrl ||
+                                    item.secure_url ||
+                                    item.secureUrl ||
+                                    ''
+                                ).trim();
+
+                            }
+
+
+                            return '';
+
+                        }
+                    )
+                    .filter(
+                        url =>
+                            url &&
+                            !isPlaceholderImage(
+                                url
+                            )
+                    );
+
+
+            if (valid.length) {
+
+                return valid;
+
+            }
+
+        }
+
+    }
+
+
+    return [];
+
+}
+
+
+function getPhotoCount(property) {
+
+    const photos =
+        getPropertyPhotos(
+            property
+        );
+
+
+    if (photos.length) {
+
+        return photos.length;
+
+    }
+
+
+    const explicitCount =
+        Number(
+            property?.photoCount ||
+            property?.photosCount ||
+            property?.imageCount ||
+            0
+        );
+
+
+    if (
+        Number.isFinite(
+            explicitCount
+        ) &&
+        explicitCount > 0
+    ) {
+
+        return explicitCount;
+
+    }
+
+
+    return 1;
+
+}
+
+
 function updateTypeCounts() {
 
     const counts = {};
@@ -2301,9 +2821,23 @@ function updateTypeCounts() {
     allProperties.forEach(
         p => {
 
-            counts[p.type] =
+            const type =
+                String(
+                    p.type ||
+                    ''
+                ).trim();
+
+
+            if (!type) {
+
+                return;
+
+            }
+
+
+            counts[type] =
                 (
-                    counts[p.type] ||
+                    counts[type] ||
                     0
                 ) + 1;
 
@@ -2349,24 +2883,53 @@ function applyFilters() {
 
         filteredProperties =
             filteredProperties.filter(
-                p =>
+                p => {
 
-                    (
-                        p.location &&
-                        p.location
-                            .toLowerCase()
-                            .includes(loc)
-                    )
+                    const location =
+                        String(
+                            p.location ||
+                            ''
+                        ).toLowerCase();
 
-                    ||
 
-                    (
-                        p.title &&
-                        p.title
-                            .toLowerCase()
-                            .includes(loc)
-                    )
+                    const title =
+                        String(
+                            p.title ||
+                            ''
+                        ).toLowerCase();
 
+
+                    const city =
+                        String(
+                            p.city ||
+                            ''
+                        ).toLowerCase();
+
+
+                    const state =
+                        String(
+                            p.state ||
+                            ''
+                        ).toLowerCase();
+
+
+                    const area =
+                        String(
+                            p.areaName ||
+                            p.areaLocation ||
+                            ''
+                        ).toLowerCase();
+
+
+                    return (
+                        location.includes(loc) ||
+                        title.includes(loc) ||
+                        city.includes(loc) ||
+                        state.includes(loc) ||
+                        area.includes(loc)
+                    );
+
+                }
             );
 
     }
@@ -2398,7 +2961,9 @@ function applyFilters() {
         filteredProperties =
             filteredProperties.filter(
                 p =>
-                    p.price >=
+                    Number(
+                        p.price
+                    ) >=
                     filters.priceMin
             );
 
@@ -2412,7 +2977,9 @@ function applyFilters() {
         filteredProperties =
             filteredProperties.filter(
                 p =>
-                    p.price <=
+                    Number(
+                        p.price
+                    ) <=
                     filters.priceMax
             );
 
@@ -2436,7 +3003,11 @@ function applyFilters() {
             filteredProperties =
                 filteredProperties.filter(
                     p =>
-                        (p.beds || 0) >= 4
+                        Number(
+                            p.beds ||
+                            p.bedrooms ||
+                            0
+                        ) >= 4
                 );
 
         }
@@ -2447,11 +3018,70 @@ function applyFilters() {
             filteredProperties =
                 filteredProperties.filter(
                     p =>
-                        (p.beds || 0) ===
+                        Number(
+                            p.beds ||
+                            p.bedrooms ||
+                            0
+                        ) ===
                         beds
                 );
 
         }
+
+    }
+
+
+    // Status filter
+
+    if (
+        filters.statuses.length > 0
+    ) {
+
+        filteredProperties =
+            filteredProperties.filter(
+                p => {
+
+                    const propertyStatus =
+                        String(
+                            p.status ||
+                            ''
+                        );
+
+
+                    const propertyType =
+                        String(
+                            p.type ||
+                            ''
+                        );
+
+
+                    return filters.statuses.some(
+                        status => {
+
+                            if (
+                                status ===
+                                'Shortlet'
+                            ) {
+
+                                return (
+                                    propertyType
+                                        .toLowerCase() ===
+                                    'shortlet'
+                                );
+
+                            }
+
+
+                            return (
+                                propertyStatus ===
+                                status
+                            );
+
+                        }
+                    );
+
+                }
+            );
 
     }
 
@@ -2464,8 +3094,8 @@ function applyFilters() {
 
             filteredProperties.sort(
                 (a, b) =>
-                    (a.price || 0) -
-                    (b.price || 0)
+                    Number(a.price || 0) -
+                    Number(b.price || 0)
             );
 
             break;
@@ -2475,8 +3105,8 @@ function applyFilters() {
 
             filteredProperties.sort(
                 (a, b) =>
-                    (b.price || 0) -
-                    (a.price || 0)
+                    Number(b.price || 0) -
+                    Number(a.price || 0)
             );
 
             break;
@@ -2486,8 +3116,8 @@ function applyFilters() {
 
             filteredProperties.sort(
                 (a, b) =>
-                    (b.createdAt || 0) -
-                    (a.createdAt || 0)
+                    getTimestampValue(b.createdAt) -
+                    getTimestampValue(a.createdAt)
             );
 
             break;
@@ -2497,8 +3127,18 @@ function applyFilters() {
 
             filteredProperties.sort(
                 (a, b) =>
-                    (b.viewings || 0) -
-                    (a.viewings || 0)
+                    Number(
+                        b.viewings ||
+                        b.views ||
+                        b.viewCount ||
+                        0
+                    ) -
+                    Number(
+                        a.viewings ||
+                        a.views ||
+                        a.viewCount ||
+                        0
+                    )
             );
 
             break;
@@ -2524,9 +3164,15 @@ function applyFilters() {
 
 function formatPrice(price) {
 
+    const numericPrice =
+        Number(price);
+
+
     if (
-        !price ||
-        price === 0
+        !Number.isFinite(
+            numericPrice
+        ) ||
+        numericPrice <= 0
     ) {
 
         return 'Contact for price';
@@ -2534,10 +3180,11 @@ function formatPrice(price) {
     }
 
 
-    if (price >= 1000000) {
+    if (numericPrice >= 1000000) {
 
         const m =
-            price / 1000000;
+            numericPrice /
+            1000000;
 
 
         return (
@@ -2553,10 +3200,11 @@ function formatPrice(price) {
     }
 
 
-    if (price >= 1000) {
+    if (numericPrice >= 1000) {
 
         const k =
-            price / 1000;
+            numericPrice /
+            1000;
 
 
         return (
@@ -2570,7 +3218,7 @@ function formatPrice(price) {
 
     return (
         '₦' +
-        price.toLocaleString()
+        numericPrice.toLocaleString()
     );
 
 }
@@ -2684,35 +3332,55 @@ function renderPropertyCard(p) {
         );
 
 
+    /*
+     * FIX:
+     * Use the same gallery/photo data that the
+     * property details workflow uses before falling
+     * back to the generic image.
+     */
+
     const image =
-        p.image ||
-        DEFAULT_IMAGE;
+        getPropertyImage(
+            p
+        );
 
 
     const photoCount =
-        (
-            p.photos &&
-            p.photos.length
-        ) ||
-        p.viewings ||
-        5;
+        getPhotoCount(
+            p
+        );
+
+
+    const imageAlt =
+        p.title
+            ? `${p.title} - MoonLat property`
+            : 'MoonLat property';
+
+
+    const safeId =
+        escapeHtml(
+            p.id
+        );
 
 
     return `
 
         <article
             class="property-card"
-            data-id="${p.id}"
-            onclick="viewProperty('${p.id}')"
+            data-id="${safeId}"
+            onclick="viewProperty('${safeId}')"
         >
 
             <div class="property-image">
 
                 <img
                     src="${escapeHtml(image)}"
-                    alt="${escapeHtml(p.title)}"
-                    onerror="this.src='${DEFAULT_IMAGE}'"
+                    alt="${escapeHtml(imageAlt)}"
+                    data-property-image="true"
+                    data-property-id="${safeId}"
                     loading="lazy"
+                    decoding="async"
+                    onerror="handlePropertyImageError(this)"
                 >
 
 
@@ -2723,8 +3391,9 @@ function renderPropertyCard(p) {
 
                 <button
                     class="property-save ${isSaved ? 'saved' : ''}"
-                    onclick="event.stopPropagation(); toggleSave('${p.id}')"
-                    aria-label="Save property"
+                    onclick="event.stopPropagation(); toggleSave('${safeId}')"
+                    aria-label="${isSaved ? 'Remove saved property' : 'Save property'}"
+                    type="button"
                 >
 
                     <svg
@@ -2744,7 +3413,7 @@ function renderPropertyCard(p) {
 
 
                 <span class="property-count">
-                    +${photoCount} Photos
+                    ${photoCount} ${photoCount === 1 ? 'Photo' : 'Photos'}
                 </span>
 
             </div>
@@ -2784,6 +3453,7 @@ function renderPropertyCard(p) {
                     <span>
                         ${escapeHtml(
                             p.location ||
+                            p.city ||
                             'Nigeria'
                         )}
                     </span>
@@ -2838,7 +3508,7 @@ function renderPropertyCard(p) {
                         <span>
                             ${
                                 p.area
-                                    ? p.area + ' sqm'
+                                    ? escapeHtml(p.area) + ' sqm'
                                     : 'N/A'
                             }
                         </span>
@@ -2864,9 +3534,23 @@ function renderPropertyCard(p) {
 
                         <span>
 
-                            ${p.beds || 0}
+                            ${
+                                Number(
+                                    p.beds ||
+                                    p.bedrooms ||
+                                    0
+                                )
+                            }
 
-                            Bed${p.beds !== 1 ? 's' : ''}
+                            Bed${
+                                Number(
+                                    p.beds ||
+                                    p.bedrooms ||
+                                    0
+                                ) !== 1
+                                    ? 's'
+                                    : ''
+                            }
 
                         </span>
 
@@ -2918,6 +3602,40 @@ function renderPropertyCard(p) {
 }
 
 
+window.handlePropertyImageError =
+    function(image) {
+
+        if (!image) {
+
+            return;
+
+        }
+
+
+        /*
+         * Prevent an infinite onerror loop.
+         */
+
+        if (
+            image.dataset.fallbackApplied ===
+            'true'
+        ) {
+
+            return;
+
+        }
+
+
+        image.dataset.fallbackApplied =
+            'true';
+
+
+        image.src =
+            DEFAULT_IMAGE;
+
+    };
+
+
 function renderProperties() {
 
     const grid =
@@ -2930,6 +3648,13 @@ function renderProperties() {
         document.getElementById(
             'resultCount'
         );
+
+
+    if (!grid || !countEl) {
+
+        return;
+
+    }
 
 
     countEl.textContent =
@@ -3020,6 +3745,49 @@ function renderProperties() {
                 renderPropertyCard
             )
             .join('');
+
+
+    /*
+     * Force the browser to load the resolved images
+     * immediately after rendering. This also makes the
+     * listing resilient when Firebase data arrives
+     * asynchronously.
+     */
+
+    requestAnimationFrame(
+        () => {
+
+            grid.querySelectorAll(
+                'img[data-property-image="true"]'
+            ).forEach(
+                img => {
+
+                    if (
+                        img.dataset.loaded !==
+                        'true'
+                    ) {
+
+                        img.addEventListener(
+                            'load',
+                            () => {
+
+                                img.dataset.loaded =
+                                    'true';
+
+                            },
+                            {
+                                once:
+                                    true
+                            }
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
 
 }
 
@@ -3303,14 +4071,14 @@ function renderActiveFilters() {
     ) {
 
         const min =
-            filters.priceMin
-                ? `₦${filters.priceMin.toLocaleString()}`
+            filters.priceMin !== null
+                ? `₦${Number(filters.priceMin).toLocaleString()}`
                 : '₦0';
 
 
         const max =
-            filters.priceMax
-                ? `₦${filters.priceMax.toLocaleString()}`
+            filters.priceMax !== null
+                ? `₦${Number(filters.priceMax).toLocaleString()}`
                 : '∞';
 
 
@@ -3344,6 +4112,30 @@ function renderActiveFilters() {
     }
 
 
+    filters.statuses.forEach(
+        status => {
+
+            chips.push({
+
+                label:
+                    status === 'Active'
+                        ? 'For Sale'
+                        : status === 'Rented'
+                            ? 'For Rent'
+                            : 'Shortlet',
+
+                key:
+                    'status',
+
+                value:
+                    status
+
+            });
+
+        }
+    );
+
+
     if (chips.length === 0) {
 
         container.innerHTML =
@@ -3361,11 +4153,12 @@ function renderActiveFilters() {
 
                     <div class="filter-chip">
 
-                        ${chip.label}
+                        ${escapeHtml(chip.label)}
 
                         <button
-                            onclick="removeFilter('${chip.key}', '${chip.value || ''}')"
+                            onclick="removeFilter('${escapeHtml(chip.key)}', '${escapeHtml(chip.value || '')}')"
                             aria-label="Remove filter"
+                            type="button"
                         >
                             ×
                         </button>
@@ -3385,7 +4178,7 @@ window.viewProperty =
     function(id) {
 
         window.location.href =
-            `property-detail.html?id=${id}`;
+            `property-detail.html?id=${encodeURIComponent(id)}`;
 
     };
 
@@ -3588,7 +4381,7 @@ window.removeFilter =
 
             const checkbox =
                 document.querySelector(
-                    `#typeFilters input[value="${value}"]`
+                    `#typeFilters input[value="${CSS.escape(value)}"]`
                 );
 
 
@@ -3652,6 +4445,34 @@ window.removeFilter =
         }
 
 
+        else if (
+            key === 'status'
+        ) {
+
+            filters.statuses =
+                filters.statuses.filter(
+                    status =>
+                        status !==
+                        value
+                );
+
+
+            const checkbox =
+                document.querySelector(
+                    `#statusFilters input[value="${CSS.escape(value)}"]`
+                );
+
+
+            if (checkbox) {
+
+                checkbox.checked =
+                    false;
+
+            }
+
+        }
+
+
         applyFilters();
 
     };
@@ -3659,6 +4480,10 @@ window.removeFilter =
 
 window.clearAllFilters =
     function() {
+
+        const currentView =
+            filters.view;
+
 
         filters = {
 
@@ -3676,7 +4501,8 @@ window.clearAllFilters =
 
             sort: 'newest',
 
-            view: filters.view
+            view:
+                currentView
 
         };
 
@@ -3701,6 +4527,15 @@ window.clearAllFilters =
 
         document.querySelectorAll(
             '#typeFilters input'
+        ).forEach(
+            cb =>
+                cb.checked =
+                    false
+        );
+
+
+        document.querySelectorAll(
+            '#statusFilters input'
         ).forEach(
             cb =>
                 cb.checked =
@@ -3895,6 +4730,37 @@ document.addEventListener(
                             Array.from(
                                 document.querySelectorAll(
                                     '#typeFilters input:checked'
+                                )
+                            ).map(
+                                cb =>
+                                    cb.value
+                            );
+
+
+                        applyFilters();
+
+                    }
+                );
+
+            }
+        );
+
+
+        // Status checkboxes
+
+        document.querySelectorAll(
+            '#statusFilters input'
+        ).forEach(
+            checkbox => {
+
+                checkbox.addEventListener(
+                    'change',
+                    () => {
+
+                        filters.statuses =
+                            Array.from(
+                                document.querySelectorAll(
+                                    '#statusFilters input:checked'
                                 )
                             ).map(
                                 cb =>
@@ -4120,6 +4986,46 @@ document.addEventListener(
 
             }
         );
+
+
+        // Restore list/grid state
+
+        const initialView =
+            document.querySelector(
+                `.view-btn[data-view="${filters.view}"]`
+            );
+
+
+        if (initialView) {
+
+            document.querySelectorAll(
+                '.view-btn'
+            ).forEach(
+                btn =>
+                    btn.classList.toggle(
+                        'active',
+                        btn ===
+                        initialView
+                    )
+            );
+
+
+            const grid =
+                document.getElementById(
+                    'propertyGrid'
+                );
+
+
+            if (grid) {
+
+                grid.classList.toggle(
+                    'list-view',
+                    filters.view === 'list'
+                );
+
+            }
+
+        }
 
 
         // Clear all filters
@@ -5064,12 +5970,6 @@ if (newsletterForm) {
 
                 /* ==================================================
                    STEP 2
-
-                   We intentionally do not query the newsletter
-                   collection.
-
-                   Public users should not need read access to
-                   subscriber records.
                 ================================================== */
 
                 await updateProgress(
@@ -5145,11 +6045,6 @@ if (newsletterForm) {
 
                 /* ==================================================
                    CREATE SUBSCRIPTION
-
-                   IMPORTANT:
-                   Keep source as "homepage" because the same
-                   public newsletter security rule is used by the
-                   working homepage footer.
                 ================================================== */
 
                 await setDoc(
@@ -5196,16 +6091,6 @@ if (newsletterForm) {
                     err
                 );
 
-
-                /* ==================================================
-                   EXISTING EMAIL
-
-                   The public page does not read newsletter records.
-
-                   If Firestore rejects an attempt to overwrite the
-                   deterministic existing document, we treat that
-                   as an existing subscription.
-                ================================================== */
 
                 if (
                     err.code ===
