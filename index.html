@@ -12,10 +12,8 @@
 
 <meta name="robots" content="index,follow">
 
-<!-- Canonical -->
 <link rel="canonical" href="https://moonlat.top/">
 
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MoonLat">
 <meta property="og:title" content="MoonLat | Discover Verified Properties Across Nigeria">
@@ -29,27 +27,257 @@
 <meta property="og:image:alt" content="MoonLat - Nigeria's Trusted Property Marketplace">
 <meta property="og:locale" content="en_NG">
 
-<!-- Twitter/X -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="MoonLat | Discover Verified Properties Across Nigeria">
 <meta name="twitter:description" content="Browse verified apartments, houses, shortlets and commercial properties across Nigeria.">
 <meta name="twitter:image" content="https://moonlat.top/assets/share-preview.jpg">
 
-<!-- App Theme -->
 <meta name="apple-mobile-web-app-title" content="MoonLat">
 <meta name="application-name" content="MoonLat">
 
-<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<!-- Styles -->
 <link rel="stylesheet" href="home.css">
 <link rel="stylesheet" href="credit.css">
 <link rel="stylesheet" href="newsletter.css">
 
 <style>
+/* ============================================================
+   HOMEPAGE APPLICATION OVERRIDES
+   Production-safe refinements for dynamic marketplace data.
+============================================================ */
+
+:root {
+    --moonlat-navy: #09063d;
+    --moonlat-blue: #3465f6;
+    --moonlat-green: #17d8c2;
+    --moonlat-border: rgba(52,101,246,.12);
+}
+
+.property-card {
+    position: relative;
+}
+
+.property-card.is-loading {
+    pointer-events: none;
+}
+
+.property-image {
+    background: #f3f5f9;
+}
+
+.property-image img {
+    background: #f3f5f9;
+}
+
+.property-card__verification {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 9px;
+    border-radius: 999px;
+    background: rgba(9,6,61,.88);
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .01em;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 3;
+}
+
+.property-card__verification svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+}
+
+.property-card__agent {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 10px;
+    color: #687286;
+    font-size: .73rem;
+    font-weight: 500;
+}
+
+.property-card__agent svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+.property-card__agent strong {
+    color: #30384a;
+    font-weight: 600;
+}
+
+.property-card__updated {
+    margin-left: auto;
+    white-space: nowrap;
+    color: #9aa3b2;
+}
+
+.market-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0 auto 14px;
+    padding: 7px 11px;
+    border: 1px solid rgba(52,101,246,.10);
+    border-radius: 999px;
+    background: #fff;
+    color: #5e687b;
+    font-size: .7rem;
+    font-weight: 600;
+}
+
+.market-status__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 0 4px rgba(16,185,129,.10);
+}
+
+.search-suggestions {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 8px);
+    display: none;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 18px 45px rgba(7,16,54,.18);
+    border: 1px solid rgba(9,6,61,.08);
+    z-index: 100;
+}
+
+.search-suggestions.show {
+    display: block;
+}
+
+.search-suggestion {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    text-align: left;
+    color: #293143;
+    background: #fff;
+    transition: .2s;
+}
+
+.search-suggestion:hover,
+.search-suggestion:focus {
+    background: #f5f7ff;
+}
+
+.search-suggestion svg {
+    width: 17px;
+    height: 17px;
+    color: #3465f6;
+    flex-shrink: 0;
+}
+
+.search-suggestion span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .8rem;
+}
+
+.search-location-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.search-location-wrap > input {
+    width: 100%;
+}
+
+.data-error {
+    width: 100%;
+    padding: 36px 18px;
+    text-align: center;
+    color: #697386;
+}
+
+.data-error h3 {
+    margin-bottom: 7px;
+    color: #252b39;
+    font-size: 1rem;
+}
+
+.data-error p {
+    font-size: .82rem;
+    line-height: 1.5;
+}
+
+.retry-data-btn {
+    margin-top: 13px;
+    padding: 9px 16px;
+    border-radius: 9px;
+    background: #3465f6;
+    color: #fff;
+    font-size: .78rem;
+    font-weight: 600;
+}
+
+.property-results-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 14px;
+}
+
+.property-results-meta strong {
+    color: #202638;
+    font-size: .9rem;
+}
+
+.property-results-meta span {
+    color: #8a93a4;
+    font-size: .76rem;
+}
+
+.live-count {
+    transition: opacity .2s ease;
+}
+
+@media (max-width: 767px) {
+    .property-card__verification {
+        left: 10px;
+        bottom: 10px;
+        padding: 5px 8px;
+        font-size: .62rem;
+    }
+
+    .property-card__agent {
+        font-size: .68rem;
+    }
+
+    .property-results-meta {
+        margin-bottom: 12px;
+    }
+}
+
+@media (min-width: 768px) {
+    .property-card__verification {
+        left: 14px;
+        bottom: 14px;
+    }
+}
 </style>
 </head>
 
@@ -110,8 +338,6 @@
 
     </div>
 
-
-    <!-- Browse -->
     <div class="drawer-section">
 
         <h4>Browse Properties</h4>
@@ -204,8 +430,6 @@
 
     </div>
 
-
-    <!-- Quick Access -->
     <div class="drawer-section">
 
         <h4>Quick Access</h4>
@@ -274,8 +498,6 @@
 
     </div>
 
-
-    <!-- Resources -->
     <div class="drawer-section">
 
         <h4>Resources</h4>
@@ -301,7 +523,6 @@
             <a href="#">Careers</a>
 
         </details>
-
 
         <details>
 
@@ -335,8 +556,6 @@
 
     </div>
 
-
-    <!-- Social -->
     <div class="drawer-section">
 
         <h4>Follow MoonLat</h4>
@@ -373,7 +592,6 @@
 
     </div>
 
-
     <div class="drawer-footer">
 
         <div>
@@ -391,7 +609,6 @@
     </div>
 
 </aside>
-
 
 <!-- ============================================================
      HEADER
@@ -411,6 +628,8 @@
         <button
             class="menu-btn"
             aria-label="Open navigation"
+            aria-expanded="false"
+            aria-controls="moonlatDrawer"
         >
             <span></span>
             <span></span>
@@ -420,7 +639,6 @@
     </div>
 
 </header>
-
 
 <main>
 
@@ -454,7 +672,6 @@
 
         </div>
 
-
         <form class="search-card" id="searchForm">
 
             <div class="search-card__field">
@@ -474,16 +691,26 @@
                     />
                 </svg>
 
-                <input
-                    type="text"
-                    name="location"
-                    id="searchLocation"
-                    placeholder="City, State or Area"
-                    autocomplete="off"
-                >
+                <div class="search-location-wrap">
+
+                    <input
+                        type="text"
+                        name="location"
+                        id="searchLocation"
+                        placeholder="City, State or Area"
+                        autocomplete="off"
+                        aria-label="Search by city, state or area"
+                    >
+
+                    <div
+                        class="search-suggestions"
+                        id="searchSuggestions"
+                        role="listbox"
+                    ></div>
+
+                </div>
 
             </div>
-
 
             <div class="search-card__field">
 
@@ -522,7 +749,6 @@
 
             </div>
 
-
             <div class="search-card__field">
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24">
@@ -552,13 +778,13 @@
                         <option>Office</option>
                         <option>Commercial</option>
                         <option>Land</option>
+                        <option>Shortlet</option>
 
                     </select>
 
                 </label>
 
             </div>
-
 
             <button
                 type="submit"
@@ -592,7 +818,6 @@
 
 </section>
 
-
 <!-- ============================================================
      AUDIENCE
 ============================================================ -->
@@ -602,6 +827,11 @@
     <div class="container">
 
         <div class="section-heading">
+
+            <div class="market-status">
+                <span class="market-status__dot"></span>
+                Live marketplace
+            </div>
 
             <h2>
                 Reach More Property Seekers with MoonLat
@@ -614,24 +844,23 @@
 
         </div>
 
-
         <div class="stat-card stat-card--people">
 
             <div class="guest-stack">
 
-                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80" alt="User">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80" alt="Property seeker">
 
-                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=80" alt="User">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=80" alt="Property seeker">
 
                 <img
                     class="featured"
                     src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&q=80"
-                    alt="User"
+                    alt="Property seeker"
                 >
 
-                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&q=80" alt="User">
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&q=80" alt="Property seeker">
 
-                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&q=80" alt="User">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&q=80" alt="Property seeker">
 
             </div>
 
@@ -643,10 +872,12 @@
 
         </div>
 
-
         <div class="stat-card">
 
-            <h3 id="totalListingsCount">
+            <h3
+                id="totalListingsCount"
+                class="live-count"
+            >
                 Loading...
             </h3>
 
@@ -656,7 +887,6 @@
 
         </div>
 
-
         <div class="section-note">
             Verified listings. Trusted agents. Secure property discovery—all in one marketplace.
         </div>
@@ -664,7 +894,6 @@
     </div>
 
 </section>
-
 
 <!-- ============================================================
      FEATURED
@@ -691,16 +920,14 @@
 
         </div>
 
-
         <div
             class="featured-indicator"
             id="featuredIndicator"
         >
-            <button class="active"></button>
-            <button></button>
-            <button></button>
+            <button class="active" type="button" aria-label="Featured slide 1"></button>
+            <button type="button" aria-label="Featured slide 2"></button>
+            <button type="button" aria-label="Featured slide 3"></button>
         </div>
-
 
         <div
             class="property-slider"
@@ -712,7 +939,6 @@
             <div class="skeleton skeleton-card"></div>
 
         </div>
-
 
         <div class="view-all-wrapper">
 
@@ -743,7 +969,6 @@
 
 </section>
 
-
 <!-- ============================================================
      FIND PROPERTY
 ============================================================ -->
@@ -772,16 +997,18 @@
                 Exact Locations. Real Developers. Verified Agents.
             </p>
 
-
             <div
                 class="property-tabs"
                 role="tablist"
+                aria-label="Property categories"
             >
 
                 <button
                     class="tab-btn active"
                     type="button"
                     data-category="all"
+                    role="tab"
+                    aria-selected="true"
                 >
                     All
                 </button>
@@ -790,6 +1017,8 @@
                     class="tab-btn"
                     type="button"
                     data-category="residential"
+                    role="tab"
+                    aria-selected="false"
                 >
                     Residential
                 </button>
@@ -798,6 +1027,8 @@
                     class="tab-btn"
                     type="button"
                     data-category="commercial"
+                    role="tab"
+                    aria-selected="false"
                 >
                     Commercial
                 </button>
@@ -806,6 +1037,8 @@
                     class="tab-btn"
                     type="button"
                     data-category="shortlet"
+                    role="tab"
+                    aria-selected="false"
                 >
                     Shortlet
                 </button>
@@ -817,7 +1050,6 @@
     </div>
 
 </section>
-
 
 <!-- ============================================================
      PROPERTY GRID
@@ -859,7 +1091,6 @@
 
             </div>
 
-
             <div class="banner-actions">
 
                 <button
@@ -881,7 +1112,6 @@
 
         </div>
 
-
         <div
             class="property-row"
             id="propertyRow1"
@@ -893,7 +1123,6 @@
 
         </div>
 
-
         <div
             class="property-row"
             id="propertyRow2"
@@ -904,7 +1133,6 @@
             <div class="skeleton skeleton-card"></div>
 
         </div>
-
 
         <div
             class="view-all-wrapper"
@@ -942,7 +1170,6 @@
     </div>
 
 </section>
-
 
 <!-- ============================================================
      COMMERCIAL CTA
@@ -1009,7 +1236,6 @@
 
             </div>
 
-
             <h2>
                 Access the largest commercial property audience
             </h2>
@@ -1020,8 +1246,6 @@
                 looking for commercial spaces.
             </p>
 
-
-            <!-- UPDATED SIGN-UP ROUTE -->
             <a
                 href="dashboard/sign-up.html"
                 class="commercial-btn"
@@ -1029,11 +1253,9 @@
                 Advertise with us
             </a>
 
-
             <h3>
                 Trusted by leading commercial real estate brands
             </h3>
-
 
             <div class="commercial-logos">
 
@@ -1052,7 +1274,6 @@
 </section>
 
 </main>
-
 
 <!-- ============================================================
      FOOTER
@@ -1076,7 +1297,6 @@
                 exclusive listings and market insights delivered to your inbox.
             </p>
 
-
             <form
                 class="footer-newsletter"
                 id="newsletterForm"
@@ -1097,7 +1317,6 @@
                 </button>
 
             </form>
-
 
             <div class="footer-socials">
 
@@ -1160,7 +1379,6 @@
 
         </div>
 
-
         <div class="footer-links">
 
             <div class="footer-column">
@@ -1185,7 +1403,6 @@
 
             </div>
 
-
             <div class="footer-column">
 
                 <h4>Company</h4>
@@ -1197,7 +1414,6 @@
                 <a href="#">Contact</a>
 
             </div>
-
 
             <div class="footer-column">
 
@@ -1212,9 +1428,7 @@
 
         </div>
 
-
         <div class="footer-divider"></div>
-
 
         <div class="footer-bottom">
 
@@ -1233,8 +1447,6 @@
 
         </div>
 
-
-        <!-- FOOTER CREDIT -->
         <div class="footer-credit">
 
             <div class="credit-content">
@@ -1278,7 +1490,6 @@
 
                     </span>
 
-
                     <span class="logo-text">
 
                         <span class="logo-kaali">
@@ -1301,7 +1512,6 @@
 
 </footer>
 
-
 <!-- ============================================================
      TOAST
 ============================================================ -->
@@ -1309,7 +1519,7 @@
 <div class="toast" id="toast">
 
     <div class="toast-icon">
-        <i class="fas fa-check"></i>
+        ✓
     </div>
 
     <div class="toast-content">
@@ -1332,7 +1542,6 @@
 
 </div>
 
-
 <!-- ============================================================
      NEWSLETTER MODAL
 ============================================================ -->
@@ -1347,12 +1556,11 @@
         <button
             class="modal-close"
             onclick="closeNewsletterModal()"
+            aria-label="Close subscription dialog"
         >
             ✕
         </button>
 
-
-        <!-- Loading -->
         <div
             class="modal-loading-content"
             id="modalLoading"
@@ -1368,7 +1576,6 @@
             <p>
                 Please wait while we process your subscription
             </p>
-
 
             <div class="progress-timeline">
 
@@ -1424,8 +1631,6 @@
 
         </div>
 
-
-        <!-- Success -->
         <div
             class="modal-success-content"
             id="modalSuccess"
@@ -1457,7 +1662,6 @@
 
             </div>
 
-
             <div class="success-body">
 
                 <div class="success-stats">
@@ -1476,13 +1680,11 @@
 
                 </div>
 
-
                 <p class="success-message">
                     Welcome to the MoonLat community! You'll now receive
                     exclusive listings, market insights, and verified
                     property updates directly to your inbox.
                 </p>
-
 
                 <button
                     class="btn-continue"
@@ -1495,8 +1697,6 @@
 
         </div>
 
-
-        <!-- Error -->
         <div
             class="modal-error-content"
             id="modalError"
@@ -1531,8 +1731,6 @@
 
         </div>
 
-
-        <!-- Already subscribed -->
         <div
             class="modal-already-content"
             id="modalAlready"
@@ -1573,7 +1771,6 @@
 
 </div>
 
-
 <!-- ============================================================
      FIREBASE / APPLICATION
 ============================================================ -->
@@ -1586,8 +1783,7 @@ import {
 
 import {
     getAuth,
-    onAuthStateChanged,
-    signOut
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
 import {
@@ -1632,11 +1828,9 @@ const db = getFirestore(app);
 ============================================================ */
 
 let currentUser = null;
-
 let currentUserData = null;
 
 let featuredProperties = [];
-
 let allProperties = [];
 
 let savedPropertyIds = [];
@@ -1650,6 +1844,10 @@ let searchFilters = {
 };
 
 let isFilterActive = false;
+let hasLoadedProperties = false;
+let propertyLoadError = false;
+
+let searchDebounceTimer = null;
 
 const DEFAULT_IMAGE =
     "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop";
@@ -1658,23 +1856,6 @@ const DEFAULT_IMAGE =
 /* ============================================================
    DASHBOARD ROUTING
 ============================================================ */
-
-/*
-    IMPORTANT:
-
-    The dashboard architecture is now:
-
-        dashboard/
-        ├── agent/
-        │   └── index.html
-        ├── buyer/
-        │   └── index.html
-        ├── sign-in.html
-        └── sign-up.html
-
-    Therefore we resolve the dashboard dynamically from
-    the user's Firestore role.
-*/
 
 function getDashboardPath(userData = {}) {
 
@@ -1685,10 +1866,15 @@ function getDashboardPath(userData = {}) {
         userData.type
     ];
 
-    const role = roleCandidates
-        .find(value => typeof value === "string" && value.trim())
-        ?.trim()
-        .toLowerCase();
+    const role =
+        roleCandidates
+            .find(
+                value =>
+                    typeof value === "string" &&
+                    value.trim()
+            )
+            ?.trim()
+            .toLowerCase();
 
     if (
         role === "agent" ||
@@ -1706,11 +1892,262 @@ function getDashboardPath(userData = {}) {
 
 function redirectToDashboard() {
 
-    const dashboardPath = getDashboardPath(
-        currentUserData || {}
+    const dashboardPath =
+        getDashboardPath(
+            currentUserData || {}
+        );
+
+    window.location.href =
+        dashboardPath;
+}
+
+
+/* ============================================================
+   FIRESTORE VALUE HELPERS
+============================================================ */
+
+function getTimestampValue(value) {
+
+    if (!value) {
+        return 0;
+    }
+
+    if (
+        typeof value === "object" &&
+        typeof value.seconds === "number"
+    ) {
+        return value.seconds * 1000;
+    }
+
+    if (
+        typeof value === "object" &&
+        typeof value.toMillis === "function"
+    ) {
+        return value.toMillis();
+    }
+
+    if (value instanceof Date) {
+        return value.getTime();
+    }
+
+    if (typeof value === "number") {
+
+        if (value < 10000000000) {
+            return value * 1000;
+        }
+
+        return value;
+    }
+
+    const parsed =
+        Date.parse(value);
+
+    return Number.isNaN(parsed)
+        ? 0
+        : parsed;
+}
+
+
+function normalizeNumber(value) {
+
+    if (
+        typeof value === "number" &&
+        Number.isFinite(value)
+    ) {
+        return value;
+    }
+
+    if (typeof value === "string") {
+
+        const cleaned =
+            value
+                .replace(/[₦,\s]/g, "")
+                .replace(/,/g, "")
+                .trim();
+
+        const parsed =
+            Number(cleaned);
+
+        return Number.isFinite(parsed)
+            ? parsed
+            : 0;
+    }
+
+    return 0;
+}
+
+
+function firstNonEmpty(...values) {
+
+    return values.find(
+        value =>
+            value !== undefined &&
+            value !== null &&
+            String(value).trim() !== ""
     );
 
-    window.location.href = dashboardPath;
+}
+
+
+function normalizeProperty(raw) {
+
+    const p = {
+        ...raw
+    };
+
+    p.id =
+        String(
+            firstNonEmpty(
+                raw.id,
+                raw.propertyId,
+                ""
+            )
+        );
+
+    p.title =
+        String(
+            firstNonEmpty(
+                raw.title,
+                raw.name,
+                raw.propertyTitle,
+                "Untitled Property"
+            )
+        );
+
+    p.type =
+        String(
+            firstNonEmpty(
+                raw.type,
+                raw.propertyType,
+                raw.category,
+                "Property"
+            )
+        );
+
+    p.location =
+        String(
+            firstNonEmpty(
+                raw.location,
+                raw.address,
+                raw.area,
+                raw.city,
+                raw.state,
+                "Nigeria"
+            )
+        );
+
+    p.price =
+        normalizeNumber(
+            firstNonEmpty(
+                raw.price,
+                raw.amount,
+                raw.rent,
+                raw.salePrice,
+                0
+            )
+        );
+
+    p.area =
+        firstNonEmpty(
+            raw.area,
+            raw.size,
+            raw.squareMeters,
+            raw.sqm,
+            ""
+        );
+
+    p.beds =
+        normalizeNumber(
+            firstNonEmpty(
+                raw.beds,
+                raw.bedrooms,
+                raw.rooms,
+                0
+            )
+        );
+
+    p.status =
+        String(
+            firstNonEmpty(
+                raw.status,
+                raw.listingStatus,
+                "Active"
+            )
+        );
+
+    p.createdAt =
+        firstNonEmpty(
+            raw.createdAt,
+            raw.publishedAt,
+            raw.dateCreated,
+            raw.timestamp,
+            null
+        );
+
+    p.image =
+        firstNonEmpty(
+            raw.image,
+            raw.coverImage,
+            raw.featuredImage,
+            raw.imageUrl,
+            raw.photo,
+            ""
+        );
+
+    if (
+        !p.image &&
+        Array.isArray(raw.images) &&
+        raw.images.length
+    ) {
+        p.image = raw.images[0];
+    }
+
+    if (
+        !p.image &&
+        Array.isArray(raw.photos) &&
+        raw.photos.length
+    ) {
+        p.image = raw.photos[0];
+    }
+
+    p.images =
+        Array.isArray(raw.images)
+            ? raw.images
+            : [];
+
+    p.photos =
+        Array.isArray(raw.photos)
+            ? raw.photos
+            : [];
+
+    p.amenities =
+        Array.isArray(raw.amenities)
+            ? raw.amenities
+            : [];
+
+    p.featured =
+        raw.featured === true ||
+        raw.isFeatured === true;
+
+    p.verified =
+        raw.verified === true ||
+        raw.isVerified === true ||
+        raw.verificationStatus === "Verified" ||
+        raw.verificationStatus === "verified";
+
+    p.agentName =
+        String(
+            firstNonEmpty(
+                raw.agentName,
+                raw.agent,
+                raw.ownerName,
+                raw.developerName,
+                raw.listedBy,
+                ""
+            )
+        );
+
+    return p;
 }
 
 
@@ -1718,51 +2155,63 @@ function redirectToDashboard() {
    AUTH
 ============================================================ */
 
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(
+    auth,
+    async user => {
 
-    currentUser = user;
+        currentUser = user;
+        currentUserData = null;
+        savedPropertyIds = [];
 
-    currentUserData = null;
+        if (user) {
 
-    savedPropertyIds = [];
+            try {
 
+                const userDoc =
+                    await getDoc(
+                        doc(
+                            db,
+                            "users",
+                            user.uid
+                        )
+                    );
 
-    if (user) {
+                if (userDoc.exists()) {
 
-        try {
+                    currentUserData =
+                        userDoc.data();
 
-            const userDoc = await getDoc(
-                doc(db, "users", user.uid)
-            );
+                    savedPropertyIds =
+                        Array.isArray(
+                            currentUserData.savedPropertyIds
+                        )
+                            ? [
+                                ...new Set(
+                                    currentUserData.savedPropertyIds
+                                )
+                            ]
+                            : [];
 
-            if (userDoc.exists()) {
+                }
 
-                currentUserData = userDoc.data();
+            } catch (err) {
 
-                savedPropertyIds =
-                    currentUserData.savedPropertyIds || [];
+                console.error(
+                    "Error loading user data:",
+                    err
+                );
 
             }
 
-        } catch (err) {
-
-            console.error(
-                "Error loading user data:",
-                err
-            );
-
         }
 
+        updateAuthUI();
+
+        renderFeatured();
+        renderPropertyGrid();
+
     }
-
-
-    updateAuthUI();
-
-    renderFeatured();
-
-    renderPropertyGrid();
-
-});
+);
 
 
 /* ============================================================
@@ -1772,19 +2221,23 @@ onAuthStateChanged(auth, async (user) => {
 function updateAuthUI() {
 
     const link =
-        document.getElementById("drawerAuthLink");
+        document.getElementById(
+            "drawerAuthLink"
+        );
 
     const title =
-        document.getElementById("drawerAuthTitle");
+        document.getElementById(
+            "drawerAuthTitle"
+        );
 
     const subtitle =
-        document.getElementById("drawerAuthSubtitle");
-
+        document.getElementById(
+            "drawerAuthSubtitle"
+        );
 
     if (!link || !title || !subtitle) {
         return;
     }
-
 
     if (currentUser) {
 
@@ -1795,20 +2248,16 @@ function updateAuthUI() {
             currentUser.email?.split("@")[0] ||
             "Dashboard";
 
-
-        title.textContent = name;
+        title.textContent =
+            name;
 
         subtitle.textContent =
             "Go to your dashboard";
 
-
-        /*
-            IMPORTANT:
-            We no longer use dashboard/dashboard.html.
-        */
-        link.href = getDashboardPath(
-            currentUserData || {}
-        );
+        link.href =
+            getDashboardPath(
+                currentUserData || {}
+            );
 
     } else {
 
@@ -1827,39 +2276,74 @@ function updateAuthUI() {
 
 
 /* ============================================================
-   DATA LOADING
+   PROPERTY SORTING
 ============================================================ */
 
-const featuredQuery = query(
-    collection(db, "properties"),
-    where("featured", "==", true),
-    limit(6)
-);
+function sortProperties(properties) {
+
+    return [...properties].sort(
+        (a, b) => {
+
+            const featuredDifference =
+                Number(b.featured) -
+                Number(a.featured);
+
+            if (featuredDifference !== 0) {
+                return featuredDifference;
+            }
+
+            return (
+                getTimestampValue(b.createdAt) -
+                getTimestampValue(a.createdAt)
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   LIVE DATA LOADING
+============================================================ */
+
+const featuredQuery =
+    query(
+        collection(db, "properties"),
+        where("featured", "==", true),
+        limit(12)
+    );
 
 
 onSnapshot(
     featuredQuery,
 
-    (snapshot) => {
+    snapshot => {
 
         featuredProperties =
-            snapshot.docs.map(d => ({
-                id: d.id,
-                ...d.data()
-            }));
+            sortProperties(
+                snapshot.docs.map(
+                    d =>
+                        normalizeProperty({
+                            id: d.id,
+                            ...d.data()
+                        })
+                )
+            );
 
         renderFeatured();
-
         updateFeaturedIndicator();
 
     },
 
-    (err) => {
+    err => {
 
         console.error(
             "Featured query error:",
             err
         );
+
+        featuredProperties = [];
 
         const slider =
             document.getElementById(
@@ -1869,9 +2353,9 @@ onSnapshot(
         if (slider) {
 
             slider.innerHTML = `
-                <div class="empty-state">
-                    <h3>No featured properties yet</h3>
-                    <p>Check back soon for premium listings.</p>
+                <div class="data-error">
+                    <h3>Featured properties are unavailable</h3>
+                    <p>We could not load premium listings right now. Please check again shortly.</p>
                 </div>
             `;
 
@@ -1881,49 +2365,37 @@ onSnapshot(
 );
 
 
-const allQuery = query(
-    collection(db, "properties"),
-    where("status", "==", "Active"),
-    limit(24)
-);
+const allQuery =
+    query(
+        collection(db, "properties"),
+        where("status", "==", "Active"),
+        limit(100)
+    );
 
 
 onSnapshot(
     allQuery,
 
-    (snapshot) => {
+    snapshot => {
+
+        propertyLoadError = false;
+        hasLoadedProperties = true;
 
         allProperties =
-            snapshot.docs.map(d => ({
-                id: d.id,
-                ...d.data()
-            }));
-
-
-        allProperties.sort(
-            (a, b) => {
-
-                const aTime =
-                    a.createdAt?.seconds ||
-                    a.createdAt ||
-                    0;
-
-                const bTime =
-                    b.createdAt?.seconds ||
-                    b.createdAt ||
-                    0;
-
-                return bTime - aTime;
-
-            }
-        );
-
+            sortProperties(
+                snapshot.docs.map(
+                    d =>
+                        normalizeProperty({
+                            id: d.id,
+                            ...d.data()
+                        })
+                )
+            );
 
         const count =
             document.getElementById(
                 "totalListingsCount"
             );
-
 
         if (count) {
 
@@ -1932,40 +2404,41 @@ onSnapshot(
 
         }
 
-
         console.log(
-            `Loaded ${allProperties.length} properties`
+            `Loaded ${allProperties.length} active properties`
         );
 
-
         renderPropertyGrid();
+        renderLocationSuggestions();
 
     },
 
-    (err) => {
+    err => {
 
         console.error(
             "All properties query error:",
             err
         );
 
+        propertyLoadError = true;
+        hasLoadedProperties = true;
+        allProperties = [];
 
         const count =
             document.getElementById(
                 "totalListingsCount"
             );
 
-
         if (count) {
-            count.textContent =
-                "0 Active Listings";
-        }
 
+            count.textContent =
+                "Listings unavailable";
+
+        }
 
         renderPropertyGrid();
 
     }
-
 );
 
 
@@ -1975,10 +2448,29 @@ onSnapshot(
 
 function formatPrice(price) {
 
+    price =
+        normalizeNumber(price);
+
     if (!price || price === 0) {
         return "Contact for price";
     }
 
+    if (price >= 1000000000) {
+
+        const b =
+            price / 1000000000;
+
+        return (
+            "₦" +
+            (
+                b % 1 === 0
+                    ? b.toFixed(0)
+                    : b.toFixed(1)
+            ) +
+            "B"
+        );
+
+    }
 
     if (price >= 1000000) {
 
@@ -1997,7 +2489,6 @@ function formatPrice(price) {
 
     }
 
-
     if (price >= 1000) {
 
         const k =
@@ -2008,17 +2499,18 @@ function formatPrice(price) {
             (
                 k % 1 === 0
                     ? k.toFixed(0)
-                    : k.toFixed(0)
+                    : k.toFixed(1)
             ) +
             "K"
         );
 
     }
 
-
     return (
         "₦" +
-        price.toLocaleString()
+        price.toLocaleString(
+            "en-NG"
+        )
     );
 
 }
@@ -2030,22 +2522,32 @@ function formatPrice(price) {
 
 function getBadge(property) {
 
-    if (property.type === "Shortlet") {
+    const type =
+        String(
+            property.type || ""
+        ).toLowerCase();
+
+    const status =
+        String(
+            property.status || ""
+        ).toLowerCase();
+
+    if (type === "shortlet") {
         return "Shortlet";
     }
 
     if (
-        property.type === "Office" ||
-        property.type === "Commercial"
+        type === "office" ||
+        type === "commercial"
     ) {
         return "For Lease";
     }
 
-    if (property.status === "Rented") {
+    if (status === "rented") {
         return "For Rent";
     }
 
-    if (property.status === "Sold") {
+    if (status === "sold") {
         return "Sold";
     }
 
@@ -2056,14 +2558,24 @@ function getBadge(property) {
 
 function getPeriod(property) {
 
-    if (property.type === "Shortlet") {
+    const type =
+        String(
+            property.type || ""
+        ).toLowerCase();
+
+    const status =
+        String(
+            property.status || ""
+        ).toLowerCase();
+
+    if (type === "shortlet") {
         return "/ Night";
     }
 
     if (
-        property.status === "Rented" ||
-        property.type === "Office" ||
-        property.type === "Commercial"
+        status === "rented" ||
+        type === "office" ||
+        type === "commercial"
     ) {
         return "/ Year";
     }
@@ -2079,7 +2591,10 @@ function getPeriod(property) {
 
 function escapeHtml(str) {
 
-    if (!str) {
+    if (
+        str === undefined ||
+        str === null
+    ) {
         return "";
     }
 
@@ -2098,10 +2613,42 @@ function escapeHtml(str) {
 
 
 /* ============================================================
+   PROPERTY IMAGE
+============================================================ */
+
+function getPropertyImage(property) {
+
+    const candidates = [
+        property.image,
+        Array.isArray(property.images)
+            ? property.images[0]
+            : "",
+        Array.isArray(property.photos)
+            ? property.photos[0]
+            : "",
+        DEFAULT_IMAGE
+    ];
+
+    const image =
+        candidates.find(
+            value =>
+                typeof value === "string" &&
+                value.trim()
+        );
+
+    return image || DEFAULT_IMAGE;
+
+}
+
+
+/* ============================================================
    PROPERTY CARD
 ============================================================ */
 
-function renderPropertyCard(p) {
+function renderPropertyCard(property) {
+
+    const p =
+        normalizeProperty(property);
 
     const badge =
         getBadge(p);
@@ -2113,56 +2660,116 @@ function renderPropertyCard(p) {
         getPeriod(p);
 
     const isSaved =
-        savedPropertyIds.includes(p.id);
+        savedPropertyIds.includes(
+            p.id
+        );
 
     const image =
-        p.image ||
-        (
-            Array.isArray(p.images) &&
-            p.images.length
-                ? p.images[0]
-                : DEFAULT_IMAGE
-        );
+        getPropertyImage(p);
 
     const photoCount =
         (
             Array.isArray(p.photos)
                 ? p.photos.length
-                : Array.isArray(p.images)
-                    ? p.images.length
-                    : 0
+                : 0
         ) ||
-        p.viewings ||
+        (
+            Array.isArray(p.images)
+                ? p.images.length
+                : 0
+        ) ||
+        normalizeNumber(
+            p.viewings
+        ) ||
         5;
 
+    const verified =
+        p.verified;
+
+    const safeId =
+        escapeHtml(p.id);
+
+    const title =
+        escapeHtml(p.title);
+
+    const location =
+        escapeHtml(p.location);
+
+    const type =
+        escapeHtml(p.type);
+
+    const area =
+        escapeHtml(
+            p.area
+        );
+
+    const beds =
+        normalizeNumber(
+            p.beds
+        );
+
+    const safeImage =
+        escapeHtml(image);
+
+    const safeAlt =
+        title ||
+        "MoonLat property";
 
     return `
 
         <article
             class="property-card"
-            data-id="${escapeHtml(p.id)}"
-            onclick="viewProperty('${escapeHtml(p.id)}')"
+            data-id="${safeId}"
+            onclick="viewProperty('${safeId}')"
+            tabindex="0"
+            role="link"
+            aria-label="View ${title}"
         >
 
             <div class="property-image">
 
                 <img
-                    src="${escapeHtml(image)}"
-                    alt="${escapeHtml(p.title)}"
-                    onerror="this.src='${DEFAULT_IMAGE}'"
+                    src="${safeImage}"
+                    alt="${safeAlt}"
+                    onerror="this.onerror=null;this.src='${DEFAULT_IMAGE}'"
                     loading="lazy"
+                    decoding="async"
                 >
-
 
                 <span class="property-badge">
                     ${escapeHtml(badge)}
                 </span>
 
+                ${
+                    verified
+                        ? `
+                            <span class="property-card__verification">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path
+                                        d="M12 3l2 2 2.8-.2.9 2.6 2.3 1.5-.9 2.7.9 2.7-2.3 1.5-.9 2.6L14 19l-2 2-2-2-2.7.2-.9-2.6-2.3-1.5.9-2.7-.9-2.7 2.3-1.5.9-2.6L10 5l2-2Z"
+                                        stroke="currentColor"
+                                        stroke-width="1.6"
+                                        stroke-linejoin="round"
+                                    />
+                                    <path
+                                        d="m9 12 2 2 4-4"
+                                        stroke="currentColor"
+                                        stroke-width="1.8"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                                Verified
+                            </span>
+                        `
+                        : ""
+                }
 
                 <button
                     class="property-save ${isSaved ? "saved" : ""}"
-                    onclick="event.stopPropagation(); toggleSave('${escapeHtml(p.id)}')"
-                    aria-label="Save property"
+                    onclick="event.stopPropagation(); toggleSave('${safeId}')"
+                    aria-label="${isSaved ? "Remove property from saved" : "Save property"}"
+                    type="button"
                 >
 
                     <svg
@@ -2180,20 +2787,17 @@ function renderPropertyCard(p) {
 
                 </button>
 
-
                 <span class="property-count">
-                    +${photoCount} Photos
+                    +${escapeHtml(photoCount)} Photos
                 </span>
 
             </div>
 
-
             <div class="property-body">
 
                 <h3 class="property-title">
-                    ${escapeHtml(p.title)}
+                    ${title}
                 </h3>
-
 
                 <div class="property-location">
 
@@ -2219,13 +2823,10 @@ function renderPropertyCard(p) {
                     </svg>
 
                     <span>
-                        ${escapeHtml(
-                            p.location || "Nigeria"
-                        )}
+                        ${location}
                     </span>
 
                 </div>
-
 
                 <div class="property-features">
 
@@ -2243,13 +2844,10 @@ function renderPropertyCard(p) {
                         </svg>
 
                         <span>
-                            ${escapeHtml(
-                                p.type || "Property"
-                            )}
+                            ${type}
                         </span>
 
                     </div>
-
 
                     <div class="feature">
 
@@ -2265,13 +2863,12 @@ function renderPropertyCard(p) {
                         </svg>
 
                         <span>
-                            ${p.area
-                                ? p.area + " sqm"
+                            ${area
+                                ? `${area} sqm`
                                 : "N/A"}
                         </span>
 
                     </div>
-
 
                     <div class="feature">
 
@@ -2287,14 +2884,39 @@ function renderPropertyCard(p) {
                         </svg>
 
                         <span>
-                            ${p.beds || 0}
-                            Bed${p.beds !== 1 ? "s" : ""}
+                            ${beds}
+                            Bed${beds !== 1 ? "s" : ""}
                         </span>
 
                     </div>
 
                 </div>
 
+                ${
+                    p.agentName
+                        ? `
+                            <div class="property-card__agent">
+
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path
+                                        d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-7 8a7 7 0 0 1 14 0"
+                                        stroke="currentColor"
+                                        stroke-width="1.8"
+                                        stroke-linecap="round"
+                                    />
+                                </svg>
+
+                                <span>
+                                    Listed by
+                                    <strong>
+                                        ${escapeHtml(p.agentName)}
+                                    </strong>
+                                </span>
+
+                            </div>
+                        `
+                        : ""
+                }
 
                 <div class="property-footer">
 
@@ -2307,17 +2929,16 @@ function renderPropertyCard(p) {
                         </span>
 
                         <div class="price">
-                            ${price}
+                            ${escapeHtml(price)}
                         </div>
 
                     </div>
-
 
                     ${
                         period
                             ? `
                                 <div class="price-period">
-                                    ${period}
+                                    ${escapeHtml(period)}
                                 </div>
                             `
                             : ""
@@ -2349,13 +2970,28 @@ function renderFeatured() {
         return;
     }
 
+    if (
+        featuredProperties.length === 0
+    ) {
 
-    if (featuredProperties.length === 0) {
+        if (
+            !hasLoadedProperties
+        ) {
+
+            slider.innerHTML = `
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+            `;
+
+            return;
+
+        }
 
         slider.innerHTML = `
 
             <div
-                class="empty-state"
+                class="data-error"
                 style="width:100%"
             >
 
@@ -2375,26 +3011,92 @@ function renderFeatured() {
 
     }
 
-
     slider.innerHTML =
         featuredProperties
-            .map(renderPropertyCard)
+            .slice(0, 6)
+            .map(
+                renderPropertyCard
+            )
             .join("");
 
 }
 
 
 /* ============================================================
-   PROPERTY GRID
+   CATEGORY HELPERS
 ============================================================ */
 
-function renderPropertyGrid() {
+function normalizedType(property) {
+
+    return String(
+        property.type || ""
+    )
+        .trim()
+        .toLowerCase();
+
+}
+
+
+function isCommercialProperty(property) {
+
+    return [
+        "commercial",
+        "office",
+        "land",
+        "warehouse",
+        "shop",
+        "retail",
+        "industrial"
+    ].includes(
+        normalizedType(property)
+    );
+
+}
+
+
+function isShortletProperty(property) {
+
+    const type =
+        normalizedType(property);
+
+    if (type === "shortlet") {
+        return true;
+    }
+
+    return (
+        Array.isArray(
+            property.amenities
+        ) &&
+        property.amenities.some(
+            amenity =>
+                String(amenity)
+                    .toLowerCase()
+                    .includes("shortlet")
+        )
+    );
+
+}
+
+
+function isResidentialProperty(property) {
+
+    return !isCommercialProperty(
+        property
+    ) && !isShortletProperty(
+        property
+    );
+
+}
+
+
+/* ============================================================
+   FILTERING
+============================================================ */
+
+function filterProperties() {
 
     let filtered =
         [...allProperties];
-
-
-    /* CATEGORY */
 
     if (
         currentCategory === "residential"
@@ -2402,95 +3104,84 @@ function renderPropertyGrid() {
 
         filtered =
             filtered.filter(
-                p =>
-                    ![
-                        "Commercial",
-                        "Office",
-                        "Land"
-                    ].includes(p.type)
+                isResidentialProperty
             );
 
-    }
-
-
-    else if (
+    } else if (
         currentCategory === "commercial"
     ) {
 
         filtered =
             filtered.filter(
-                p =>
-                    [
-                        "Commercial",
-                        "Office",
-                        "Land"
-                    ].includes(p.type)
+                isCommercialProperty
             );
 
-    }
-
-
-    else if (
+    } else if (
         currentCategory === "shortlet"
     ) {
 
         filtered =
             filtered.filter(
-                p =>
-                    p.type === "Shortlet" ||
-                    (
-                        Array.isArray(p.amenities) &&
-                        p.amenities.includes("Shortlet")
-                    )
+                isShortletProperty
             );
 
     }
 
-
-    /* LOCATION */
-
-    if (searchFilters.location) {
+    if (
+        searchFilters.location
+    ) {
 
         const loc =
-            searchFilters.location.toLowerCase();
+            searchFilters.location
+                .toLowerCase()
+                .trim();
 
         filtered =
             filtered.filter(
-                p =>
-                    (
-                        p.location &&
-                        String(p.location)
-                            .toLowerCase()
-                            .includes(loc)
-                    ) ||
-                    (
-                        p.title &&
-                        String(p.title)
-                            .toLowerCase()
-                            .includes(loc)
-                    )
+                p => {
+
+                    const searchable =
+                        [
+                            p.location,
+                            p.title,
+                            p.city,
+                            p.state,
+                            p.address,
+                            p.area
+                        ]
+                            .filter(Boolean)
+                            .join(" ")
+                            .toLowerCase();
+
+                    return searchable.includes(
+                        loc
+                    );
+
+                }
             );
 
     }
 
+    if (
+        searchFilters.type
+    ) {
 
-    /* TYPE */
-
-    if (searchFilters.type) {
+        const requestedType =
+            searchFilters.type
+                .toLowerCase();
 
         filtered =
             filtered.filter(
                 p =>
-                    p.type ===
-                    searchFilters.type
+                    normalizedType(p) ===
+                    requestedType
             );
 
     }
 
-
-    /* PRICE */
-
-    if (searchFilters.price) {
+    if (
+        searchFilters.price
+    ) {
 
         const [
             min,
@@ -2502,13 +3193,37 @@ function renderPropertyGrid() {
 
         filtered =
             filtered.filter(
-                p =>
-                    Number(p.price) >= min &&
-                    Number(p.price) <= max
+                p => {
+
+                    const price =
+                        normalizeNumber(
+                            p.price
+                        );
+
+                    if (!price) {
+                        return false;
+                    }
+
+                    return (
+                        price >= min &&
+                        price <= max
+                    );
+
+                }
             );
 
     }
 
+    return filtered;
+
+}
+
+
+/* ============================================================
+   PROPERTY GRID
+============================================================ */
+
+function renderPropertyGrid() {
 
     const row1 =
         document.getElementById(
@@ -2530,17 +3245,76 @@ function renderPropertyGrid() {
             "gridViewAllWrapper"
         );
 
-
-    if (!row1 || !row2) {
+    if (
+        !row1 ||
+        !row2
+    ) {
         return;
     }
 
+    if (
+        !hasLoadedProperties
+    ) {
 
-    /* SEARCH BANNER */
+        row1.innerHTML = `
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+        `;
 
-    if (isFilterActive) {
+        row2.innerHTML = `
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+        `;
 
-        banner?.classList.add("show");
+        return;
+
+    }
+
+    if (
+        propertyLoadError
+    ) {
+
+        row1.innerHTML = `
+            <div class="data-error">
+                <h3>Properties could not be loaded</h3>
+                <p>Please refresh the page or try again shortly.</p>
+                <button
+                    type="button"
+                    class="retry-data-btn"
+                    onclick="window.location.reload()"
+                >
+                    Refresh Marketplace
+                </button>
+            </div>
+        `;
+
+        row2.innerHTML = "";
+
+        if (viewAllWrapper) {
+            viewAllWrapper.style.display =
+                "none";
+        }
+
+        banner?.classList.remove(
+            "show"
+        );
+
+        return;
+
+    }
+
+    const filtered =
+        filterProperties();
+
+    if (
+        isFilterActive
+    ) {
+
+        banner?.classList.add(
+            "show"
+        );
 
         updateBannerText(
             filtered.length
@@ -2548,14 +3322,15 @@ function renderPropertyGrid() {
 
     } else {
 
-        banner?.classList.remove("show");
+        banner?.classList.remove(
+            "show"
+        );
 
     }
 
-
-    /* EMPTY */
-
-    if (filtered.length === 0) {
+    if (
+        filtered.length === 0
+    ) {
 
         row1.innerHTML = `
 
@@ -2605,30 +3380,41 @@ function renderPropertyGrid() {
 
     }
 
-
     if (viewAllWrapper) {
         viewAllWrapper.style.display =
             "";
     }
 
+    const display =
+        filtered.slice(
+            0,
+            12
+        );
 
     const middle =
         Math.ceil(
-            filtered.length / 2
+            display.length / 2
         );
 
-
     row1.innerHTML =
-        filtered
-            .slice(0, middle)
-            .map(renderPropertyCard)
+        display
+            .slice(
+                0,
+                middle
+            )
+            .map(
+                renderPropertyCard
+            )
             .join("");
 
-
     row2.innerHTML =
-        filtered
-            .slice(middle)
-            .map(renderPropertyCard)
+        display
+            .slice(
+                middle
+            )
+            .map(
+                renderPropertyCard
+            )
             .join("");
 
 }
@@ -2650,11 +3436,11 @@ function updateBannerText(count) {
             "bannerViewAll"
         );
 
+    const filterDesc = [];
 
-    let filterDesc = [];
-
-
-    if (searchFilters.location) {
+    if (
+        searchFilters.location
+    ) {
 
         filterDesc.push(
             `"${searchFilters.location}"`
@@ -2662,8 +3448,9 @@ function updateBannerText(count) {
 
     }
 
-
-    if (searchFilters.type) {
+    if (
+        searchFilters.type
+    ) {
 
         filterDesc.push(
             searchFilters.type
@@ -2671,8 +3458,9 @@ function updateBannerText(count) {
 
     }
 
-
-    if (searchFilters.price) {
+    if (
+        searchFilters.price
+    ) {
 
         const [
             min,
@@ -2688,7 +3476,6 @@ function updateBannerText(count) {
 
     }
 
-
     if (
         currentCategory !== "all"
     ) {
@@ -2699,12 +3486,10 @@ function updateBannerText(count) {
 
     }
 
-
     const desc =
-        filterDesc.length > 0
+        filterDesc.length
             ? filterDesc.join(", ")
             : "all";
-
 
     if (bannerText) {
 
@@ -2717,12 +3502,12 @@ function updateBannerText(count) {
 
     }
 
-
     const params =
         new URLSearchParams();
 
-
-    if (searchFilters.location) {
+    if (
+        searchFilters.location
+    ) {
 
         params.set(
             "location",
@@ -2731,8 +3516,9 @@ function updateBannerText(count) {
 
     }
 
-
-    if (searchFilters.type) {
+    if (
+        searchFilters.type
+    ) {
 
         params.set(
             "type",
@@ -2741,8 +3527,9 @@ function updateBannerText(count) {
 
     }
 
-
-    if (searchFilters.price) {
+    if (
+        searchFilters.price
+    ) {
 
         const [
             min,
@@ -2763,6 +3550,16 @@ function updateBannerText(count) {
 
     }
 
+    if (
+        currentCategory !== "all"
+    ) {
+
+        params.set(
+            "category",
+            currentCategory
+        );
+
+    }
 
     if (bannerViewAll) {
 
@@ -2772,6 +3569,196 @@ function updateBannerText(count) {
                 : "properties.html";
 
     }
+
+}
+
+
+/* ============================================================
+   LOCATION SUGGESTIONS
+============================================================ */
+
+function getUniqueLocations() {
+
+    const values = [];
+
+    allProperties.forEach(
+        p => {
+
+            [
+                p.location,
+                p.city,
+                p.state,
+                p.area
+            ]
+                .forEach(
+                    value => {
+
+                        if (
+                            typeof value !== "string"
+                        ) {
+                            return;
+                        }
+
+                        const clean =
+                            value.trim();
+
+                        if (
+                            clean &&
+                            clean.length >= 2
+                        ) {
+
+                            values.push(
+                                clean
+                            );
+
+                        }
+
+                    }
+                );
+
+        }
+    );
+
+    return [
+        ...new Map(
+            values.map(
+                value => [
+                    value.toLowerCase(),
+                    value
+                ]
+            )
+        ).values()
+    ]
+        .sort(
+            (a, b) =>
+                a.localeCompare(b)
+        )
+        .slice(
+            0,
+            100
+        );
+
+}
+
+
+function renderLocationSuggestions(
+    forceShow = false
+) {
+
+    const input =
+        document.getElementById(
+            "searchLocation"
+        );
+
+    const container =
+        document.getElementById(
+            "searchSuggestions"
+        );
+
+    if (
+        !input ||
+        !container
+    ) {
+        return;
+    }
+
+    const queryText =
+        input.value
+            .trim()
+            .toLowerCase();
+
+    if (
+        !forceShow &&
+        queryText.length < 1
+    ) {
+
+        container.classList.remove(
+            "show"
+        );
+
+        container.innerHTML =
+            "";
+
+        return;
+
+    }
+
+    const locations =
+        getUniqueLocations()
+            .filter(
+                location =>
+                    !queryText ||
+                    location
+                        .toLowerCase()
+                        .includes(
+                            queryText
+                        )
+            )
+            .slice(
+                0,
+                6
+            );
+
+    if (
+        locations.length === 0
+    ) {
+
+        container.classList.remove(
+            "show"
+        );
+
+        container.innerHTML =
+            "";
+
+        return;
+
+    }
+
+    container.innerHTML =
+        locations
+            .map(
+                location => `
+                    <button
+                        type="button"
+                        class="search-suggestion"
+                        data-location="${escapeHtml(location)}"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path
+                                d="M12 21s7-5 7-11a7 7 0 1 0-14 0c0 6 7 11 7 11Z"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            />
+                            <circle
+                                cx="12"
+                                cy="10"
+                                r="2.5"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            />
+                        </svg>
+                        <span>${escapeHtml(location)}</span>
+                    </button>
+                `
+            )
+            .join("");
+
+    container.classList.add(
+        "show"
+    );
+
+}
+
+
+function hideLocationSuggestions() {
+
+    document
+        .getElementById(
+            "searchSuggestions"
+        )
+        ?.classList.remove(
+            "show"
+        );
 
 }
 
@@ -2792,10 +3779,6 @@ function updateFeaturedIndicator() {
             "#featuredIndicator button"
         );
 
-    const totalDots =
-        dots.length;
-
-
     if (
         !slider ||
         featuredProperties.length === 0
@@ -2803,22 +3786,39 @@ function updateFeaturedIndicator() {
         return;
     }
 
-
-    const cardWidth =
+    const card =
         slider.querySelector(
             ".property-card"
-        )?.offsetWidth || 310;
+        );
 
+    if (!card) {
+        return;
+    }
 
-    const gap = 14;
+    const computed =
+        window.getComputedStyle(
+            slider
+        );
 
+    const gap =
+        parseFloat(
+            computed.columnGap ||
+            computed.gap ||
+            "14"
+        ) || 14;
+
+    const cardWidth =
+        card.offsetWidth ||
+        310;
 
     const index =
         Math.round(
             slider.scrollLeft /
-            (cardWidth + gap)
+            (
+                cardWidth +
+                gap
+            )
         );
-
 
     dots.forEach(
         (dot, i) => {
@@ -2828,7 +3828,7 @@ function updateFeaturedIndicator() {
                 i ===
                 Math.min(
                     index,
-                    totalDots - 1
+                    dots.length - 1
                 )
             );
 
@@ -2842,7 +3842,12 @@ function updateFeaturedIndicator() {
    VIEW PROPERTY
 ============================================================ */
 
-window.viewProperty = function(id) {
+window.viewProperty =
+function(id) {
+
+    if (!id) {
+        return;
+    }
 
     window.location.href =
         `property-detail.html?id=${encodeURIComponent(id)}`;
@@ -2851,10 +3856,56 @@ window.viewProperty = function(id) {
 
 
 /* ============================================================
+   PROPERTY KEYBOARD ACCESS
+============================================================ */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        const card =
+            event.target.closest(
+                ".property-card"
+            );
+
+        if (
+            !card ||
+            (
+                event.key !== "Enter" &&
+                event.key !== " "
+            )
+        ) {
+            return;
+        }
+
+        if (
+            event.target.closest(
+                "button"
+            )
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+
+        viewProperty(
+            card.dataset.id
+        );
+
+    }
+);
+
+
+/* ============================================================
    SAVE PROPERTY
 ============================================================ */
 
-window.toggleSave = async function(propertyId) {
+window.toggleSave =
+async function(propertyId) {
+
+    if (!propertyId) {
+        return;
+    }
 
     if (!currentUser) {
 
@@ -2864,7 +3915,6 @@ window.toggleSave = async function(propertyId) {
             "Please sign in to save properties"
         );
 
-
         setTimeout(
             () => {
 
@@ -2872,19 +3922,17 @@ window.toggleSave = async function(propertyId) {
                     "dashboard/sign-in.html";
 
             },
-            1500
+            1200
         );
 
         return;
 
     }
 
-
     const isSaved =
         savedPropertyIds.includes(
             propertyId
         );
-
 
     const userRef =
         doc(
@@ -2892,7 +3940,6 @@ window.toggleSave = async function(propertyId) {
             "users",
             currentUser.uid
         );
-
 
     try {
 
@@ -2902,16 +3949,17 @@ window.toggleSave = async function(propertyId) {
                 userRef,
                 {
                     savedPropertyIds:
-                        arrayRemove(propertyId)
+                        arrayRemove(
+                            propertyId
+                        )
                 }
             );
 
-
             savedPropertyIds =
                 savedPropertyIds.filter(
-                    id => id !== propertyId
+                    id =>
+                        id !== propertyId
                 );
-
 
             showToast(
                 "info",
@@ -2925,15 +3973,16 @@ window.toggleSave = async function(propertyId) {
                 userRef,
                 {
                     savedPropertyIds:
-                        arrayUnion(propertyId)
+                        arrayUnion(
+                            propertyId
+                        )
                 }
             );
 
-
-            savedPropertyIds.push(
+            savedPropertyIds = [
+                ...savedPropertyIds,
                 propertyId
-            );
-
+            ];
 
             showToast(
                 "success",
@@ -2943,11 +3992,8 @@ window.toggleSave = async function(propertyId) {
 
         }
 
-
         renderFeatured();
-
         renderPropertyGrid();
-
 
     } catch (err) {
 
@@ -2955,7 +4001,6 @@ window.toggleSave = async function(propertyId) {
             "Save error:",
             err
         );
-
 
         showToast(
             "error",
@@ -2972,7 +4017,8 @@ window.toggleSave = async function(propertyId) {
    AUTH REQUIRED
 ============================================================ */
 
-window.requireAuth = function(
+window.requireAuth =
+function(
     event,
     feature
 ) {
@@ -2981,13 +4027,11 @@ window.requireAuth = function(
 
         event.preventDefault();
 
-
         showToast(
             "error",
             "Sign In Required",
             `Please sign in to access ${feature}`
         );
-
 
         setTimeout(
             () => {
@@ -2996,7 +4040,7 @@ window.requireAuth = function(
                     "dashboard/sign-in.html";
 
             },
-            1500
+            1200
         );
 
     }
@@ -3017,11 +4061,11 @@ function() {
         type: ""
     };
 
+    currentCategory =
+        "all";
 
-    currentCategory = "all";
-
-    isFilterActive = false;
-
+    isFilterActive =
+        false;
 
     const location =
         document.getElementById(
@@ -3038,7 +4082,6 @@ function() {
             "searchType"
         );
 
-
     if (location) {
         location.value = "";
     }
@@ -3051,26 +4094,42 @@ function() {
         type.value = "";
     }
 
-
     document
-        .querySelectorAll(".tab-btn")
+        .querySelectorAll(
+            ".tab-btn"
+        )
         .forEach(
-            b =>
+            b => {
+
                 b.classList.remove(
                     "active"
-                )
+                );
+
+                b.setAttribute(
+                    "aria-selected",
+                    "false"
+                );
+
+            }
         );
 
-
-    document
-        .querySelector(
+    const allButton =
+        document.querySelector(
             '.tab-btn[data-category="all"]'
-        )
-        ?.classList.add("active");
+        );
 
+    allButton?.classList.add(
+        "active"
+    );
+
+    allButton?.setAttribute(
+        "aria-selected",
+        "true"
+    );
+
+    hideLocationSuggestions();
 
     renderPropertyGrid();
-
 
     showToast(
         "info",
@@ -3079,6 +4138,137 @@ function() {
     );
 
 };
+
+
+/* ============================================================
+   URL FILTER SYNC
+============================================================ */
+
+function readUrlFilters() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const location =
+        params.get("location") ||
+        "";
+
+    const type =
+        params.get("type") ||
+        "";
+
+    const minPrice =
+        params.get("minPrice");
+
+    const maxPrice =
+        params.get("maxPrice");
+
+    let price = "";
+
+    if (
+        minPrice !== null &&
+        maxPrice !== null
+    ) {
+
+        price =
+            `${minPrice}-${maxPrice}`;
+
+    }
+
+    searchFilters = {
+        location,
+        price,
+        type
+    };
+
+    const category =
+        (
+            params.get("category") ||
+            "all"
+        )
+            .toLowerCase();
+
+    if (
+        [
+            "all",
+            "residential",
+            "commercial",
+            "shortlet"
+        ].includes(category)
+    ) {
+
+        currentCategory =
+            category;
+
+    }
+
+    isFilterActive =
+        !!(
+            location ||
+            price ||
+            type ||
+            currentCategory !== "all"
+        );
+
+    const locationInput =
+        document.getElementById(
+            "searchLocation"
+        );
+
+    const priceInput =
+        document.getElementById(
+            "searchPrice"
+        );
+
+    const typeInput =
+        document.getElementById(
+            "searchType"
+        );
+
+    if (locationInput) {
+        locationInput.value =
+            location;
+    }
+
+    if (priceInput) {
+        priceInput.value =
+            price;
+    }
+
+    if (typeInput) {
+        typeInput.value =
+            type;
+    }
+
+    document
+        .querySelectorAll(
+            ".tab-btn"
+        )
+        .forEach(
+            btn => {
+
+                const active =
+                    btn.dataset.category ===
+                    currentCategory;
+
+                btn.classList.toggle(
+                    "active",
+                    active
+                );
+
+                btn.setAttribute(
+                    "aria-selected",
+                    active
+                        ? "true"
+                        : "false"
+                );
+
+            }
+        );
+
+}
 
 
 /* ============================================================
@@ -3095,55 +4285,58 @@ if (searchForm) {
 
     searchForm.addEventListener(
         "submit",
-        e => {
+        event => {
 
-            e.preventDefault();
+            event.preventDefault();
 
+            const locationInput =
+                document.getElementById(
+                    "searchLocation"
+                );
+
+            const priceInput =
+                document.getElementById(
+                    "searchPrice"
+                );
+
+            const typeInput =
+                document.getElementById(
+                    "searchType"
+                );
 
             searchFilters.location =
-                document
-                    .getElementById(
-                        "searchLocation"
-                    )
-                    .value
-                    .trim();
-
+                locationInput?.value
+                    .trim() ||
+                    "";
 
             searchFilters.price =
-                document
-                    .getElementById(
-                        "searchPrice"
-                    )
-                    .value;
-
+                priceInput?.value ||
+                "";
 
             searchFilters.type =
-                document
-                    .getElementById(
-                        "searchType"
-                    )
-                    .value;
-
+                typeInput?.value ||
+                "";
 
             isFilterActive =
                 !!(
                     searchFilters.location ||
                     searchFilters.price ||
-                    searchFilters.type
+                    searchFilters.type ||
+                    currentCategory !== "all"
                 );
 
+            hideLocationSuggestions();
 
             renderPropertyGrid();
-
 
             document
                 .getElementById(
                     "propertyGrid"
                 )
                 ?.scrollIntoView({
-                    behavior: "smooth"
+                    behavior: "smooth",
+                    block: "start"
                 });
-
 
             if (isFilterActive) {
 
@@ -3170,11 +4363,124 @@ if (searchForm) {
 
 
 /* ============================================================
+   LOCATION INPUT
+============================================================ */
+
+const locationInput =
+    document.getElementById(
+        "searchLocation"
+    );
+
+
+if (locationInput) {
+
+    locationInput.addEventListener(
+        "input",
+        () => {
+
+            clearTimeout(
+                searchDebounceTimer
+            );
+
+            renderLocationSuggestions();
+
+            searchDebounceTimer =
+                setTimeout(
+                    () => {
+
+                        const value =
+                            locationInput.value
+                                .trim();
+
+                        if (!value) {
+                            return;
+                        }
+
+                    },
+                    150
+                );
+
+        }
+    );
+
+    locationInput.addEventListener(
+        "focus",
+        () => {
+
+            renderLocationSuggestions(
+                true
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   SUGGESTION EVENTS
+============================================================ */
+
+document.addEventListener(
+    "click",
+    event => {
+
+        const suggestion =
+            event.target.closest(
+                ".search-suggestion"
+            );
+
+        if (!suggestion) {
+            return;
+        }
+
+        const input =
+            document.getElementById(
+                "searchLocation"
+            );
+
+        if (input) {
+
+            input.value =
+                suggestion.dataset.location ||
+                "";
+
+            input.focus();
+
+        }
+
+        hideLocationSuggestions();
+
+    }
+);
+
+
+document.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target.closest(
+                ".search-location-wrap"
+            )
+        ) {
+            return;
+        }
+
+        hideLocationSuggestions();
+
+    }
+);
+
+
+/* ============================================================
    TABS
 ============================================================ */
 
 document
-    .querySelectorAll(".tab-btn")
+    .querySelectorAll(
+        ".tab-btn"
+    )
     .forEach(
         btn => {
 
@@ -3187,50 +4493,54 @@ document
                             ".tab-btn"
                         )
                         .forEach(
-                            b =>
+                            b => {
+
                                 b.classList.remove(
                                     "active"
-                                )
-                        );
+                                );
 
+                                b.setAttribute(
+                                    "aria-selected",
+                                    "false"
+                                );
+
+                            }
+                        );
 
                     btn.classList.add(
                         "active"
                     );
 
+                    btn.setAttribute(
+                        "aria-selected",
+                        "true"
+                    );
 
                     currentCategory =
-                        btn.dataset.category;
+                        btn.dataset.category ||
+                        "all";
 
+                    isFilterActive =
+                        currentCategory !==
+                        "all" ||
+                        !!(
+                            searchFilters.location ||
+                            searchFilters.price ||
+                            searchFilters.type
+                        );
 
-                    if (
-                        currentCategory !== "all"
-                    ) {
+                    renderPropertyGrid();
 
-                        isFilterActive =
-                            true;
-
-
-                        renderPropertyGrid();
-
-
-                        document
-                            .getElementById(
-                                "propertyGrid"
-                            )
-                            ?.scrollIntoView({
-                                behavior:
-                                    "smooth"
-                            });
-
-                    } else {
-
-                        isFilterActive =
-                            false;
-
-                        renderPropertyGrid();
-
-                    }
+                    document
+                        .getElementById(
+                            "propertyGrid"
+                        )
+                        ?.scrollIntoView({
+                            behavior:
+                                "smooth",
+                            block:
+                                "start"
+                        });
 
                 }
             );
@@ -3253,7 +4563,10 @@ if (slider) {
 
     slider.addEventListener(
         "scroll",
-        updateFeaturedIndicator
+        updateFeaturedIndicator,
+        {
+            passive: true
+        }
     );
 
 }
@@ -3274,20 +4587,37 @@ document
                         return;
                     }
 
-
-                    const cardWidth =
+                    const card =
                         slider.querySelector(
                             ".property-card"
-                        )?.offsetWidth ||
-                        310;
+                        );
 
+                    if (!card) {
+                        return;
+                    }
+
+                    const computed =
+                        window.getComputedStyle(
+                            slider
+                        );
+
+                    const gap =
+                        parseFloat(
+                            computed.columnGap ||
+                            computed.gap ||
+                            "14"
+                        ) || 14;
+
+                    const cardWidth =
+                        card.offsetWidth ||
+                        310;
 
                     slider.scrollTo({
                         left:
                             index *
                             (
                                 cardWidth +
-                                14
+                                gap
                             ),
                         behavior:
                             "smooth"
@@ -3305,7 +4635,6 @@ document
 ============================================================ */
 
 let lastEmail = "";
-
 let isSubmitting = false;
 
 
@@ -3316,7 +4645,6 @@ function() {
         document.getElementById(
             "newsletterModal"
         );
-
 
     if (modal) {
 
@@ -3348,11 +4676,9 @@ function showNewsletterModal(
             "newsletterModal"
         );
 
-
     if (!modal) {
         return;
     }
-
 
     const loading =
         document.getElementById(
@@ -3374,27 +4700,22 @@ function showNewsletterModal(
             "modalAlready"
         );
 
+    [
+        loading,
+        success,
+        error,
+        already
+    ]
+        .forEach(
+            element => {
 
-    if (loading) {
-        loading.style.display =
-            "none";
-    }
+                if (element) {
+                    element.style.display =
+                        "none";
+                }
 
-    if (success) {
-        success.style.display =
-            "none";
-    }
-
-    if (error) {
-        error.style.display =
-            "none";
-    }
-
-    if (already) {
-        already.style.display =
-            "none";
-    }
-
+            }
+        );
 
     if (
         state === "loading" &&
@@ -3406,10 +4727,7 @@ function showNewsletterModal(
 
         resetProgress();
 
-    }
-
-
-    else if (
+    } else if (
         state === "success" &&
         success
     ) {
@@ -3422,10 +4740,7 @@ function showNewsletterModal(
             100
         );
 
-    }
-
-
-    else if (
+    } else if (
         state === "error" &&
         error
     ) {
@@ -3433,12 +4748,10 @@ function showNewsletterModal(
         error.style.display =
             "block";
 
-
         const details =
             document.getElementById(
                 "errorDetails"
             );
-
 
         if (details) {
 
@@ -3448,10 +4761,7 @@ function showNewsletterModal(
 
         }
 
-    }
-
-
-    else if (
+    } else if (
         state === "already" &&
         already
     ) {
@@ -3461,11 +4771,9 @@ function showNewsletterModal(
 
     }
 
-
     modal.classList.add(
         "show"
     );
-
 
     document.body.style.overflow =
         "hidden";
@@ -3484,7 +4792,6 @@ function() {
 
     window.closeNewsletterModal();
 
-
     setTimeout(
         () => {
 
@@ -3492,7 +4799,6 @@ function() {
                 document.getElementById(
                     "newsletterEmail"
                 );
-
 
             if (
                 lastEmail &&
@@ -3506,13 +4812,18 @@ function() {
 
             }
 
-
             document
                 .getElementById(
                     "newsletterForm"
                 )
                 ?.dispatchEvent(
-                    new Event("submit")
+                    new Event(
+                        "submit",
+                        {
+                            bubbles: true,
+                            cancelable: true
+                        }
+                    )
                 );
 
         },
@@ -3522,7 +4833,9 @@ function() {
 };
 
 
-async function updateProgress(step) {
+async function updateProgress(
+    step
+) {
 
     for (
         let i = 1;
@@ -3535,7 +4848,6 @@ async function updateProgress(step) {
                 `step${i}`
             );
 
-
         if (stepEl) {
 
             stepEl.classList.remove(
@@ -3546,12 +4858,10 @@ async function updateProgress(step) {
                 "completed"
             );
 
-
             const icon =
                 stepEl.querySelector(
                     ".progress-step-icon"
                 );
-
 
             if (icon) {
                 icon.textContent =
@@ -3562,12 +4872,10 @@ async function updateProgress(step) {
 
     }
 
-
     const currentStep =
         document.getElementById(
             `step${step}`
         );
-
 
     if (currentStep) {
 
@@ -3577,12 +4885,11 @@ async function updateProgress(step) {
 
     }
 
-
     await new Promise(
         resolve =>
             setTimeout(
                 resolve,
-                400
+                350
             )
     );
 
@@ -3602,7 +4909,6 @@ function resetProgress() {
                 `step${i}`
             );
 
-
         if (stepEl) {
 
             stepEl.classList.remove(
@@ -3610,12 +4916,10 @@ function resetProgress() {
                 "completed"
             );
 
-
             const icon =
                 stepEl.querySelector(
                     ".progress-step-icon"
                 );
-
 
             if (icon) {
                 icon.textContent =
@@ -3636,14 +4940,12 @@ function createConfetti() {
             "confettiContainer"
         );
 
-
     if (!container) {
         return;
     }
 
-
-    container.innerHTML = "";
-
+    container.innerHTML =
+        "";
 
     const colors = [
         "#667eea",
@@ -3656,7 +4958,6 @@ function createConfetti() {
         "#fa709a"
     ];
 
-
     for (
         let i = 0;
         i < 20;
@@ -3668,15 +4969,13 @@ function createConfetti() {
                 "div"
             );
 
-
         confetti.className =
             "confetti";
 
-
         confetti.style.left =
-            Math.random() * 100 +
+            Math.random() *
+            100 +
             "%";
-
 
         confetti.style.backgroundColor =
             colors[
@@ -3686,12 +4985,10 @@ function createConfetti() {
                 )
             ];
 
-
         confetti.style.animationDelay =
             Math.random() *
             1.5 +
             "s";
-
 
         confetti.style.animationDuration =
             (
@@ -3701,21 +4998,17 @@ function createConfetti() {
             ) +
             "s";
 
-
         if (
             Math.random() <
-            0.33
+            .33
         ) {
 
             confetti.style.borderRadius =
                 "50%";
 
-        }
-
-
-        else if (
+        } else if (
             Math.random() <
-            0.66
+            .66
         ) {
 
             confetti.style.width =
@@ -3725,7 +5018,6 @@ function createConfetti() {
                 "12px";
 
         }
-
 
         container.appendChild(
             confetti
@@ -3742,10 +5034,10 @@ function createConfetti() {
 
 document.addEventListener(
     "click",
-    function(e) {
+    event => {
 
         if (
-            e.target.id ===
+            event.target.id ===
             "newsletterModal"
         ) {
 
@@ -3759,18 +5051,18 @@ document.addEventListener(
 
 document.addEventListener(
     "keydown",
-    function(e) {
+    event => {
 
-        if (e.key !== "Escape") {
+        if (
+            event.key !== "Escape"
+        ) {
             return;
         }
-
 
         const modal =
             document.getElementById(
                 "newsletterModal"
             );
-
 
         if (
             modal &&
@@ -3788,8 +5080,67 @@ document.addEventListener(
 
 
 /* ============================================================
-   NEWSLETTER FORM
+   NEWSLETTER SUBSCRIPTION
 ============================================================ */
+
+async function createNewsletterSubscription(
+    email
+) {
+
+    const encoder =
+        new TextEncoder();
+
+    const data =
+        encoder.encode(
+            email
+        );
+
+    const hashBuffer =
+        await crypto.subtle.digest(
+            "SHA-256",
+            data
+        );
+
+    const hashArray =
+        Array.from(
+            new Uint8Array(
+                hashBuffer
+            )
+        );
+
+    const emailHash =
+        hashArray
+            .map(
+                byte =>
+                    byte
+                        .toString(16)
+                        .padStart(
+                            2,
+                            "0"
+                        )
+            )
+            .join("");
+
+    const newsletterRef =
+        doc(
+            db,
+            "newsletter",
+            emailHash
+        );
+
+    await setDoc(
+        newsletterRef,
+        {
+            email,
+            subscribedAt:
+                serverTimestamp(),
+            source:
+                "homepage"
+        }
+    );
+
+}
+
 
 const newsletterForm =
     document.getElementById(
@@ -3801,37 +5152,38 @@ if (newsletterForm) {
 
     newsletterForm.addEventListener(
         "submit",
-        async e => {
+        async event => {
 
-            e.preventDefault();
-
+            event.preventDefault();
 
             if (isSubmitting) {
                 return;
             }
-
 
             const emailInput =
                 document.getElementById(
                     "newsletterEmail"
                 );
 
+            const btn =
+                document.getElementById(
+                    "newsletterBtn"
+                );
+
+            if (
+                !emailInput ||
+                !btn
+            ) {
+                return;
+            }
 
             let email =
                 emailInput.value
                     .trim()
                     .toLowerCase();
 
-
-            const btn =
-                document.getElementById(
-                    "newsletterBtn"
-                );
-
-
             const emailRegex =
                 /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
-
 
             if (
                 !email ||
@@ -3841,9 +5193,8 @@ if (newsletterForm) {
                 showToast(
                     "error",
                     "Invalid Email",
-                    "Please enter a valid email address (e.g., name@example.com)."
+                    "Please enter a valid email address."
                 );
-
 
                 emailInput.focus();
 
@@ -3851,10 +5202,8 @@ if (newsletterForm) {
 
             }
 
-
             const parts =
                 email.split("@");
-
 
             const commonTypos = {
 
@@ -3887,7 +5236,6 @@ if (newsletterForm) {
 
             };
 
-
             if (
                 commonTypos[parts[1]]
             ) {
@@ -3895,21 +5243,14 @@ if (newsletterForm) {
                 const correctEmail =
                     `${parts[0]}@${commonTypos[parts[1]]}`;
 
-
                 showToast(
                     "info",
                     "Check your email",
-                    `Did you mean ${correctEmail}? We auto-corrected it for you.`
+                    `Did you mean ${correctEmail}?`
                 );
-
 
                 emailInput.value =
                     correctEmail;
-
-
-                email =
-                    correctEmail;
-
 
                 emailInput.focus();
 
@@ -3917,332 +5258,95 @@ if (newsletterForm) {
 
             }
 
-
             isSubmitting =
                 true;
-
 
             lastEmail =
                 email;
 
-
             btn.disabled =
                 true;
 
-
             btn.textContent =
                 "Verifying...";
-
 
             showNewsletterModal(
                 "loading"
             );
 
-
             try {
 
-                await updateProgress(1);
+                await updateProgress(
+                    1
+                );
 
-                await updateProgress(2);
+                await updateProgress(
+                    2
+                );
 
+                await updateProgress(
+                    3
+                );
 
-/* ============================================================
-   CREATE NEWSLETTER SUBSCRIPTION
-============================================================ */
+                try {
 
-/*
-    We intentionally do NOT query the newsletter collection.
+                    await createNewsletterSubscription(
+                        email
+                    );
 
-    Public users are not allowed to read newsletter records.
-    Instead, the normalized email is hashed and used as the
-    deterministic Firestore document ID.
+                } catch (
+                    subscriptionError
+                ) {
 
-    This gives us:
+                    if (
+                        subscriptionError.code ===
+                        "permission-denied"
+                    ) {
 
-    - No public newsletter reads
-    - No subscriber list exposure
-    - One subscription per email
-    - Safe duplicate detection
-    - No Firestore "missing index" / permission query error
-*/
+                        showNewsletterModal(
+                            "already"
+                        );
 
+                        return;
 
-async function createNewsletterSubscription(email) {
+                    }
 
-    /*
-        Create SHA-256 hash from the normalized email.
+                    throw subscriptionError;
 
-        crypto.subtle is available on HTTPS sites such as
-        https://moonlat.top/
-    */
+                }
 
-    const encoder =
-        new TextEncoder();
+                await updateProgress(
+                    4
+                );
 
-    const data =
-        encoder.encode(email);
+                showNewsletterModal(
+                    "success"
+                );
 
-    const hashBuffer =
-        await crypto.subtle.digest(
-            "SHA-256",
-            data
-        );
+                emailInput.value =
+                    "";
 
-    const hashArray =
-        Array.from(
-            new Uint8Array(hashBuffer)
-        );
-
-    const emailHash =
-        hashArray
-            .map(
-                byte =>
-                    byte
-                        .toString(16)
-                        .padStart(2, "0")
-            )
-            .join("");
-
-
-    /*
-        Use the hash as the document ID.
-
-        Example:
-
-        newsletter/
-          8f14e45fceea167a5a36dedd4bea2543...
-    */
-
-    const newsletterRef =
-        doc(
-            db,
-            "newsletter",
-            emailHash
-        );
-
-
-    /*
-        setDoc() will create the document if it does not exist.
-
-        Because our Firestore rules allow PUBLIC CREATE but
-        do not allow PUBLIC UPDATE, attempting to subscribe
-        again to the same deterministic document will be denied.
-
-        That lets us safely identify an existing subscription
-        without exposing newsletter records to the public.
-    */
-
-    await setDoc(
-        newsletterRef,
-        {
-            email:
-                email,
-
-            subscribedAt:
-                serverTimestamp(),
-
-            source:
-                "homepage"
-        }
-    );
-
-}
-
-
-/* ============================================================
-   SUBMIT NEWSLETTER
-============================================================ */
-
-try {
-
-    await updateProgress(1);
-
-
-    /*
-        Step 2 now means local validation / duplicate-safe
-        subscription preparation.
-
-        We DO NOT query Firestore here.
-    */
-
-    await updateProgress(2);
-
-
-    await updateProgress(3);
-
-
-    try {
-
-        await createNewsletterSubscription(
-            email
-        );
-
-    }
-
-
-    catch (subscriptionError) {
-
-        /*
-            A permission-denied error at this point means the
-            deterministic newsletter document already exists.
-
-            We intentionally do not perform a public read to
-            verify this because newsletter records must remain
-            private.
-        */
-
-        if (
-            subscriptionError.code ===
-            "permission-denied"
-        ) {
-
-            console.info(
-                "Newsletter subscription already exists."
-            );
-
-
-            showNewsletterModal(
-                "already"
-            );
-
-
-            return;
-
-        }
-
-
-        throw subscriptionError;
-
-    }
-
-
-    await updateProgress(4);
-
-
-    showNewsletterModal(
-        "success"
-    );
-
-
-    emailInput.value =
-        "";
-
-}
-
-
-catch (err) {
-
-    console.error(
-        "Newsletter error:",
-        err
-    );
-
-
-    let errorMsg =
-        "Failed to subscribe. Please check your internet connection and try again.";
-
-
-    if (
-        err.code ===
-        "permission-denied"
-    ) {
-
-        /*
-            This normally means the email already exists because
-            newsletter creation is intentionally public while
-            newsletter updates are not.
-        */
-
-        errorMsg =
-            "This email is already subscribed to the MoonLat newsletter.";
-
-    }
-
-
-    else if (
-        err.code ===
-            "unavailable" ||
-        err.code ===
-            "network-error"
-    ) {
-
-        errorMsg =
-            "Network error. Please check your connection and try again.";
-
-    }
-
-
-    else if (
-        err.message
-    ) {
-
-        errorMsg =
-            err.message;
-
-    }
-
-
-    showNewsletterModal(
-        "error",
-        errorMsg
-    );
-
-}
-
-
-finally {
-
-    isSubmitting =
-        false;
-
-    btn.disabled =
-        false;
-
-    btn.textContent =
-        "Subscribe";
-
-}
-
-            }
-
-
-            catch (err) {
+            } catch (err) {
 
                 console.error(
                     "Newsletter error:",
                     err
                 );
 
-
                 let errorMsg =
                     "Failed to subscribe. Please check your internet connection and try again.";
 
-
                 if (
                     err.code ===
-                    "permission-denied"
-                ) {
-
-                    errorMsg =
-                        "Subscription failed due to security rules. Please contact support.";
-
-                }
-
-
-                else if (
+                    "unavailable" ||
                     err.code ===
-                        "unavailable" ||
-                    err.code ===
-                        "network-error"
+                    "network-error"
                 ) {
 
                     errorMsg =
                         "Network error. Please check your connection and try again.";
 
-                }
-
-
-                else if (
+                } else if (
                     err.message
                 ) {
 
@@ -4251,16 +5355,12 @@ finally {
 
                 }
 
-
                 showNewsletterModal(
                     "error",
                     errorMsg
                 );
 
-            }
-
-
-            finally {
+            } finally {
 
                 isSubmitting =
                     false;
@@ -4294,47 +5394,43 @@ function showToast(
             "toast"
         );
 
-
     const icon =
         document.querySelector(
             ".toast-icon"
         );
 
-
     if (!toast) {
         return;
     }
 
-
     toast.className =
         `toast ${type}`;
 
+    const titleElement =
+        document.getElementById(
+            "toastTitle"
+        );
 
-    document.getElementById(
-        "toastTitle"
-    ).textContent =
-        title;
+    const messageElement =
+        document.getElementById(
+            "toastMessage"
+        );
 
+    if (titleElement) {
+        titleElement.textContent =
+            title;
+    }
 
-    document.getElementById(
-        "toastMessage"
-    ).textContent =
-        message;
-
+    if (messageElement) {
+        messageElement.textContent =
+            message;
+    }
 
     const icons = {
-
-        success:
-            "✓",
-
-        error:
-            "✕",
-
-        info:
-            "ℹ"
-
+        success: "✓",
+        error: "✕",
+        info: "ℹ"
     };
-
 
     if (icon) {
 
@@ -4344,22 +5440,25 @@ function showToast(
 
     }
 
-
     toast.classList.add(
         "show"
     );
 
-
-    setTimeout(
-        () => {
-
-            toast.classList.remove(
-                "show"
-            );
-
-        },
-        4000
+    clearTimeout(
+        window.__moonlatToastTimer
     );
+
+    window.__moonlatToastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            4000
+        );
 
 }
 
@@ -4377,70 +5476,74 @@ document.addEventListener(
                 ".menu-btn"
             );
 
-
         const drawer =
             document.querySelector(
                 ".app-drawer"
             );
-
 
         const overlay =
             document.querySelector(
                 ".drawer-overlay"
             );
 
-
         const closeBtn =
             document.querySelector(
                 ".drawer-close"
             );
 
-
         function openDrawer() {
 
-            if (!drawer || !overlay) {
+            if (
+                !drawer ||
+                !overlay
+            ) {
                 return;
             }
-
 
             drawer.classList.add(
                 "show"
             );
 
-
             overlay.classList.add(
                 "show"
             );
 
+            menuBtn?.setAttribute(
+                "aria-expanded",
+                "true"
+            );
 
             document.body.style.overflow =
                 "hidden";
 
         }
 
-
         function closeDrawer() {
 
-            if (!drawer || !overlay) {
+            if (
+                !drawer ||
+                !overlay
+            ) {
                 return;
             }
-
 
             drawer.classList.remove(
                 "show"
             );
 
-
             overlay.classList.remove(
                 "show"
             );
 
+            menuBtn?.setAttribute(
+                "aria-expanded",
+                "false"
+            );
 
             document.body.style.overflow =
                 "";
 
         }
-
 
         if (menuBtn) {
 
@@ -4451,7 +5554,6 @@ document.addEventListener(
 
         }
 
-
         if (closeBtn) {
 
             closeBtn.addEventListener(
@@ -4460,7 +5562,6 @@ document.addEventListener(
             );
 
         }
-
 
         if (overlay) {
 
@@ -4471,13 +5572,12 @@ document.addEventListener(
 
         }
 
-
         document.addEventListener(
             "keydown",
-            e => {
+            event => {
 
                 if (
-                    e.key ===
+                    event.key ===
                     "Escape"
                 ) {
 
@@ -4487,7 +5587,6 @@ document.addEventListener(
 
             }
         );
-
 
         document
             .querySelectorAll(
@@ -4504,12 +5603,10 @@ document.addEventListener(
                 }
             );
 
-
         const details =
             document.querySelectorAll(
                 ".app-drawer details"
             );
-
 
         details.forEach(
             item => {
@@ -4523,7 +5620,6 @@ document.addEventListener(
                         ) {
                             return;
                         }
-
 
                         details.forEach(
                             other => {
@@ -4549,6 +5645,15 @@ document.addEventListener(
 
     }
 );
+
+
+/* ============================================================
+   INITIALIZATION
+============================================================ */
+
+readUrlFilters();
+renderFeatured();
+renderPropertyGrid();
 
 </script>
 
