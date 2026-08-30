@@ -1,49 +1,382 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-NG">
 <head>
+
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MoonLat | Discover Vetted Properties Across Nigeria</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+>
 
-<meta name="description" content="Discover verified apartments, houses, shortlets and commercial properties across Nigeria's trusted real estate marketplace.">
-<meta name="theme-color" content="#09063d">
+<title>MoonLat | Verified Properties for Rent, Sale & Shortlets Across Nigeria</title>
 
-<meta name="robots" content="index,follow">
+<meta
+    name="description"
+    content="Discover verified apartments, houses, shortlets, land and commercial properties across Nigeria. Search trusted property listings by location, budget and property type on MoonLat."
+>
 
-<link rel="canonical" href="https://moonlat.top/">
+<meta
+    name="keywords"
+    content="Nigeria property, properties in Nigeria, houses for rent Nigeria, houses for sale Nigeria, apartments Nigeria, Lagos property, Abuja property, shortlets Nigeria, commercial property Nigeria, verified properties Nigeria, real estate Nigeria, MoonLat"
+>
 
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="MoonLat">
-<meta property="og:title" content="MoonLat | Discover Verified Properties Across Nigeria">
-<meta property="og:description" content="Discover verified apartments, houses, shortlets and commercial properties across Nigeria's trusted real estate marketplace.">
-<meta property="og:url" content="https://moonlat.top/">
-<meta property="og:image" content="https://moonlat.top/assets/share-preview.jpg">
-<meta property="og:image:secure_url" content="https://moonlat.top/assets/share-preview.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:alt" content="MoonLat - Nigeria's Trusted Property Marketplace">
-<meta property="og:locale" content="en_NG">
+<meta
+    name="author"
+    content="MoonLat"
+>
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="MoonLat | Discover Verified Properties Across Nigeria">
-<meta name="twitter:description" content="Browse verified apartments, houses, shortlets and commercial properties across Nigeria.">
-<meta name="twitter:image" content="https://moonlat.top/assets/share-preview.jpg">
+<meta
+    name="publisher"
+    content="MoonLat"
+>
 
-<meta name="apple-mobile-web-app-title" content="MoonLat">
-<meta name="application-name" content="MoonLat">
+<meta
+    name="theme-color"
+    content="#09063d"
+>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<meta
+    name="color-scheme"
+    content="light"
+>
 
-<link rel="stylesheet" href="home.css">
-<link rel="stylesheet" href="credit.css">
-<link rel="stylesheet" href="newsletter.css">
+<meta
+    name="format-detection"
+    content="telephone=no"
+>
+
+<meta
+    name="referrer"
+    content="strict-origin-when-cross-origin"
+>
+
+<meta
+    name="robots"
+    content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+>
+
+<meta
+    name="googlebot"
+    content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+>
+
+<meta
+    name="bingbot"
+    content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+>
+
+<link
+    rel="canonical"
+    href="https://moonlat.top/"
+>
+
+<link
+    rel="alternate"
+    hreflang="en-ng"
+    href="https://moonlat.top/"
+>
+
+<link
+    rel="alternate"
+    hreflang="x-default"
+    href="https://moonlat.top/"
+>
+
+<!-- ============================================================
+     FAVICON / APP IDENTITY
+============================================================ -->
+
+<link
+    rel="icon"
+    href="https://i.postimg.cc/xTmS49sJ/IMG-5672.png"
+    type="image/png"
+>
+
+<link
+    rel="apple-touch-icon"
+    href="https://i.postimg.cc/xTmS49sJ/IMG-5672.png"
+>
+
+<meta
+    name="apple-mobile-web-app-title"
+    content="MoonLat"
+>
+
+<meta
+    name="application-name"
+    content="MoonLat"
+>
+
+<meta
+    name="mobile-web-app-capable"
+    content="yes"
+>
+
+<meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+>
+
+<meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="default"
+>
+
+<!-- ============================================================
+     OPEN GRAPH
+============================================================ -->
+
+<meta
+    property="og:type"
+    content="website"
+>
+
+<meta
+    property="og:site_name"
+    content="MoonLat"
+>
+
+<meta
+    property="og:title"
+    content="MoonLat | Verified Properties Across Nigeria"
+>
+
+<meta
+    property="og:description"
+    content="Search verified apartments, houses, shortlets, land and commercial properties across Nigeria by location, budget and property type."
+>
+
+<meta
+    property="og:url"
+    content="https://moonlat.top/"
+>
+
+<meta
+    property="og:image"
+    content="https://moonlat.top/assets/share-preview.jpg"
+>
+
+<meta
+    property="og:image:secure_url"
+    content="https://moonlat.top/assets/share-preview.jpg"
+>
+
+<meta
+    property="og:image:width"
+    content="1200"
+>
+
+<meta
+    property="og:image:height"
+    content="630"
+>
+
+<meta
+    property="og:image:type"
+    content="image/jpeg"
+>
+
+<meta
+    property="og:image:alt"
+    content="MoonLat - Verified property marketplace across Nigeria"
+>
+
+<meta
+    property="og:locale"
+    content="en_NG"
+>
+
+<!-- ============================================================
+     TWITTER / X
+============================================================ -->
+
+<meta
+    name="twitter:card"
+    content="summary_large_image"
+>
+
+<meta
+    name="twitter:title"
+    content="MoonLat | Verified Properties Across Nigeria"
+>
+
+<meta
+    name="twitter:description"
+    content="Discover verified apartments, houses, shortlets, land and commercial properties across Nigeria."
+>
+
+<meta
+    name="twitter:image"
+    content="https://moonlat.top/assets/share-preview.jpg"
+>
+
+<meta
+    name="twitter:image:alt"
+    content="MoonLat - Verified property marketplace across Nigeria"
+>
+
+<!-- ============================================================
+     PERFORMANCE
+============================================================ -->
+
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+<link
+    rel="preconnect"
+    href="https://images.unsplash.com"
+    crossorigin
+>
+
+<link
+    rel="dns-prefetch"
+    href="//www.gstatic.com"
+>
+
+<link
+    rel="dns-prefetch"
+    href="//fonts.googleapis.com"
+>
+
+<link
+    rel="dns-prefetch"
+    href="//images.unsplash.com"
+>
+
+<link
+    rel="preload"
+    as="image"
+    href="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=2000&q=80"
+    fetchpriority="high"
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+<link
+    rel="stylesheet"
+    href="home.css"
+>
+
+<link
+    rel="stylesheet"
+    href="credit.css"
+>
+
+<link
+    rel="stylesheet"
+    href="newsletter.css"
+>
+
+<!-- ============================================================
+     ENTITY / SEMANTIC GRAPH
+============================================================ -->
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "Organization",
+            "@id": "https://moonlat.top/#organization",
+            "name": "MoonLat",
+            "url": "https://moonlat.top/",
+            "logo": {
+                "@type": "ImageObject",
+                "@id": "https://moonlat.top/#logo",
+                "url": "https://i.postimg.cc/xTmS49sJ/IMG-5672.png",
+                "contentUrl": "https://i.postimg.cc/xTmS49sJ/IMG-5672.png",
+                "caption": "MoonLat logo"
+            },
+            "image": {
+                "@id": "https://moonlat.top/#logo"
+            },
+            "description": "MoonLat is a Nigerian property marketplace for discovering apartments, houses, shortlets, land and commercial properties.",
+            "areaServed": {
+                "@type": "Country",
+                "name": "Nigeria"
+            },
+            "sameAs": [
+                "https://moonlat.top/"
+            ]
+        },
+        {
+            "@type": "WebSite",
+            "@id": "https://moonlat.top/#website",
+            "url": "https://moonlat.top/",
+            "name": "MoonLat",
+            "alternateName": "MoonLat Property Marketplace",
+            "description": "Verified property marketplace for homes, apartments, shortlets, land and commercial properties across Nigeria.",
+            "publisher": {
+                "@id": "https://moonlat.top/#organization"
+            },
+            "inLanguage": "en-NG"
+        },
+        {
+            "@type": "WebPage",
+            "@id": "https://moonlat.top/#webpage",
+            "url": "https://moonlat.top/",
+            "name": "MoonLat | Verified Properties for Rent, Sale & Shortlets Across Nigeria",
+            "description": "Discover verified apartments, houses, shortlets, land and commercial properties across Nigeria.",
+            "isPartOf": {
+                "@id": "https://moonlat.top/#website"
+            },
+            "about": {
+                "@id": "https://moonlat.top/#organization"
+            },
+            "primaryImageOfPage": {
+                "@type": "ImageObject",
+                "url": "https://moonlat.top/assets/share-preview.jpg"
+            },
+            "breadcrumb": {
+                "@id": "https://moonlat.top/#breadcrumb"
+            },
+            "inLanguage": "en-NG"
+        },
+        {
+            "@type": "CollectionPage",
+            "@id": "https://moonlat.top/#property-marketplace",
+            "url": "https://moonlat.top/",
+            "name": "Verified Properties Across Nigeria",
+            "description": "Browse verified property listings across Nigeria.",
+            "isPartOf": {
+                "@id": "https://moonlat.top/#website"
+            },
+            "about": {
+                "@type": "Thing",
+                "name": "Real estate properties in Nigeria"
+            }
+        },
+        {
+            "@type": "BreadcrumbList",
+            "@id": "https://moonlat.top/#breadcrumb",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://moonlat.top/"
+                }
+            ]
+        }
+    ]
+}
+</script>
 
 <style>
+
 /* ============================================================
    HOMEPAGE APPLICATION OVERRIDES
    Production-safe refinements for dynamic marketplace data.
@@ -66,9 +399,14 @@
 
 .property-image {
     background: #f3f5f9;
+    overflow: hidden;
 }
 
 .property-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     background: #f3f5f9;
 }
 
@@ -255,7 +593,30 @@
     transition: opacity .2s ease;
 }
 
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.hero__image {
+    display: block;
+}
+
+.footer-logo {
+    display: block;
+    max-width: 180px;
+    height: auto;
+}
+
 @media (max-width: 767px) {
+
     .property-card__verification {
         left: 10px;
         bottom: 10px;
@@ -270,15 +631,20 @@
     .property-results-meta {
         margin-bottom: 12px;
     }
+
 }
 
 @media (min-width: 768px) {
+
     .property-card__verification {
         left: 14px;
         bottom: 14px;
     }
+
 }
+
 </style>
+
 </head>
 
 <body>
@@ -287,20 +653,38 @@
      DRAWER
 ============================================================ -->
 
-<div class="drawer-overlay"></div>
+<div
+    class="drawer-overlay"
+    aria-hidden="true"
+></div>
 
-<aside class="app-drawer">
+<aside
+    class="app-drawer"
+    id="moonlatDrawer"
+    aria-label="MoonLat navigation"
+>
 
     <div class="drawer-header">
-        <button class="drawer-close" aria-label="Close Menu">✕</button>
+
+        <button
+            class="drawer-close"
+            aria-label="Close MoonLat navigation menu"
+            type="button"
+        >
+            ✕
+        </button>
 
         <div class="drawer-title">
+
             <h2>Menu</h2>
+
             <p>
                 Discover verified homes, apartments, shortlets and
                 commercial properties across Nigeria.
             </p>
+
         </div>
+
     </div>
 
     <div class="drawer-card">
@@ -309,20 +693,30 @@
             href="dashboard/sign-in.html"
             class="drawer-item drawer-primary"
             id="drawerAuthLink"
+            aria-label="Login or sign up for MoonLat"
         >
 
             <div class="drawer-icon">
-                <svg viewBox="0 0 24 24" fill="none">
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-7 8a7 7 0 0 1 14 0"
                         stroke="currentColor"
                         stroke-width="2"
                         stroke-linecap="round"
                     />
+
                 </svg>
+
             </div>
 
             <div>
+
                 <strong id="drawerAuthTitle">
                     Login / Sign Up
                 </strong>
@@ -330,107 +724,202 @@
                 <span id="drawerAuthSubtitle">
                     Access your saved properties
                 </span>
+
             </div>
 
-            <span class="drawer-arrow">›</span>
+            <span
+                class="drawer-arrow"
+                aria-hidden="true"
+            >
+                ›
+            </span>
 
         </a>
 
     </div>
 
-    <div class="drawer-section">
+    <nav
+        class="drawer-section"
+        aria-label="Browse properties"
+    >
 
         <h4>Browse Properties</h4>
 
-        <a href="properties.html" class="drawer-link">
+        <a
+            href="properties.html"
+            class="drawer-link"
+        >
+
             <span>
-                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M5 3h14v18H5V3Zm4 4h2m-2 4h2m4-4h2m-2 4h2"
                         stroke="currentColor"
                         stroke-width="2"
                         stroke-linecap="round"
                     />
+
                 </svg>
+
                 All Properties
+
             </span>
-            <span>›</span>
+
+            <span aria-hidden="true">›</span>
+
         </a>
 
-        <a href="properties.html?type=Apartment" class="drawer-link">
+        <a
+            href="properties.html?type=Apartment"
+            class="drawer-link"
+        >
+
             <span>
-                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M3 11L12 4l9 7v10H3V11Z"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                     <path
                         d="M9 21v-6h6v6"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                 </svg>
+
                 Apartments
+
             </span>
-            <span>›</span>
+
+            <span aria-hidden="true">›</span>
+
         </a>
 
-        <a href="properties.html?type=House" class="drawer-link">
+        <a
+            href="properties.html?type=House"
+            class="drawer-link"
+        >
+
             <span>
-                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M3 11L12 4l9 7v10H3V11Z"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                     <path
                         d="M9 21v-6h6v6"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                 </svg>
+
                 Houses
+
             </span>
-            <span>›</span>
+
+            <span aria-hidden="true">›</span>
+
         </a>
 
-        <a href="properties.html?type=Shortlet" class="drawer-link">
+        <a
+            href="properties.html?type=Shortlet"
+            class="drawer-link"
+        >
+
             <span>
-                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M4 10h16M6 6h12a2 2 0 0 1 2 2v8H4V8a2 2 0 0 1 2-2Z"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                     <path
                         d="M7 16v2m10-2v2"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                 </svg>
+
                 Shortlets
+
             </span>
-            <span>›</span>
+
+            <span aria-hidden="true">›</span>
+
         </a>
 
-        <a href="properties.html?type=Commercial" class="drawer-link">
+        <a
+            href="properties.html?type=Commercial"
+            class="drawer-link"
+        >
+
             <span>
-                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M4 21V5h10v16M14 9h6v12"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                 </svg>
+
                 Commercial
+
             </span>
-            <span>›</span>
+
+            <span aria-hidden="true">›</span>
+
         </a>
 
-    </div>
+    </nav>
 
-    <div class="drawer-section">
+    <nav
+        class="drawer-section"
+        aria-label="MoonLat quick access"
+    >
 
         <h4>Quick Access</h4>
 
@@ -439,17 +928,30 @@
             class="drawer-link"
             onclick="requireAuth(event, 'saved properties')"
         >
+
             <span>
-                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M6 3h12v18l-6-4-6 4V3Z"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                 </svg>
+
                 Saved Properties
+
             </span>
-            <span>›</span>
+
+            <span aria-hidden="true">›</span>
+
         </a>
 
         <a
@@ -457,32 +959,58 @@
             class="drawer-link"
             onclick="requireAuth(event, 'property alerts')"
         >
+
             <span>
-                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M12 3a5 5 0 0 1 5 5v4l2 3H5l2-3V8a5 5 0 0 1 5-5Z"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                     <path
                         d="M10 19a2 2 0 0 0 4 0"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                 </svg>
+
                 Property Alerts
+
             </span>
-            <span>›</span>
+
+            <span aria-hidden="true">›</span>
+
         </a>
 
-        <a href="properties.html" class="drawer-link">
+        <a
+            href="properties.html"
+            class="drawer-link"
+        >
+
             <span>
-                <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+
+                <svg
+                    class="link-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M12 21s7-5 7-11a7 7 0 1 0-14 0c0 6 7 11 7 11Z"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                     <circle
                         cx="12"
                         cy="10"
@@ -490,13 +1018,18 @@
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                 </svg>
+
                 Find Agents
+
             </span>
-            <span>›</span>
+
+            <span aria-hidden="true">›</span>
+
         </a>
 
-    </div>
+    </nav>
 
     <div class="drawer-section">
 
@@ -505,19 +1038,31 @@
         <details>
 
             <summary>
+
                 <span>
-                    <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+
+                    <svg
+                        class="link-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                    >
+
                         <path
                             d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"
                             stroke="currentColor"
                             stroke-width="2"
                         />
+
                     </svg>
+
                     Company
+
                 </span>
+
             </summary>
 
-            <a href="#">About MoonLat</a>
+            <a href="about-moonlat/index.html">About MoonLat</a>
             <a href="#">Advertise With Us</a>
             <a href="#">Our Partners</a>
             <a href="#">Careers</a>
@@ -527,8 +1072,16 @@
         <details>
 
             <summary>
+
                 <span>
-                    <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+
+                    <svg
+                        class="link-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                    >
+
                         <circle
                             cx="12"
                             cy="12"
@@ -536,15 +1089,20 @@
                             stroke="currentColor"
                             stroke-width="2"
                         />
+
                         <path
                             d="M12 17v.01M12 14c0-3 3-3 3-6a3 3 0 1 0-6 0"
                             stroke="currentColor"
                             stroke-width="2"
                             stroke-linecap="round"
                         />
+
                     </svg>
+
                     Help & Support
+
                 </span>
+
             </summary>
 
             <a href="#">Help Centre</a>
@@ -562,30 +1120,95 @@
 
         <div class="drawer-socials">
 
-            <a href="#" aria-label="Facebook">
-                <svg viewBox="0 0 24 24" fill="currentColor">
+            <a
+                href="#"
+                aria-label="MoonLat on Facebook"
+            >
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                >
+
                     <path d="M13.5 21v-7h2.3l.4-3h-2.7V9.2c0-.9.2-1.5 1.5-1.5H16V5c-.5-.1-1.4-.2-2.3-.2-2.4 0-3.9 1.4-3.9 4V11H7v3h2.8v7h3.7z"/>
+
                 </svg>
+
             </a>
 
-            <a href="#" aria-label="Instagram">
-                <svg viewBox="0 0 24 24" fill="none">
-                    <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/>
-                    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
-                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+            <a
+                href="#"
+                aria-label="MoonLat on Instagram"
+            >
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
+                    <rect
+                        x="3"
+                        y="3"
+                        width="18"
+                        height="18"
+                        rx="5"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="4"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+
+                    <circle
+                        cx="17.5"
+                        cy="6.5"
+                        r="1"
+                        fill="currentColor"
+                    />
+
                 </svg>
+
             </a>
 
-            <a href="#" aria-label="X">
-                <svg viewBox="0 0 24 24" fill="currentColor">
+            <a
+                href="#"
+                aria-label="MoonLat on X"
+            >
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                >
+
                     <path d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.3L6.7 21H3.6l7.3-8.4L1 3h6.2l4.4 5.8L18.9 3z"/>
+
                 </svg>
+
             </a>
 
-            <a href="#" aria-label="LinkedIn">
-                <svg viewBox="0 0 24 24" fill="currentColor">
+            <a
+                href="#"
+                aria-label="MoonLat on LinkedIn"
+            >
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                >
+
                     <path d="M4.98 3.5a1.75 1.75 0 1 1 0 3.5 1.75 1.75 0 0 1 0-3.5ZM3.5 8h3v12h-3V8Zm5 0h2.9v1.7h.1c.4-.8 1.5-1.7 3.2-1.7 3.4 0 4 2.2 4 5.1V20h-3v-6c0-1.4 0-3.2-2-3.2s-2.3 1.5-2.3 3V20h-3V8z"/>
+
                 </svg>
+
             </a>
 
         </div>
@@ -595,15 +1218,23 @@
     <div class="drawer-footer">
 
         <div>
+
             <strong>MoonLat</strong>
+
             <br>
+
             <small>Version 2.0.0</small>
+
         </div>
 
         <div style="text-align:right">
+
             <small>© 2026</small>
+
             <br>
+
             <small>All Rights Reserved</small>
+
         </div>
 
     </div>
@@ -614,53 +1245,78 @@
      HEADER
 ============================================================ -->
 
-<header class="header">
+<header
+    class="header"
+    role="banner"
+>
 
     <div class="container header__container">
 
-        <a href="index.html" class="logo">
+        <a
+            href="index.html"
+            class="logo"
+            aria-label="MoonLat home"
+        >
+
             <img
                 src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png"
-                alt="MoonLat Logo"
+                alt="MoonLat"
+                width="180"
+                height="64"
+                decoding="async"
             >
+
         </a>
 
         <button
             class="menu-btn"
-            aria-label="Open navigation"
+            aria-label="Open MoonLat navigation"
             aria-expanded="false"
             aria-controls="moonlatDrawer"
+            type="button"
         >
+
             <span></span>
             <span></span>
             <span></span>
+
         </button>
 
     </div>
 
 </header>
 
-<main>
+<main id="main-content">
 
 <!-- ============================================================
      HERO
 ============================================================ -->
 
-<section class="hero">
+<section
+    class="hero"
+    aria-labelledby="hero-title"
+>
 
-    <div class="hero__overlay"></div>
+    <div
+        class="hero__overlay"
+        aria-hidden="true"
+    ></div>
 
     <img
         class="hero__image"
         src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=2000&q=80"
-        alt="Luxury modern residential apartment"
+        alt="Modern luxury home representing verified properties available through MoonLat in Nigeria"
+        width="2000"
+        height="1333"
+        fetchpriority="high"
+        decoding="async"
     >
 
     <div class="container hero__content">
 
         <div class="hero__text">
 
-            <h1>
+            <h1 id="hero-title">
                 Find Verified<br>
                 Properties Across Nigeria
             </h1>
@@ -672,16 +1328,30 @@
 
         </div>
 
-        <form class="search-card" id="searchForm">
+        <form
+            class="search-card"
+            id="searchForm"
+            role="search"
+            aria-label="Search MoonLat property listings"
+        >
 
             <div class="search-card__field">
 
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="26"
+                    height="26"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M12 21s7-5.373 7-11a7 7 0 10-14 0c0 5.627 7 11 7 11z"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                     <circle
                         cx="12"
                         cy="10"
@@ -689,23 +1359,34 @@
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                 </svg>
 
                 <div class="search-location-wrap">
+
+                    <label
+                        for="searchLocation"
+                        class="visually-hidden"
+                    >
+                        City, state or area
+                    </label>
 
                     <input
                         type="text"
                         name="location"
                         id="searchLocation"
                         placeholder="City, State or Area"
-                        autocomplete="off"
+                        autocomplete="address-level2"
                         aria-label="Search by city, state or area"
+                        aria-controls="searchSuggestions"
+                        aria-autocomplete="list"
                     >
 
                     <div
                         class="search-suggestions"
                         id="searchSuggestions"
                         role="listbox"
+                        aria-label="Location suggestions"
                     ></div>
 
                 </div>
@@ -714,7 +1395,15 @@
 
             <div class="search-card__field">
 
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="26"
+                    height="26"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+
                     <circle
                         cx="12"
                         cy="12"
@@ -722,19 +1411,25 @@
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                     <path
                         d="M12 7v10M9 9.5c0-1 1.2-2 3-2s3 1 3 2-1 2-3 2-3 1-3 2 1.2 2 3 2 3-1 3-2"
                         stroke="currentColor"
                         stroke-width="2"
                         stroke-linecap="round"
                     />
+
                 </svg>
 
                 <label>
 
                     <span>Budget</span>
 
-                    <select name="price" id="searchPrice">
+                    <select
+                        name="price"
+                        id="searchPrice"
+                        aria-label="Select property budget"
+                    >
 
                         <option value="">Any Price</option>
                         <option value="0-500000">Under ₦500K</option>
@@ -751,24 +1446,38 @@
 
             <div class="search-card__field">
 
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="26"
+                    height="26"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M4 10.5L12 4l8 6.5V20H4V10.5z"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                     <path
                         d="M9 20v-6h6v6"
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                 </svg>
 
                 <label>
 
                     <span>Property</span>
 
-                    <select name="type" id="searchType">
+                    <select
+                        name="type"
+                        id="searchType"
+                        aria-label="Select property type"
+                    >
 
                         <option value="">Any Type</option>
                         <option>Apartment</option>
@@ -790,9 +1499,18 @@
                 type="submit"
                 class="search-button"
                 id="searchBtn"
+                aria-label="Search property listings"
             >
 
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+
                     <circle
                         cx="11"
                         cy="11"
@@ -800,12 +1518,14 @@
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                     <path
                         d="M20 20L16.5 16.5"
                         stroke="currentColor"
                         stroke-width="2"
                         stroke-linecap="round"
                     />
+
                 </svg>
 
                 <span>Search</span>
@@ -822,45 +1542,92 @@
      AUDIENCE
 ============================================================ -->
 
-<section class="audience">
+<section
+    class="audience"
+    aria-labelledby="audience-title"
+>
 
     <div class="container">
 
         <div class="section-heading">
 
-            <div class="market-status">
-                <span class="market-status__dot"></span>
+            <div
+                class="market-status"
+                aria-label="MoonLat marketplace status: live"
+            >
+
+                <span
+                    class="market-status__dot"
+                    aria-hidden="true"
+                ></span>
+
                 Live marketplace
+
             </div>
 
-            <h2>
+            <h2 id="audience-title">
                 Reach More Property Seekers with MoonLat
             </h2>
 
             <p>
                 List your apartments, houses, shortlets and commercial
-                properties where thousands of Nigerians search every day.
+                properties where Nigerians search for their next property.
             </p>
 
         </div>
 
-        <div class="stat-card stat-card--people">
+        <div
+            class="stat-card stat-card--people"
+            aria-label="Property seeker audience"
+        >
 
             <div class="guest-stack">
 
-                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80" alt="Property seeker">
+                <img
+                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80"
+                    alt="Property seeker using MoonLat"
+                    width="300"
+                    height="300"
+                    loading="lazy"
+                    decoding="async"
+                >
 
-                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=80" alt="Property seeker">
+                <img
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=80"
+                    alt="Property seeker"
+                    width="300"
+                    height="300"
+                    loading="lazy"
+                    decoding="async"
+                >
 
                 <img
                     class="featured"
                     src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&q=80"
-                    alt="Property seeker"
+                    alt="Property seeker exploring housing options"
+                    width="500"
+                    height="500"
+                    loading="lazy"
+                    decoding="async"
                 >
 
-                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&q=80" alt="Property seeker">
+                <img
+                    src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&q=80"
+                    alt="Property seeker"
+                    width="300"
+                    height="300"
+                    loading="lazy"
+                    decoding="async"
+                >
 
-                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&q=80" alt="Property seeker">
+                <img
+                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&q=80"
+                    alt="Property seeker"
+                    width="300"
+                    height="300"
+                    loading="lazy"
+                    decoding="async"
+                >
 
             </div>
 
@@ -877,6 +1644,7 @@
             <h3
                 id="totalListingsCount"
                 class="live-count"
+                aria-live="polite"
             >
                 Loading...
             </h3>
@@ -899,7 +1667,11 @@
      FEATURED
 ============================================================ -->
 
-<section class="featured-properties" id="featured">
+<section
+    class="featured-properties"
+    id="featured"
+    aria-labelledby="featured-title"
+>
 
     <div class="container">
 
@@ -909,7 +1681,7 @@
                 Verified Listings
             </span>
 
-            <h2>
+            <h2 id="featured-title">
                 Explore Premium Properties Across Nigeria
             </h2>
 
@@ -923,20 +1695,54 @@
         <div
             class="featured-indicator"
             id="featuredIndicator"
+            role="tablist"
+            aria-label="Featured property slides"
         >
-            <button class="active" type="button" aria-label="Featured slide 1"></button>
-            <button type="button" aria-label="Featured slide 2"></button>
-            <button type="button" aria-label="Featured slide 3"></button>
+
+            <button
+                class="active"
+                type="button"
+                aria-label="Featured slide 1"
+                aria-selected="true"
+                role="tab"
+            ></button>
+
+            <button
+                type="button"
+                aria-label="Featured slide 2"
+                aria-selected="false"
+                role="tab"
+            ></button>
+
+            <button
+                type="button"
+                aria-label="Featured slide 3"
+                aria-selected="false"
+                role="tab"
+            ></button>
+
         </div>
 
         <div
             class="property-slider"
             id="featuredSlider"
+            aria-label="Featured property listings"
         >
 
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
+            <div
+                class="skeleton skeleton-card"
+                aria-hidden="true"
+            ></div>
+
+            <div
+                class="skeleton skeleton-card"
+                aria-hidden="true"
+            ></div>
+
+            <div
+                class="skeleton skeleton-card"
+                aria-hidden="true"
+            ></div>
 
         </div>
 
@@ -945,13 +1751,19 @@
             <a
                 href="properties.html?featured=true"
                 class="view-all-btn"
+                aria-label="View all featured MoonLat properties"
             >
 
                 <span>
                     View All Featured Properties
                 </span>
 
-                <svg viewBox="0 0 24 24" fill="none">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M9 18l6-6-6-6"
                         stroke="currentColor"
@@ -959,6 +1771,7 @@
                         stroke-linecap="round"
                         stroke-linejoin="round"
                     />
+
                 </svg>
 
             </a>
@@ -973,21 +1786,31 @@
      FIND PROPERTY
 ============================================================ -->
 
-<section class="find-property">
+<section
+    class="find-property"
+    aria-labelledby="find-property-title"
+>
 
     <img
         src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1800&q=80"
-        alt="Modern Property"
+        alt="Modern residential property available through a Nigerian real estate marketplace"
         class="find-property__image"
+        width="1800"
+        height="1200"
+        loading="lazy"
+        decoding="async"
     >
 
-    <div class="find-property__overlay"></div>
+    <div
+        class="find-property__overlay"
+        aria-hidden="true"
+    ></div>
 
     <div class="container">
 
         <div class="find-property__content">
 
-            <h2>
+            <h2 id="find-property-title">
                 Find your preferred<br>
                 property in <strong>3 clicks</strong><br>
                 <span>not months</span>
@@ -1058,18 +1881,38 @@
 <section
     class="property-grid-section"
     id="propertyGrid"
+    aria-labelledby="property-grid-title"
 >
 
     <div class="container">
 
+        <div class="visually-hidden">
+
+            <h2 id="property-grid-title">
+                Properties Available Across Nigeria
+            </h2>
+
+            <p>
+                Explore active MoonLat property listings including apartments,
+                houses, shortlets, commercial spaces and land across Nigeria.
+            </p>
+
+        </div>
+
         <div
             class="search-active-banner"
             id="searchBanner"
+            aria-live="polite"
         >
 
             <div class="banner-info">
 
-                <svg viewBox="0 0 24 24" fill="none">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
                     <circle
                         cx="11"
                         cy="11"
@@ -1077,12 +1920,14 @@
                         stroke="currentColor"
                         stroke-width="2"
                     />
+
                     <path
                         d="M20 20L16.5 16.5"
                         stroke="currentColor"
                         stroke-width="2"
                         stroke-linecap="round"
                     />
+
                 </svg>
 
                 <span id="bannerText">
@@ -1096,6 +1941,7 @@
                 <button
                     class="banner-btn banner-btn-secondary"
                     onclick="clearHomepageFilters()"
+                    type="button"
                 >
                     Clear Filters
                 </button>
@@ -1115,22 +1961,48 @@
         <div
             class="property-row"
             id="propertyRow1"
+            aria-live="polite"
+            aria-label="Property listings"
         >
 
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
+            <div
+                class="skeleton skeleton-card"
+                aria-hidden="true"
+            ></div>
+
+            <div
+                class="skeleton skeleton-card"
+                aria-hidden="true"
+            ></div>
+
+            <div
+                class="skeleton skeleton-card"
+                aria-hidden="true"
+            ></div>
 
         </div>
 
         <div
             class="property-row"
             id="propertyRow2"
+            aria-live="polite"
+            aria-label="Additional property listings"
         >
 
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
+            <div
+                class="skeleton skeleton-card"
+                aria-hidden="true"
+            ></div>
+
+            <div
+                class="skeleton skeleton-card"
+                aria-hidden="true"
+            ></div>
+
+            <div
+                class="skeleton skeleton-card"
+                aria-hidden="true"
+            ></div>
 
         </div>
 
@@ -1147,13 +2019,19 @@
                 href="properties.html"
                 class="view-all-btn"
                 id="gridViewAllBtn"
+                aria-label="Browse all MoonLat properties"
             >
 
                 <span>
                     Browse All Properties
                 </span>
 
-                <svg viewBox="0 0 24 24" fill="none">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+
                     <path
                         d="M9 18l6-6-6-6"
                         stroke="currentColor"
@@ -1161,6 +2039,7 @@
                         stroke-linecap="round"
                         stroke-linejoin="round"
                     />
+
                 </svg>
 
             </a>
@@ -1175,17 +2054,29 @@
      COMMERCIAL CTA
 ============================================================ -->
 
-<section class="commercial-cta">
+<section
+    class="commercial-cta"
+    aria-labelledby="commercial-title"
+>
 
     <div class="container">
 
         <div class="commercial-card">
 
-            <div class="commercial-pattern"></div>
+            <div
+                class="commercial-pattern"
+                aria-hidden="true"
+            ></div>
 
-            <div class="commercial-icon">
+            <div
+                class="commercial-icon"
+                aria-hidden="true"
+            >
 
-                <svg viewBox="0 0 64 64" fill="none">
+                <svg
+                    viewBox="0 0 64 64"
+                    fill="none"
+                >
 
                     <circle
                         cx="32"
@@ -1236,12 +2127,12 @@
 
             </div>
 
-            <h2>
+            <h2 id="commercial-title">
                 Access the largest commercial property audience
             </h2>
 
             <p>
-                MoonLat gives you access to Nigeria's largest audience of
+                MoonLat gives you access to Nigeria's property audience of
                 agents, developers, landlords, investors and businesses
                 looking for commercial spaces.
             </p>
@@ -1249,6 +2140,7 @@
             <a
                 href="dashboard/sign-up.html"
                 class="commercial-btn"
+                aria-label="Advertise your property on MoonLat"
             >
                 Advertise with us
             </a>
@@ -1257,7 +2149,10 @@
                 Trusted by leading commercial real estate brands
             </h3>
 
-            <div class="commercial-logos">
+            <div
+                class="commercial-logos"
+                aria-label="Commercial real estate brands"
+            >
 
                 <span>Prime</span>
                 <span>Landmark</span>
@@ -1279,33 +2174,58 @@
      FOOTER
 ============================================================ -->
 
-<footer class="footer">
+<footer
+    class="footer"
+    role="contentinfo"
+>
 
     <div class="footer-container">
 
         <div class="footer-top">
 
-            <img
-                src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png"
-                alt="MoonLat Logo"
-                class="footer-logo"
+            <a
+                href="index.html"
+                aria-label="MoonLat home"
             >
 
+                <img
+                    src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png"
+                    alt="MoonLat"
+                    class="footer-logo"
+                    width="180"
+                    height="64"
+                    loading="lazy"
+                    decoding="async"
+                >
+
+            </a>
+
             <p class="footer-text">
-                Join thousands of Nigerians discovering verified homes,
-                apartments, shortlets and commercial properties. Get
-                exclusive listings and market insights delivered to your inbox.
+                Join Nigerians discovering verified homes, apartments,
+                shortlets and commercial properties. Get exclusive listings
+                and market insights delivered to your inbox.
             </p>
 
             <form
                 class="footer-newsletter"
                 id="newsletterForm"
+                aria-label="MoonLat newsletter subscription"
             >
+
+                <label
+                    for="newsletterEmail"
+                    class="visually-hidden"
+                >
+                    Email address
+                </label>
 
                 <input
                     type="email"
                     id="newsletterEmail"
+                    name="email"
                     placeholder="Enter your email address"
+                    autocomplete="email"
+                    inputmode="email"
                     required
                 >
 
@@ -1318,10 +2238,22 @@
 
             </form>
 
-            <div class="footer-socials">
+            <div
+                class="footer-socials"
+                aria-label="MoonLat social media"
+            >
 
-                <a href="#" aria-label="WhatsApp">
-                    <svg viewBox="0 0 24 24" fill="none">
+                <a
+                    href="#"
+                    aria-label="MoonLat on WhatsApp"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                    >
+
                         <path
                             d="M20 12A8 8 0 1 0 5.1 16.1L4 20l4-1.1A8 8 0 1 0 20 12Z"
                             stroke="currentColor"
@@ -1329,27 +2261,61 @@
                             stroke-linecap="round"
                             stroke-linejoin="round"
                         />
+
                         <path
                             d="M9.4 9.2c.2-.5.4-.5.7-.5h.6c.2 0 .4.1.5.4l.6 1.4c.1.3.1.5-.1.7l-.5.6c.4.8 1 1.4 1.8 1.8l.6-.5c.2-.2.4-.2.7-.1l1.4.6c.3.1.4.3.4.5v.6c0 .3 0 .5-.5.7-.4.2-.9.3-1.4.2-2-.4-4.1-2.4-4.5-4.5-.1-.5 0-1 .2-1.4Z"
                             fill="currentColor"
                         />
+
                     </svg>
+
                 </a>
 
-                <a href="#" aria-label="X">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
+                <a
+                    href="#"
+                    aria-label="MoonLat on X"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                    >
+
                         <path d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.2L6.7 21H3.6l7.3-8.3L1 3h6.2l4.4 5.8L18.9 3Z"/>
+
                     </svg>
+
                 </a>
 
-                <a href="#" aria-label="Facebook">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
+                <a
+                    href="#"
+                    aria-label="MoonLat on Facebook"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                    >
+
                         <path d="M13.5 21v-7h2.3l.4-3h-2.7V9.1c0-.9.2-1.5 1.5-1.5H16V5c-.5-.1-1.4-.2-2.3-.2-2.3 0-3.9 1.4-3.9 4V11H7v3h2.8v7h3.7Z"/>
+
                     </svg>
+
                 </a>
 
-                <a href="#" aria-label="Instagram">
-                    <svg viewBox="0 0 24 24" fill="none">
+                <a
+                    href="#"
+                    aria-label="MoonLat on Instagram"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                    >
+
                         <rect
                             x="3"
                             y="3"
@@ -1359,6 +2325,7 @@
                             stroke="currentColor"
                             stroke-width="1.8"
                         />
+
                         <circle
                             cx="12"
                             cy="12"
@@ -1366,13 +2333,16 @@
                             stroke="currentColor"
                             stroke-width="1.8"
                         />
+
                         <circle
                             cx="17.4"
                             cy="6.6"
                             r="1"
                             fill="currentColor"
                         />
+
                     </svg>
+
                 </a>
 
             </div>
@@ -1407,7 +2377,7 @@
 
                 <h4>Company</h4>
 
-                <a href="#">About Us</a>
+                <a href="about-moonlat/index.html">About Us</a>
                 <a href="#">Advertise</a>
                 <a href="#">Partners</a>
                 <a href="#">Blog</a>
@@ -1459,11 +2429,16 @@
                     href="https://kaali.space"
                     class="credit-logo"
                     title="KAALI NG - Crafting Digital Excellence"
+                    rel="noopener"
                 >
 
                     <span class="logo-icon">
 
-                        <svg viewBox="0 0 24 24" fill="none">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            aria-hidden="true"
+                        >
 
                             <path
                                 d="M12 2L2 7v10l10 5 10-5V7L12 2z"
@@ -1516,9 +2491,18 @@
      TOAST
 ============================================================ -->
 
-<div class="toast" id="toast">
+<div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+>
 
-    <div class="toast-icon">
+    <div
+        class="toast-icon"
+        aria-hidden="true"
+    >
         ✓
     </div>
 
@@ -1549,6 +2533,9 @@
 <div
     class="modal-overlay"
     id="newsletterModal"
+    role="dialog"
+    aria-modal="true"
+    aria-label="MoonLat newsletter subscription"
 >
 
     <div class="modal-container">
@@ -1557,6 +2544,7 @@
             class="modal-close"
             onclick="closeNewsletterModal()"
             aria-label="Close subscription dialog"
+            type="button"
         >
             ✕
         </button>
@@ -1565,10 +2553,13 @@
             class="modal-loading-content"
             id="modalLoading"
             style="display:none;"
+            aria-live="polite"
         >
 
             <div class="loading-icon">
+
                 <div class="loading-spinner"></div>
+
             </div>
 
             <h2>Subscribing...</h2>
@@ -1583,48 +2574,60 @@
                     class="progress-step"
                     id="step1"
                 >
+
                     <div class="progress-step-icon">
                         1
                     </div>
+
                     <div class="progress-step-text">
                         Validating email address
                     </div>
+
                 </div>
 
                 <div
                     class="progress-step"
                     id="step2"
                 >
+
                     <div class="progress-step-icon">
                         2
                     </div>
+
                     <div class="progress-step-text">
                         Checking existing subscriptions
                     </div>
+
                 </div>
 
                 <div
                     class="progress-step"
                     id="step3"
                 >
+
                     <div class="progress-step-icon">
                         3
                     </div>
+
                     <div class="progress-step-text">
                         Adding to newsletter database
                     </div>
+
                 </div>
 
                 <div
                     class="progress-step"
                     id="step4"
                 >
+
                     <div class="progress-step-icon">
                         4
                     </div>
+
                     <div class="progress-step-text">
                         Confirming subscription
                     </div>
+
                 </div>
 
             </div>
@@ -1648,9 +2651,13 @@
                 <div
                     class="confetti-container"
                     id="confettiContainer"
+                    aria-hidden="true"
                 ></div>
 
-                <div class="success-icon"></div>
+                <div
+                    class="success-icon"
+                    aria-hidden="true"
+                ></div>
 
                 <h2>
                     Congratulations!
@@ -1689,6 +2696,7 @@
                 <button
                     class="btn-continue"
                     onclick="closeNewsletterModal()"
+                    type="button"
                 >
                     Continue
                 </button>
@@ -1703,7 +2711,10 @@
             style="display:none;"
         >
 
-            <div class="error-icon">
+            <div
+                class="error-icon"
+                aria-hidden="true"
+            >
                 ✕
             </div>
 
@@ -1725,6 +2736,7 @@
             <button
                 class="btn-retry"
                 onclick="retrySubscription()"
+                type="button"
             >
                 Try Again
             </button>
@@ -1737,7 +2749,10 @@
             style="display:none;"
         >
 
-            <div class="already-icon">
+            <div
+                class="already-icon"
+                aria-hidden="true"
+            >
                 📧
             </div>
 
@@ -1761,6 +2776,7 @@
             <button
                 class="btn-ok"
                 onclick="closeNewsletterModal()"
+                type="button"
             >
                 OK, Got it
             </button>
@@ -2333,6 +3349,7 @@ onSnapshot(
 
         renderFeatured();
         updateFeaturedIndicator();
+        updateHomepageSchema();
 
     },
 
@@ -2410,6 +3427,7 @@ onSnapshot(
 
         renderPropertyGrid();
         renderLocationSuggestions();
+        updateHomepageSchema();
 
     },
 
@@ -2440,6 +3458,76 @@ onSnapshot(
 
     }
 );
+
+
+/* ============================================================
+   DYNAMIC PROPERTY ENTITY GRAPH
+============================================================ */
+
+function updateHomepageSchema() {
+
+    const existing =
+        document.getElementById(
+            "moonlatDynamicPropertySchema"
+        );
+
+    if (existing) {
+        existing.remove();
+    }
+
+    if (!allProperties.length) {
+        return;
+    }
+
+    const items =
+        allProperties
+            .slice(0, 20)
+            .map(
+                (property, index) => {
+
+                    const p =
+                        normalizeProperty(
+                            property
+                        );
+
+                    return {
+                        "@type": "ListItem",
+                        "position": index + 1,
+                        "name": p.title,
+                        "url":
+                            `https://moonlat.top/property-detail.html?id=${encodeURIComponent(p.id)}`
+                    };
+
+                }
+            );
+
+    const schema =
+        document.createElement(
+            "script"
+        );
+
+    schema.id =
+        "moonlatDynamicPropertySchema";
+
+    schema.type =
+        "application/ld+json";
+
+    schema.textContent =
+        JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "@id": "https://moonlat.top/#active-property-list",
+            "name": "Active MoonLat Property Listings",
+            "description": "A selection of active property listings available through MoonLat across Nigeria.",
+            "numberOfItems": allProperties.length,
+            "itemListElement": items
+        });
+
+    document.head.appendChild(
+        schema
+    );
+
+}
 
 
 /* ============================================================
@@ -2713,7 +3801,7 @@ function renderPropertyCard(property) {
 
     const safeAlt =
         title ||
-        "MoonLat property";
+        "MoonLat property listing in Nigeria";
 
     return `
 
@@ -2734,6 +3822,8 @@ function renderPropertyCard(property) {
                     onerror="this.onerror=null;this.src='${DEFAULT_IMAGE}'"
                     loading="lazy"
                     decoding="async"
+                    width="800"
+                    height="600"
                 >
 
                 <span class="property-badge">
@@ -2743,14 +3833,24 @@ function renderPropertyCard(property) {
                 ${
                     verified
                         ? `
-                            <span class="property-card__verification">
-                                <svg viewBox="0 0 24 24" fill="none">
+                            <span
+                                class="property-card__verification"
+                                aria-label="Verified property"
+                            >
+
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    aria-hidden="true"
+                                >
+
                                     <path
                                         d="M12 3l2 2 2.8-.2.9 2.6 2.3 1.5-.9 2.7.9 2.7-2.3 1.5-.9 2.6L14 19l-2 2-2-2-2.7.2-.9-2.6-2.3-1.5.9-2.7-.9-2.7 2.3-1.5.9-2.6L10 5l2-2Z"
                                         stroke="currentColor"
                                         stroke-width="1.6"
                                         stroke-linejoin="round"
                                     />
+
                                     <path
                                         d="m9 12 2 2 4-4"
                                         stroke="currentColor"
@@ -2758,8 +3858,11 @@ function renderPropertyCard(property) {
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
                                     />
+
                                 </svg>
+
                                 Verified
+
                             </span>
                         `
                         : ""
@@ -2775,6 +3878,7 @@ function renderPropertyCard(property) {
                     <svg
                         viewBox="0 0 24 24"
                         fill="${isSaved ? "currentColor" : "none"}"
+                        aria-hidden="true"
                     >
 
                         <path
@@ -2804,6 +3908,7 @@ function renderPropertyCard(property) {
                     <svg
                         viewBox="0 0 24 24"
                         fill="none"
+                        aria-hidden="true"
                     >
 
                         <path
@@ -2835,12 +3940,15 @@ function renderPropertyCard(property) {
                         <svg
                             viewBox="0 0 24 24"
                             fill="none"
+                            aria-hidden="true"
                         >
+
                             <path
                                 d="M4 10.5L12 4l8 6.5V20H4z"
                                 stroke="currentColor"
                                 stroke-width="2"
                             />
+
                         </svg>
 
                         <span>
@@ -2854,12 +3962,15 @@ function renderPropertyCard(property) {
                         <svg
                             viewBox="0 0 24 24"
                             fill="none"
+                            aria-hidden="true"
                         >
+
                             <path
                                 d="M4 12h16M12 4v16"
                                 stroke="currentColor"
                                 stroke-width="2"
                             />
+
                         </svg>
 
                         <span>
@@ -2875,12 +3986,15 @@ function renderPropertyCard(property) {
                         <svg
                             viewBox="0 0 24 24"
                             fill="none"
+                            aria-hidden="true"
                         >
+
                             <path
                                 d="M12 17.3l-5.2 2.7 1-5.8L3.5 10l5.9-.9L12 4l2.6 5.1 5.9.9-4.3 4.2 1 5.8z"
                                 stroke="currentColor"
                                 stroke-width="2"
                             />
+
                         </svg>
 
                         <span>
@@ -2897,13 +4011,19 @@ function renderPropertyCard(property) {
                         ? `
                             <div class="property-card__agent">
 
-                                <svg viewBox="0 0 24 24" fill="none">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    aria-hidden="true"
+                                >
+
                                     <path
                                         d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-7 8a7 7 0 0 1 14 0"
                                         stroke="currentColor"
                                         stroke-width="1.8"
                                         stroke-linecap="round"
                                     />
+
                                 </svg>
 
                                 <span>
@@ -3722,13 +4842,21 @@ function renderLocationSuggestions(
                         type="button"
                         class="search-suggestion"
                         data-location="${escapeHtml(location)}"
+                        role="option"
                     >
-                        <svg viewBox="0 0 24 24" fill="none">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            aria-hidden="true"
+                        >
+
                             <path
                                 d="M12 21s7-5 7-11a7 7 0 1 0-14 0c0 6 7 11 7 11Z"
                                 stroke="currentColor"
                                 stroke-width="1.8"
                             />
+
                             <circle
                                 cx="12"
                                 cy="10"
@@ -3736,8 +4864,13 @@ function renderLocationSuggestions(
                                 stroke="currentColor"
                                 stroke-width="1.8"
                             />
+
                         </svg>
-                        <span>${escapeHtml(location)}</span>
+
+                        <span>
+                            ${escapeHtml(location)}
+                        </span>
+
                     </button>
                 `
             )
@@ -3830,6 +4963,17 @@ function updateFeaturedIndicator() {
                     index,
                     dots.length - 1
                 )
+            );
+
+            dot.setAttribute(
+                "aria-selected",
+                i ===
+                Math.min(
+                    index,
+                    dots.length - 1
+                )
+                    ? "true"
+                    : "false"
             );
 
         }
@@ -5513,6 +6657,11 @@ document.addEventListener(
                 "true"
             );
 
+            overlay.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
             document.body.style.overflow =
                 "hidden";
 
@@ -5538,6 +6687,11 @@ document.addEventListener(
             menuBtn?.setAttribute(
                 "aria-expanded",
                 "false"
+            );
+
+            overlay.setAttribute(
+                "aria-hidden",
+                "true"
             );
 
             document.body.style.overflow =
@@ -5652,7 +6806,9 @@ document.addEventListener(
 ============================================================ */
 
 readUrlFilters();
+
 renderFeatured();
+
 renderPropertyGrid();
 
 </script>
