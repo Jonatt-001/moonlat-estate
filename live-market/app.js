@@ -57,6 +57,7 @@ const els = {
 };
 
 let selectedPurpose = "";
+
 let moonlatProperties = [];
 let externalProperties = [];
 let allProperties = [];
@@ -68,6 +69,10 @@ let externalError = null;
 let moonlatError = null;
 
 let debounceTimer = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+  initialize();
+});
 
 function safeText(element, value) {
   if (element) {
@@ -87,17 +92,104 @@ function safeClass(element, className, enabled) {
   }
 }
 
-function setYear() {
-  safeText(els.year, new Date().getFullYear());
+function initialize() {
+  try {
+    safeText(
+      els.year,
+      new Date().getFullYear()
+    );
 
-  const directYear = document.querySelector("#year");
-  if (directYear) {
-    directYear.textContent = new Date().getFullYear();
+    initializeRuntimeDiagnostics();
+
+    updateLabels();
+
+    initializePurposeTabs();
+    initializeFilters();
+    initializeSearch();
+    initializeClearButton();
+    initializeMobileNavigation();
+
+    safeText(
+      els.statStatus,
+      "Connecting"
+    );
+
+    safeText(
+      els.syncStatus,
+      "Connecting"
+    );
+
+    safeText(
+      els.syncTime,
+      "Checking the live market..."
+    );
+
+    loadMoonlatMarket();
+    loadExternalMarket();
+
+    setInterval(
+      () => {
+        if (
+          document.visibilityState === "visible"
+        ) {
+          loadExternalMarket();
+        }
+      },
+      300000
+    );
+  } catch (error) {
+    console.error(
+      "MoonLat Live Market initialization error:",
+      error
+    );
+
+    safeText(
+      els.statStatus,
+      "Offline"
+    );
+
+    safeText(
+      els.syncStatus,
+      "Feed error"
+    );
+
+    safeText(
+      els.syncTime,
+      "The market interface could not initialize"
+    );
+
+    showError(
+      "The Live Market interface encountered an initialization error."
+    );
   }
 }
 
+function initializeRuntimeDiagnostics() {
+  window.addEventListener(
+    "error",
+    event => {
+      console.error(
+        "MoonLat Live Market runtime error:",
+        event.error || event.message
+      );
+    }
+  );
+
+  window.addEventListener(
+    "unhandledrejection",
+    event => {
+      console.error(
+        "MoonLat Live Market promise error:",
+        event.reason
+      );
+    }
+  );
+}
+
 function getTimestampValue(value) {
-  if (!value) return 0;
+  if (!value) {
+    return 0;
+  }
 
   if (typeof value === "number") {
     return value;
@@ -113,11 +205,14 @@ function getTimestampValue(value) {
 
   const parsed = new Date(value).getTime();
 
-  return Number.isFinite(parsed) ? parsed : 0;
+  return Number.isFinite(parsed)
+    ? parsed
+    : 0;
 }
 
 function relativeTime(value) {
-  const timestamp = getTimestampValue(value);
+  const timestamp =
+    getTimestampValue(value);
 
   if (!timestamp) {
     return "Recently updated";
@@ -125,7 +220,9 @@ function relativeTime(value) {
 
   const minutes = Math.max(
     0,
-    Math.floor((Date.now() - timestamp) / 60000)
+    Math.floor(
+      (Date.now() - timestamp) / 60000
+    )
   );
 
   if (minutes < 2) {
@@ -136,7 +233,8 @@ function relativeTime(value) {
     return `${minutes}m ago`;
   }
 
-  const hours = Math.floor(minutes / 60);
+  const hours =
+    Math.floor(minutes / 60);
 
   if (hours < 24) {
     return `${hours}h ago`;
@@ -146,43 +244,62 @@ function relativeTime(value) {
 }
 
 function formatPrice(property) {
-  const price = Number(property.price);
+  const price =
+    Number(property.price);
 
-  if (!Number.isFinite(price) || price <= 0) {
+  if (
+    !Number.isFinite(price) ||
+    price <= 0
+  ) {
     return "Contact for price";
   }
 
-  const currency = property.currency || "NGN";
+  const currency =
+    property.currency || "NGN";
 
   try {
-    return new Intl.NumberFormat("en-NG", {
-      style: "currency",
-      currency,
-      maximumFractionDigits: 0
-    }).format(price);
+    return new Intl.NumberFormat(
+      "en-NG",
+      {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 0
+      }
+    ).format(price);
   } catch {
     return `${currency} ${price.toLocaleString()}`;
   }
 }
 
 function normalizeInternalProperty(property) {
-  const type = property.type || property.propertyType || "Property";
+  const type =
+    property.type ||
+    property.propertyType ||
+    "Property";
 
-  const purpose = String(
-    property.transactionType ||
-    property.listingType ||
-    property.purpose ||
-    property.status ||
-    ""
-  ).toLowerCase();
+  const purpose =
+    String(
+      property.transactionType ||
+      property.listingType ||
+      property.purpose ||
+      property.status ||
+      ""
+    ).toLowerCase();
 
   let transaction = "";
 
-  if (String(type).toLowerCase() === "shortlet") {
+  if (
+    String(type).toLowerCase() ===
+    "shortlet"
+  ) {
     transaction = "rent";
-  } else if (purpose.includes("rent")) {
+  } else if (
+    purpose.includes("rent")
+  ) {
     transaction = "rent";
-  } else if (purpose.includes("lease")) {
+  } else if (
+    purpose.includes("lease")
+  ) {
     transaction = "lease";
   } else if (
     purpose.includes("sale") ||
@@ -196,12 +313,21 @@ function normalizeInternalProperty(property) {
     property.coverImage ||
     property.mainImage ||
     property.imageUrl ||
-    (Array.isArray(property.images) ? property.images[0] : "") ||
-    (Array.isArray(property.gallery) ? property.gallery[0] : "");
+    (
+      Array.isArray(property.images)
+        ? property.images[0]
+        : ""
+    ) ||
+    (
+      Array.isArray(property.gallery)
+        ? property.gallery[0]
+        : ""
+    );
 
   return {
     id: `moonlat:${property.id}`,
     internalId: property.id,
+
     sourceType: "internal",
     sourceName: "MoonLat",
 
@@ -271,9 +397,13 @@ function normalizeInternalProperty(property) {
   };
 }
 
-function normalizeExternalProperty(item) {
+function normalizeExternalProperty(
+  item,
+  index
+) {
   const location =
-    item.location && typeof item.location === "object"
+    item.location &&
+    typeof item.location === "object"
       ? item.location
       : {};
 
@@ -292,7 +422,7 @@ function normalizeExternalProperty(item) {
     sourceName:
       item.source_name ||
       item.source ||
-      "External source",
+      "Untera",
 
     title:
       item.title ||
@@ -311,10 +441,14 @@ function normalizeExternalProperty(item) {
       null,
 
     propertyType:
-      normalizeExternalType(item.type),
+      normalizeExternalType(
+        item.type
+      ),
 
     transaction:
-      normalizeTransaction(item.transaction),
+      normalizeTransaction(
+        item.transaction
+      ),
 
     bedrooms:
       item.beds ??
@@ -350,9 +484,11 @@ function normalizeExternalProperty(item) {
       item.image ||
       item.image_url ||
       item.thumbnail ||
-      (Array.isArray(item.images)
-        ? item.images[0]
-        : ""),
+      (
+        Array.isArray(item.images)
+          ? item.images[0]
+          : ""
+      ),
 
     sourceUrl:
       item.original_url ||
@@ -369,12 +505,17 @@ function normalizeExternalProperty(item) {
 
     createdAt:
       item.created_at ||
-      null
+      null,
+
+    externalOrder:
+      index
   };
 }
 
 function normalizeExternalType(value) {
-  const v = String(value || "").toLowerCase();
+  const v =
+    String(value || "")
+      .toLowerCase();
 
   if (
     v.includes("flat") ||
@@ -383,7 +524,9 @@ function normalizeExternalType(value) {
     return "Apartment";
   }
 
-  if (v.includes("villa")) {
+  if (
+    v.includes("villa")
+  ) {
     return "Villa";
   }
 
@@ -410,21 +553,30 @@ function normalizeExternalType(value) {
     return "Commercial";
   }
 
-  if (v.includes("shortlet")) {
+  if (
+    v.includes("shortlet")
+  ) {
     return "Shortlet";
   }
 
-  return value || "Property";
+  return value ||
+    "Property";
 }
 
 function normalizeTransaction(value) {
-  const v = String(value || "").toLowerCase();
+  const v =
+    String(value || "")
+      .toLowerCase();
 
-  if (v.includes("rent")) {
+  if (
+    v.includes("rent")
+  ) {
     return "rent";
   }
 
-  if (v.includes("lease")) {
+  if (
+    v.includes("lease")
+  ) {
     return "lease";
   }
 
@@ -454,21 +606,36 @@ function getSearchText(property) {
 }
 
 function updateLabels() {
-  if (els.type && els.typeLabel) {
+  if (
+    els.type &&
+    els.typeLabel
+  ) {
     els.typeLabel.textContent =
-      els.type.options[els.type.selectedIndex]?.text ||
+      els.type.options[
+        els.type.selectedIndex
+      ]?.text ||
       "Any type";
   }
 
-  if (els.beds && els.bedsLabel) {
+  if (
+    els.beds &&
+    els.bedsLabel
+  ) {
     els.bedsLabel.textContent =
-      els.beds.options[els.beds.selectedIndex]?.text ||
+      els.beds.options[
+        els.beds.selectedIndex
+      ]?.text ||
       "Any";
   }
 
-  if (els.price && els.priceLabel) {
+  if (
+    els.price &&
+    els.priceLabel
+  ) {
     els.priceLabel.textContent =
-      els.price.options[els.price.selectedIndex]?.text ||
+      els.price.options[
+        els.price.selectedIndex
+      ]?.text ||
       "Any range";
   }
 }
@@ -482,29 +649,37 @@ function matchesFilters(property) {
 
   if (
     search &&
-    !getSearchText(property).includes(search)
+    !getSearchText(property)
+      .includes(search)
   ) {
     return false;
   }
 
   if (
     selectedPurpose &&
-    property.transaction !== selectedPurpose
+    property.transaction !==
+      selectedPurpose
   ) {
     return false;
   }
 
   if (
     els.type?.value &&
-    String(property.propertyType).toLowerCase() !==
-    els.type.value.toLowerCase()
+    String(
+      property.propertyType
+    ).toLowerCase() !==
+      els.type.value.toLowerCase()
   ) {
     return false;
   }
 
-  if (els.beds?.value) {
+  if (
+    els.beds?.value
+  ) {
     const bedrooms =
-      Number(property.bedrooms || 0);
+      Number(
+        property.bedrooms || 0
+      );
 
     if (
       bedrooms <
@@ -514,14 +689,21 @@ function matchesFilters(property) {
     }
   }
 
-  if (els.price?.value) {
-    const [min, max] =
+  if (
+    els.price?.value
+  ) {
+    const [
+      min,
+      max
+    ] =
       els.price.value.split("-");
 
     const price =
       Number(property.price);
 
-    if (!Number.isFinite(price)) {
+    if (
+      !Number.isFinite(price)
+    ) {
       return false;
     }
 
@@ -543,70 +725,279 @@ function matchesFilters(property) {
   return true;
 }
 
-function sortProperties(properties) {
-  const sorted = [...properties];
+/*
+ * Important:
+ *
+ * The external API can return listings without
+ * createdAt / updatedAt values.
+ *
+ * Therefore, newest sorting cannot simply compare
+ * timestamps. We preserve the external API's own
+ * ordering as a fallback.
+ */
+function compareNewest(a, b) {
+  const aTime =
+    getTimestampValue(
+      a.createdAt ||
+      a.updatedAt
+    );
+
+  const bTime =
+    getTimestampValue(
+      b.createdAt ||
+      b.updatedAt
+    );
+
+  if (
+    aTime &&
+    bTime
+  ) {
+    return bTime - aTime;
+  }
+
+  if (
+    aTime &&
+    !bTime
+  ) {
+    return -1;
+  }
+
+  if (
+    !aTime &&
+    bTime
+  ) {
+    return 1;
+  }
+
+  if (
+    a.sourceType === "external" &&
+    b.sourceType === "external"
+  ) {
+    return (
+      Number(
+        a.externalOrder ?? 0
+      ) -
+      Number(
+        b.externalOrder ?? 0
+      )
+    );
+  }
+
+  if (
+    a.sourceType === "internal" &&
+    b.sourceType === "internal"
+  ) {
+    return (
+      Number(
+        a.marketOrder ?? 0
+      ) -
+      Number(
+        b.marketOrder ?? 0
+      )
+    );
+  }
+
+  return 0;
+}
+
+/*
+ * This is the key aggregator improvement.
+ *
+ * Instead of:
+ *
+ * MoonLat x 21
+ * External x 24
+ *
+ * we preserve both feeds independently and
+ * interleave them for the default market view.
+ *
+ * That makes the aggregated nature of the page
+ * immediately visible.
+ */
+function interleaveMarket(
+  internal,
+  external
+) {
+  const result = [];
+
+  const maxLength =
+    Math.max(
+      internal.length,
+      external.length
+    );
+
+  for (
+    let i = 0;
+    i < maxLength;
+    i++
+  ) {
+    if (
+      internal[i]
+    ) {
+      result.push(
+        internal[i]
+      );
+    }
+
+    if (
+      external[i]
+    ) {
+      result.push(
+        external[i]
+      );
+    }
+  }
+
+  return result;
+}
+
+function sortProperties(
+  properties
+) {
+  const sorted =
+    [...properties];
 
   const sort =
     els.sort?.value ||
     "newest";
 
-  if (sort === "price-low") {
+  if (
+    sort === "price-low"
+  ) {
     sorted.sort(
-      (a, b) =>
-        Number(a.price || Infinity) -
-        Number(b.price || Infinity)
+      (a, b) => {
+        const aPrice =
+          Number(a.price);
+
+        const bPrice =
+          Number(b.price);
+
+        if (
+          !Number.isFinite(aPrice)
+        ) {
+          return 1;
+        }
+
+        if (
+          !Number.isFinite(bPrice)
+        ) {
+          return -1;
+        }
+
+        return (
+          aPrice -
+          bPrice
+        );
+      }
     );
-  } else if (sort === "price-high") {
-    sorted.sort(
-      (a, b) =>
-        Number(b.price || 0) -
-        Number(a.price || 0)
-    );
-  } else {
-    sorted.sort(
-      (a, b) =>
-        getTimestampValue(
-          b.createdAt ||
-          b.updatedAt
-        ) -
-        getTimestampValue(
-          a.createdAt ||
-          a.updatedAt
-        )
-    );
+
+    return sorted;
   }
 
-  return sorted;
+  if (
+    sort === "price-high"
+  ) {
+    sorted.sort(
+      (a, b) => {
+        const aPrice =
+          Number(a.price);
+
+        const bPrice =
+          Number(b.price);
+
+        if (
+          !Number.isFinite(aPrice)
+        ) {
+          return 1;
+        }
+
+        if (
+          !Number.isFinite(bPrice)
+        ) {
+          return -1;
+        }
+
+        return (
+          bPrice -
+          aPrice
+        );
+      }
+    );
+
+    return sorted;
+  }
+
+  /*
+   * Default newest view.
+   *
+   * First create separate ordered feeds.
+   * Then merge them.
+   */
+  const internal =
+    sorted
+      .filter(
+        property =>
+          property.sourceType ===
+          "internal"
+      )
+      .sort(
+        compareNewest
+      );
+
+  const external =
+    sorted
+      .filter(
+        property =>
+          property.sourceType ===
+          "external"
+      )
+      .sort(
+        compareNewest
+      );
+
+  return interleaveMarket(
+    internal,
+    external
+  );
 }
 
-function dedupeProperties(properties) {
-  const seen = new Set();
+function dedupeProperties(
+  properties
+) {
+  const seen =
+    new Set();
 
-  return properties.filter(property => {
-    const canonical = [
-      property.sourceUrl,
-      property.title,
-      property.price,
-      property.city,
-      property.area
-    ]
-      .filter(Boolean)
-      .join("|")
-      .toLowerCase();
+  return properties.filter(
+    property => {
+      const canonical = [
+        property.sourceUrl,
+        property.title,
+        property.price,
+        property.city,
+        property.area
+      ]
+        .filter(Boolean)
+        .join("|")
+        .toLowerCase();
 
-    const key =
-      property.sourceType === "internal"
-        ? property.id
-        : canonical || property.id;
+      const key =
+        property.sourceType ===
+        "internal"
+          ? property.id
+          : canonical ||
+            property.id;
 
-    if (seen.has(key)) {
-      return false;
+      if (
+        seen.has(key)
+      ) {
+        return false;
+      }
+
+      seen.add(key);
+
+      return true;
     }
-
-    seen.add(key);
-
-    return true;
-  });
+  );
 }
 
 function rebuildMarket() {
@@ -617,27 +1008,39 @@ function rebuildMarket() {
     ]);
 
   const filtered =
-    sortProperties(
-      allProperties.filter(
-        matchesFilters
-      )
+    allProperties.filter(
+      matchesFilters
     );
 
-  renderProperties(filtered);
-  updateStats(filtered);
+  const sorted =
+    sortProperties(
+      filtered
+    );
+
+  renderProperties(
+    sorted
+  );
+
+  updateStats(
+    sorted
+  );
 }
 
-function updateStats(filtered) {
+function updateStats(
+  filtered
+) {
   const moonlatCount =
     filtered.filter(
       property =>
-        property.sourceType === "internal"
+        property.sourceType ===
+        "internal"
     ).length;
 
   const externalCount =
     filtered.filter(
       property =>
-        property.sourceType === "external"
+        property.sourceType ===
+        "external"
     ).length;
 
   safeText(
@@ -730,7 +1133,9 @@ function updateStats(filtered) {
       return;
     }
 
-    if (externalError) {
+    if (
+      externalError
+    ) {
       safeText(
         els.statStatus,
         "Partial"
@@ -754,16 +1159,21 @@ function updateStats(filtered) {
 
       safeText(
         els.syncTime,
-        `MoonLat updated ${new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit"
-        })}`
+        `MoonLat updated ${new Date().toLocaleTimeString(
+          [],
+          {
+            hour: "2-digit",
+            minute: "2-digit"
+          }
+        )}`
       );
 
       return;
     }
 
-    if (moonlatError) {
+    if (
+      moonlatError
+    ) {
       safeText(
         els.statStatus,
         "Partial"
@@ -787,10 +1197,13 @@ function updateStats(filtered) {
 
       safeText(
         els.syncTime,
-        `External feed updated ${new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit"
-        })}`
+        `External feed updated ${new Date().toLocaleTimeString(
+          [],
+          {
+            hour: "2-digit",
+            minute: "2-digit"
+          }
+        )}`
       );
 
       return;
@@ -819,15 +1232,20 @@ function updateStats(filtered) {
 
     safeText(
       els.syncTime,
-      `Updated ${new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit"
-      })}`
+      `Updated ${new Date().toLocaleTimeString(
+        [],
+        {
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      )}`
     );
   }
 }
 
-function renderProperties(properties) {
+function renderProperties(
+  properties
+) {
   if (!els.grid) {
     return;
   }
@@ -839,7 +1257,9 @@ function renderProperties(properties) {
     Boolean(properties.length)
   );
 
-  if (!properties.length) {
+  if (
+    !properties.length
+  ) {
     return;
   }
 
@@ -851,253 +1271,361 @@ function renderProperties(properties) {
     return;
   }
 
-  properties.forEach(property => {
-    try {
-      const node =
-        els.template.content.cloneNode(true);
+  properties.forEach(
+    property => {
+      try {
+        const node =
+          els.template.content.cloneNode(
+            true
+          );
 
-      const media =
-        node.querySelector(".property-media");
+        const media =
+          node.querySelector(
+            ".property-media"
+          );
 
-      const image =
-        node.querySelector(".property-image");
+        const image =
+          node.querySelector(
+            ".property-image"
+          );
 
-      const badge =
-        node.querySelector(".source-badge");
+        const badge =
+          node.querySelector(
+            ".source-badge"
+          );
 
-      const badgeDot =
-        node.querySelector(".source-badge span");
+        const badgeDot =
+          node.querySelector(
+            ".source-badge span"
+          );
 
-      const badgeText =
-        node.querySelector(".source-badge em");
+        const badgeText =
+          node.querySelector(
+            ".source-badge em"
+          );
 
-      const freshBadge =
-        node.querySelector(".fresh-badge");
+        const freshBadge =
+          node.querySelector(
+            ".fresh-badge"
+          );
 
-      const saveButton =
-        node.querySelector(".save-button");
+        const saveButton =
+          node.querySelector(
+            ".save-button"
+          );
 
-      const price =
-        node.querySelector(".price");
+        const price =
+          node.querySelector(
+            ".price"
+          );
 
-      const purpose =
-        node.querySelector(".purpose");
+        const purpose =
+          node.querySelector(
+            ".purpose"
+          );
 
-      const title =
-        node.querySelector(".title");
+        const title =
+          node.querySelector(
+            ".title"
+          );
 
-      const location =
-        node.querySelector(".location");
+        const location =
+          node.querySelector(
+            ".location"
+          );
 
-      const facts =
-        node.querySelector(".facts");
+        const facts =
+          node.querySelector(
+            ".facts"
+          );
 
-      const source =
-        node.querySelector(".source");
+        const source =
+          node.querySelector(
+            ".source"
+          );
 
-      const viewLink =
-        node.querySelector(".view-link");
+        const viewLink =
+          node.querySelector(
+            ".view-link"
+          );
 
-      const href =
-        property.sourceType === "internal"
-          ? `../property-detail.html?id=${encodeURIComponent(property.internalId)}`
-          : property.sourceUrl || "#";
+        const href =
+          property.sourceType ===
+          "internal"
+            ? `../property-detail.html?id=${encodeURIComponent(
+                property.internalId
+              )}`
+            : property.sourceUrl ||
+              "#";
 
-      if (media) {
-        media.href = href;
-      }
-
-      if (viewLink) {
-        viewLink.href = href;
-
-        viewLink.textContent =
-          property.sourceType === "external"
-            ? "View source "
-            : "View on MoonLat ";
-
-        const arrow =
-          document.createElement("span");
-
-        arrow.textContent =
-          property.sourceType === "external"
-            ? "↗"
-            : "→";
-
-        viewLink.appendChild(arrow);
-      }
-
-      if (image) {
-        image.src =
-          property.image ||
-          "./placeholder.svg";
-
-        image.alt =
-          property.title ||
-          "Property listing";
-
-        image.onerror = () => {
-          if (
-            image.src.indexOf(
-              "placeholder.svg"
-            ) === -1
-          ) {
-            image.src =
-              "./placeholder.svg";
-          }
-        };
-      }
-
-      if (badge) {
-        badge.classList.toggle(
-          "internal",
-          property.sourceType === "internal"
-        );
-      }
-
-      if (badgeDot) {
-        badgeDot.style.background =
-          property.sourceType === "internal"
-            ? "var(--accent)"
-            : "";
-      }
-
-      if (badgeText) {
-        badgeText.textContent =
-          property.sourceType === "internal"
-            ? "MoonLat verified"
-            : `${property.sourceName} · aggregated`;
-      }
-
-      safeText(
-        price,
-        formatPrice(property)
-      );
-
-      safeText(
-        purpose,
-        property.transaction === "rent"
-          ? "For rent"
-          : property.transaction === "lease"
-            ? "Lease"
-            : property.transaction === "sale"
-              ? "For sale"
-              : "Listing"
-      );
-
-      safeText(
-        title,
-        property.title ||
-        "Property listing"
-      );
-
-      const locationParts = [
-        property.area,
-        property.city,
-        property.state
-      ].filter(Boolean);
-
-      safeText(
-        location,
-        locationParts.join(", ") ||
-        property.locationText ||
-        "Nigeria"
-      );
-
-      safeText(
-        freshBadge,
-        relativeTime(
-          property.updatedAt ||
-          property.createdAt
-        )
-      );
-
-      safeText(
-        source,
-        property.sourceType === "internal"
-          ? "MoonLat inventory"
-          : `Source: ${property.sourceName || "External"}`
-      );
-
-      const factsList = [
-        property.bedrooms != null &&
-        property.bedrooms !== ""
-          ? `${property.bedrooms} beds`
-          : "",
-
-        property.bathrooms != null &&
-        property.bathrooms !== ""
-          ? `${property.bathrooms} baths`
-          : "",
-
-        property.propertyType ||
-        ""
-      ].filter(Boolean);
-
-      if (facts) {
-        facts.innerHTML =
-          factsList
-            .map(
-              value =>
-                `<span>${escapeHtml(value)}</span>`
-            )
-            .join("");
-      }
-
-      if (saveButton) {
-        const saveKey =
-          `moonlat:live-market:saved:${property.id}`;
-
-        try {
-          if (
-            localStorage.getItem(saveKey) === "1"
-          ) {
-            saveButton.classList.add("saved");
-          }
-        } catch {
-          // Local storage may be unavailable.
+        if (
+          media
+        ) {
+          media.href =
+            href;
         }
 
-        saveButton.addEventListener(
-          "click",
-          event => {
-            event.preventDefault();
-            event.stopPropagation();
+        if (
+          viewLink
+        ) {
+          viewLink.href =
+            href;
 
-            const saved =
-              saveButton.classList.toggle(
+          viewLink.textContent =
+            property.sourceType ===
+            "external"
+              ? "View source "
+              : "View on MoonLat ";
+
+          const arrow =
+            document.createElement(
+              "span"
+            );
+
+          arrow.textContent =
+            property.sourceType ===
+            "external"
+              ? "↗"
+              : "→";
+
+          viewLink.appendChild(
+            arrow
+          );
+        }
+
+        if (
+          image
+        ) {
+          image.src =
+            property.image ||
+            "./placeholder.svg";
+
+          image.alt =
+            property.title ||
+            "Property listing";
+
+          image.onerror =
+            () => {
+              if (
+                !image.src.includes(
+                  "placeholder.svg"
+                )
+              ) {
+                image.src =
+                  "./placeholder.svg";
+              }
+            };
+        }
+
+        if (
+          badge
+        ) {
+          badge.classList.toggle(
+            "internal",
+            property.sourceType ===
+              "internal"
+          );
+
+          badge.classList.toggle(
+            "external",
+            property.sourceType ===
+              "external"
+          );
+        }
+
+        if (
+          badgeDot
+        ) {
+          badgeDot.style.background =
+            property.sourceType ===
+            "internal"
+              ? "var(--accent)"
+              : "var(--success)";
+        }
+
+        if (
+          badgeText
+        ) {
+          badgeText.textContent =
+            property.sourceType ===
+            "internal"
+              ? "MoonLat verified"
+              : `${property.sourceName || "Untera"} · aggregated`;
+        }
+
+        safeText(
+          price,
+          formatPrice(
+            property
+          )
+        );
+
+        safeText(
+          purpose,
+          property.transaction ===
+            "rent"
+            ? "For rent"
+            : property.transaction ===
+                "lease"
+              ? "Lease"
+              : property.transaction ===
+                  "sale"
+                ? "For sale"
+                : "Listing"
+        );
+
+        safeText(
+          title,
+          property.title ||
+            "Property listing"
+        );
+
+        const locationParts = [
+          property.area,
+          property.city,
+          property.state
+        ].filter(Boolean);
+
+        safeText(
+          location,
+          locationParts.join(
+            ", "
+          ) ||
+            property.locationText ||
+            "Nigeria"
+        );
+
+        safeText(
+          freshBadge,
+          relativeTime(
+            property.updatedAt ||
+              property.createdAt
+          )
+        );
+
+        safeText(
+          source,
+          property.sourceType ===
+            "internal"
+            ? "MoonLat inventory"
+            : `Source: ${
+                property.sourceName ||
+                "Untera"
+              }`
+        );
+
+        const factsList = [
+          property.bedrooms !=
+              null &&
+          property.bedrooms !== ""
+            ? `${property.bedrooms} beds`
+            : "",
+
+          property.bathrooms !=
+              null &&
+          property.bathrooms !== ""
+            ? `${property.bathrooms} baths`
+            : "",
+
+          property.propertyType ||
+            ""
+        ].filter(Boolean);
+
+        if (
+          facts
+        ) {
+          facts.innerHTML =
+            factsList
+              .map(
+                value =>
+                  `<span>${escapeHtml(
+                    value
+                  )}</span>`
+              )
+              .join("");
+        }
+
+        if (
+          saveButton
+        ) {
+          const saveKey =
+            `moonlat:live-market:saved:${property.id}`;
+
+          try {
+            if (
+              localStorage.getItem(
+                saveKey
+              ) === "1"
+            ) {
+              saveButton.classList.add(
                 "saved"
               );
-
-            try {
-              localStorage.setItem(
-                saveKey,
-                saved ? "1" : "0"
-              );
-            } catch {
-              // Ignore storage errors.
             }
+          } catch {
+            // Ignore local storage errors.
           }
+
+          saveButton.addEventListener(
+            "click",
+            event => {
+              event.preventDefault();
+              event.stopPropagation();
+
+              const saved =
+                saveButton.classList.toggle(
+                  "saved"
+                );
+
+              try {
+                localStorage.setItem(
+                  saveKey,
+                  saved ? "1" : "0"
+                );
+              } catch {
+                // Ignore local storage errors.
+              }
+            }
+          );
+        }
+
+        els.grid.appendChild(
+          node
+        );
+      } catch (error) {
+        console.error(
+          "MoonLat Live Market card render error:",
+          error,
+          property
         );
       }
-
-      els.grid.appendChild(node);
-    } catch (error) {
-      console.error(
-        "MoonLat Live Market card render error:",
-        error,
-        property
-      );
     }
-  });
+  );
 }
 
 function escapeHtml(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+  return String(
+    value ?? ""
+  )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 }
 
 async function loadExternalMarket() {
@@ -1113,10 +1641,11 @@ async function loadExternalMarket() {
   try {
     const response =
       await fetch(
-        `${API_BASE}/listings?country=NG&page=1&pageSize=24&sort=newest`,
+        `${API_BASE}/listings?country=NG&page=1&pageSize=50&sort=newest`,
         {
           headers: {
-            Accept: "application/json"
+            Accept:
+              "application/json"
           },
           cache: "no-store"
         }
@@ -1127,7 +1656,11 @@ async function loadExternalMarket() {
         "content-type"
       ) || "";
 
-    if (!contentType.includes("application/json")) {
+    if (
+      !contentType.includes(
+        "application/json"
+      )
+    ) {
       const text =
         await response.text();
 
@@ -1149,28 +1682,47 @@ async function loadExternalMarket() {
     ) {
       throw new Error(
         payload?.error ||
-        `External market feed returned HTTP ${response.status}.`
+          `External market feed returned HTTP ${response.status}.`
       );
     }
 
-    externalProperties =
-      Array.isArray(payload?.data)
+    const rawListings =
+      Array.isArray(
+        payload?.data
+      )
         ? payload.data
-            .map(
-              normalizeExternalProperty
-            )
         : [];
 
-    externalLoaded = true;
-    externalError = null;
+    externalProperties =
+      rawListings.map(
+        (
+          item,
+          index
+        ) =>
+          normalizeExternalProperty(
+            item,
+            index
+          )
+      );
+
+    externalLoaded =
+      true;
+
+    externalError =
+      null;
 
     clearError();
 
     rebuildMarket();
   } catch (error) {
-    externalLoaded = false;
-    externalError = error;
-    externalProperties = [];
+    externalLoaded =
+      false;
+
+    externalError =
+      error;
+
+    externalProperties =
+      [];
 
     console.error(
       "MoonLat Live Market external feed error:",
@@ -1185,14 +1737,16 @@ async function loadExternalMarket() {
     ) {
       showError(
         error?.message ||
-        "The external market feed is temporarily unavailable."
+          "The external market feed is temporarily unavailable."
       );
     }
   }
 }
 
 function showError(message) {
-  if (!els.error) {
+  if (
+    !els.error
+  ) {
     console.error(
       "Live Market:",
       message
@@ -1205,21 +1759,30 @@ function showError(message) {
     message ||
     "The live market is temporarily unavailable.";
 
-  els.error.hidden = false;
+  els.error.hidden =
+    false;
 }
 
 function clearError() {
-  if (!els.error) {
+  if (
+    !els.error
+  ) {
     return;
   }
 
-  els.error.hidden = true;
-  els.error.textContent = "";
+  els.error.hidden =
+    true;
+
+  els.error.textContent =
+    "";
 }
 
 function loadMoonlatMarket() {
-  moonlatLoaded = false;
-  moonlatError = null;
+  moonlatLoaded =
+    false;
+
+  moonlatError =
+    null;
 
   try {
     const allQuery =
@@ -1246,7 +1809,8 @@ function loadMoonlatMarket() {
           snapshot.docs
             .map(
               docSnapshot => ({
-                id: docSnapshot.id,
+                id:
+                  docSnapshot.id,
                 ...docSnapshot.data()
               })
             )
@@ -1254,19 +1818,41 @@ function loadMoonlatMarket() {
               normalizeInternalProperty
             );
 
-        moonlatLoaded = true;
-        moonlatError = null;
+        moonlatProperties =
+          moonlatProperties.map(
+            (
+              property,
+              index
+            ) => ({
+              ...property,
+              marketOrder:
+                index
+            })
+          );
 
-        if (!externalError) {
+        moonlatLoaded =
+          true;
+
+        moonlatError =
+          null;
+
+        if (
+          !externalError
+        ) {
           clearError();
         }
 
         rebuildMarket();
       },
       error => {
-        moonlatLoaded = true;
-        moonlatError = error;
-        moonlatProperties = [];
+        moonlatLoaded =
+          true;
+
+        moonlatError =
+          error;
+
+        moonlatProperties =
+          [];
 
         console.error(
           "MoonLat live market Firestore error:",
@@ -1281,9 +1867,14 @@ function loadMoonlatMarket() {
       }
     );
   } catch (error) {
-    moonlatLoaded = true;
-    moonlatError = error;
-    moonlatProperties = [];
+    moonlatLoaded =
+      true;
+
+    moonlatError =
+      error;
+
+    moonlatProperties =
+      [];
 
     console.error(
       "MoonLat Firestore initialization error:",
@@ -1299,60 +1890,85 @@ function loadMoonlatMarket() {
 }
 
 function clearFilters() {
-  if (els.q) {
-    els.q.value = "";
+  if (
+    els.q
+  ) {
+    els.q.value =
+      "";
   }
 
-  selectedPurpose = "";
+  selectedPurpose =
+    "";
 
-  if (els.type) {
-    els.type.value = "";
+  if (
+    els.type
+  ) {
+    els.type.value =
+      "";
   }
 
-  if (els.beds) {
-    els.beds.value = "";
+  if (
+    els.beds
+  ) {
+    els.beds.value =
+      "";
   }
 
-  if (els.price) {
-    els.price.value = "";
+  if (
+    els.price
+  ) {
+    els.price.value =
+      "";
   }
 
-  if (els.sort) {
-    els.sort.value = "newest";
+  if (
+    els.sort
+  ) {
+    els.sort.value =
+      "newest";
   }
 
-  els.purposeTabs.forEach(tab => {
-    tab.classList.toggle(
-      "active",
-      tab.dataset.purpose === ""
-    );
-  });
+  els.purposeTabs.forEach(
+    tab => {
+      tab.classList.toggle(
+        "active",
+        tab.dataset.purpose ===
+          ""
+      );
+    }
+  );
 
   updateLabels();
+
   clearError();
+
   rebuildMarket();
 }
 
 function initializePurposeTabs() {
-  els.purposeTabs.forEach(tab => {
-    tab.addEventListener(
-      "click",
-      () => {
-        selectedPurpose =
-          tab.dataset.purpose || "";
+  els.purposeTabs.forEach(
+    tab => {
+      tab.addEventListener(
+        "click",
+        () => {
+          selectedPurpose =
+            tab.dataset.purpose ||
+            "";
 
-        els.purposeTabs.forEach(
-          item =>
-            item.classList.toggle(
-              "active",
-              item === tab
-            )
-        );
+          els.purposeTabs.forEach(
+            item => {
+              item.classList.toggle(
+                "active",
+                item === tab
+              );
+            }
+          );
 
-        rebuildMarket();
-      }
-    );
-  });
+          rebuildMarket();
+        }
+      );
+    }
+  );
 }
 
 function initializeFilters() {
@@ -1363,19 +1979,23 @@ function initializeFilters() {
     els.sort
   ]
     .filter(Boolean)
-    .forEach(control => {
-      control.addEventListener(
-        "change",
-        () => {
-          updateLabels();
-          rebuildMarket();
-        }
-      );
-    });
+    .forEach(
+      control => {
+        control.addEventListener(
+          "change",
+          () => {
+            updateLabels();
+            rebuildMarket();
+          }
+        );
+      }
+    );
 }
 
 function initializeSearch() {
-  if (els.searchBtn) {
+  if (
+    els.searchBtn
+  ) {
     els.searchBtn.addEventListener(
       "click",
       () => {
@@ -1386,11 +2006,16 @@ function initializeSearch() {
     );
   }
 
-  if (els.q) {
+  if (
+    els.q
+  ) {
     els.q.addEventListener(
       "keydown",
       event => {
-        if (event.key === "Enter") {
+        if (
+          event.key ===
+          "Enter"
+        ) {
           clearError();
           rebuildMarket();
           loadExternalMarket();
@@ -1407,7 +2032,9 @@ function initializeSearch() {
 
         debounceTimer =
           setTimeout(
-            () => rebuildMarket(),
+            () => {
+              rebuildMarket();
+            },
             180
           );
       }
@@ -1418,26 +2045,32 @@ function initializeSearch() {
     .querySelectorAll(
       ".quick-links button"
     )
-    .forEach(button => {
-      button.addEventListener(
-        "click",
-        () => {
-          if (els.q) {
-            els.q.value =
-              button.dataset.query ||
-              "";
-          }
+    .forEach(
+      button => {
+        button.addEventListener(
+          "click",
+          () => {
+            if (
+              els.q
+            ) {
+              els.q.value =
+                button.dataset.query ||
+                "";
+            }
 
-          clearError();
-          rebuildMarket();
-          loadExternalMarket();
-        }
-      );
-    });
+            clearError();
+            rebuildMarket();
+            loadExternalMarket();
+          }
+        );
+      }
+    );
 }
 
 function initializeClearButton() {
-  if (els.clearFilters) {
+  if (
+    els.clearFilters
+  ) {
     els.clearFilters.addEventListener(
       "click",
       clearFilters
@@ -1473,112 +2106,20 @@ function initializeMobileNavigation() {
 
   els.mobileNav
     .querySelectorAll("a")
-    .forEach(link => {
-      link.addEventListener(
-        "click",
-        () => {
-          els.menuButton.setAttribute(
-            "aria-expanded",
-            "false"
-          );
+    .forEach(
+      link => {
+        link.addEventListener(
+          "click",
+          () => {
+            els.menuButton.setAttribute(
+              "aria-expanded",
+              "false"
+            );
 
-          els.mobileNav.hidden =
-            true;
-        }
-      );
-    });
+            els.mobileNav.hidden =
+              true;
+          }
+        );
+      }
+    );
 }
-
-function initializeRuntimeDiagnostics() {
-  window.addEventListener(
-    "error",
-    event => {
-      console.error(
-        "MoonLat Live Market runtime error:",
-        event.error || event.message
-      );
-    }
-  );
-
-  window.addEventListener(
-    "unhandledrejection",
-    event => {
-      console.error(
-        "MoonLat Live Market unhandled promise rejection:",
-        event.reason
-      );
-    }
-  );
-}
-
-function initialize() {
-  try {
-    setYear();
-
-    initializeRuntimeDiagnostics();
-
-    updateLabels();
-
-    initializePurposeTabs();
-    initializeFilters();
-    initializeSearch();
-    initializeClearButton();
-    initializeMobileNavigation();
-
-    safeText(
-      els.statStatus,
-      "Connecting"
-    );
-
-    safeText(
-      els.syncStatus,
-      "Connecting"
-    );
-
-    safeText(
-      els.syncTime,
-      "Checking the live market..."
-    );
-
-    loadMoonlatMarket();
-    loadExternalMarket();
-
-    setInterval(
-      () => {
-        if (
-          document.visibilityState ===
-          "visible"
-        ) {
-          loadExternalMarket();
-        }
-      },
-      300000
-    );
-  } catch (error) {
-    console.error(
-      "MoonLat Live Market initialization error:",
-      error
-    );
-
-    safeText(
-      els.statStatus,
-      "Offline"
-    );
-
-    safeText(
-      els.syncStatus,
-      "Feed error"
-    );
-
-    safeText(
-      els.syncTime,
-      "The market interface could not initialize"
-    );
-
-    showError(
-      "The Live Market interface encountered an initialization error. Check the browser console for details."
-    );
-  }
-}
-
-initialize();
