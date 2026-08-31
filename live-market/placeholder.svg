@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 960">
+<defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#dce5da"/><stop offset="1" stop-color="#b8c8b8"/></linearGradient></defs>
+<rect width="1200" height="960" fill="url(#g)"/>
+<path d="M0 780 340 470 540 650 710 500 1200 820V960H0Z" fill="#9eafa1"/>
+<rect x="390" y="365" width="390" height="330" rx="8" fill="#e9eee8" opacity=".82"/>
+<path d="M350 385 585 210l235 175" fill="#7f9586"/>
+<g fill="#b6c8ba"><rect x="430" y="435" width="80" height="80"/><rect x="550" y="435" width="80" height="80"/><rect x="670" y="435" width="80" height="80"/><rect x="430" y="555" width="80" height="80"/><rect x="550" y="555" width="80" height="80"/><rect x="670" y="555" width="80" height="80"/></g>
+<text x="600" y="865" text-anchor="middle" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#53675b">MoonLat Live Market</text>
+</svg>
