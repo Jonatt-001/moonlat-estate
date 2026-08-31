@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Live Market | MoonLat</title>
+  <meta name="description" content="Discover fresh property listings from MoonLat and connected real-estate sources in one live market.">
+  <link rel="canonical" href="https://moonlat.top/live-market/">
+  <meta property="og:title" content="Live Market | MoonLat">
+  <meta property="og:description" content="Discover fresh property listings from MoonLat and connected real-estate sources in one live market.">
+  <meta property="og:url" content="https://moonlat.top/live-market/">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#f7f7f3">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="MoonLat home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 28 28" fill="none">
+            <path d="M4 20.5 10.8 13l4.2 4.2L24 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M17.5 8H24v6.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span>MOONLAT</span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a href="/">Home</a>
+        <a href="/properties.html">Properties</a>
+        <a class="active" href="/live-market/">Live Market</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="list-property" href="/dashboard/">List property</a>
+        <button class="menu-button" id="menuButton" aria-label="Open navigation" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="mobile-nav" id="mobileNav" hidden>
+      <a href="/">Home</a>
+      <a href="/properties.html">Properties</a>
+      <a class="active" href="/live-market/">Live Market</a>
+      <a href="/dashboard/">List property</a>
+    </div>
+
+    <main>
+      <section class="hero">
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-orb orb-one"></div>
+          <div class="hero-orb orb-two"></div>
+          <div class="hero-building building-back"></div>
+          <div class="hero-building building-main">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="hero-glass"></div>
+          <div class="hero-copy">
+            <div class="live-label"><span class="live-dot"></span> LIVE PROPERTY MARKET</div>
+            <h1>See what is<br><em>moving.</em></h1>
+            <p>Fresh property listings, prices and market signals brought together from MoonLat and connected property sources.</p>
+          </div>
+        </div>
+
+        <div class="hero-bottom">
+          <div class="market-pulse">
+            <div class="pulse-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 16.5 9 11l3.2 3.2L20 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M15.5 6.5H20V11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <strong>One market. Multiple sources.</strong>
+              <span>MoonLat combines its own inventory with connected external feeds.</span>
+            </div>
+          </div>
+
+          <div class="feed-status">
+            <span class="status-ring" id="statusRing"></span>
+            <div>
+              <strong id="syncStatus">Connecting</strong>
+              <small id="syncTime">Checking the live market...</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="search-panel" aria-label="Search live property market">
+        <div class="purpose-tabs" role="tablist" aria-label="Property purpose">
+          <button class="purpose-tab active" data-purpose="">All</button>
+          <button class="purpose-tab" data-purpose="sale">Buy</button>
+          <button class="purpose-tab" data-purpose="rent">Rent</button>
+          <button class="purpose-tab" data-purpose="lease">Lease</button>
+        </div>
+
+        <div class="search-row">
+          <div class="search-field">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"/>
+              <path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <input id="q" type="search" placeholder="City, neighbourhood or property..." autocomplete="off">
+          </div>
+          <button class="search-submit" id="searchBtn">
+            <span>Search market</span>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="filter-row">
+          <button class="filter-control">
+            <span class="filter-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 20V9.5L12 4l8 5.5V20H4Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 20v-6h8v6M8.5 9.5h.01M12 9.5h.01M15.5 9.5h.01" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </span>
+            <span><small>Property</small><strong id="typeLabel">Any type</strong></span>
+            <span class="chevron">⌄</span>
+            <select id="type" aria-label="Property type">
+              <option value="">Any type</option>
+              <option value="Apartment">Apartment</option>
+              <option value="House">House</option>
+              <option value="Villa">Villa</option>
+              <option value="Land">Land</option>
+              <option value="Commercial">Commercial</option>
+              <option value="Shortlet">Shortlet</option>
+            </select>
+          </button>
+
+          <button class="filter-control">
+            <span class="filter-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 17v-6.5h16V17M4 14h16M6 10.5V7h4v3.5M14 10.5V7h4v3.5M4 17v2M20 17v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span><small>Beds & baths</small><strong id="bedsLabel">Any</strong></span>
+            <span class="chevron">⌄</span>
+            <select id="beds" aria-label="Bedrooms">
+              <option value="">Any</option>
+              <option value="1">1+ bedroom</option>
+              <option value="2">2+ bedrooms</option>
+              <option value="3">3+ bedrooms</option>
+              <option value="4">4+ bedrooms</option>
+              <option value="5">5+ bedrooms</option>
+            </select>
+          </button>
+
+          <button class="filter-control">
+            <span class="filter-icon">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/><path d="M14.5 9.5c-.7-.8-1.7-1.2-2.8-1.2-1.7 0-2.7.8-2.7 2 0 3.1 5.5 1.5 5.5 4.2 0 1.2-1.1 2-2.9 2-1.3 0-2.4-.5-3.1-1.3M12 6.5v11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <span><small>Price</small><strong id="priceLabel">Any range</strong></span>
+            <span class="chevron">⌄</span>
+            <select id="price" aria-label="Price range">
+              <option value="">Any range</option>
+              <option value="0-5000000">Under ₦5M</option>
+              <option value="5000000-20000000">₦5M – ₦20M</option>
+              <option value="20000000-50000000">₦20M – ₦50M</option>
+              <option value="50000000-">₦50M+</option>
+            </select>
+          </button>
+
+          <div class="filter-control location-control">
+            <span class="filter-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M19 10.5c0 5.2-7 10-7 10s-7-4.8-7-10a7 7 0 1 1 14 0Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="10.5" r="2.2" stroke="currentColor" stroke-width="1.7"/></svg>
+            </span>
+            <span><small>Market</small><strong>Nigeria</strong></span>
+            <span class="chevron">⌄</span>
+          </div>
+        </div>
+
+        <div class="quick-links">
+          <span>Quick search</span>
+          <button data-query="Abuja">Abuja</button>
+          <button data-query="Lagos">Lagos</button>
+          <button data-query="Port Harcourt">Port Harcourt</button>
+          <button data-query="Ibadan">Ibadan</button>
+        </div>
+      </section>
+
+      <section class="market-overview">
+        <div class="overview-heading">
+          <div>
+            <span class="section-kicker">MARKET SNAPSHOT</span>
+            <h2>What is happening now</h2>
+          </div>
+          <span class="data-note"><span class="mini-live"></span> <span id="overviewSourceText">Live + MoonLat</span></span>
+        </div>
+
+        <div class="overview-grid">
+          <article class="overview-card overview-feature">
+            <div class="overview-number" id="statListings">—</div>
+            <div>
+              <strong>Listings in this market</strong>
+              <span>Current combined results after filtering.</span>
+            </div>
+            <div class="sparkline" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+          </article>
+          <article class="overview-card">
+            <span class="card-label">MoonLat listings</span>
+            <strong id="statMoonlat">—</strong>
+            <span class="card-sub">Your own verified inventory</span>
+          </article>
+          <article class="overview-card">
+            <span class="card-label">External listings</span>
+            <strong id="statExternal">—</strong>
+            <span class="card-sub">Connected market inventory</span>
+          </article>
+          <article class="overview-card">
+            <span class="card-label">Feed health</span>
+            <strong id="statStatus">Checking</strong>
+            <span class="card-sub">Firebase + external feed</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="listing-section">
+        <div class="listing-heading">
+          <div>
+            <span class="section-kicker">FRESH INVENTORY</span>
+            <h2>Latest properties</h2>
+          </div>
+          <div class="listing-tools">
+            <span id="resultCount">0 properties</span>
+            <select id="sort" aria-label="Sort properties">
+              <option value="newest">Newest</option>
+              <option value="price-low">Lowest price</option>
+              <option value="price-high">Highest price</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="error" class="message error" hidden></div>
+        <div id="loading" class="listing-grid skeleton-grid">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+        <section id="grid" class="listing-grid" aria-live="polite"></section>
+        <div id="empty" class="message empty" hidden>
+          <strong>No matching properties</strong>
+          <span>Try a broader location or remove one of the filters.</span>
+          <button id="clearFilters">Clear filters</button>
+        </div>
+      </section>
+
+      <section class="market-note">
+        <div class="note-art" aria-hidden="true">
+          <div class="note-building one"></div>
+          <div class="note-building two"></div>
+          <div class="note-building three"></div>
+          <div class="note-sun"></div>
+        </div>
+        <div class="note-content">
+          <span class="section-kicker">HOW MOONLAT WORKS</span>
+          <h2>One place to discover the market.</h2>
+          <p>MoonLat combines its own Firestore inventory with connected property feeds. Internal properties open in MoonLat; external properties retain source attribution and link back to their original listing.</p>
+          <div class="note-points">
+            <span><b>01</b> Real-time MoonLat inventory</span>
+            <span><b>02</b> External source attribution</span>
+            <span><b>03</b> Normalized property data</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <a class="brand footer-brand" href="/">MOONLAT</a>
+        <p>Property discovery, connected.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/properties.html">Properties</a>
+        <a href="/live-market/">Live Market</a>
+        <a href="/dashboard/">List a property</a>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> MoonLat</span>
+        <span>External listings remain attributed to their original source.</span>
+        <a href="https://untera.io/" target="_blank" rel="noopener noreferrer">Powered by Untera</a>
+      </div>
+    </footer>
+  </div>
+
+  <template id="propertyTemplate">
+    <article class="property-card">
+      <a class="property-media" target="_blank" rel="noopener noreferrer">
+        <img class="property-image" loading="lazy" alt="">
+        <span class="source-badge"><span></span><em></em></span>
+        <button class="save-button" type="button" aria-label="Save property">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M20 8.5c0 5-8 10-8 10s-8-5-8-10a4.5 4.5 0 0 1 8-2.7A4.5 4.5 0 0 1 20 8.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        </button>
+        <span class="fresh-badge"></span>
+      </a>
+      <div class="property-body">
+        <div class="property-price-row">
+          <strong class="price"></strong>
+          <span class="purpose"></span>
+        </div>
+        <h3 class="title"></h3>
+        <p class="location"></p>
+        <div class="facts"></div>
+        <div class="property-footer">
+          <span class="source"></span>
+          <a class="view-link" target="_blank" rel="noopener noreferrer">View listing <span>↗</span></a>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
