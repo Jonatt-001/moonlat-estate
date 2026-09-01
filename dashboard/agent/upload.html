@@ -439,6 +439,22 @@
             gap: 12px;
         }
 
+        .location-field-help {
+            margin: 7px 2px 0;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.45;
+        }
+
+        .select:disabled {
+            background: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .location-field-help.is-ready { color: #15803d; }
+        .location-field-help.is-warning { color: #b45309; }
+
         .location-card {
             overflow: hidden;
             border: 1.5px solid var(--border);
@@ -1778,15 +1794,10 @@
                             State <span>*</span>
                         </label>
 
-                        <select class="select" id="state" required>
+                        <select class="select" id="state" required aria-describedby="stateHelp">
                             <option value="">Select state</option>
-                            <option>Lagos</option>
-                            <option>FCT</option>
-                            <option>Rivers</option>
-                            <option>Kano</option>
-                            <option>Kaduna</option>
-                            <option>Oyo</option>
                         </select>
+                        <p class="location-field-help" id="stateHelp">Choose the Nigerian state where the property is located.</p>
 
                     </div>
 
@@ -1796,15 +1807,10 @@
                             City <span>*</span>
                         </label>
 
-                        <select class="select" id="city" required>
-                            <option value="">Select city</option>
-                            <option>Lagos</option>
-                            <option>Abuja</option>
-                            <option>Port Harcourt</option>
-                            <option>Ibadan</option>
-                            <option>Kano</option>
-                            <option>Kaduna</option>
+                        <select class="select" id="city" required disabled aria-describedby="cityHelp">
+                            <option value="">Select state first</option>
                         </select>
+                        <p class="location-field-help" id="cityHelp">Select a state first. Its cities and towns will load automatically.</p>
 
                     </div>
 
@@ -3947,6 +3953,20 @@
                 return false;
             }
 
+            if (window.MoonLatLocation?.getCitiesForState) {
+                const validCities = window.MoonLatLocation.getCitiesForState(state);
+                const selectedCityOption = document.getElementById("city")?.selectedOptions?.[0];
+                const isKnownCity = validCities.some(item => item.toLowerCase() === city.toLowerCase());
+                const isRetainedLegacyCity = selectedCityOption?.dataset?.moonlatSource === "legacy";
+                if (!isKnownCity && !isRetainedLegacyCity) {
+                    toast(`"${city}" is not a valid city / town for ${state}. Please choose from the city list.`, "error");
+                    document.getElementById("city")?.focus();
+                    return false;
+                }
+            }
+
+
+
             if (!price || price <= 0) {
 
                 toast(
@@ -4212,6 +4232,35 @@
         return response.json();
     }
 
+    let addressLookupTimer = null;
+    let addressLookupSequence = 0;
+
+    async function resolveTypedAddressLocation() {
+        const addressInput = document.getElementById("address");
+        if (!addressInput) return;
+        const query = addressInput.value.trim();
+        if (query.length < 8) return;
+        const sequence = ++addressLookupSequence;
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&countrycodes=ng&q=${encodeURIComponent(query)}`, { headers: { "Accept": "application/json" } });
+            if (!response.ok) return;
+            const results = await response.json();
+            if (sequence !== addressLookupSequence || !Array.isArray(results) || !results[0]) return;
+            window.MoonLatLocation?.applyGeocodedLocation(results[0]);
+        } catch (error) {
+            console.warn("MoonLat: typed address lookup failed.", error);
+        }
+    }
+
+    function bindTypedAddressLocationLookup() {
+        const input = document.getElementById("address");
+        if (!input) return;
+        input.addEventListener("input", () => {
+            clearTimeout(addressLookupTimer);
+            addressLookupTimer = setTimeout(resolveTypedAddressLocation, 900);
+        });
+    }
+
     async function useCurrentLocation() {
 
         if (!navigator.geolocation) {
@@ -4292,6 +4341,10 @@
                         .getElementById("address")
                         .value =
                         data.display_name;
+
+                    if (window.MoonLatLocation?.applyGeocodedLocation) {
+                        window.MoonLatLocation.applyGeocodedLocation(data);
+                    }
 
                     const wrapper =
                         document.getElementById(
@@ -4471,6 +4524,10 @@
                 .getElementById("address")
                 .value =
                 data.display_name;
+
+            if (window.MoonLatLocation?.applyGeocodedLocation) {
+                window.MoonLatLocation.applyGeocodedLocation(data);
+            }
 
             button?.classList.add(
                 "hidden"
@@ -5572,8 +5629,6 @@
                 "title",
                 "category",
                 "address",
-                "state",
-                "city",
                 "area",
                 "size",
                 "sizeUnit",
@@ -5596,6 +5651,11 @@
                         draft[id];
                 }
             });
+
+            if (window.MoonLatLocation?.setLocationFields) {
+                window.MoonLatLocation.setLocationFields(draft.state || "", draft.city || "", { preservePreferred: true });
+            }
+
 
             if (draft.propertyType) {
 
@@ -5751,6 +5811,126 @@
             );
         }
     }
+
+    /*
+     * ------------------------------------------------------------
+     * NIGERIA LOCATION DATA + STATE -> CITY WORKFLOW
+     * ------------------------------------------------------------
+     */
+    const NIGERIA_LOCATION_DATA = {
+        "Abia":["Umuahia","Aba","Arochukwu","Bende","Ohafia","Isiala Ngwa","Osisioma","Ukwa","Umunneochi"],
+        "Adamawa":["Yola","Mubi","Jimeta","Numan","Ganye","Hong","Michika","Song","Gombi","Mayo-Belwa"],
+        "Akwa Ibom":["Uyo","Eket","Ikot Ekpene","Oron","Abak","Ikot Abasi","Etinan","Ibeno","Itu","Essene"],
+        "Anambra":["Awka","Onitsha","Nnewi","Ekwulobia","Ogidi","Ihiala","Otuocha","Obosi","Agulu","Umunze"],
+        "Bauchi":["Bauchi","Azare","Jama'are","Misau","Ningi","Katagum","Dass","Darazo","Ganjuwa","Toro"],
+        "Bayelsa":["Yenagoa","Brass","Nembe","Ogbia","Sagbama","Amassoma","Kaiama","Twon-Brass"],
+        "Benue":["Makurdi","Gboko","Otukpo","Katsina-Ala","Adikpo","Vandeikya","Aliade","Zaki Biam","Ugbokolo","Oju"],
+        "Borno":["Maiduguri","Bama","Biu","Dikwa","Gamboru","Monguno","Ngala","Konduga","Damboa","Gwoza"],
+        "Cross River":["Calabar","Ugep","Ogoja","Ikom","Obudu","Akamkpa","Obubra","Yakurr","Etung"],
+        "Delta":["Asaba","Warri","Sapele","Ughelli","Effurun","Agbor","Ozoro","Oleh","Burutu","Koko"],
+        "Ebonyi":["Abakaliki","Afikpo","Onueke","Ishieke","Ezza","Ohaukwu","Edda"],
+        "Edo":["Benin City","Auchi","Ekpoma","Uromi","Igarra","Irrua","Sabongida-Ora","Fugar","Agenebode"],
+        "Ekiti":["Ado-Ekiti","Ikere","Ikole","Ilawe","Ijero","Aramoko","Oye","Ise","Emure"],
+        "Enugu":["Enugu","Nsukka","Agbani","Oji River","Awgu","Udi","9th Mile Corner","Ezeagu","Obollo-Afor"],
+        "Gombe":["Gombe","Kumo","Billiri","Kaltungo","Deba","Dukku","Nafada","Funakaye"],
+        "Imo":["Owerri","Orlu","Okigwe","Oguta","Mbaise","Ideato","Nkwerre","Ohaji","Ehime Mbano"],
+        "Jigawa":["Dutse","Hadejia","Gumel","Birnin Kudu","Kazaure","Ringim","Babura","Garki","Malam Madori"],
+        "Kaduna":["Kaduna","Zaria","Kafanchan","Kachia","Kajuru","Saminaka","Birnin Gwari","Ikara","Jaji","Soba"],
+        "Kano":["Kano","Wudil","Bichi","Gaya","Rano","Dambatta","Kura","Karaye","Gezawa","Dawakin Tofa"],
+        "Katsina":["Katsina","Funtua","Daura","Malumfashi","Dutsin-Ma","Kafur","Jibiya","Mani","Bakori","Rimi"],
+        "Kebbi":["Birnin Kebbi","Argungu","Yauri","Jega","Zuru","Koko","Bunza","Dakingari","Kamba"],
+        "Kogi":["Lokoja","Okene","Anyigba","Idah","Kabba","Dekina","Ankpa","Ajaokuta","Obajana"],
+        "Kwara":["Ilorin","Offa","Jebba","Lafiagi","Patigi","Omu-Aran","Kaiama","Bacita","Share"],
+        "Lagos":["Ikeja","Lekki","Epe","Ikorodu","Badagry","Agege","Alimosho","Surulere","Apapa","Mushin","Oshodi","Yaba","Victoria Island","Lagos Island"],
+        "Nasarawa":["Lafia","Keffi","Karu","Akwanga","Nasarawa","Doma","Wamba","Mararaba","Kokona"],
+        "Niger":["Minna","Bida","Suleja","Kontagora","New Bussa","Mokwa","Borgu","Lapai","Paikoro","Tegina"],
+        "Ogun":["Abeokuta","Sagamu","Ijebu-Ode","Ota","Ilaro","Ayetoro","Ifo","Mowe","Ofada","Agbara","Remo"],
+        "Ondo":["Akure","Ondo","Owo","Ikare","Ore","Igbokoda","Irele","Okitipupa","Idanre"],
+        "Osun":["Osogbo","Ile-Ife","Ilesa","Ede","Ikirun","Iwo","Ejigbo","Ila Orangun","Ikire","Gbongan"],
+        "Oyo":["Ibadan","Ogbomosho","Oyo","Iseyin","Eruwa","Igboho","Saki","Ibarapa","Kishi","Fiditi"],
+        "Plateau":["Jos","Bukuru","Barkin Ladi","Pankshin","Shendam","Mangu","Bassa","Langtang","Wase","Vom"],
+        "Rivers":["Port Harcourt","Obio-Akpor","Bonny","Okrika","Eleme","Bori","Ahoada","Degema","Omoku","Abonnema"],
+        "Sokoto":["Sokoto","Tambuwal","Gwadabawa","Wurno","Illela","Goronyo","Rabah","Binji","Yabo"],
+        "Taraba":["Jalingo","Wukari","Bali","Gembu","Serti","Takum","Zing","Karim Lamido","Mutum Biyu"],
+        "Yobe":["Damaturu","Potiskum","Gashua","Nguru","Geidam","Bade","Bursari","Machina","Gujba"],
+        "Zamfara":["Gusau","Kaura Namoda","Talata Mafara","Kebbe","Anka","Bungudu","Tsafe","Maru","Zurmi","Bakura"],
+        "Federal Capital Territory":["Abuja","Gwagwalada","Kuje","Bwari","Kwali","Abaji"]
+    };
+
+    const NIGERIA_STATES = Object.keys(NIGERIA_LOCATION_DATA);
+    const NIGERIA_STATE_ALIASES = {
+        "fct":"Federal Capital Territory",
+        "federal capital territory":"Federal Capital Territory",
+        "abuja federal capital territory":"Federal Capital Territory",
+        ...Object.fromEntries(NIGERIA_STATES.filter(s=>s!=="Federal Capital Territory").map(s=>[`${s.toLowerCase()} state`,s]))
+    };
+
+    function normalizeLocationText(value) { return String(value || "").trim().replace(/\s+/g," "); }
+    function normalizeStateName(value) {
+        const text=normalizeLocationText(value); if(!text) return "";
+        const key=text.toLowerCase();
+        return NIGERIA_STATE_ALIASES[key] || NIGERIA_STATES.find(s=>s.toLowerCase()===key) || "";
+    }
+    function normalizeCityName(value) {
+        return normalizeLocationText(value).replace(/\b(city|municipality)\b/gi,"").replace(/\s+/g," ").trim();
+    }
+    function getCitiesForState(state) { const s=normalizeStateName(state); return Array.isArray(NIGERIA_LOCATION_DATA[s])?[...NIGERIA_LOCATION_DATA[s]]:[]; }
+    function findCityMatch(state,city) {
+        const wanted=normalizeCityName(city).toLowerCase(); if(!wanted) return "";
+        const cities=getCitiesForState(state);
+        return cities.find(c=>c.toLowerCase()===wanted) || cities.find(c=>c.toLowerCase().startsWith(wanted)) || cities.find(c=>wanted.startsWith(c.toLowerCase())) || "";
+    }
+    function populateStateOptions(selectedState="") {
+        const select=document.getElementById("state"); if(!select) return;
+        const wanted=normalizeStateName(selectedState); select.innerHTML="";
+        const placeholder=document.createElement("option"); placeholder.value=""; placeholder.textContent="Select state"; select.appendChild(placeholder);
+        NIGERIA_STATES.slice().sort((a,b)=>a==="Federal Capital Territory"?-1:b==="Federal Capital Territory"?1:a.localeCompare(b)).forEach(state=>{
+            const option=document.createElement("option"); option.value=state; option.textContent=state==="Federal Capital Territory"?"Federal Capital Territory (FCT)":state; option.selected=state===wanted; select.appendChild(option);
+        });
+    }
+    function updateCityOptions(state,preferredCity="",options={}) {
+        const select=document.getElementById("city"), help=document.getElementById("cityHelp"); if(!select) return "";
+        const canonical=normalizeStateName(state), cities=getCitiesForState(canonical), preferred=normalizeCityName(preferredCity), matched=findCityMatch(canonical,preferred);
+        select.innerHTML="";
+        if(!canonical || !cities.length) {
+            const option=document.createElement("option"); option.value=""; option.textContent="Select state first"; select.appendChild(option); select.value=""; select.disabled=true;
+            if(help){help.textContent="Select a state first. Its cities and towns will load automatically.";help.classList.remove("is-ready","is-warning");} return "";
+        }
+        const placeholder=document.createElement("option"); placeholder.value=""; placeholder.textContent="Select city / town"; select.appendChild(placeholder);
+        cities.forEach(city=>{const option=document.createElement("option");option.value=city;option.textContent=city;select.appendChild(option);});
+        const selected=options.preservePreferred!==false && matched ? matched : cities[0];
+        select.value=selected || ""; select.disabled=false;
+        if(help){help.textContent=`${cities.length} cities / towns available in ${canonical}. You can change the suggested location.`;help.classList.add("is-ready");help.classList.remove("is-warning");}
+        return selected || "";
+    }
+    function setLocationFields(state,city="",options={}) {
+        const stateSelect=document.getElementById("state"); if(!stateSelect) return "";
+        const canonical=normalizeStateName(state); populateStateOptions(canonical); stateSelect.value=canonical;
+        const selected=updateCityOptions(canonical,city,options), citySelect=document.getElementById("city"), help=document.getElementById("cityHelp"), matched=findCityMatch(canonical,city);
+        if(city && !matched && canonical && citySelect) {
+            const legacy=normalizeCityName(city);
+            if(legacy){const option=document.createElement("option");option.value=legacy;option.textContent=`${legacy} (existing listing)`;option.dataset.moonlatSource="legacy";option.selected=true;citySelect.appendChild(option);if(help){help.textContent=`${legacy} was retained from the existing listing. You can switch to another ${canonical} city / town.`;help.classList.add("is-warning");help.classList.remove("is-ready");}return legacy;}
+        }
+        return selected;
+    }
+    function applyGeocodedLocation(data) {
+        const address=data?.address||{};
+        const state=normalizeStateName(address.state||address.state_district||address.region||""); if(!state) return false;
+        const candidates=[address.city,address.town,address.municipality,address.village,address.city_district,address.suburb].map(normalizeCityName).filter(Boolean);
+        const known=getCitiesForState(state);
+        let city=candidates.find(c=>known.some(k=>k.toLowerCase()===c.toLowerCase()))||"";
+        if(!city) city=candidates.find(c=>known.some(k=>k.toLowerCase().includes(c.toLowerCase())||c.toLowerCase().includes(k.toLowerCase())))||"";
+        if(!city) city=candidates[0]||"";
+        setLocationFields(state,city,{preservePreferred:true}); return true;
+    }
+    function bindLocationWorkflow() {
+        const state=document.getElementById("state"), city=document.getElementById("city"); if(!state||!city) return;
+        populateStateOptions(); updateCityOptions("");
+        state.addEventListener("change",()=>{updateCityOptions(state.value,"",{preservePreferred:false});if(typeof scheduleDraftSave==="function")scheduleDraftSave();});
+        city.addEventListener("change",()=>{const match=findCityMatch(state.value,city.value);if(match)city.value=match;if(typeof scheduleDraftSave==="function")scheduleDraftSave();});
+    }
+    window.MoonLatLocation={data:NIGERIA_LOCATION_DATA,states:NIGERIA_STATES,normalizeStateName,getCitiesForState,updateCityOptions,setLocationFields,applyGeocodedLocation};
+    document.addEventListener("DOMContentLoaded",bindLocationWorkflow);
 
     /*
      * ------------------------------------------------------------
@@ -6214,6 +6394,9 @@
             if (!raw) return;
             const draft = JSON.parse(raw);
             if (!draft || typeof draft !== "object") return;
+            if (window.MoonLatLocation?.setLocationFields && (draft.state || draft.city)) {
+                window.MoonLatLocation.setLocationFields(draft.state || "", draft.city || "", { preservePreferred: true });
+            }
             if (draft.documents && typeof draft.documents === "object") {
                 documents = draft.documents;
                 window.MoonLatDocuments = documents;
@@ -6897,8 +7080,12 @@
             property.locationAddress
         );
 
-        setValue("state", property.state);
-        setValue("city", property.city);
+        if (window.MoonLatLocation?.setLocationFields) {
+            window.MoonLatLocation.setLocationFields(property.state || "", property.city || "", { preservePreferred: true });
+        } else {
+            setValue("state", property.state);
+            setValue("city", property.city);
+        }
         setValue("area", property.area);
         setValue("size", property.size);
         setValue("sizeUnit", property.sizeUnit || "sqm");
