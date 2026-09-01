@@ -45,6 +45,395 @@
     rel="stylesheet"
     href="./styles.css"
   >
+
+  <style>
+    /* =====================================================
+       PREMIUM PARTNER / NETWORK FOOTER
+    ====================================================== */
+
+    .premium-site-footer {
+      position: relative;
+      overflow: hidden;
+      background: #071d16;
+      color: #f5f7f1;
+      border-radius: 36px 36px 0 0;
+      margin-top: 48px;
+    }
+
+    .premium-site-footer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 8% 8%, rgba(191, 239, 108, 0.11), transparent 27%),
+        radial-gradient(circle at 92% 22%, rgba(255, 255, 255, 0.055), transparent 26%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.018), transparent 45%);
+    }
+
+    .footer-network,
+    .footer-main,
+    .footer-bottom {
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-network {
+      padding: 72px 6vw 42px;
+    }
+
+    .footer-network-copy {
+      max-width: 720px;
+    }
+
+    .footer-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #b9ec68;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .footer-kicker::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.7;
+    }
+
+    .footer-network-copy h2 {
+      margin: 18px 0 16px;
+      max-width: 680px;
+      font-size: clamp(42px, 6vw, 82px);
+      line-height: 0.96;
+      letter-spacing: -0.055em;
+      font-weight: 800;
+    }
+
+    .footer-network-copy h2 em {
+      color: #b9ec68;
+      font-style: normal;
+    }
+
+    .footer-network-copy p {
+      max-width: 650px;
+      margin: 0;
+      color: rgba(245, 247, 241, 0.67);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .partner-marquee {
+      position: relative;
+      overflow: hidden;
+      margin: 54px -6vw 0;
+      padding: 22px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    }
+
+    .partner-track {
+      display: flex;
+      width: max-content;
+      align-items: center;
+      gap: 16px;
+      animation: moonlatPartnerMarquee 34s linear infinite;
+      will-change: transform;
+    }
+
+    .partner-marquee:hover .partner-track {
+      animation-play-state: paused;
+    }
+
+    .partner-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 52px;
+      padding: 0 20px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+      color: rgba(245, 247, 241, 0.68);
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+    }
+
+    .partner-logo:hover {
+      border-color: rgba(185, 236, 104, 0.34);
+      color: #f5f7f1;
+      background: rgba(185, 236, 104, 0.06);
+    }
+
+    .logo-symbol {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 27px;
+      height: 27px;
+      border-radius: 8px;
+      background: rgba(185, 236, 104, 0.12);
+      color: #b9ec68;
+      font-size: 11px;
+      letter-spacing: 0;
+    }
+
+    .house-symbol {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .property-symbol {
+      font-size: 15px;
+    }
+
+    .untera-logo {
+      padding: 7px 15px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .untera-logo img {
+      display: block;
+      width: 94px;
+      height: 38px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .footer-partner-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-top: 38px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .footer-partner-intro {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      color: rgba(245, 247, 241, 0.55);
+      font-size: 13px;
+    }
+
+    .footer-partner-intro .footer-kicker {
+      font-size: 9px;
+    }
+
+    .footer-partner-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      min-width: min(100%, 330px);
+      padding: 9px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 18px;
+      color: inherit;
+      text-decoration: none;
+      background: rgba(0, 0, 0, 0.13);
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .footer-partner-brand:hover {
+      transform: translateY(-2px);
+      border-color: rgba(185, 236, 104, 0.34);
+      background: rgba(185, 236, 104, 0.06);
+    }
+
+    .partner-brand-mark {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 74px;
+      height: 46px;
+      overflow: hidden;
+      flex: 0 0 auto;
+      border-radius: 12px;
+      background: #101419;
+    }
+
+    .partner-brand-mark img {
+      width: 68px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .partner-brand-copy {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .partner-brand-copy strong {
+      font-size: 15px;
+      letter-spacing: -0.02em;
+    }
+
+    .partner-brand-copy small {
+      color: rgba(245, 247, 241, 0.5);
+      font-size: 11px;
+    }
+
+    .partner-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      color: #b9ec68;
+      font-size: 17px;
+    }
+
+    .footer-main {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 40px;
+      margin: 0 6vw;
+      padding: 38px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .premium-site-footer .footer-brand {
+      color: #f5f7f1;
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    .premium-site-footer .footer-main p {
+      margin: 9px 0 0;
+      color: rgba(245, 247, 241, 0.48);
+      font-size: 13px;
+    }
+
+    .premium-site-footer .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 22px;
+    }
+
+    .premium-site-footer .footer-links a {
+      color: rgba(245, 247, 241, 0.66);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 160ms ease;
+    }
+
+    .premium-site-footer .footer-links a:hover {
+      color: #b9ec68;
+    }
+
+    .premium-site-footer .footer-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 24px;
+      margin: 0 6vw;
+      padding: 19px 0 25px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: rgba(245, 247, 241, 0.38);
+      font-size: 11px;
+    }
+
+    @keyframes moonlatPartnerMarquee {
+      from {
+        transform: translate3d(0, 0, 0);
+      }
+      to {
+        transform: translate3d(-50%, 0, 0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .partner-track {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .premium-site-footer {
+        border-radius: 28px 28px 0 0;
+        margin-top: 28px;
+      }
+
+      .footer-network {
+        padding: 48px 24px 30px;
+      }
+
+      .footer-network-copy h2 {
+        font-size: clamp(40px, 12vw, 58px);
+      }
+
+      .footer-network-copy p {
+        font-size: 14px;
+        line-height: 1.75;
+      }
+
+      .partner-marquee {
+        margin: 42px -24px 0;
+      }
+
+      .partner-track {
+        gap: 10px;
+        animation-duration: 28s;
+      }
+
+      .partner-logo {
+        min-height: 48px;
+        padding: 0 15px;
+        font-size: 10px;
+      }
+
+      .footer-partner-card {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 16px;
+      }
+
+      .footer-partner-brand {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .footer-main {
+        align-items: flex-start;
+        flex-direction: column;
+        margin: 0 24px;
+        padding: 30px 0;
+      }
+
+      .premium-site-footer .footer-links {
+        justify-content: flex-start;
+        gap: 14px 24px;
+      }
+
+      .premium-site-footer .footer-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+        margin: 0 24px;
+        padding-bottom: 24px;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -112,9 +501,9 @@
 
         <a
           class="list-property"
-          href="/dashboard/sign-in.html"
+          href="/dashboard/"
         >
-          List a property
+          List property
         </a>
 
         <button
@@ -157,8 +546,8 @@
         Live Market
       </a>
 
-      <a href="/dashboard/sign-in.html">
-        List a property
+      <a href="/dashboard/">
+        List property
       </a>
     </div>
 
@@ -217,7 +606,7 @@
             </h1>
 
             <p>
-              Fresh property listings, pricing and market signals from MoonLat and trusted property sources, brought together in one place.
+              Fresh property listings, prices and market signals brought together from MoonLat and trusted property sources.
             </p>
 
           </div>
@@ -249,7 +638,6 @@
                   stroke-width="1.8"
                   stroke-linecap="round"
                 />
-
               </svg>
 
             </div>
@@ -282,7 +670,7 @@
               </strong>
 
               <small id="syncTime">
-                Preparing the live market...
+                Checking the live market...
               </small>
 
             </div>
@@ -365,7 +753,6 @@
                 stroke-width="1.8"
                 stroke-linecap="round"
               />
-
             </svg>
 
             <input
@@ -400,7 +787,6 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
-
             </svg>
 
           </button>
@@ -436,7 +822,6 @@
                   stroke-width="1.7"
                   stroke-linecap="round"
                 />
-
               </svg>
 
             </span>
@@ -488,7 +873,6 @@
               <option value="Shortlet">
                 Shortlet
               </option>
-
             </select>
 
           </button>
@@ -514,7 +898,6 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
-
               </svg>
 
             </span>
@@ -562,7 +945,6 @@
               <option value="5">
                 5+ bedrooms
               </option>
-
             </select>
 
           </button>
@@ -595,7 +977,6 @@
                   stroke-width="1.5"
                   stroke-linecap="round"
                 />
-
               </svg>
 
             </span>
@@ -639,7 +1020,6 @@
               <option value="50000000-">
                 ₦50M+
               </option>
-
             </select>
 
           </button>
@@ -670,7 +1050,6 @@
                   stroke="currentColor"
                   stroke-width="1.7"
                 />
-
               </svg>
 
             </span>
@@ -901,7 +1280,6 @@
               <option value="price-high">
                 Highest price
               </option>
-
             </select>
 
           </div>
@@ -1022,43 +1400,221 @@
     </main>
 
     <!-- =====================================================
-         FOOTER
+         PREMIUM NETWORK FOOTER
     ====================================================== -->
 
-    <footer class="site-footer">
+    <footer class="site-footer premium-site-footer">
 
-      <div>
+      <div class="footer-network">
 
-        <a
-          class="brand footer-brand"
-          href="/"
+        <div class="footer-network-copy">
+
+          <span class="footer-kicker">
+            CONNECTED PROPERTY NETWORK
+          </span>
+
+          <h2>
+            Property discovery,
+            <br>
+            <em>connected.</em>
+          </h2>
+
+          <p>
+            MoonLat brings property discovery together with trusted market sources, helping you explore more homes, land and real-estate opportunities from one place.
+          </p>
+
+        </div>
+
+        <div
+          class="partner-marquee"
+          aria-label="Property discovery network"
         >
-          MOONLAT
-        </a>
 
-        <p>
-          Property discovery, connected.
-        </p>
+          <div class="partner-track">
+
+            <div class="partner-logo moonlat-logo">
+              <span class="logo-symbol">M</span>
+              <span>MOONLAT</span>
+            </div>
+
+            <div class="partner-logo">
+              <span class="logo-symbol house-symbol">⌂</span>
+              <span>HOMES</span>
+            </div>
+
+            <div class="partner-logo">
+              <span class="logo-symbol property-symbol">▦</span>
+              <span>PROPERTY</span>
+            </div>
+
+            <div class="partner-logo">
+              <span class="logo-symbol">R</span>
+              <span>REALTY</span>
+            </div>
+
+            <div class="partner-logo">
+              <span class="logo-symbol">E</span>
+              <span>ESTATES</span>
+            </div>
+
+            <div class="partner-logo">
+              <span class="logo-symbol">L</span>
+              <span>LIVING</span>
+            </div>
+
+            <a
+              class="partner-logo untera-logo"
+              href="https://untera.io/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit Untera"
+            >
+              <img
+                src="https://untera.io/logo-dark-bg.png"
+                alt="Untera"
+                loading="lazy"
+              >
+            </a>
+
+            <div class="partner-logo moonlat-logo" aria-hidden="true">
+              <span class="logo-symbol">M</span>
+              <span>MOONLAT</span>
+            </div>
+
+            <div class="partner-logo" aria-hidden="true">
+              <span class="logo-symbol house-symbol">⌂</span>
+              <span>HOMES</span>
+            </div>
+
+            <div class="partner-logo" aria-hidden="true">
+              <span class="logo-symbol property-symbol">▦</span>
+              <span>PROPERTY</span>
+            </div>
+
+            <div class="partner-logo" aria-hidden="true">
+              <span class="logo-symbol">R</span>
+              <span>REALTY</span>
+            </div>
+
+            <div class="partner-logo" aria-hidden="true">
+              <span class="logo-symbol">E</span>
+              <span>ESTATES</span>
+            </div>
+
+            <div class="partner-logo" aria-hidden="true">
+              <span class="logo-symbol">L</span>
+              <span>LIVING</span>
+            </div>
+
+            <a
+              class="partner-logo untera-logo"
+              href="https://untera.io/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <img
+                src="https://untera.io/logo-dark-bg.png"
+                alt=""
+                loading="lazy"
+              >
+            </a>
+
+          </div>
+
+        </div>
+
+        <div class="footer-partner-card">
+
+          <div class="footer-partner-intro">
+
+            <span class="footer-kicker">
+              GLOBAL PROPERTY NETWORK
+            </span>
+
+            <span>
+              Explore beyond one market
+            </span>
+
+          </div>
+
+          <a
+            href="https://untera.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-partner-brand"
+            aria-label="Visit Untera"
+          >
+
+            <span class="partner-brand-mark">
+              <img
+                src="https://untera.io/logo-dark-bg.png"
+                alt="Untera logo"
+                loading="lazy"
+              >
+            </span>
+
+            <span class="partner-brand-copy">
+              <strong>
+                Untera
+              </strong>
+
+              <small>
+                International property search
+              </small>
+            </span>
+
+            <span
+              class="partner-arrow"
+              aria-hidden="true"
+            >
+              ↗
+            </span>
+
+          </a>
+
+        </div>
 
       </div>
 
-      <div class="footer-links">
+      <div class="footer-main">
 
-        <a href="/">
-          Home
-        </a>
+        <div>
 
-        <a href="/properties.html">
-          Properties
-        </a>
+          <a
+            class="brand footer-brand"
+            href="/"
+            aria-label="MoonLat home"
+          >
+            MOONLAT
+          </a>
 
-        <a href="/live-market/">
-          Live Market
-        </a>
+          <p>
+            Property discovery, connected.
+          </p>
 
-        <a href="/dashboard/sign-in.html">
-          List a property
-        </a>
+        </div>
+
+        <div class="footer-links">
+
+          <a href="/">
+            Home
+          </a>
+
+          <a href="/properties.html">
+            Properties
+          </a>
+
+          <a href="/live-market/">
+            Live Market
+          </a>
+
+          <a href="/dashboard/">
+            List a property
+          </a>
+
+        </div>
 
       </div>
 
@@ -1069,16 +1625,12 @@
         </span>
 
         <span>
-          Partner listings remain attributed to their original source.
+          Property information remains attributed to its respective source.
         </span>
 
-        <a
-          href="https://untera.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by Untera
-        </a>
+        <span>
+          Built for better property discovery.
+        </span>
 
       </div>
 
@@ -1128,7 +1680,6 @@
               stroke-width="1.7"
               stroke-linejoin="round"
             />
-
           </svg>
 
         </button>
