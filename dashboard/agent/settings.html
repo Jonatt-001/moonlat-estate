@@ -2709,6 +2709,7 @@
             user: null,
             profile: null,
             unsubscribeProfile: null,
+            publicProfileEnsured: false,
             loading: true,
             initialized: false,
 
@@ -4249,6 +4250,80 @@
          * ============================================================
          */
 
+        /*
+         * ============================================================
+         * PUBLIC AGENT PROFILE SYNC
+         * ============================================================
+         *
+         * users/{uid} remains the private canonical account profile.
+         * publicAgentProfiles/{uid} is the sanitized public projection
+         * consumed by public property pages.
+         *
+         * Only deliberately public agent identity/contact fields are
+         * mirrored. Private account fields never leave users/{uid}.
+         * ============================================================
+         */
+
+        async function ensurePublicAgentProfile() {
+            const user = getCurrentUser();
+
+            if (!user || !db) {
+                return;
+            }
+
+            const ref =
+                db
+                    .collection("publicAgentProfiles")
+                    .doc(user.uid);
+
+            const snapshot =
+                await ref.get();
+
+            if (!snapshot.exists) {
+                await syncPublicAgentProfile();
+            }
+        }
+
+        async function syncPublicAgentProfile(overrides = {}) {
+            const user = getCurrentUser();
+
+            if (!user || !db) {
+                return;
+            }
+
+            const profile = {
+                ...getProfile(),
+                ...overrides
+            };
+
+            if (profile.role && profile.role !== "agent") {
+                return;
+            }
+
+            const publicProfile = {
+                agentId: user.uid,
+                displayName: profile.name || user.displayName || "Agent",
+                name: profile.name || user.displayName || "Agent",
+                phoneNumber: profile.phone || "",
+                phone: profile.phone || "",
+                whatsappNumber: profile.whatsapp || "",
+                whatsapp: profile.whatsapp || "",
+                whatsappSameAsPhone: false,
+                photoURL: profile.photoURL || "",
+                profileImage: profile.photoURL || "",
+                agentType: "Verified Agent",
+                active: profile.isActive !== false,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            await db
+                .collection("publicAgentProfiles")
+                .doc(user.uid)
+                .set(publicProfile, {
+                    merge: true
+                });
+        }
+
         async function updateProfile(data) {
             const userId = getUserId();
 
@@ -4314,6 +4389,10 @@
 
             try {
                 await updateProfile({
+                    name
+                });
+
+                await syncPublicAgentProfile({
                     name
                 });
 
@@ -4402,6 +4481,11 @@
 
             try {
                 await updateProfile({
+                    phone,
+                    whatsapp
+                });
+
+                await syncPublicAgentProfile({
                     phone,
                     whatsapp
                 });
@@ -4942,6 +5026,11 @@
                     result.secure_url
             });
 
+            await syncPublicAgentProfile({
+                photoURL:
+                    result.secure_url
+            });
+
             return result.secure_url;
         }
 
@@ -5347,6 +5436,18 @@
                             renderProfileHeader();
                             updateProfileHealth();
                             renderSecurity();
+                        }
+
+                        if (!state.publicProfileEnsured) {
+                            state.publicProfileEnsured = true;
+
+                            ensurePublicAgentProfile()
+                                .catch(error => {
+                                    console.warn(
+                                        "MoonLat public agent profile initialization failed:",
+                                        error
+                                    );
+                                });
                         }
 
                         setSyncStatus(
