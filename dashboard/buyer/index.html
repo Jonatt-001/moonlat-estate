@@ -703,6 +703,255 @@
   }
 
   /*
+   * Premium homepage route
+   */
+  .mobile-drawer-home-section {
+    margin-top: 4px;
+    margin-bottom: 0;
+  }
+
+  .mobile-drawer-home-link {
+    position: relative;
+
+    width: 100%;
+    min-height: 58px;
+
+    padding: 8px 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    border: 1px solid #e6ebf2;
+    border-radius: 17px;
+
+    background:
+      linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+
+    color: #0f172a;
+
+    text-decoration: none;
+
+    box-shadow:
+      0 8px 24px rgba(15, 23, 42, 0.045),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+    transition:
+      transform .18s ease,
+      border-color .18s ease,
+      box-shadow .18s ease,
+      background .18s ease;
+  }
+
+  .mobile-drawer-home-link:hover {
+    border-color: #d7e0ec;
+
+    background:
+      linear-gradient(135deg, #ffffff 0%, #f4f7fb 100%);
+
+    box-shadow:
+      0 12px 30px rgba(15, 23, 42, 0.075),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95);
+
+    transform: translateY(-1px);
+  }
+
+  .mobile-drawer-home-link:active {
+    transform: scale(.985);
+  }
+
+  .mobile-drawer-home-icon {
+    width: 40px;
+    height: 40px;
+
+    flex: 0 0 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: #020617;
+    color: #ffffff;
+
+    box-shadow:
+      0 7px 16px rgba(2, 6, 23, 0.16);
+
+    font-size: 12px;
+  }
+
+  .mobile-drawer-home-copy {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .mobile-drawer-home-title {
+    display: block;
+
+    font-size: 13px;
+    line-height: 1.25;
+
+    font-weight: 800;
+    letter-spacing: -.01em;
+
+    color: #0f172a;
+  }
+
+  .mobile-drawer-home-subtitle {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 9px;
+    line-height: 1.2;
+
+    font-weight: 700;
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+
+    color: #94a3b8;
+  }
+
+  .mobile-drawer-home-arrow {
+    width: 30px;
+    height: 30px;
+
+    flex: 0 0 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #f1f5f9;
+    color: #64748b;
+
+    font-size: 9px;
+
+    transition:
+      background .18s ease,
+      color .18s ease,
+      transform .18s ease;
+  }
+
+  .mobile-drawer-home-link:hover .mobile-drawer-home-arrow {
+    background: #e8eef7;
+    color: #0f172a;
+    transform: translateX(2px);
+  }
+
+  .desktop-sidebar-home-link {
+    position: relative;
+
+    min-height: 58px;
+
+    margin-top: 20px;
+    padding: 8px 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    border: 1px solid #e6ebf2;
+    border-radius: 15px;
+
+    background:
+      linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+
+    color: #0f172a;
+
+    text-decoration: none;
+
+    box-shadow:
+      0 7px 20px rgba(15, 23, 42, 0.04);
+
+    transition:
+      transform .18s ease,
+      border-color .18s ease,
+      box-shadow .18s ease;
+  }
+
+  .desktop-sidebar-home-link:hover {
+    border-color: #d7e0ec;
+
+    box-shadow:
+      0 10px 25px rgba(15, 23, 42, 0.075);
+
+    transform: translateY(-1px);
+  }
+
+  .desktop-sidebar-home-link:active {
+    transform: scale(.985);
+  }
+
+  .desktop-sidebar-home-icon {
+    width: 36px;
+    height: 36px;
+
+    flex: 0 0 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #020617;
+    color: #ffffff;
+
+    font-size: 10px;
+  }
+
+  .desktop-sidebar-home-copy {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .desktop-sidebar-home-title {
+    display: block;
+
+    font-size: 12px;
+    line-height: 1.25;
+
+    font-weight: 800;
+
+    color: #0f172a;
+  }
+
+  .desktop-sidebar-home-subtitle {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 8px;
+    line-height: 1.2;
+
+    font-weight: 700;
+    letter-spacing: .09em;
+
+    text-transform: uppercase;
+
+    color: #94a3b8;
+  }
+
+  .desktop-sidebar-home-arrow {
+    color: #94a3b8;
+    font-size: 9px;
+
+    transition:
+      color .18s ease,
+      transform .18s ease;
+  }
+
+  .desktop-sidebar-home-link:hover .desktop-sidebar-home-arrow {
+    color: #0f172a;
+    transform: translateX(2px);
+  }
+
+  /*
    * Hide the mobile drawer on desktop.
    */
 
@@ -1527,6 +1776,38 @@
 
       </section>
 
+
+      <!-- Homepage -->
+      <section class="mobile-drawer-section mobile-drawer-home-section">
+
+        <a
+          href="https://moonlat.top/"
+          class="mobile-drawer-home-link"
+          aria-label="Visit MoonLat homepage"
+        >
+
+          <span class="mobile-drawer-home-icon">
+            <i class="fas fa-house"></i>
+          </span>
+
+          <span class="mobile-drawer-home-copy">
+            <span class="mobile-drawer-home-title">
+              Visit Homepage
+            </span>
+
+            <span class="mobile-drawer-home-subtitle">
+              moonlat.top
+            </span>
+          </span>
+
+          <span class="mobile-drawer-home-arrow">
+            <i class="fas fa-arrow-up-right-from-square"></i>
+          </span>
+
+        </a>
+
+      </section>
+
     </div>
 
 
@@ -1746,6 +2027,33 @@
           </a>
 
         </div>
+
+
+        <a
+          href="https://moonlat.top/"
+          class="desktop-sidebar-home-link"
+          aria-label="Visit MoonLat homepage"
+        >
+
+          <span class="desktop-sidebar-home-icon">
+            <i class="fas fa-house"></i>
+          </span>
+
+          <span class="desktop-sidebar-home-copy">
+            <span class="desktop-sidebar-home-title">
+              Visit Homepage
+            </span>
+
+            <span class="desktop-sidebar-home-subtitle">
+              moonlat.top
+            </span>
+          </span>
+
+          <span class="desktop-sidebar-home-arrow">
+            <i class="fas fa-arrow-up-right-from-square"></i>
+          </span>
+
+        </a>
 
       </nav>
 
