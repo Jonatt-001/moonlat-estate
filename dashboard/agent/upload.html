@@ -6540,5 +6540,1196 @@
         hideStatus
     };
 })();
-</script></body>
+</script>
+<script>
+(function MoonLatEditWorkflow() {
+    "use strict";
+
+    const params = new URLSearchParams(window.location.search);
+    const editMode = params.get("mode") === "edit";
+    const editId = String(params.get("id") || "").trim();
+
+    if (!editMode) return;
+
+    let editProperty = null;
+    let editLoaded = false;
+    let editBusy = false;
+
+    const str = value =>
+        value === null || value === undefined ? "" : String(value);
+
+    const attr = value =>
+        str(value)
+            .replace(/&/g, "&amp;")
+            .replace(/"/g, "&quot;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+    const toast = (message, type = "error") => {
+        if (typeof window.toast === "function") {
+            window.toast(message, type);
+        } else {
+            console[type === "error" ? "error" : "log"](message);
+        }
+    };
+
+    function setValue(id, value) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.value = str(value);
+        el.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
+    function setChoice(group, value) {
+        const wanted = str(value).trim().toLowerCase();
+        if (!wanted) return;
+
+        const buttons = Array.from(
+            document.querySelectorAll(`[data-choice-group="${group}"]`)
+        );
+
+        const match = buttons.find(
+            button => str(button.dataset.value).trim().toLowerCase() === wanted
+        );
+
+        if (!match) return;
+
+        buttons.forEach(button => {
+            button.classList.toggle("selected", button === match);
+        });
+    }
+
+    function setCounter(id, value) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = String(Math.max(0, Number(value) || 0));
+    }
+
+    function getCounter(id) {
+        return Math.max(
+            0,
+            Number(document.getElementById(id)?.textContent || 0) || 0
+        );
+    }
+
+    function getSelected(group, fallback = "") {
+        return (
+            document.querySelector(
+                `[data-choice-group="${group}"].selected`
+            )?.dataset.value || fallback
+        );
+    }
+
+    function getField(id) {
+        return document.getElementById(id)?.value?.trim() || "";
+    }
+
+    function getNumber(id) {
+        const value = getField(id)
+            .replace(/,/g, "")
+            .replace(/[^\d.-]/g, "");
+
+        const number = Number(value);
+        return Number.isFinite(number) ? number : 0;
+    }
+
+    function normalizeImages(property) {
+        const images = [];
+
+        const add = value => {
+            let url = "";
+
+            if (typeof value === "string") {
+                url = value.trim();
+            } else if (value && typeof value === "object") {
+                url = str(
+                    value.url ||
+                    value.src ||
+                    value.secure_url ||
+                    value.image
+                ).trim();
+            }
+
+            if (url && !images.includes(url)) {
+                images.push(url);
+            }
+        };
+
+        if (Array.isArray(property.images)) {
+            property.images.forEach(add);
+        }
+
+        if (Array.isArray(property.photos)) {
+            property.photos.forEach(add);
+        }
+
+        [
+            property.image,
+            property.featuredImage,
+            property.coverImage,
+            property.thumbnail,
+            property.photo
+        ].forEach(add);
+
+        return images.slice(0, 6);
+    }
+
+    function renderPhotos(images) {
+        const grid = document.getElementById("photoGrid");
+        if (!grid) return;
+
+        grid.innerHTML = "";
+
+        images.forEach((url, index) => {
+            const box = document.createElement("div");
+            box.className =
+                "upload-box" + (index === 0 ? " primary" : "");
+
+            box.innerHTML = `
+                <div class="photo-preview">
+                    <img
+                        src="${attr(url)}"
+                        alt="Property photo ${index + 1}"
+                        loading="lazy"
+                    >
+                </div>
+                <button
+                    class="photo-close"
+                    type="button"
+                    aria-label="Remove photo"
+                >×</button>
+            `;
+
+            box.querySelector(".photo-close")?.addEventListener(
+                "click",
+                event => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    box.remove();
+
+                    if (
+                        typeof window.refreshPhotoPrimaryState ===
+                        "function"
+                    ) {
+                        window.refreshPhotoPrimaryState();
+                    }
+
+                    refreshReview();
+                }
+            );
+
+            grid.appendChild(box);
+        });
+
+        if (typeof window.refreshPhotoPrimaryState === "function") {
+            window.refreshPhotoPrimaryState();
+        }
+    }
+
+    function getCurrentImages() {
+        return Array.from(
+            document.querySelectorAll(
+                "#photoGrid .photo-preview img"
+            )
+        )
+            .map(img => img.currentSrc || img.src)
+            .filter(Boolean)
+            .slice(0, 6);
+    }
+
+    function setAmenities(values) {
+        const wanted = new Set(
+            Array.isArray(values)
+                ? values.map(v => str(v).trim().toLowerCase())
+                : []
+        );
+
+        document.querySelectorAll(".amenity").forEach(button => {
+            button.classList.toggle(
+                "selected",
+                wanted.has(
+                    str(button.dataset.value).trim().toLowerCase()
+                )
+            );
+        });
+    }
+
+    function setCoordinates(property) {
+        const lat = Number(
+            property.latitude ??
+            property.lat
+        );
+
+        const lng = Number(
+            property.longitude ??
+            property.lng
+        );
+
+        if (
+            Number.isFinite(lat) &&
+            Number.isFinite(lng) &&
+            Math.abs(lat) <= 90 &&
+            Math.abs(lng) <= 180
+        ) {
+            window.selectedLatLng = {
+                lat,
+                lng
+            };
+        }
+    }
+
+    function setEditUI() {
+        document.title = "Edit Property — MoonLat";
+
+        document.querySelector(".page-title")?.replaceChildren(
+            document.createTextNode("Edit Property")
+        );
+
+        const button =
+            document.getElementById("publishBtn");
+
+        if (button) {
+            button.innerHTML = `
+                <svg
+                    class="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                >
+                    <path d="M5 12.5l4.5 4.5L19 7.5"></path>
+                </svg>
+                <span>Save Property Changes</span>
+            `;
+        }
+
+        const heading =
+            document.querySelector(".publish-card h3");
+
+        if (heading) {
+            heading.textContent = "Review your changes";
+        }
+
+        const copy =
+            document.querySelector(".publish-card p");
+
+        if (copy) {
+            copy.textContent =
+                "Review your updated property details, price, location and media. Saving will update this listing in place.";
+        }
+
+        const confirm =
+            document.getElementById("agentConfirmAccuracy");
+
+        const confirmText =
+            confirm?.closest("label")?.querySelector("span");
+
+        if (confirmText) {
+            confirmText.textContent =
+                "I confirm that the updated property information, price, location and uploaded media are accurate to the best of my knowledge.";
+        }
+
+        if (!document.getElementById("moonlatEditModeBanner")) {
+            const style = document.createElement("style");
+
+            style.textContent = `
+                #moonlatEditModeBanner {
+                    max-width: 920px;
+                    margin: 0 auto 18px;
+                    padding: 14px 16px;
+                    border: 1px solid #fed7aa;
+                    border-radius: 16px;
+                    background: #fff7ed;
+                    color: #7c2d12;
+                    box-shadow: 0 6px 24px rgba(15,23,42,.05);
+                }
+                #moonlatEditModeBanner strong {
+                    display:block;
+                    font-size:13px;
+                    font-weight:900;
+                    margin-bottom:3px;
+                }
+                #moonlatEditModeBanner span {
+                    display:block;
+                    font-size:12px;
+                    line-height:1.55;
+                    color:#9a3412;
+                }
+            `;
+
+            document.head.appendChild(style);
+
+            const banner = document.createElement("div");
+            banner.id = "moonlatEditModeBanner";
+            banner.innerHTML = `
+                <strong>Editing existing listing</strong>
+                <span>Your changes will update this property in place. MoonLat will not create a duplicate listing.</span>
+            `;
+
+            const content =
+                document.querySelector(".content");
+
+            content?.insertBefore(
+                banner,
+                content.firstElementChild
+            );
+        }
+    }
+
+    function hydrate(property) {
+        editProperty = property;
+        setEditUI();
+
+        setValue(
+            "title",
+            property.title ||
+            property.propertyTitle ||
+            property.name
+        );
+
+        setValue("category", property.category);
+
+        setValue(
+            "address",
+            property.address ||
+            property.propertyAddress ||
+            property.locationAddress
+        );
+
+        setValue("state", property.state);
+        setValue("city", property.city);
+        setValue("area", property.area);
+        setValue("size", property.size);
+        setValue("sizeUnit", property.sizeUnit || "sqm");
+        setValue("year", property.year);
+        setValue("furnishing", property.furnishing);
+
+        if (
+            property.price !== undefined &&
+            property.price !== null &&
+            property.price !== ""
+        ) {
+            setValue(
+                "price",
+                Number(property.price).toLocaleString("en-NG")
+            );
+        }
+
+        setValue("charges", property.charges);
+
+        setChoice(
+            "propertyType",
+            property.type ||
+            property.propertyType ||
+            "House"
+        );
+
+        setChoice(
+            "purpose",
+            property.purpose ||
+            "For Sale"
+        );
+
+        setChoice(
+            "priceType",
+            property.priceType ||
+            "Fixed Price"
+        );
+
+        setCounter("bedrooms", property.bedrooms);
+        setCounter("bathrooms", property.bathrooms);
+        setCounter("toilets", property.toilets);
+        setCounter("parking", property.parking);
+
+        setAmenities(property.amenities);
+
+        const description =
+            property.description ||
+            property.propertyDescription ||
+            "";
+
+        const descriptionEl =
+            document.getElementById("propertyDescription");
+
+        if (descriptionEl) {
+            descriptionEl.value = description;
+            descriptionEl.dispatchEvent(
+                new Event("input", { bubbles: true })
+            );
+        }
+
+        renderPhotos(
+            normalizeImages(property)
+        );
+
+        window.MoonLatEditDocuments =
+            property.documents &&
+            typeof property.documents === "object"
+                ? property.documents
+                : {};
+
+        setCoordinates(property);
+
+        const confirm =
+            document.getElementById("agentConfirmAccuracy");
+
+        if (confirm) {
+            confirm.checked = false;
+        }
+
+        const status =
+            document.getElementById("draftStatus");
+
+        if (status) {
+            status.textContent = "Editing saved listing";
+            status.className =
+                "draft-status saved";
+        }
+
+        editLoaded = true;
+
+        try {
+            window.populateReview?.();
+        } catch (error) {
+            console.warn(
+                "MoonLat: review refresh failed.",
+                error
+            );
+        }
+
+        refreshReview();
+    }
+
+    function refreshReview() {
+        const title =
+            document.getElementById("reviewTitle");
+
+        if (title) {
+            title.textContent =
+                getField("title") ||
+                "Property Title";
+        }
+
+        const image =
+            document.getElementById("reviewImage");
+
+        const images =
+            getCurrentImages();
+
+        if (image && images.length) {
+            image.innerHTML = `
+                <img
+                    src="${attr(images[0])}"
+                    alt="Main property photo"
+                >
+            `;
+        }
+    }
+
+    function getAgentContact(existing, user) {
+        const profile =
+            window.authProfile ||
+            window.agentProfile ||
+            {};
+
+        return {
+            name:
+                existing.agentName ||
+                existing.agentProfile?.name ||
+                profile.name ||
+                profile.displayName ||
+                user.displayName ||
+                "",
+
+            phone:
+                existing.agentPhone ||
+                existing.agentProfile?.phone ||
+                profile.phone ||
+                profile.phoneNumber ||
+                "",
+
+            whatsapp:
+                existing.agentWhatsApp ||
+                existing.agentWhatsapp ||
+                existing.agentProfile?.whatsapp ||
+                profile.whatsapp ||
+                profile.whatsappNumber ||
+                "",
+
+            photoURL:
+                existing.agentPhotoURL ||
+                existing.agentProfile?.photoURL ||
+                profile.photoURL ||
+                profile.profileImage ||
+                "",
+
+            businessName:
+                existing.agentBusinessName ||
+                existing.agentProfile?.businessName ||
+                profile.businessName ||
+                ""
+        };
+    }
+
+    function buildPayload(existing, user) {
+        const agent =
+            getAgentContact(
+                existing,
+                user
+            );
+
+        const description =
+            getField("propertyDescription");
+
+        const images =
+            getCurrentImages();
+
+        const lat =
+            Number(window.selectedLatLng?.lat);
+
+        const lng =
+            Number(window.selectedLatLng?.lng);
+
+        const payload = {
+            title: getField("title"),
+            type: getSelected(
+                "propertyType",
+                "House"
+            ),
+            purpose: getSelected(
+                "purpose",
+                "For Sale"
+            ),
+            category: getField("category"),
+            description,
+            shortDescription:
+                description.length > 160
+                    ? description.slice(0, 157).trimEnd() + "..."
+                    : description,
+            address: getField("address"),
+            state: getField("state"),
+            city: getField("city"),
+            area: getField("area"),
+            bedrooms: getCounter("bedrooms"),
+            bathrooms: getCounter("bathrooms"),
+            toilets: getCounter("toilets"),
+            parking: getCounter("parking"),
+            size: getNumber("size") || null,
+            sizeUnit:
+                getField("sizeUnit") ||
+                "sqm",
+            year: getField("year"),
+            furnishing: getField("furnishing"),
+            priceType: getSelected(
+                "priceType",
+                "Fixed Price"
+            ),
+            price: getNumber("price"),
+            charges: getField("charges"),
+            amenities: Array.from(
+                document.querySelectorAll(".amenity.selected")
+            )
+                .map(button => button.dataset.value)
+                .filter(Boolean),
+            images,
+            documents:
+                window.MoonLatDocuments ||
+                window.MoonLatEditDocuments ||
+                existing.documents ||
+                {},
+            latitude:
+                Number.isFinite(lat)
+                    ? lat
+                    : (
+                        Number.isFinite(
+                            Number(existing.latitude)
+                        )
+                            ? Number(existing.latitude)
+                            : null
+                    ),
+            longitude:
+                Number.isFinite(lng)
+                    ? lng
+                    : (
+                        Number.isFinite(
+                            Number(existing.longitude)
+                        )
+                            ? Number(existing.longitude)
+                            : null
+                    ),
+
+            /*
+             * Preserve the listing lifecycle. Editing property facts
+             * must never silently reset status or promotion state.
+             */
+            status:
+                existing.status ||
+                existing.listingStatus ||
+                "Active",
+
+            listingStatus:
+                existing.listingStatus ||
+                existing.status ||
+                "Active",
+
+            workflowStatus:
+                existing.workflowStatus ||
+                "published",
+
+            moderationStatus:
+                existing.moderationStatus ||
+                "unreviewed",
+
+            agentId:
+                existing.agentId ||
+                existing.ownerId ||
+                user.uid,
+
+            ownerId:
+                existing.ownerId ||
+                existing.agentId ||
+                user.uid,
+
+            agentName:
+                agent.name,
+
+            agentPhone:
+                agent.phone,
+
+            agentWhatsApp:
+                agent.whatsapp,
+
+            agentEmail:
+                existing.agentEmail ||
+                user.email ||
+                "",
+
+            agentBusinessName:
+                agent.businessName,
+
+            agentPhotoURL:
+                agent.photoURL,
+
+            agentProfile: {
+                ...(existing.agentProfile || {}),
+                uid:
+                    existing.agentId ||
+                    existing.ownerId ||
+                    user.uid,
+                name:
+                    agent.name,
+                email:
+                    existing.agentEmail ||
+                    user.email ||
+                    "",
+                phone:
+                    agent.phone,
+                whatsapp:
+                    agent.whatsapp,
+                businessName:
+                    agent.businessName,
+                professionalBio:
+                    existing.agentProfile?.professionalBio ||
+                    "",
+                serviceAreas:
+                    existing.agentProfile?.serviceAreas ||
+                    {},
+                availability:
+                    existing.agentProfile?.availability ||
+                    {},
+                photoURL:
+                    agent.photoURL
+            },
+
+            updatedAt:
+                firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        /*
+         * Preserve existing immutable/history/analytics fields.
+         * Only copy fields that actually exist on the stored document.
+         */
+        [
+            "createdAt",
+            "publishedAt",
+            "inquiries",
+            "viewings",
+            "views",
+            "leads",
+            "featured",
+            "sponsored",
+            "promotionStatus",
+            "promotionRequest",
+            "promotedAt",
+            "quickTags",
+            "customAgentTag"
+        ].forEach(key => {
+            if (
+                Object.prototype.hasOwnProperty.call(
+                    existing,
+                    key
+                ) &&
+                existing[key] !== undefined
+            ) {
+                payload[key] =
+                    existing[key];
+            }
+        });
+
+        return payload;
+    }
+
+    function validate() {
+        if (!editLoaded || !editProperty) {
+            toast(
+                "The property is still loading. Please wait.",
+                "error"
+            );
+            return false;
+        }
+
+        if (!getField("title")) {
+            toast(
+                "Add a property title before saving.",
+                "error"
+            );
+            return false;
+        }
+
+        if (
+            !getField("state") ||
+            !getField("city")
+        ) {
+            toast(
+                "Complete the property location before saving.",
+                "error"
+            );
+            return false;
+        }
+
+        if (getNumber("price") <= 0) {
+            toast(
+                "Enter a valid property price in Naira.",
+                "error"
+            );
+            return false;
+        }
+
+        if (getCurrentImages().length < 1) {
+            toast(
+                "Keep at least one property photo.",
+                "error"
+            );
+            return false;
+        }
+
+        if (
+            getField("propertyDescription").length <
+            40
+        ) {
+            toast(
+                "Add a property description of at least 40 characters.",
+                "error"
+            );
+            return false;
+        }
+
+        const confirm =
+            document.getElementById(
+                "agentConfirmAccuracy"
+            );
+
+        if (!confirm?.checked) {
+            toast(
+                "Confirm that the updated property information is accurate before saving.",
+                "error"
+            );
+
+            confirm?.focus();
+            confirm?.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+            return false;
+        }
+
+        return true;
+    }
+
+    async function updateProperty() {
+        if (editBusy || !validate()) return;
+
+        const button =
+            document.getElementById("publishBtn");
+
+        const original =
+            button?.innerHTML ||
+            "Save Property Changes";
+
+        editBusy = true;
+
+        if (button) {
+            button.disabled = true;
+            button.innerHTML = `
+                <svg
+                    class="w-5 h-5 spin"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                >
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="9"
+                        stroke-opacity=".25"
+                    ></circle>
+                    <path d="M21 12a9 9 0 0 0-9-9"></path>
+                </svg>
+                <span>Saving changes...</span>
+            `;
+        }
+
+        try {
+            const user =
+                firebase.auth().currentUser;
+
+            if (!user) {
+                throw new Error(
+                    "Your session has expired. Please sign in again."
+                );
+            }
+
+            const db =
+                firebase.firestore();
+
+            const ref =
+                db.collection("properties")
+                    .doc(editId);
+
+            /*
+             * Authoritative read. localStorage is only navigation context,
+             * never the security source.
+             */
+            const snapshot =
+                await ref.get();
+
+            if (!snapshot.exists) {
+                throw new Error(
+                    "This property no longer exists."
+                );
+            }
+
+            const existing =
+                snapshot.data() || {};
+
+            const ownerId =
+                String(
+                    existing.ownerId ||
+                    existing.agentId ||
+                    ""
+                );
+
+            if (
+                ownerId !==
+                String(user.uid)
+            ) {
+                const error =
+                    new Error(
+                        "You can only edit properties that belong to your agent account."
+                    );
+
+                error.code =
+                    "permission-denied";
+
+                throw error;
+            }
+
+            const payload =
+                buildPayload(
+                    existing,
+                    user
+                );
+
+            await ref.update(
+                payload
+            );
+
+            /*
+             * Keep the public agent projection aligned with the
+             * listing contact data. Failure here is non-fatal because
+             * the property itself is already updated.
+             */
+            try {
+                await db
+                    .collection("publicAgentProfiles")
+                    .doc(user.uid)
+                    .set(
+                        {
+                            agentId: user.uid,
+                            displayName:
+                                payload.agentName || "",
+                            name:
+                                payload.agentName || "",
+                            phoneNumber:
+                                payload.agentPhone || "",
+                            phone:
+                                payload.agentPhone || "",
+                            whatsappNumber:
+                                payload.agentWhatsApp || "",
+                            whatsapp:
+                                payload.agentWhatsApp || "",
+                            photoURL:
+                                payload.agentPhotoURL || "",
+                            agentType:
+                                "Verified Agent",
+                            active: true,
+                            updatedAt:
+                                firebase.firestore.FieldValue.serverTimestamp()
+                        },
+                        { merge: true }
+                    );
+            } catch (profileError) {
+                console.warn(
+                    "MoonLat: public agent profile sync failed.",
+                    profileError
+                );
+            }
+
+            localStorage.removeItem(
+                "moonlat-edit-property"
+            );
+
+            localStorage.removeItem(
+                "dyve-edit-property"
+            );
+
+            localStorage.removeItem(
+                "agent-property-draft"
+            );
+
+            localStorage.removeItem(
+                `moonlat:agent-property-draft:${user.uid}`
+            );
+
+            window.__MOONLAT_EDIT_RESULT =
+                "success";
+
+            window.__MOONLAT_UPDATED_PROPERTY_ID =
+                editId;
+
+            toast(
+                "Property updated successfully.",
+                "success"
+            );
+
+            if (button) {
+                button.innerHTML = `
+                    <svg
+                        class="w-5 h-5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        aria-hidden="true"
+                    >
+                        <path d="M5 12.5l4.5 4.5L19 7.5"></path>
+                    </svg>
+                    <span>Changes Saved</span>
+                `;
+            }
+
+            setTimeout(() => {
+                window.location.href =
+                    "manager.html";
+            }, 800);
+
+        } catch (error) {
+            console.error(
+                "MoonLat: property update failed.",
+                error
+            );
+
+            toast(
+                error?.code === "permission-denied"
+                    ? "You can only edit properties you uploaded."
+                    : (
+                        error?.message ||
+                        "Could not save the property changes."
+                    ),
+                "error"
+            );
+
+            if (button) {
+                button.disabled = false;
+                button.innerHTML =
+                    original;
+            }
+        } finally {
+            editBusy = false;
+        }
+    }
+
+    async function loadEditProperty() {
+        if (!editId) {
+            toast(
+                "The edit link is missing the property ID.",
+                "error"
+            );
+
+            setTimeout(
+                () =>
+                    window.location.href =
+                        "manager.html",
+                1200
+            );
+
+            return;
+        }
+
+        const user =
+            firebase.auth().currentUser;
+
+        if (!user) return;
+
+        try {
+            const snapshot =
+                await firebase
+                    .firestore()
+                    .collection("properties")
+                    .doc(editId)
+                    .get();
+
+            if (!snapshot.exists) {
+                throw new Error(
+                    "The requested property could not be found."
+                );
+            }
+
+            const property = {
+                id: snapshot.id,
+                ...snapshot.data()
+            };
+
+            const ownerId =
+                String(
+                    property.ownerId ||
+                    property.agentId ||
+                    ""
+                );
+
+            if (
+                ownerId !==
+                String(user.uid)
+            ) {
+                const error =
+                    new Error(
+                        "This property does not belong to your agent account."
+                    );
+
+                error.code =
+                    "permission-denied";
+
+                throw error;
+            }
+
+            hydrate(property);
+        } catch (error) {
+            console.error(
+                "MoonLat: edit property load failed.",
+                error
+            );
+
+            toast(
+                error?.code === "permission-denied"
+                    ? "You can only edit properties you uploaded."
+                    : (
+                        error?.message ||
+                        "Unable to load this property for editing."
+                    ),
+                "error"
+            );
+
+            setTimeout(
+                () =>
+                    window.location.href =
+                        "manager.html",
+                1400
+            );
+        }
+    }
+
+    const originalPublish =
+        window.publishProperty;
+
+    window.publishProperty = function() {
+        if (!editMode) {
+            return originalPublish?.apply(
+                this,
+                arguments
+            );
+        }
+
+        return updateProperty();
+    };
+
+    window.MoonLatEditWorkflow = {
+        isEditMode: () => editMode,
+        getPropertyId: () => editId,
+        update: updateProperty
+    };
+
+    function initialize() {
+        if (
+            !window.firebase?.auth ||
+            !window.firebase?.firestore
+        ) {
+            toast(
+                "Firebase is unavailable. Please reload the page.",
+                "error"
+            );
+            return;
+        }
+
+        if (
+            firebase.auth().currentUser
+        ) {
+            loadEditProperty();
+            return;
+        }
+
+        firebase.auth().onAuthStateChanged(
+            user => {
+                if (user) {
+                    loadEditProperty();
+                }
+            }
+        );
+    }
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            () =>
+                setTimeout(
+                    initialize,
+                    300
+                )
+        );
+    } else {
+        setTimeout(
+            initialize,
+            300
+        );
+    }
+})();
+</script>
+
+</body>
 </html>
