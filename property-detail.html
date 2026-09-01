@@ -1667,6 +1667,10 @@ onAuthStateChanged(
 
         if (currentProperty) {
             updateSaveUI();
+
+            if (currentUser) {
+                loadAgentDataIfAllowed();
+            }
         }
 
     }
@@ -2122,6 +2126,74 @@ function updatePropertyMeta(property) {
 
 }
 
+// =================== LOAD AGENT PROFILE ===================
+async function loadAgentDataIfAllowed() {
+
+    if (!currentUser || !currentProperty) {
+        return;
+    }
+
+    const agentId =
+        currentProperty.agentId ||
+        currentProperty.ownerId ||
+        currentProperty.userId;
+
+    if (!agentId) {
+        return;
+    }
+
+    try {
+
+        const agentDoc =
+            await getDoc(
+                doc(
+                    db,
+                    'users',
+                    agentId
+                )
+            );
+
+        if (agentDoc.exists()) {
+
+            agentData = {
+                id: agentDoc.id,
+                ...agentDoc.data()
+            };
+
+            console.log(
+                'MoonLat Agent Data:',
+                agentData
+            );
+
+            renderPropertyDetail();
+
+        } else {
+
+            console.warn(
+                'Agent user document not found:',
+                agentId
+            );
+
+        }
+
+    } catch (err) {
+
+        if (err?.code === 'permission-denied') {
+            console.warn(
+                'Private agent profile is not readable; using public property contact data.'
+            );
+            return;
+        }
+
+        console.error(
+            'Error fetching agent data:',
+            err
+        );
+
+    }
+
+}
+
 // =================== LOAD PROPERTY ===================
 
 async function loadProperty() {
@@ -2170,54 +2242,16 @@ async function loadProperty() {
 
         agentData = null;
 
-        const agentId =
-            currentProperty.agentId ||
-            currentProperty.ownerId ||
-            currentProperty.userId;
-
-        if (agentId) {
-
-            try {
-
-                const agentDoc =
-                    await getDoc(
-                        doc(
-                            db,
-                            'users',
-                            agentId
-                        )
-                    );
-
-                if (agentDoc.exists()) {
-
-                    agentData = {
-                        id: agentDoc.id,
-                        ...agentDoc.data()
-                    };
-
-                    console.log(
-                        'MoonLat Agent Data:',
-                        agentData
-                    );
-
-                } else {
-
-                    console.warn(
-                        'Agent user document not found:',
-                        agentId
-                    );
-
-                }
-
-            } catch (err) {
-
-                console.error(
-                    'Error fetching agent data:',
-                    err
-                );
-
-            }
-
+        /*
+         * The property document is public. The users/{agentId} document
+         * is intentionally protected by Firestore and must never be
+         * required for a logged-out visitor to contact an agent.
+         * Public contact data is therefore resolved from currentProperty.
+         * A richer private agent profile is loaded only for authenticated
+         * visitors as an optional enhancement.
+         */
+        if (currentUser) {
+            await loadAgentDataIfAllowed();
         }
 
         loadSimilarProperties();
@@ -2488,6 +2522,11 @@ function getAgentPhone() {
         getFirstValidValue(
 
             currentProperty?.agentPhone,
+            currentProperty?.agentPhoneNumber,
+            currentProperty?.agentMobile,
+            currentProperty?.contact?.agentPhone,
+            currentProperty?.contact?.phone,
+            currentProperty?.agentContact?.phone,
             currentProperty?.agent?.phoneNumber,
             currentProperty?.agent?.phone,
             currentProperty?.agent?.mobileNumber,
@@ -2531,6 +2570,11 @@ function getAgentWhatsApp() {
 
             currentProperty?.agentWhatsApp,
             currentProperty?.agentWhatsapp,
+            currentProperty?.agentWhatsAppNumber,
+            currentProperty?.agentWhatsappNumber,
+            currentProperty?.contact?.agentWhatsApp,
+            currentProperty?.contact?.whatsapp,
+            currentProperty?.agentContact?.whatsapp,
             currentProperty?.agent?.whatsappNumber,
             currentProperty?.agent?.whatsappPhone,
             currentProperty?.agent?.whatsapp,
