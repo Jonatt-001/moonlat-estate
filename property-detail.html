@@ -198,6 +198,198 @@
     overflow: hidden;
 }
 
+
+/* =========================================================
+   REGISTERED MEMBER CONTACT ACCESS
+   ========================================================= */
+
+.contact-auth-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 12000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(7, 10, 28, 0.62);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 180ms ease, visibility 180ms ease;
+}
+
+.contact-auth-modal.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.contact-auth-modal-content {
+    position: relative;
+    width: min(100%, 460px);
+    padding: 32px;
+    border: 1px solid rgba(33, 27, 99, 0.12);
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.24);
+    transform: translateY(12px) scale(0.98);
+    transition: transform 180ms ease;
+}
+
+.contact-auth-modal.show .contact-auth-modal-content {
+    transform: translateY(0) scale(1);
+}
+
+.contact-auth-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #667085;
+    font-size: 17px;
+    cursor: pointer;
+    transition: 160ms ease;
+}
+
+.contact-auth-modal-close:hover {
+    background: #f5f6fa;
+    color: #211b63;
+    border-color: #d7d9e2;
+}
+
+.contact-auth-modal-icon {
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 18px;
+    border-radius: 17px;
+    background: #f0efff;
+    color: #211b63;
+}
+
+.contact-auth-modal-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.contact-auth-modal-eyebrow {
+    margin-bottom: 8px;
+    color: #211b63;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+}
+
+.contact-auth-modal-content h3 {
+    margin: 0;
+    padding-right: 36px;
+    color: #111827;
+    font-size: clamp(1.35rem, 4vw, 1.7rem);
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.contact-auth-modal-subtitle {
+    margin: 12px 0 18px;
+    color: #667085;
+    font-size: 0.94rem;
+    line-height: 1.65;
+}
+
+.contact-auth-property {
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    border: 1px solid #e8eaf0;
+    border-radius: 12px;
+    background: #f8f9fc;
+    color: #475467;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.45;
+}
+
+.contact-auth-actions {
+    display: grid;
+    gap: 10px;
+}
+
+.contact-auth-primary,
+.contact-auth-secondary {
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 0 17px;
+    border-radius: 13px;
+    text-decoration: none;
+    font-size: 0.93rem;
+    font-weight: 700;
+    transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.contact-auth-primary {
+    background: #211b63;
+    color: #ffffff;
+    box-shadow: 0 10px 22px rgba(33, 27, 99, 0.18);
+}
+
+.contact-auth-primary:hover {
+    background: #17134d;
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(33, 27, 99, 0.24);
+}
+
+.contact-auth-secondary {
+    border: 1px solid #dfe2ea;
+    background: #ffffff;
+    color: #211b63;
+}
+
+.contact-auth-secondary:hover {
+    background: #f7f7fb;
+    border-color: #cfd3df;
+    transform: translateY(-1px);
+}
+
+.contact-auth-primary svg,
+.contact-auth-secondary svg {
+    width: 19px;
+    height: 19px;
+    flex: 0 0 auto;
+}
+
+.contact-auth-note {
+    margin: 16px 0 0;
+    color: #98a2b3;
+    font-size: 0.74rem;
+    line-height: 1.5;
+    text-align: center;
+}
+
+@media (max-width: 520px) {
+    .contact-auth-modal {
+        align-items: flex-end;
+        padding: 10px;
+    }
+
+    .contact-auth-modal-content {
+        width: 100%;
+        padding: 26px 20px 22px;
+        border-radius: 22px;
+        margin-bottom: env(safe-area-inset-bottom);
+    }
+}
+
 </style>
 
 </head>
@@ -931,6 +1123,112 @@
 
 </div>
 
+<!-- AUTH GATE MODAL -->
+<div
+    class="contact-auth-modal"
+    id="contactAuthModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="contactAuthModalTitle"
+    aria-hidden="true"
+>
+    <div class="contact-auth-modal-content">
+
+        <button
+            class="contact-auth-modal-close"
+            onclick="closeContactAuthModal()"
+            aria-label="Close"
+            type="button"
+        >
+            ✕
+        </button>
+
+        <div class="contact-auth-modal-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                    d="M7 11V8a5 5 0 0 1 10 0v3"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                />
+                <rect
+                    x="4"
+                    y="11"
+                    width="16"
+                    height="10"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="2"
+                />
+                <circle
+                    cx="12"
+                    cy="16"
+                    r="1.5"
+                    fill="currentColor"
+                />
+            </svg>
+        </div>
+
+        <div class="contact-auth-modal-eyebrow">
+            MEMBER ACCESS
+        </div>
+
+        <h3 id="contactAuthModalTitle">
+            Sign in to contact this agent
+        </h3>
+
+        <p class="contact-auth-modal-subtitle">
+            Agent phone and WhatsApp details are available to registered MoonLat members. Sign in if you already have an account, or create one to continue.
+        </p>
+
+        <div class="contact-auth-property" id="contactAuthProperty">
+            Property details
+        </div>
+
+        <div class="contact-auth-actions">
+
+            <a
+                class="contact-auth-primary"
+                id="contactAuthSignIn"
+                href="dashboard/sign-in.html"
+            >
+                <span>Sign In</span>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                        d="M5 12h14M13 6l6 6-6 6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                </svg>
+            </a>
+
+            <a
+                class="contact-auth-secondary"
+                id="contactAuthSignUp"
+                href="dashboard/sign-up.html"
+            >
+                <span>Create an Account</span>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                        d="M12 5v14M5 12h14"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                </svg>
+            </a>
+
+        </div>
+
+        <p class="contact-auth-note">
+            Your account is required before agent contact details can be revealed.
+        </p>
+
+    </div>
+</div>
+
 <!-- CONTACT CHOICE MODAL -->
 <div
     class="contact-modal"
@@ -1594,6 +1892,10 @@ onAuthStateChanged(
 
         if (currentProperty) {
             updateSaveUI();
+
+            if (currentUser) {
+                await loadAuthenticatedAgentData();
+            }
         }
 
     }
@@ -1650,6 +1952,97 @@ function updateAuthUI() {
 
         link.href =
             'dashboard/sign-in.html';
+
+    }
+
+}
+
+async function loadAuthenticatedAgentData() {
+
+    if (!currentUser || !currentProperty) {
+        return;
+    }
+
+    const agentId =
+        currentProperty.agentId ||
+        currentProperty.ownerId ||
+        currentProperty.userId;
+
+    if (!agentId) {
+        return;
+    }
+
+    try {
+
+        const publicAgentDoc =
+            await getDoc(
+                doc(
+                    db,
+                    'publicAgentProfiles',
+                    agentId
+                )
+            );
+
+        if (publicAgentDoc.exists()) {
+
+            agentData = {
+                id: publicAgentDoc.id,
+                ...publicAgentDoc.data()
+            };
+
+        } else {
+
+            /*
+             * Legacy fallback for authenticated users only.
+             * This read is intentionally never attempted for
+             * logged-out visitors.
+             */
+            try {
+
+                const agentDoc =
+                    await getDoc(
+                        doc(
+                            db,
+                            'users',
+                            agentId
+                        )
+                    );
+
+                if (agentDoc.exists()) {
+
+                    agentData = {
+                        id: agentDoc.id,
+                        ...agentDoc.data()
+                    };
+
+                }
+
+            } catch (privateAgentError) {
+
+                console.warn(
+                    'Authenticated agent profile fallback failed:',
+                    privateAgentError
+                );
+
+            }
+
+        }
+
+        /*
+         * Re-render so the authenticated user's view receives the
+         * resolved agent profile/contact state immediately.
+         */
+        if (currentProperty) {
+            renderPropertyDetail();
+            updateSaveUI();
+        }
+
+    } catch (err) {
+
+        console.error(
+            'Error loading authenticated agent profile:',
+            err
+        );
 
     }
 
@@ -2119,7 +2512,7 @@ async function loadProperty() {
          * ========================================================
          */
 
-        if (agentId) {
+        if (agentId && currentUser) {
 
             try {
 
@@ -4238,8 +4631,155 @@ window.viewProperty =
 // PUBLIC ACTION
 // =========================================================
 
+function getAuthRedirectUrl(targetPage) {
+
+    const returnUrl =
+        `${window.location.origin}${window.location.pathname}${window.location.search}`;
+
+    try {
+        sessionStorage.setItem(
+            'moonlatContactReturnUrl',
+            returnUrl
+        );
+    } catch (err) {
+        console.warn(
+            'Could not save MoonLat contact return URL:',
+            err
+        );
+    }
+
+    return `${targetPage}?redirect=${encodeURIComponent(returnUrl)}`;
+
+}
+
+window.openContactAuthModal =
+    function() {
+
+        const modal =
+            document.getElementById(
+                'contactAuthModal'
+            );
+
+        const propertyLabel =
+            document.getElementById(
+                'contactAuthProperty'
+            );
+
+        const signIn =
+            document.getElementById(
+                'contactAuthSignIn'
+            );
+
+        const signUp =
+            document.getElementById(
+                'contactAuthSignUp'
+            );
+
+        if (propertyLabel) {
+
+            const propertyTitle =
+                currentProperty?.title ||
+                'this property';
+
+            propertyLabel.textContent =
+                `Contact details for: ${propertyTitle}`;
+
+        }
+
+        const returnUrl =
+            `${window.location.origin}${window.location.pathname}${window.location.search}`;
+
+        try {
+            sessionStorage.setItem(
+                'moonlatContactReturnUrl',
+                returnUrl
+            );
+        } catch (err) {
+            console.warn(
+                'Could not save MoonLat contact return URL:',
+                err
+            );
+        }
+
+        if (signIn) {
+            signIn.href =
+                getAuthRedirectUrl(
+                    'dashboard/sign-in.html'
+                );
+        }
+
+        if (signUp) {
+            signUp.href =
+                getAuthRedirectUrl(
+                    'dashboard/sign-up.html'
+                );
+        }
+
+        if (modal) {
+
+            modal.classList.add(
+                'show'
+            );
+
+            modal.setAttribute(
+                'aria-hidden',
+                'false'
+            );
+
+            document.body.style.overflow =
+                'hidden';
+
+        }
+
+    };
+
+window.closeContactAuthModal =
+    function() {
+
+        const modal =
+            document.getElementById(
+                'contactAuthModal'
+            );
+
+        if (modal) {
+
+            modal.classList.remove(
+                'show'
+            );
+
+            modal.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+        }
+
+        /*
+         * Do not blindly restore body scrolling here if another
+         * MoonLat modal is open.
+         */
+        const contactModal =
+            document.getElementById(
+                'contactModal'
+            );
+
+        if (
+            !contactModal ||
+            !contactModal.classList.contains('show')
+        ) {
+            document.body.style.overflow =
+                '';
+        }
+
+    };
+
 window.openContactModal =
     function() {
+
+        if (!currentUser) {
+            openContactAuthModal();
+            return;
+        }
 
         if (!currentProperty) {
 
@@ -4378,6 +4918,12 @@ window.closeContactModal =
 window.callAgent =
     function() {
 
+        if (!currentUser) {
+            closeContactModal();
+            openContactAuthModal();
+            return;
+        }
+
         if (!currentProperty) {
 
             showToast(
@@ -4433,6 +4979,12 @@ window.callAgent =
 
 window.whatsappAgent =
     function() {
+
+        if (!currentUser) {
+            closeContactModal();
+            openContactAuthModal();
+            return;
+        }
 
         if (!currentProperty) {
 
@@ -5126,6 +5678,22 @@ document.addEventListener(
                     ) {
 
                         closeContactModal();
+
+                    }
+
+                    const contactAuthModal =
+                        document.getElementById(
+                            'contactAuthModal'
+                        );
+
+                    if (
+                        contactAuthModal &&
+                        contactAuthModal.classList.contains(
+                            'show'
+                        )
+                    ) {
+
+                        closeContactAuthModal();
 
                     }
 
