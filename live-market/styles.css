@@ -2620,35 +2620,1193 @@ h2 {
       13px;
   }
 
-  /* =======================================================
-     MOBILE FOOTER
-  ======================================================= */
+/* =========================================================
+   PREMIUM PARTNER NETWORK FOOTER
+========================================================= */
 
-  .site-footer {
-    padding:
-      28px 18px;
+.premium-site-footer {
+  position: relative;
 
-    grid-template-columns:
-      1fr;
+  margin-top: 110px;
+
+  padding:
+    0 max(22px, 5vw) 34px;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f8f9f6 0%,
+      #f1f3ee 100%
+    );
+
+  border-top:
+    1px solid var(--line);
+}
+
+.premium-site-footer::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  top: 0;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(24,63,173,.22),
+      rgba(169,223,88,.45),
+      rgba(24,63,173,.22),
+      transparent
+    );
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   NETWORK INTRO
+========================================================= */
+
+.footer-network {
+  width: min(1320px, 100%);
+
+  margin: 0 auto;
+
+  padding:
+    70px 0 54px;
+
+  position: relative;
+}
+
+.footer-network::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      var(--line),
+      transparent
+    );
+}
+
+.footer-network-copy {
+  max-width: 760px;
+}
+
+.footer-kicker {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  color: var(--accent);
+
+  font-size: 10px;
+
+  font-weight: 950;
+
+  letter-spacing: .18em;
+
+  text-transform: uppercase;
+}
+
+.footer-kicker::before {
+  content: "";
+
+  width: 7px;
+  height: 7px;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  background: var(--lime);
+
+  box-shadow:
+    0 0 0 5px rgba(169,223,88,.12);
+}
+
+.footer-network-copy h2 {
+  max-width: 720px;
+
+  margin:
+    14px 0 15px;
+
+  color: var(--ink);
+
+  font-size:
+    clamp(
+      36px,
+      5vw,
+      64px
+    );
+
+  line-height: .96;
+
+  letter-spacing: -.068em;
+
+  font-weight: 950;
+}
+
+.footer-network-copy h2 em {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-weight: 400;
+
+  letter-spacing: -.055em;
+}
+
+.footer-network-copy p {
+  max-width: 610px;
+
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size:
+    clamp(
+      13px,
+      1.5vw,
+      15px
+    );
+
+  line-height: 1.7;
+
+  font-weight: 500;
+}
+
+/* =========================================================
+   PARTNER MARQUEE
+========================================================= */
+
+.partner-marquee {
+  width: 100%;
+
+  margin-top: 43px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  border-top:
+    1px solid rgba(220,225,219,.8);
+
+  border-bottom:
+    1px solid rgba(220,225,219,.8);
+
+  background:
+    rgba(255,255,255,.52);
+
+  mask-image:
+    linear-gradient(
+      90deg,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+
+  -webkit-mask-image:
+    linear-gradient(
+      90deg,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+}
+
+.partner-track {
+  width: max-content;
+
+  min-height: 92px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  padding:
+    12px 0;
+
+  animation:
+    partnerMarquee
+    34s
+    linear
+    infinite;
+}
+
+.partner-marquee:hover .partner-track {
+  animation-play-state: paused;
+}
+
+@keyframes partnerMarquee {
+  from {
+    transform:
+      translate3d(0, 0, 0);
   }
 
-  .footer-links {
+  to {
+    transform:
+      translate3d(-50%, 0, 0);
+  }
+}
+
+/* =========================================================
+   PARTNER LOGOS
+========================================================= */
+
+.partner-logo {
+  min-width: 158px;
+
+  height: 61px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 9px;
+
+  padding:
+    0 20px;
+
+  border:
+    1px solid rgba(205,212,205,.82);
+
+  border-radius: 15px;
+
+  background:
+    rgba(255,255,255,.82);
+
+  color: #66716a;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: .055em;
+
+  white-space: nowrap;
+
+  box-shadow:
+    0 5px 17px rgba(16,32,25,.025);
+
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    background .2s ease,
+    color .2s ease;
+}
+
+.partner-logo:hover {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(24,63,173,.18);
+
+  background:
+    #fff;
+
+  color:
+    var(--ink);
+
+  box-shadow:
+    0 10px 25px rgba(16,32,25,.06);
+}
+
+.partner-logo::before {
+  content: "";
+
+  width: 23px;
+  height: 23px;
+
+  display: grid;
+
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  border-radius: 7px;
+
+  background:
+    var(--surface-soft);
+
+  border:
+    1px solid var(--line);
+
+  opacity: .9;
+}
+
+/* =========================================================
+   MOONLAT NETWORK MARK
+========================================================= */
+
+.partner-logo.moonlat-logo {
+  color:
+    var(--ink);
+
+  background:
+    var(--lime-soft);
+
+  border-color:
+    rgba(169,223,88,.35);
+}
+
+.partner-logo.moonlat-logo::before {
+  background:
+    var(--lime);
+
+  border-color:
+    rgba(169,223,88,.45);
+}
+
+/* =========================================================
+   PROPERTY CATEGORY MARKS
+========================================================= */
+
+.partner-logo:nth-child(3)::before {
+  border-radius: 50%;
+
+  background:
+    var(--accent-soft);
+
+  border-color:
+    rgba(24,63,173,.12);
+}
+
+.partner-logo:nth-child(4)::before {
+  background:
+    #eef5f1;
+}
+
+.partner-logo:nth-child(5)::before {
+  border-radius: 50%;
+
+  background:
+    #f1f3ee;
+}
+
+.partner-logo:nth-child(6)::before {
+  background:
+    var(--lime-soft);
+}
+
+/* =========================================================
+   UNTERA
+========================================================= */
+
+.partner-logo.untera-logo {
+  padding:
+    0 22px;
+
+  background:
+    #102019;
+
+  border-color:
+    #102019;
+
+  color:
+    #fff;
+
+  cursor: pointer;
+}
+
+.partner-logo.untera-logo:hover {
+  background:
+    #17372b;
+
+  border-color:
+    #17372b;
+
+  color:
+    #fff;
+
+  transform:
+    translateY(-2px);
+}
+
+.partner-logo.untera-logo::before {
+  display: none;
+}
+
+.partner-logo.untera-logo img {
+  width:
+    82px;
+
+  height:
+    auto;
+
+  max-height:
+    26px;
+
+  object-fit:
+    contain;
+}
+
+/* =========================================================
+   FEATURED PARTNER CARD
+========================================================= */
+
+.footer-partner-card {
+  width: min(1320px, 100%);
+
+  margin:
+    28px auto 0;
+
+  padding:
+    18px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  border:
+    1px solid var(--line);
+
+  border-radius:
+    20px;
+
+  background:
+    rgba(255,255,255,.72);
+
+  box-shadow:
+    0 10px 30px rgba(16,32,25,.035);
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+.footer-partner-card:hover {
+  border-color:
+    var(--line-dark);
+
+  box-shadow:
+    0 15px 35px rgba(16,32,25,.06);
+}
+
+.footer-partner-intro {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  min-width: 0;
+}
+
+.footer-partner-intro .footer-kicker {
+  color:
+    var(--muted);
+
+  font-size:
+    8px;
+}
+
+.footer-partner-intro .footer-kicker::before {
+  width: 5px;
+  height: 5px;
+
+  background:
+    var(--success);
+
+  box-shadow:
+    0 0 0 4px rgba(45,122,85,.09);
+}
+
+.footer-partner-brand {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding:
+    8px 12px;
+
+  border-radius:
+    13px;
+
+  color:
+    var(--ink);
+
+  transition:
+    background .2s ease,
+    transform .2s ease;
+}
+
+.footer-partner-brand:hover {
+  background:
+    var(--surface-soft);
+
+  transform:
+    translateY(-1px);
+}
+
+.partner-brand-mark {
+  width: 40px;
+  height: 40px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius:
+    11px;
+
+  background:
+    #102019;
+
+  overflow: hidden;
+}
+
+.partner-brand-mark img {
+  width:
+    27px;
+
+  height:
+    27px;
+
+  object-fit:
+    contain;
+}
+
+.partner-brand-copy {
+  min-width:
+    0;
+}
+
+.partner-brand-copy strong {
+  display:
+    block;
+
+  color:
+    var(--ink);
+
+  font-size:
+    12px;
+
+  font-weight:
+    900;
+}
+
+.partner-brand-copy small {
+  display:
+    block;
+
+  margin-top:
+    3px;
+
+  color:
+    var(--muted);
+
+  font-size:
+    9px;
+
+  font-weight:
+    650;
+}
+
+.partner-arrow {
+  width:
+    34px;
+
+  height:
+    34px;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--accent-soft);
+
+  color:
+    var(--accent);
+
+  font-size:
+    15px;
+
+  transition:
+    transform .2s ease,
+    background .2s ease;
+}
+
+.footer-partner-brand:hover .partner-arrow {
+  transform:
+    translate(2px, -2px);
+
+  background:
+    var(--accent);
+
+  color:
+    #fff;
+}
+
+/* =========================================================
+   FOOTER MAIN
+========================================================= */
+
+.footer-main {
+  width:
+    min(1320px, 100%);
+
+  margin:
+    0 auto;
+
+  padding:
+    38px 0 30px;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    1fr auto;
+
+  gap:
+    35px;
+}
+
+.premium-site-footer .footer-brand {
+  color:
+    var(--ink);
+}
+
+.premium-site-footer .footer-brand:hover {
+  color:
+    var(--accent);
+}
+
+.premium-site-footer .footer-main p {
+  color:
+    var(--muted);
+
+  font-size:
+    11px;
+
+  line-height:
+    1.5;
+
+  margin:
+    8px 0 0;
+}
+
+.premium-site-footer .footer-links {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    flex-end;
+
+  gap:
+    24px;
+
+  color:
+    var(--muted);
+
+  font-size:
+    11px;
+
+  font-weight:
+    700;
+}
+
+.premium-site-footer .footer-links a {
+  position:
+    relative;
+
+  padding:
+    6px 0;
+
+  transition:
+    color .18s ease;
+}
+
+.premium-site-footer .footer-links a::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  left:
+    0;
+
+  right:
+    0;
+
+  bottom:
+    0;
+
+  height:
+    1px;
+
+  background:
+    var(--accent);
+
+  transform:
+    scaleX(0);
+
+  transform-origin:
+    right;
+
+  transition:
+    transform .2s ease;
+}
+
+.premium-site-footer .footer-links a:hover {
+  color:
+    var(--accent);
+}
+
+.premium-site-footer .footer-links a:hover::after {
+  transform:
+    scaleX(1);
+
+  transform-origin:
+    left;
+}
+
+/* =========================================================
+   FOOTER BOTTOM
+========================================================= */
+
+.premium-site-footer .footer-bottom {
+  width:
+    min(1320px, 100%);
+
+  margin:
+    0 auto;
+
+  padding:
+    19px 0 0;
+
+  border-top:
+    1px solid var(--line);
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    20px;
+
+  color:
+    var(--muted-light);
+
+  font-size:
+    9px;
+
+  line-height:
+    1.5;
+}
+
+.premium-site-footer .footer-bottom a {
+  color:
+    var(--ink-soft);
+
+  font-weight:
+    850;
+
+  transition:
+    color .18s ease;
+}
+
+.premium-site-footer .footer-bottom a:hover {
+  color:
+    var(--accent);
+}
+
+/* =========================================================
+   MOBILE PREMIUM FOOTER
+========================================================= */
+
+@media (max-width: 720px) {
+
+  .premium-site-footer {
+    margin-top:
+      72px;
+
+    padding:
+      0 17px 25px;
+  }
+
+  .footer-network {
+    padding:
+      48px 0 38px;
+  }
+
+  .footer-network-copy {
+    max-width:
+      100%;
+  }
+
+  .footer-network-copy h2 {
+    margin-top:
+      12px;
+
+    font-size:
+      clamp(
+        34px,
+        10.5vw,
+        48px
+      );
+
+    line-height:
+      .94;
+  }
+
+  .footer-network-copy p {
+    max-width:
+      100%;
+
+    margin-top:
+      14px;
+
+    font-size:
+      12px;
+
+    line-height:
+      1.65;
+  }
+
+  /* -------------------------------------------------------
+     MOBILE MARQUEE
+  ------------------------------------------------------- */
+
+  .partner-marquee {
+    margin-top:
+      30px;
+
+    mask-image:
+      linear-gradient(
+        90deg,
+        transparent,
+        #000 5%,
+        #000 95%,
+        transparent
+      );
+
+    -webkit-mask-image:
+      linear-gradient(
+        90deg,
+        transparent,
+        #000 5%,
+        #000 95%,
+        transparent
+      );
+  }
+
+  .partner-track {
+    min-height:
+      76px;
+
+    gap:
+      9px;
+
+    animation-duration:
+      27s;
+  }
+
+  .partner-logo {
+    min-width:
+      128px;
+
+    height:
+      50px;
+
+    padding:
+      0 14px;
+
+    border-radius:
+      12px;
+
+    font-size:
+      8px;
+  }
+
+  .partner-logo::before {
+    width:
+      19px;
+
+    height:
+      19px;
+
+    border-radius:
+      6px;
+  }
+
+  .partner-logo.untera-logo {
+    padding:
+      0 16px;
+  }
+
+  .partner-logo.untera-logo img {
+    width:
+      70px;
+
+    max-height:
+      22px;
+  }
+
+  /* -------------------------------------------------------
+     FEATURED PARTNER
+  ------------------------------------------------------- */
+
+  .footer-partner-card {
+    margin-top:
+      16px;
+
+    padding:
+      12px;
+
+    border-radius:
+      16px;
+
+    gap:
+      10px;
+  }
+
+  .footer-partner-intro {
+    gap:
+      8px;
+  }
+
+  .footer-partner-intro .footer-kicker {
+    display:
+      none;
+  }
+
+  .footer-partner-brand {
+    gap:
+      9px;
+
+    padding:
+      5px 7px;
+  }
+
+  .partner-brand-mark {
+    width:
+      35px;
+
+    height:
+      35px;
+
+    border-radius:
+      9px;
+  }
+
+  .partner-brand-mark img {
+    width:
+      24px;
+
+    height:
+      24px;
+  }
+
+  .partner-brand-copy strong {
+    font-size:
+      11px;
+  }
+
+  .partner-brand-copy small {
+    font-size:
+      8px;
+  }
+
+  .partner-arrow {
+    width:
+      30px;
+
+    height:
+      30px;
+
+    font-size:
+      13px;
+  }
+
+  /* -------------------------------------------------------
+     FOOTER MAIN
+  ------------------------------------------------------- */
+
+  .footer-main {
+    grid-template-columns:
+      1fr;
+
+    gap:
+      24px;
+
+    padding:
+      30px 0 25px;
+  }
+
+  .premium-site-footer .footer-links {
+    justify-content:
+      flex-start;
+
     flex-wrap:
       wrap;
 
     gap:
-      13px 20px;
+      12px 20px;
+
+    font-size:
+      10px;
   }
 
-  .footer-bottom {
-    grid-column:
-      auto;
+  /* -------------------------------------------------------
+     FOOTER LEGAL / META
+  ------------------------------------------------------- */
+
+  .premium-site-footer .footer-bottom {
+    align-items:
+      flex-start;
 
     flex-direction:
       column;
 
     gap:
-      8px;
+      7px;
+
+    padding-top:
+      16px;
+
+    font-size:
+      8.5px;
+  }
+}
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 370px) {
+
+  .premium-site-footer {
+    padding:
+      0 13px 22px;
+  }
+
+  .footer-network {
+    padding:
+      42px 0 32px;
+  }
+
+  .footer-network-copy h2 {
+    font-size:
+      32px;
+  }
+
+  .partner-logo {
+    min-width:
+      116px;
+
+    height:
+      46px;
+
+    font-size:
+      7.5px;
+  }
+
+  .partner-logo.untera-logo img {
+    width:
+      63px;
+  }
+
+  .footer-partner-card {
+    padding:
+      9px;
+  }
+
+  .partner-brand-mark {
+    width:
+      32px;
+
+    height:
+      32px;
+  }
+
+  .partner-brand-copy strong {
+    font-size:
+      10px;
+  }
+
+  .partner-brand-copy small {
+    font-size:
+      7px;
+  }
+
+  .partner-arrow {
+    width:
+      27px;
+
+    height:
+      27px;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY / REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .partner-track {
+    animation:
+      none;
+  }
+
+  .partner-marquee:hover .partner-track {
+    animation:
+      none;
+  }
+
+  .partner-logo,
+  .footer-partner-card,
+  .footer-partner-brand,
+  .partner-arrow {
+    transition:
+      none;
   }
 }
 
