@@ -2243,7 +2243,7 @@ img {
     }
 
     const slug = text(item?.slug || item?.propertySlug || getId(item));
-    return `${window.location.origin}/property.html?id=${encodeURIComponent(slug)}`;
+    return `${window.location.origin}/property-detail.html?id=${encodeURIComponent(slug)}`;
   }
 
   async function shareItem(item) {
