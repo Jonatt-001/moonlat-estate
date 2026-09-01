@@ -990,9 +990,18 @@
 
         <div class="contact-choice-list">
 
+            <div
+                id="contactModalUnavailable"
+                style="display:none;padding:1.25rem;border:1px solid #e5e7eb;border-radius:1rem;background:#f8fafc;color:#64748b;text-align:center;line-height:1.5;"
+                role="status"
+            >
+                This agent has not provided public contact information yet.
+            </div>
+
             <button
                 type="button"
                 class="contact-choice-btn contact-choice-call"
+                id="contactCallChoice"
                 onclick="callAgent()"
             >
 
@@ -1051,6 +1060,7 @@
             <button
                 type="button"
                 class="contact-choice-btn contact-choice-whatsapp"
+                id="contactWhatsAppChoice"
                 onclick="whatsappAgent()"
             >
 
@@ -4252,17 +4262,70 @@ window.openContactModal =
                 'contactModalProperty'
             );
 
+        const callChoice =
+            document.getElementById(
+                'contactCallChoice'
+            );
+
+        const whatsappChoice =
+            document.getElementById(
+                'contactWhatsAppChoice'
+            );
+
+        const unavailable =
+            document.getElementById(
+                'contactModalUnavailable'
+            );
+
         const agentName =
             agentData?.displayName ||
             agentData?.name ||
             currentProperty.agentName ||
             currentProperty.ownerName ||
+            currentProperty.agentDisplayName ||
             'Verified Agent';
+
+        const hasPhone =
+            Boolean(
+                normalizePhoneNumber(
+                    getAgentPhone()
+                )
+            );
+
+        const hasWhatsApp =
+            Boolean(
+                normalizePhoneNumber(
+                    getAgentWhatsApp()
+                )
+            );
 
         if (propertyLabel) {
 
             propertyLabel.textContent =
                 `${agentName} · ${currentProperty.title || 'This property'}`;
+
+        }
+
+        if (callChoice) {
+
+            callChoice.style.display =
+                hasPhone ? '' : 'none';
+
+        }
+
+        if (whatsappChoice) {
+
+            whatsappChoice.style.display =
+                hasWhatsApp ? '' : 'none';
+
+        }
+
+        if (unavailable) {
+
+            unavailable.style.display =
+                hasPhone || hasWhatsApp
+                    ? 'none'
+                    : '';
 
         }
 
