@@ -198,6 +198,57 @@
     overflow: hidden;
 }
 
+.contact-unavailable-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 18px;
+    padding: 22px 18px;
+    text-align: center;
+    border: 1px solid #e3e7ef;
+    border-radius: 18px;
+    background: #f8fafc;
+    color: #667085;
+}
+
+.contact-unavailable-state[hidden] {
+    display: none !important;
+}
+
+.contact-choice-btn[hidden] {
+    display: none !important;
+}
+
+.contact-unavailable-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 3px;
+    border-radius: 14px;
+    background: #eef2f7;
+    color: #667085;
+}
+
+.contact-unavailable-icon svg {
+    width: 23px;
+    height: 23px;
+}
+
+.contact-unavailable-state strong {
+    color: #1f2937;
+    font-size: 0.98rem;
+    font-weight: 700;
+}
+
+.contact-unavailable-state span {
+    max-width: 330px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
 </style>
 
 </head>
@@ -1110,6 +1161,38 @@
                 </span>
 
             </button>
+
+        </div>
+
+        <div
+            class="contact-unavailable-state"
+            id="contactUnavailableState"
+            hidden
+        >
+
+            <div class="contact-unavailable-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="9"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                    />
+                    <path
+                        d="M12 8v4M12 16h.01"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                </svg>
+            </div>
+
+            <strong>Contact unavailable</strong>
+
+            <span>
+                This agent has not provided a public phone or WhatsApp number for this listing.
+            </span>
 
         </div>
 
@@ -2390,21 +2473,31 @@ function getFirstValidValue(...values) {
 
 function getAgentPhone() {
 
+    /*
+     * CONTACT DATA MUST BE PUBLIC-SAFE.
+     *
+     * The property document is the primary public source for an agent's
+     * contact details. The authenticated viewer's phone number is NEVER
+     * used here; it belongs to the visitor, not the listing agent.
+     *
+     * agentData remains a fallback when the public users document is
+     * readable, but the page does not require authentication to resolve
+     * contact information.
+     */
     const phone =
         getFirstValidValue(
 
-            agentData?.phoneNumber,
-            agentData?.phone,
-            agentData?.mobileNumber,
-            agentData?.mobile,
-            agentData?.contactPhone,
-            agentData?.telephone,
-
-            agentData?.contact?.phone,
-            agentData?.contact?.phoneNumber,
-            agentData?.contact?.mobile,
-
             currentProperty?.agentPhone,
+            currentProperty?.agent?.phoneNumber,
+            currentProperty?.agent?.phone,
+            currentProperty?.agent?.mobileNumber,
+            currentProperty?.agent?.mobile,
+            currentProperty?.agent?.contactPhone,
+            currentProperty?.agent?.telephone,
+            currentProperty?.agent?.contact?.phone,
+            currentProperty?.agent?.contact?.phoneNumber,
+            currentProperty?.agent?.contact?.mobile,
+
             currentProperty?.ownerPhone,
             currentProperty?.phoneNumber,
             currentProperty?.phone,
@@ -2412,7 +2505,15 @@ function getAgentPhone() {
             currentProperty?.mobile,
             currentProperty?.contactPhone,
 
-            currentUser?.phoneNumber
+            agentData?.phoneNumber,
+            agentData?.phone,
+            agentData?.mobileNumber,
+            agentData?.mobile,
+            agentData?.contactPhone,
+            agentData?.telephone,
+            agentData?.contact?.phone,
+            agentData?.contact?.phoneNumber,
+            agentData?.contact?.mobile
         );
 
     return phone;
@@ -2421,8 +2522,33 @@ function getAgentPhone() {
 
 function getAgentWhatsApp() {
 
+    /*
+     * As with phone, public property-level WhatsApp fields are resolved
+     * first so visitors can contact an agent without signing in.
+     */
     const explicitWhatsApp =
         getFirstValidValue(
+
+            currentProperty?.agentWhatsApp,
+            currentProperty?.agentWhatsapp,
+            currentProperty?.agent?.whatsappNumber,
+            currentProperty?.agent?.whatsappPhone,
+            currentProperty?.agent?.whatsapp,
+            currentProperty?.agent?.whatsAppNumber,
+            currentProperty?.agent?.whatsAppPhone,
+            currentProperty?.agent?.whatsApp,
+            currentProperty?.agent?.contact?.whatsappNumber,
+            currentProperty?.agent?.contact?.whatsappPhone,
+            currentProperty?.agent?.contact?.whatsapp,
+            currentProperty?.agent?.contact?.whatsAppNumber,
+            currentProperty?.agent?.contact?.whatsAppPhone,
+            currentProperty?.agent?.contact?.whatsApp,
+
+            currentProperty?.ownerWhatsApp,
+            currentProperty?.ownerWhatsapp,
+            currentProperty?.whatsappNumber,
+            currentProperty?.whatsappPhone,
+            currentProperty?.whatsapp,
 
             agentData?.whatsappNumber,
             agentData?.whatsappPhone,
@@ -2430,21 +2556,12 @@ function getAgentWhatsApp() {
             agentData?.whatsAppNumber,
             agentData?.whatsAppPhone,
             agentData?.whatsApp,
-
             agentData?.contact?.whatsappNumber,
             agentData?.contact?.whatsappPhone,
             agentData?.contact?.whatsapp,
             agentData?.contact?.whatsAppNumber,
             agentData?.contact?.whatsAppPhone,
-            agentData?.contact?.whatsApp,
-
-            currentProperty?.agentWhatsApp,
-            currentProperty?.agentWhatsapp,
-            currentProperty?.ownerWhatsApp,
-            currentProperty?.ownerWhatsapp,
-            currentProperty?.whatsappNumber,
-            currentProperty?.whatsappPhone,
-            currentProperty?.whatsapp
+            agentData?.contact?.whatsApp
         );
 
     if (explicitWhatsApp) {
@@ -4187,18 +4304,62 @@ window.openContactModal =
                 'contactModalProperty'
             );
 
+        const callButton =
+            document.querySelector(
+                '.contact-choice-call'
+            );
+
+        const whatsappButton =
+            document.querySelector(
+                '.contact-choice-whatsapp'
+            );
+
+        const unavailableState =
+            document.getElementById(
+                'contactUnavailableState'
+            );
+
         const agentName =
             agentData?.displayName ||
             agentData?.name ||
             currentProperty.agentName ||
             currentProperty.ownerName ||
+            currentProperty.agent?.displayName ||
+            currentProperty.agent?.name ||
             'Verified Agent';
+
+        const hasPhone =
+            Boolean(
+                normalizePhoneNumber(
+                    getAgentPhone()
+                )
+            );
+
+        const hasWhatsApp =
+            Boolean(
+                normalizePhoneNumber(
+                    getAgentWhatsApp()
+                )
+            );
 
         if (propertyLabel) {
 
             propertyLabel.textContent =
                 `${agentName} · ${currentProperty.title || 'This property'}`;
 
+        }
+
+        if (callButton) {
+            callButton.hidden = !hasPhone;
+        }
+
+        if (whatsappButton) {
+            whatsappButton.hidden = !hasWhatsApp;
+        }
+
+        if (unavailableState) {
+            unavailableState.hidden =
+                hasPhone || hasWhatsApp;
         }
 
         if (modal) {
