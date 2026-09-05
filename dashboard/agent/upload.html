@@ -1184,6 +1184,22 @@
         .map-adjust:hover { border-color:#cbd5e1; background:#f8fafc; }
         .upload-box.primary { border-color:var(--accent); background:var(--accent-soft); color:var(--accent); }
         .upload-box.primary::after { content:'Main photo'; position:absolute; left:8px; bottom:7px; padding:3px 7px; border-radius:6px; color:#fff; background:rgba(15,23,42,.78); font-size:9px; font-weight:800; }
+        .video-upload-section { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--border); }
+        .video-upload-card { position: relative; overflow: hidden; display: grid; grid-template-columns: 58px 1fr auto; align-items: center; gap: 12px; padding: 14px; border: 1.5px solid var(--border); border-radius: 16px; background: #fff; }
+        .video-upload-icon { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 13px; background: #eef3ff; color: var(--accent); }
+        .video-upload-copy { min-width: 0; }
+        .video-upload-copy strong { display:block; font-size:13px; font-weight:800; }
+        .video-upload-copy span { display:block; margin-top:3px; color:var(--muted); font-size:10px; line-height:1.5; }
+        .video-upload-button { min-height: 40px; padding: 0 13px; border: 1px solid #cbd5e1; border-radius: 10px; background:#fff; color:var(--text); font-size:11px; font-weight:800; }
+        .video-upload-button:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); }
+        .video-preview-card { position:relative; overflow:hidden; margin-top:10px; border:1.5px solid var(--border); border-radius:14px; background:#0f172a; }
+        .video-preview-card video { display:block; width:100%; max-height:360px; background:#000; }
+        .video-preview-meta { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 11px; color:#fff; font-size:10px; }
+        .video-preview-meta strong { font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .video-remove { border:0; background:rgba(255,255,255,.12); color:#fff; border-radius:7px; padding:5px 8px; font-size:9px; font-weight:800; }
+        .video-upload-error { margin-top:7px; color:#b91c1c; font-size:10px; font-weight:700; }
+        .review-video { width:100%; max-height:300px; border-radius:12px; background:#000; object-fit:contain; }
+        @media (max-width:520px) { .video-upload-card { grid-template-columns: 46px 1fr; } .video-upload-icon { width:42px; height:42px; } .video-upload-button { grid-column:1 / -1; width:100%; } }
         .photo-close { width:28px; height:28px; }
         .photo-make-primary { position:absolute; left:7px; top:7px; z-index:2; min-height:26px; padding:0 7px; border:0; border-radius:7px; color:#fff; background:rgba(15,23,42,.72); font-size:9px; font-weight:800; }
         .photo-make-primary.active { background:var(--accent); }
@@ -2172,6 +2188,24 @@
                         </div>
                     </button>
 
+                </div>
+
+                <div class="video-upload-section">
+                    <h2 class="section-title">Property Video <span style="color:var(--muted);font-size:11px;font-weight:600;">Optional</span></h2>
+                    <p class="section-description">Add one short walkthrough or property video. Maximum duration is 1 minute.</p>
+                    <input type="file" id="videoInput" class="hidden" accept="video/mp4,video/webm,video/quicktime,video/*" onchange="handleVideoUpload(event)">
+                    <div class="video-upload-card" id="videoUploadCard">
+                        <div class="video-upload-icon">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="m10 9 5 3-5 3V9Z"></path></svg>
+                        </div>
+                        <div class="video-upload-copy">
+                            <strong>Upload a property video</strong>
+                            <span>MP4, WebM or MOV · Up to 60 seconds · Optional</span>
+                        </div>
+                        <button class="video-upload-button" type="button" onclick="document.getElementById('videoInput').click()">Choose Video</button>
+                    </div>
+                    <div id="videoPreviewWrap" class="hidden"></div>
+                    <div id="videoUploadError" class="video-upload-error hidden" role="alert"></div>
                 </div>
 
                 <div class="tip">
@@ -5566,6 +5600,9 @@
             images:
                 uploadedPhotos,
 
+            video:
+                window.MoonLatVideo || null,
+
             step:
                 currentStep,
 
@@ -6144,7 +6181,8 @@
             ...base,
             documents,
             selectedLatLng: typeof selectedLatLng !== "undefined" ? selectedLatLng : null,
-            version: 2,
+            video: window.MoonLatVideo || null,
+            version: 3,
             savedAt: new Date().toISOString()
         };
     }
@@ -6358,15 +6396,186 @@
     }
     window.removePhoto = removePhotoEnhanced;
 
+    window.MoonLatVideo = window.MoonLatVideo || null;
+    window.MoonLatVideoUploadInProgress = false;
+
+    function showVideoError(message) {
+        const error = document.getElementById("videoUploadError");
+        if (!error) return;
+        error.textContent = message || "";
+        error.classList.toggle("hidden", !message);
+    }
+
+    function formatVideoDuration(seconds) {
+        const total = Math.max(0, Math.round(Number(seconds) || 0));
+        const minutes = Math.floor(total / 60);
+        const secs = total % 60;
+        return `${minutes}:${String(secs).padStart(2, "0")}`;
+    }
+
+    function readVideoDuration(file) {
+        return new Promise((resolve, reject) => {
+            const objectUrl = URL.createObjectURL(file);
+            const video = document.createElement("video");
+            video.preload = "metadata";
+            video.onloadedmetadata = () => {
+                const duration = Number(video.duration);
+                URL.revokeObjectURL(objectUrl);
+                video.remove();
+                if (!Number.isFinite(duration) || duration <= 0) {
+                    reject(new Error("Could not determine the video duration."));
+                    return;
+                }
+                resolve(duration);
+            };
+            video.onerror = () => {
+                URL.revokeObjectURL(objectUrl);
+                video.remove();
+                reject(new Error("This video could not be read. Please choose a valid video file."));
+            };
+            video.src = objectUrl;
+        });
+    }
+
+    function renderVideo(videoData) {
+        const wrap = document.getElementById("videoPreviewWrap");
+        if (!wrap) return;
+        if (!videoData?.url) {
+            wrap.innerHTML = "";
+            wrap.classList.add("hidden");
+            return;
+        }
+        const name = String(videoData.name || "Property video").replace(/[<>&"]/g, char => ({"<":"&lt;", ">":"&gt;", "&":"&amp;", "\"":"&quot;"}[char]));
+        const url = String(videoData.url).replace(/"/g, "&quot;");
+        wrap.innerHTML = `
+            <div class="video-preview-card">
+                <video src="${url}" controls playsinline preload="metadata"></video>
+                <div class="video-preview-meta">
+                    <strong>${name}</strong>
+                    <span>${formatVideoDuration(videoData.duration)} · <button class="video-remove" type="button" onclick="removePropertyVideo()">Remove</button></span>
+                </div>
+            </div>
+        `;
+        wrap.classList.remove("hidden");
+    }
+
+    function removePropertyVideo() {
+        window.MoonLatVideo = null;
+        const input = document.getElementById("videoInput");
+        if (input) input.value = "";
+        renderVideo(null);
+        showVideoError("");
+        if (typeof scheduleDraftSave === "function") scheduleDraftSave();
+        if (typeof updateReviewMedia === "function") updateReviewMedia();
+        toast("Property video removed.", "success");
+    }
+    window.removePropertyVideo = removePropertyVideo;
+
+    async function uploadVideoWithProgress(file, duration) {
+        const xhr = new XMLHttpRequest();
+        const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dxdbn6xwy/video/upload";
+        return new Promise((resolve, reject) => {
+            xhr.open("POST", cloudinaryUrl, true);
+            xhr.upload.addEventListener("progress", event => {
+                if (!event.lengthComputable) return;
+                const percent = Math.round((event.loaded / event.total) * 100);
+                setStatus(
+                    "Uploading property video",
+                    `${file.name} · ${Math.round(event.loaded / 1024 / 1024 * 10) / 10} MB of ${Math.round(event.total / 1024 / 1024 * 10) / 10} MB · ${formatVideoDuration(duration)}`,
+                    percent
+                );
+            });
+            xhr.addEventListener("load", () => {
+                let result = {};
+                try { result = JSON.parse(xhr.responseText || "{}"); } catch {}
+                if (xhr.status >= 200 && xhr.status < 300 && result.secure_url) {
+                    resolve(result);
+                } else {
+                    reject(new Error(result?.error?.message || "Cloudinary video upload failed."));
+                }
+            });
+            xhr.addEventListener("error", () => reject(new Error("Network error while uploading the video.")));
+            xhr.addEventListener("abort", () => reject(new Error("Video upload was cancelled.")));
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "geefox_unsigned");
+            formData.append("folder", "moonlat_properties/videos");
+            xhr.send(formData);
+        });
+    }
+
+    window.handleVideoUpload = async function(event) {
+        const file = event?.target?.files?.[0];
+        if (!file) return;
+        showVideoError("");
+        if (!file.type.startsWith("video/")) {
+            showVideoError("Please select a valid video file.");
+            event.target.value = "";
+            return;
+        }
+        if (window.MoonLatVideoUploadInProgress) return;
+        window.MoonLatVideoUploadInProgress = true;
+        const button = document.querySelector(".video-upload-button");
+        const originalButtonText = button?.textContent || "Choose Video";
+        if (button) {
+            button.disabled = true;
+            button.textContent = "Checking...";
+        }
+        try {
+            const duration = await readVideoDuration(file);
+            if (duration > 60.05) {
+                throw new Error("Video must be 1 minute or shorter.");
+            }
+            if (button) button.textContent = "Uploading...";
+            setStatus("Preparing property video", `${file.name} · ${formatVideoDuration(duration)} · Maximum 1:00`, 0);
+            const result = await uploadVideoWithProgress(file, duration);
+            window.MoonLatVideo = {
+                url: result.secure_url,
+                secure_url: result.secure_url,
+                publicId: result.public_id || "",
+                resourceType: result.resource_type || "video",
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                duration: Number(result.duration || duration),
+                width: Number(result.width || 0),
+                height: Number(result.height || 0)
+            };
+            renderVideo(window.MoonLatVideo);
+            if (typeof scheduleDraftSave === "function") scheduleDraftSave();
+            if (typeof updateReviewMedia === "function") updateReviewMedia();
+            setStatus("Property video ready", `${file.name} · ${formatVideoDuration(window.MoonLatVideo.duration)} · Ready to publish`, 100, true, "success");
+            hideStatus(1800);
+            toast("Property video uploaded.", "success");
+        } catch (error) {
+            console.error("MoonLat video upload failed:", error);
+            window.MoonLatVideo = null;
+            renderVideo(null);
+            showVideoError(error.message || "Could not upload this video. Please try again.");
+            setStatus("Video upload failed", error.message || "Please choose another video.", 100, true, "error");
+            hideStatus(4200);
+            toast(error.message || "Could not upload the property video.", "error");
+        } finally {
+            window.MoonLatVideoUploadInProgress = false;
+            if (button) {
+                button.disabled = false;
+                button.textContent = originalButtonText;
+            }
+            event.target.value = "";
+        }
+    };
+
     function updateReviewMedia() {
         const list = document.getElementById("reviewMediaList");
         const status = document.getElementById("reviewMediaStatus");
         if (!list) return;
         const photoCount = uploadedPhotos.length;
         const documentCount = Object.keys(documents).length;
+        const videoReady = !!window.MoonLatVideo?.url;
         list.innerHTML = `
             <div class="review-media-item"><span>Property photos</span><span>${photoCount} uploaded</span></div>
             <div class="review-media-item"><span>Main photo</span><span>${photoCount ? "Ready" : "Missing"}</span></div>
+            <div class="review-media-item"><span>Property video</span><span>${videoReady ? `${Math.round(Number(window.MoonLatVideo.duration || 0))} sec · Ready` : "Optional · Not added"}</span></div>
             <div class="review-media-item"><span>Supporting documents</span><span>${documentCount} uploaded</span></div>
         `;
         const ready = photoCount >= 1;
@@ -6385,7 +6594,7 @@
     const originalCollectDraft = typeof collectDraft === "function" ? collectDraft : null;
     window.collectDraft = function() {
         const base = typeof originalCollectDraft === "function" ? originalCollectDraft() : {};
-        return { ...base, documents, selectedLatLng: window.selectedLatLng || null, version: 2 };
+        return { ...base, documents, selectedLatLng: window.selectedLatLng || null, video: window.MoonLatVideo || null, version: 3 };
     };
 
     function restoreEnhancedDraft() {
@@ -6401,6 +6610,10 @@
                 documents = draft.documents;
                 window.MoonLatDocuments = documents;
             }
+            if (draft.video && typeof draft.video === "object" && draft.video.url) {
+                window.MoonLatVideo = draft.video;
+                renderVideo(draft.video);
+            }
             renderDocuments();
             if (draft.selectedLatLng && Number.isFinite(Number(draft.selectedLatLng.lat)) && Number.isFinite(Number(draft.selectedLatLng.lng))) {
                 if (typeof selectedLatLng !== "undefined") {
@@ -6414,8 +6627,8 @@
     }
 
     function validateProductionPublish() {
-        if (photoUploadInProgress > 0) {
-            toast("Wait for photo uploads to finish before continuing.", "error");
+        if (photoUploadInProgress > 0 || window.MoonLatVideoUploadInProgress) {
+            toast("Wait for media uploads to finish before continuing.", "error");
             return false;
         }
         if (uploadedPhotos.length < 1) {
@@ -6857,6 +7070,18 @@
         return images.slice(0, 6);
     }
 
+    function normalizeVideo(property) {
+        const value = property?.video || property?.videoUrl || property?.propertyVideo || (Array.isArray(property?.videos) ? property.videos[0] : null);
+        if (!value) return null;
+        if (typeof value === "string") return { url: value.trim(), duration: Number(property?.videoDuration || 0), name: "Property video" };
+        if (typeof value === "object") {
+            const url = str(value.url || value.secure_url || value.src || value.video).trim();
+            if (!url) return null;
+            return { ...value, url, duration: Number(value.duration || property?.videoDuration || 0), name: value.name || "Property video" };
+        }
+        return null;
+    }
+
     function renderPhotos(images) {
         const grid = document.getElementById("photoGrid");
         if (!grid) return;
@@ -7149,6 +7374,8 @@
         renderPhotos(
             normalizeImages(property)
         );
+        window.MoonLatVideo = normalizeVideo(property);
+        renderVideo(window.MoonLatVideo);
 
         window.MoonLatEditDocuments =
             property.documents &&
@@ -7320,6 +7547,11 @@
                 .map(button => button.dataset.value)
                 .filter(Boolean),
             images,
+            video: window.MoonLatVideo?.url || null,
+            videoUrl: window.MoonLatVideo?.url || null,
+            videoDuration: Number(window.MoonLatVideo?.duration || 0) || null,
+            videoPublicId: window.MoonLatVideo?.publicId || "",
+            videos: window.MoonLatVideo?.url ? [window.MoonLatVideo.url] : [],
             documents:
                 window.MoonLatDocuments ||
                 window.MoonLatEditDocuments ||
