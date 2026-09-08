@@ -1505,6 +1505,121 @@ let verificationCooldown =
 
 
 /* ============================================================
+   AUTH RETURN FLOW
+   ------------------------------------------------------------
+   Preserve the public property contact request through sign-in
+   and return the user to that exact property after authentication.
+   ============================================================ */
+
+const authUrlParams =
+  new URLSearchParams(
+    window.location.search
+  );
+
+
+function getContactReturnUrl() {
+
+  let candidate =
+    authUrlParams.get("redirect");
+
+  if (!candidate) {
+
+    try {
+      candidate =
+        sessionStorage.getItem(
+          "moonlatContactReturnUrl"
+        );
+    } catch (error) {
+      console.warn(
+        "MoonLat: could not read contact return URL.",
+        error
+      );
+    }
+
+  }
+
+  if (!candidate) {
+    return null;
+  }
+
+  try {
+
+    const destination =
+      new URL(
+        candidate,
+        window.location.origin
+      );
+
+    if (
+      destination.origin !==
+      window.location.origin
+    ) {
+      return null;
+    }
+
+    return destination.href;
+
+  } catch (error) {
+
+    console.warn(
+      "MoonLat: invalid authentication return URL.",
+      error
+    );
+
+    return null;
+
+  }
+
+}
+
+
+function consumeContactReturnUrl() {
+
+  const destination =
+    getContactReturnUrl();
+
+  if (!destination) {
+    return null;
+  }
+
+  try {
+    sessionStorage.removeItem("moonlatContactReturnUrl");
+  } catch (error) {
+    console.warn(
+      "MoonLat: could not clear contact return URL.",
+      error
+    );
+  }
+
+  return destination;
+
+}
+
+
+function updateAuthReturnLinks() {
+
+  const destination =
+    getContactReturnUrl();
+
+  if (!destination) {
+    return;
+  }
+
+  document
+    .querySelectorAll(
+      'a[href="sign-up.html"]'
+    )
+    .forEach(
+      link => {
+        link.href =
+          `sign-up.html?redirect=${encodeURIComponent(destination)}`;
+      }
+    );
+
+}
+
+
+/* ============================================================
    DOM HELPER
    ============================================================ */
 
@@ -1994,6 +2109,13 @@ function getRedirectUrl(
 
 
 /* ============================================================
+   INITIAL RETURN-LINK SYNC
+   ============================================================ */
+
+updateAuthReturnLinks();
+
+
+/* ============================================================
    FIREBASE ERROR MESSAGES
    ============================================================ */
 
@@ -2421,6 +2543,9 @@ async function routeAuthenticatedUser(
 
   try {
 
+    const contactReturnUrl =
+      getContactReturnUrl();
+
     /*
      * Resolve the persisted MoonLat role BEFORE applying the
      * email-verification gate. This is critical because the
@@ -2460,6 +2585,7 @@ async function routeAuthenticatedUser(
 
 
     const destination =
+      contactReturnUrl ||
       getRedirectUrl(
         role,
         data
@@ -2471,8 +2597,12 @@ async function routeAuthenticatedUser(
 
 
     showLoading(
-      "Welcome back",
-      `Opening your ${getRoleLabel(role).toLowerCase()} workspace...`
+      contactReturnUrl
+        ? "Contact access unlocked"
+        : "Welcome back",
+      contactReturnUrl
+        ? "Returning to the property..."
+        : `Opening your ${getRoleLabel(role).toLowerCase()} workspace...`
     );
 
 
@@ -2690,7 +2820,12 @@ $("loginForm")
         }
 
 
+        const contactReturnUrl =
+          getContactReturnUrl();
+
+
         const destination =
+          contactReturnUrl ||
           getRedirectUrl(
             role,
             data
@@ -2699,8 +2834,12 @@ $("loginForm")
 
         showAlert(
           "success",
-          "Welcome back",
-          `Signed in as ${getRoleLabel(role)}. Opening your workspace...`
+          contactReturnUrl
+            ? "Contact access unlocked"
+            : "Welcome back",
+          contactReturnUrl
+            ? "Returning to the property..."
+            : `Signed in as ${getRoleLabel(role)}. Opening your workspace...`
         );
 
 
@@ -2709,13 +2848,21 @@ $("loginForm")
 
 
         showLoading(
-          "Welcome back",
-          `Opening your ${getRoleLabel(role).toLowerCase()} workspace...`
+          contactReturnUrl
+            ? "Contact access unlocked"
+            : "Welcome back",
+          contactReturnUrl
+            ? "Returning to the property..."
+            : `Opening your ${getRoleLabel(role).toLowerCase()} workspace...`
         );
 
 
         setTimeout(
           () => {
+
+            if (getContactReturnUrl()) {
+              consumeContactReturnUrl();
+            }
 
             window.location.replace(
               destination
@@ -2884,7 +3031,12 @@ $("googleBtn")
           "buyer";
 
 
+        const contactReturnUrl =
+          getContactReturnUrl();
+
+
         const destination =
+          contactReturnUrl ||
           getRedirectUrl(
             role,
             data
@@ -2893,8 +3045,12 @@ $("googleBtn")
 
         showAlert(
           "success",
-          "Welcome back",
-          `Signed in as ${getRoleLabel(role)} with Google.`
+          contactReturnUrl
+            ? "Contact access unlocked"
+            : "Welcome back",
+          contactReturnUrl
+            ? "Returning to the property..."
+            : `Signed in as ${getRoleLabel(role)} with Google.`
         );
 
 
@@ -2903,13 +3059,21 @@ $("googleBtn")
 
 
         showLoading(
-          "Welcome back",
-          `Opening your ${getRoleLabel(role).toLowerCase()} workspace...`
+          contactReturnUrl
+            ? "Contact access unlocked"
+            : "Welcome back",
+          contactReturnUrl
+            ? "Returning to the property..."
+            : `Opening your ${getRoleLabel(role).toLowerCase()} workspace...`
         );
 
 
         setTimeout(
           () => {
+
+            if (getContactReturnUrl()) {
+              consumeContactReturnUrl();
+            }
 
             window.location.replace(
               destination
