@@ -1774,6 +1774,122 @@ let resendCooldown = false;
 
 
 /* ============================================================
+   AUTH RETURN FLOW
+   ------------------------------------------------------------
+   Preserve the public property contact request through account
+   creation and email verification, then return the user to the
+   exact property instead of the normal workspace.
+   ============================================================ */
+
+const authUrlParams =
+  new URLSearchParams(
+    window.location.search
+  );
+
+
+function getContactReturnUrl() {
+
+  let candidate =
+    authUrlParams.get("redirect");
+
+  if (!candidate) {
+
+    try {
+      candidate =
+        sessionStorage.getItem(
+          "moonlatContactReturnUrl"
+        );
+    } catch (error) {
+      console.warn(
+        "MoonLat: could not read contact return URL.",
+        error
+      );
+    }
+
+  }
+
+  if (!candidate) {
+    return null;
+  }
+
+  try {
+
+    const destination =
+      new URL(
+        candidate,
+        window.location.origin
+      );
+
+    if (
+      destination.origin !==
+      window.location.origin
+    ) {
+      return null;
+    }
+
+    return destination.href;
+
+  } catch (error) {
+
+    console.warn(
+      "MoonLat: invalid authentication return URL.",
+      error
+    );
+
+    return null;
+
+  }
+
+}
+
+
+function consumeContactReturnUrl() {
+
+  const destination =
+    getContactReturnUrl();
+
+  if (!destination) {
+    return null;
+  }
+
+  try {
+    sessionStorage.removeItem("moonlatContactReturnUrl");
+  } catch (error) {
+    console.warn(
+      "MoonLat: could not clear contact return URL.",
+      error
+    );
+  }
+
+  return destination;
+
+}
+
+
+function updateAuthReturnLinks() {
+
+  const destination =
+    getContactReturnUrl();
+
+  if (!destination) {
+    return;
+  }
+
+  document
+    .querySelectorAll(
+      'a[href="sign-in.html"]'
+    )
+    .forEach(
+      link => {
+        link.href =
+          `sign-in.html?redirect=${encodeURIComponent(destination)}`;
+      }
+    );
+
+}
+
+
+/* ============================================================
    ELEMENTS
    ============================================================ */
 
@@ -2405,6 +2521,21 @@ async function routeVerifiedUser(user) {
   }
 
   try {
+
+    const contactReturnUrl =
+      getContactReturnUrl();
+
+    if (contactReturnUrl) {
+
+      consumeContactReturnUrl();
+
+      window.location.replace(
+        contactReturnUrl
+      );
+
+      return;
+
+    }
 
     const profile = await getUserProfile(user.uid);
 
@@ -3058,6 +3189,13 @@ registerForm.addEventListener(
 
   }
 );
+
+
+/* ============================================================
+   INITIAL RETURN-LINK SYNC
+   ============================================================ */
+
+updateAuthReturnLinks();
 
 
 /* ============================================================
