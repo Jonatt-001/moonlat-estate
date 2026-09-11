@@ -3,54 +3,112 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
   <title>Live Market | MoonLat</title>
-
   <meta
     name="description"
-    content="Discover fresh property listings, pricing and market opportunities from MoonLat and trusted property sources in one live market."
+    content="Explore the live MoonLat property market. Discover fresh homes, land, rentals and investment opportunities with current listings, prices and market signals across Nigeria."
   >
-
   <link
     rel="canonical"
     href="https://moonlat.top/live-market/"
   >
-
+  <!-- =====================================================
+       OPEN GRAPH / SOCIAL SHARING
+  ====================================================== -->
   <meta
     property="og:title"
     content="Live Market | MoonLat"
   >
-
   <meta
     property="og:description"
-    content="Discover fresh property listings, pricing and market opportunities from MoonLat and trusted property sources in one live market."
+    content="Explore the live MoonLat property market. Discover fresh homes, land, rentals and investment opportunities with current listings, prices and market signals across Nigeria."
   >
-
   <meta
     property="og:url"
     content="https://moonlat.top/live-market/"
   >
-
   <meta
     property="og:type"
     content="website"
   >
-
+  <meta
+    property="og:site_name"
+    content="MoonLat"
+  >
+  <meta
+    property="og:locale"
+    content="en_NG"
+  >
+  <meta
+    property="og:image"
+    content="https://moonlat.top/live-market.png"
+  >
+  <meta
+    property="og:image:url"
+    content="https://moonlat.top/live-market.png"
+  >
+  <meta
+    property="og:image:secure_url"
+    content="https://moonlat.top/live-market.png"
+  >
+  <meta
+    property="og:image:type"
+    content="image/png"
+  >
+  <meta
+    property="og:image:alt"
+    content="MoonLat Live Market — discover properties, prices and opportunities across Nigeria"
+  >
+  <!--
+    If live-market.png is 1200 × 630, keep these dimensions.
+    If the actual image has different dimensions, update them accordingly.
+  -->
+  <meta
+    property="og:image:width"
+    content="1200"
+  >
+  <meta
+    property="og:image:height"
+    content="630"
+  >
+  <!-- =====================================================
+       TWITTER / X SOCIAL SHARING
+  ====================================================== -->
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  >
+  <meta
+    name="twitter:title"
+    content="Live Market | MoonLat"
+  >
+  <meta
+    name="twitter:description"
+    content="Explore fresh property listings, current prices and market opportunities across Nigeria with MoonLat's live property market."
+  >
+  <meta
+    name="twitter:image"
+    content="https://moonlat.top/live-market.png"
+  >
+  <meta
+    name="twitter:image:alt"
+    content="MoonLat Live Market — property listings and market opportunities across Nigeria"
+  >
+  <!-- =====================================================
+       BRAND / BROWSER
+  ====================================================== -->
   <meta
     name="theme-color"
     content="#f5f6f1"
   >
-
   <link
     rel="stylesheet"
     href="./styles.css"
   >
-
   <style>
     /* =====================================================
        PREMIUM PARTNER / NETWORK FOOTER
     ====================================================== */
-
     .premium-site-footer {
       position: relative;
       overflow: hidden;
@@ -59,7 +117,6 @@
       border-radius: 36px 36px 0 0;
       margin-top: 48px;
     }
-
     .premium-site-footer::before {
       content: "";
       position: absolute;
@@ -70,22 +127,18 @@
         radial-gradient(circle at 92% 22%, rgba(255, 255, 255, 0.055), transparent 26%),
         linear-gradient(135deg, rgba(255, 255, 255, 0.018), transparent 45%);
     }
-
     .footer-network,
     .footer-main,
     .footer-bottom {
       position: relative;
       z-index: 1;
     }
-
     .footer-network {
       padding: 72px 6vw 42px;
     }
-
     .footer-network-copy {
       max-width: 720px;
     }
-
     .footer-kicker {
       display: inline-flex;
       align-items: center;
@@ -96,7 +149,6 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
     }
-
     .footer-kicker::before {
       content: "";
       width: 22px;
@@ -104,7 +156,6 @@
       background: currentColor;
       opacity: 0.7;
     }
-
     .footer-network-copy h2 {
       margin: 18px 0 16px;
       max-width: 680px;
@@ -113,12 +164,10 @@
       letter-spacing: -0.055em;
       font-weight: 800;
     }
-
     .footer-network-copy h2 em {
       color: #b9ec68;
       font-style: normal;
     }
-
     .footer-network-copy p {
       max-width: 650px;
       margin: 0;
@@ -126,7 +175,6 @@
       font-size: 16px;
       line-height: 1.8;
     }
-
     .partner-marquee {
       position: relative;
       overflow: hidden;
@@ -137,7 +185,6 @@
       mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
       -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
     }
-
     .partner-track {
       display: flex;
       width: max-content;
@@ -146,11 +193,9 @@
       animation: moonlatPartnerMarquee 34s linear infinite;
       will-change: transform;
     }
-
     .partner-marquee:hover .partner-track {
       animation-play-state: paused;
     }
-
     .partner-logo {
       display: inline-flex;
       align-items: center;
@@ -166,13 +211,11 @@
       font-weight: 800;
       letter-spacing: 0.13em;
     }
-
     .partner-logo:hover {
       border-color: rgba(185, 236, 104, 0.34);
       color: #f5f7f1;
       background: rgba(185, 236, 104, 0.06);
     }
-
     .logo-symbol {
       display: inline-flex;
       align-items: center;
@@ -185,21 +228,17 @@
       font-size: 11px;
       letter-spacing: 0;
     }
-
     .house-symbol {
       font-size: 18px;
       line-height: 1;
     }
-
     .property-symbol {
       font-size: 15px;
     }
-
     .untera-logo {
       padding: 7px 15px;
       background: rgba(255, 255, 255, 0.06);
     }
-
     .untera-logo img {
       display: block;
       width: 94px;
@@ -207,7 +246,6 @@
       object-fit: contain;
       border-radius: 8px;
     }
-
     .footer-partner-card {
       display: flex;
       align-items: center;
@@ -219,7 +257,6 @@
       border-radius: 24px;
       background: rgba(255, 255, 255, 0.035);
     }
-
     .footer-partner-intro {
       display: flex;
       flex-direction: column;
@@ -227,11 +264,9 @@
       color: rgba(245, 247, 241, 0.55);
       font-size: 13px;
     }
-
     .footer-partner-intro .footer-kicker {
       font-size: 9px;
     }
-
     .footer-partner-brand {
       display: inline-flex;
       align-items: center;
@@ -245,13 +280,11 @@
       background: rgba(0, 0, 0, 0.13);
       transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
     }
-
     .footer-partner-brand:hover {
       transform: translateY(-2px);
       border-color: rgba(185, 236, 104, 0.34);
       background: rgba(185, 236, 104, 0.06);
     }
-
     .partner-brand-mark {
       display: flex;
       align-items: center;
@@ -263,30 +296,25 @@
       border-radius: 12px;
       background: #101419;
     }
-
     .partner-brand-mark img {
       width: 68px;
       height: 42px;
       object-fit: contain;
     }
-
     .partner-brand-copy {
       display: flex;
       flex: 1;
       flex-direction: column;
       gap: 2px;
     }
-
     .partner-brand-copy strong {
       font-size: 15px;
       letter-spacing: -0.02em;
     }
-
     .partner-brand-copy small {
       color: rgba(245, 247, 241, 0.5);
       font-size: 11px;
     }
-
     .partner-arrow {
       display: flex;
       align-items: center;
@@ -298,7 +326,6 @@
       color: #b9ec68;
       font-size: 17px;
     }
-
     .footer-main {
       display: flex;
       align-items: flex-end;
@@ -308,27 +335,23 @@
       padding: 38px 0;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
-
     .premium-site-footer .footer-brand {
       color: #f5f7f1;
       text-decoration: none;
       font-weight: 800;
       letter-spacing: 0.12em;
     }
-
     .premium-site-footer .footer-main p {
       margin: 9px 0 0;
       color: rgba(245, 247, 241, 0.48);
       font-size: 13px;
     }
-
     .premium-site-footer .footer-links {
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-end;
       gap: 22px;
     }
-
     .premium-site-footer .footer-links a {
       color: rgba(245, 247, 241, 0.66);
       font-size: 13px;
@@ -336,11 +359,9 @@
       text-decoration: none;
       transition: color 160ms ease;
     }
-
     .premium-site-footer .footer-links a:hover {
       color: #b9ec68;
     }
-
     .premium-site-footer .footer-bottom {
       display: flex;
       flex-wrap: wrap;
@@ -353,7 +374,6 @@
       color: rgba(245, 247, 241, 0.38);
       font-size: 11px;
     }
-
     @keyframes moonlatPartnerMarquee {
       from {
         transform: translate3d(0, 0, 0);
@@ -362,70 +382,57 @@
         transform: translate3d(-50%, 0, 0);
       }
     }
-
     @media (prefers-reduced-motion: reduce) {
       .partner-track {
         animation: none;
       }
     }
-
     @media (max-width: 720px) {
       .premium-site-footer {
         border-radius: 28px 28px 0 0;
         margin-top: 28px;
       }
-
       .footer-network {
         padding: 48px 24px 30px;
       }
-
       .footer-network-copy h2 {
         font-size: clamp(40px, 12vw, 58px);
       }
-
       .footer-network-copy p {
         font-size: 14px;
         line-height: 1.75;
       }
-
       .partner-marquee {
         margin: 42px -24px 0;
       }
-
       .partner-track {
         gap: 10px;
         animation-duration: 28s;
       }
-
       .partner-logo {
         min-height: 48px;
         padding: 0 15px;
         font-size: 10px;
       }
-
       .footer-partner-card {
         align-items: stretch;
         flex-direction: column;
         padding: 16px;
       }
-
       .footer-partner-brand {
         min-width: 0;
         width: 100%;
       }
-
       .footer-main {
         align-items: flex-start;
         flex-direction: column;
         margin: 0 24px;
         padding: 30px 0;
       }
-
       .premium-site-footer .footer-links {
         justify-content: flex-start;
         gap: 14px 24px;
       }
-
       .premium-site-footer .footer-bottom {
         align-items: flex-start;
         flex-direction: column;
