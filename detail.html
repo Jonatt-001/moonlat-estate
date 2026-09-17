@@ -405,6 +405,77 @@ h1{font-size:clamp(1.8rem,4vw,3.15rem);line-height:1.08;letter-spacing:-.035em;m
     html{scroll-behavior:auto}
     *{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
+/* ============================================================
+   MOONLAT BLUE STICKY HEADER
+   ============================================================ */
+
+.header{
+    background:#09063d !important;
+    border-bottom:1px solid rgba(255,255,255,.08) !important;
+    box-shadow:0 8px 28px rgba(9,6,61,.12);
+}
+
+.header-inner{
+    background:transparent;
+}
+
+.logo img{
+    /* Keeps the existing logo intact */
+    filter:none;
+}
+
+.header-actions{
+    gap:9px;
+}
+
+.icon-btn{
+    background:rgba(255,255,255,.06) !important;
+    border:1px solid rgba(255,255,255,.18) !important;
+    color:#fff !important;
+    box-shadow:0 4px 16px rgba(0,0,0,.08);
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.icon-btn:hover{
+    background:rgba(255,255,255,.12) !important;
+    border-color:rgba(255,255,255,.3) !important;
+}
+
+.icon-btn:active{
+    transform:scale(.95);
+}
+
+/* Mobile header */
+@media(max-width:650px){
+    .header{
+        height:64px;
+        background:#09063d !important;
+    }
+
+    .header-inner{
+        padding:0;
+    }
+
+    .logo img{
+        width:100px;
+    }
+
+    .icon-btn{
+        width:40px;
+        height:40px;
+    }
+}
+
+/* Accessibility */
+@media(prefers-reduced-motion:reduce){
+    .icon-btn{
+        transition:none;
+    }
+}
+
 </style>
 </head>
 
