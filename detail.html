@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Property Detail | MoonLat</title>
+<meta name="description" content="Explore this property in detail on MoonLat.">
+<meta name="theme-color" content="#09063d">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MoonLat">
+<meta property="og:title" content="Property Detail | MoonLat" id="ogTitle">
+<meta property="og:description" content="Explore this property in detail on MoonLat." id="ogDescription">
+<meta property="og:url" content="https://www.moonlat.top/detail.html" id="ogUrl">
+<meta property="og:image" content="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&auto=format&fit=crop" id="ogImage">
+<meta property="og:image:alt" content="MoonLat property" id="ogImageAlt">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Property Detail | MoonLat" id="twitterTitle">
+<meta name="twitter:description" content="Explore this property in detail on MoonLat." id="twitterDescription">
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&auto=format&fit=crop" id="twitterImage">
+
+<link rel="canonical" href="https://www.moonlat.top/detail.html" id="canonicalUrl">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+<style>
+:root{
+    --navy:#09063d;
+    --navy-2:#121044;
+    --blue:#3465f6;
+    --cyan:#17d8c2;
+    --ink:#111426;
+    --muted:#697086;
+    --line:#e8eaf0;
+    --soft:#f6f7fa;
+    --white:#fff;
+    --shadow:0 18px 55px rgba(18,16,68,.10);
+    --radius:24px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;
+    background:#fff;
+    color:var(--ink);
+    font-family:Poppins,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;
+}
+button,a{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+.container{width:min(1180px,calc(100% - 36px));margin:auto}
+
+.header{
+    position:sticky;top:0;z-index:1000;
+    height:72px;background:rgba(255,255,255,.92);
+    border-bottom:1px solid rgba(232,234,240,.9);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.header-inner{height:100%;display:flex;align-items:center;justify-content:space-between}
+.logo img{width:112px;height:auto}
+.header-actions{display:flex;gap:9px;align-items:center}
+.icon-btn{
+    width:43px;height:43px;border:1px solid var(--line);background:#fff;
+    border-radius:50%;display:grid;place-items:center;color:var(--navy);
+}
+.icon-btn svg{width:20px;height:20px}
+.hero{padding:24px 0 0}
+.crumbs{display:flex;gap:8px;align-items:center;color:#8a90a1;font-size:12px;margin:0 0 18px}
+.crumbs a:hover{color:var(--blue)}
+.crumb-current{color:#4e5569;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.gallery{
+    display:grid;grid-template-columns:1.55fr .72fr;gap:10px;
+    height:min(620px,62vw);min-height:390px;
+}
+.gallery-main,.gallery-side>button{
+    position:relative;border:0;padding:0;overflow:hidden;background:#e9ebf0;
+}
+.gallery-main{border-radius:28px 0 0 28px}
+.gallery-side{display:grid;grid-template-rows:1fr 1fr;gap:10px}
+.gallery-side>button:first-child{border-radius:0 28px 0 0}
+.gallery-side>button:last-child{border-radius:0 0 28px 0}
+.gallery img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
+.gallery button:hover img{transform:scale(1.025)}
+.gallery-overlay{
+    position:absolute;inset:0;padding:22px;display:flex;justify-content:space-between;
+    align-items:flex-start;background:linear-gradient(180deg,rgba(0,0,0,.30),transparent 35%,rgba(0,0,0,.16));
+    pointer-events:none;
+}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{
+    padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.92);
+    color:var(--navy);font-size:11px;font-weight:800;letter-spacing:.02em;
+    box-shadow:0 8px 25px rgba(0,0,0,.12)
+}
+.badge.dark{background:rgba(9,6,61,.9);color:#fff}
+.gallery-count{
+    display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;
+    background:rgba(0,0,0,.58);color:#fff;font-size:11px;font-weight:700
+}
+.gallery-count svg{width:15px;height:15px}
+.hero-meta{
+    display:grid;grid-template-columns:1fr auto;gap:30px;align-items:end;
+    padding:28px 0 30px;border-bottom:1px solid var(--line)
+}
+.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:800;color:var(--blue);margin-bottom:8px}
+h1{font-size:clamp(1.8rem,4vw,3.15rem);line-height:1.08;letter-spacing:-.035em;margin:0 0 11px;color:var(--navy)}
+.location{display:flex;align-items:center;gap:7px;color:#737a8d;font-size:.9rem}
+.location svg{width:17px;height:17px;color:var(--blue)}
+.price-wrap{text-align:right}
+.price-label{display:block;color:#8a90a1;font-size:11px;margin-bottom:3px}
+.price{font-size:clamp(1.45rem,3vw,2.15rem);font-weight:800;letter-spacing:-.035em;color:var(--navy)}
+.period{font-size:12px;color:#737a8d}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:30px;padding:38px 0 90px}
+.section{padding:0 0 38px;margin-bottom:38px;border-bottom:1px solid var(--line)}
+.section:last-child{margin-bottom:0}
+.section-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--blue);font-weight:800;margin-bottom:8px}
+.section h2{font-size:1.4rem;line-height:1.2;margin:0 0 18px;color:var(--navy);letter-spacing:-.025em}
+.description{font-size:.95rem;line-height:1.95;color:#596176;white-space:pre-line}
+.description.empty{color:#969cab;font-style:italic}
+
+.facts{
+    display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);
+    border-radius:20px;overflow:hidden;background:#fff
+}
+.fact{padding:19px 15px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.fact:nth-child(4n){border-right:0}
+.fact:nth-last-child(-n+4){border-bottom:0}
+.fact-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#9298a8;font-weight:700;margin-bottom:6px}
+.fact-value{font-size:.91rem;font-weight:700;color:#222842;word-break:break-word}
+
+.highlights{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.highlight{
+    padding:17px;border:1px solid var(--line);border-radius:18px;background:var(--soft);
+    display:flex;gap:13px;align-items:flex-start
+}
+.highlight-icon{
+    width:38px;height:38px;flex:0 0 38px;border-radius:12px;background:#eef2ff;
+    color:var(--blue);display:grid;place-items:center
+}
+.highlight-icon svg{width:19px;height:19px}
+.highlight strong{display:block;font-size:.84rem;margin-bottom:3px;color:#252b42}
+.highlight span{font-size:.74rem;color:#7c8394;line-height:1.45}
+
+.amenities{display:flex;flex-wrap:wrap;gap:9px}
+.amenity{
+    padding:10px 13px;border:1px solid var(--line);border-radius:999px;
+    background:#fff;font-size:.76rem;font-weight:600;color:#50586b
+}
+
+.location-card{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#fff}
+#map{height:320px;background:#edf0f3}
+.address{padding:17px 18px;font-size:.82rem;color:#60687b;line-height:1.6}
+
+.sidebar{position:relative}
+.sticky-card{
+    position:sticky;top:92px;border:1px solid var(--line);border-radius:24px;
+    padding:21px;background:#fff;box-shadow:var(--shadow)
+}
+.side-label{font-size:11px;color:#9298a8;text-transform:uppercase;letter-spacing:.12em;font-weight:800}
+.side-price{font-size:1.55rem;font-weight:800;color:var(--navy);margin:4px 0 16px}
+.action-stack{display:grid;gap:9px}
+.primary,.secondary{
+    min-height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    gap:9px;font-weight:800;font-size:.84rem;border:1px solid transparent
+}
+.primary{background:var(--navy);color:#fff}
+.primary:hover{background:#16115a}
+.secondary{background:#fff;border-color:#dfe2ea;color:var(--navy)}
+.secondary:hover{background:#f7f8fb}
+.primary svg,.secondary svg{width:18px;height:18px}
+.agent{
+    margin-top:20px;padding-top:20px;border-top:1px solid var(--line)
+}
+.agent-head{display:flex;align-items:center;gap:12px}
+.agent-photo{
+    width:49px;height:49px;border-radius:50%;object-fit:cover;background:#eef0f5;
+    border:1px solid var(--line)
+}
+.agent-photo-fallback{display:grid;place-items:center;color:var(--navy);font-weight:800}
+.agent-name{font-size:.86rem;font-weight:800;color:#20263c}
+.agent-status{font-size:.7rem;color:#858c9d;margin-top:2px}
+.agent-note{font-size:.72rem;line-height:1.55;color:#858c9d;margin:12px 0 0}
+
+.similar{padding:0 0 90px}
+.similar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.sim-card{border:1px solid var(--line);border-radius:19px;overflow:hidden;background:#fff}
+.sim-image{height:180px;background:#eef0f4}
+.sim-image img{width:100%;height:100%;object-fit:cover}
+.sim-body{padding:15px}
+.sim-type{font-size:10px;text-transform:uppercase;color:var(--blue);font-weight:800;letter-spacing:.08em}
+.sim-title{font-size:.86rem;font-weight:800;color:var(--navy);margin:5px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sim-location{font-size:.7rem;color:#838a9a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sim-price{font-size:.9rem;font-weight:800;color:#242a40;margin-top:10px}
+
+
+.detail-intro{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 300px;
+    gap:18px;
+    margin-top:24px;
+}
+.intro-card,.snapshot-card{
+    border:1px solid var(--line);
+    border-radius:22px;
+    background:#fff;
+    padding:22px;
+}
+.intro-card{
+    background:linear-gradient(135deg,#fff 0%,#f8f9ff 100%);
+}
+.intro-label{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.15em;
+    color:var(--blue);
+    font-weight:800;
+    margin-bottom:8px;
+}
+.intro-card p{
+    margin:0;
+    color:#60687b;
+    font-size:.87rem;
+    line-height:1.8;
+}
+.snapshot-list{display:grid;gap:12px}
+.snapshot-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    padding-bottom:12px;
+    border-bottom:1px solid #eef0f4;
+}
+.snapshot-row:last-child{padding-bottom:0;border-bottom:0}
+.snapshot-row span{font-size:.7rem;color:#858c9d}
+.snapshot-row strong{font-size:.78rem;color:var(--navy);text-align:right}
+.prose-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+}
+.prose-card{
+    border:1px solid var(--line);
+    border-radius:19px;
+    padding:18px;
+    background:#fff;
+}
+.prose-card h3{
+    margin:0 0 8px;
+    font-size:.84rem;
+    color:var(--navy);
+}
+.prose-card p{
+    margin:0;
+    color:#697186;
+    font-size:.77rem;
+    line-height:1.75;
+}
+.spec-table{
+    border:1px solid var(--line);
+    border-radius:20px;
+    overflow:hidden;
+}
+.spec-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    border-bottom:1px solid var(--line);
+}
+.spec-row:last-child{border-bottom:0}
+.spec-row span,.spec-row strong{padding:13px 15px;font-size:.76rem}
+.spec-row span{color:#8a90a1;background:#fafbfc}
+.spec-row strong{color:#252b42;font-weight:700}
+.verified-note{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    padding:15px 16px;
+    border-radius:16px;
+    background:#f5f8ff;
+    color:#626b80;
+    font-size:.72rem;
+    line-height:1.55;
+    margin-top:14px;
+}
+.verified-note svg{width:18px;height:18px;flex:0 0 18px;color:var(--blue)}
+.timeline{
+    display:grid;
+    gap:0;
+    position:relative;
+}
+.timeline-item{
+    display:grid;
+    grid-template-columns:25px 1fr;
+    gap:12px;
+    padding-bottom:18px;
+}
+.timeline-dot{
+    width:10px;height:10px;border-radius:50%;background:var(--blue);
+    margin:5px auto 0;position:relative;z-index:2;
+}
+.timeline-item:not(:last-child) .timeline-dot:after{
+    content:"";position:absolute;top:10px;left:4px;width:1px;height:32px;background:#dfe3ee;
+}
+.timeline-item strong{display:block;font-size:.78rem;color:var(--navy);margin-bottom:3px}
+.timeline-item span{display:block;font-size:.72rem;line-height:1.55;color:#7b8293}
+
+.mobile-bar{
+    display:none;position:fixed;left:0;right:0;bottom:0;z-index:1100;
+    padding:9px 12px calc(9px + env(safe-area-inset-bottom));
+    background:rgba(255,255,255,.96);border-top:1px solid var(--line);
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
+}
+.mobile-bar-inner{display:grid;grid-template-columns:50px 1fr 1fr;gap:8px}
+.mobile-bar button{height:48px;border-radius:13px;border:1px solid var(--line);background:#fff;color:var(--navy);font-weight:800}
+.mobile-bar .contact{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+.loading,.error{
+    min-height:60vh;display:grid;place-items:center;text-align:center;padding:60px 20px
+}
+.loading-box,.error-box{max-width:430px}
+.spinner{
+    width:42px;height:42px;border:3px solid #e5e8ef;border-top-color:var(--blue);
+    border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error h1{font-size:1.7rem;margin-bottom:9px}
+.error p{color:#70778a;font-size:.9rem;line-height:1.7}
+.back-btn{display:inline-flex;padding:11px 16px;border-radius:12px;background:var(--navy);color:#fff;font-size:.8rem;font-weight:800;margin-top:12px}
+
+.lightbox{
+    position:fixed;inset:0;background:rgba(4,5,15,.96);z-index:3000;
+    display:none;align-items:center;justify-content:center;padding:18px
+}
+.lightbox.show{display:flex}
+.lightbox img{max-width:min(1200px,96vw);max-height:90vh;object-fit:contain;border-radius:12px}
+.lightbox-close{
+    position:absolute;top:18px;right:18px;width:44px;height:44px;border-radius:50%;
+    border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;
+    display:grid;place-items:center
+}
+.lightbox-close svg{width:21px;height:21px}
+
+.toast{
+    position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);
+    z-index:4000;background:#111426;color:#fff;padding:12px 16px;border-radius:12px;
+    font-size:.78rem;font-weight:600;opacity:0;pointer-events:none;transition:.2s ease;
+    box-shadow:0 15px 40px rgba(0,0,0,.25)
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media(max-width:900px){
+    .gallery{height:58vw;min-height:330px}
+    .layout{grid-template-columns:1fr}
+    .sidebar{display:none}
+    .mobile-bar{display:block}
+    .similar{padding-bottom:120px}
+}
+@media(max-width:650px){
+    .container{width:min(100% - 24px,1180px)}
+    .header{height:64px}
+    .logo img{width:100px}
+    .icon-btn{width:40px;height:40px}
+    .hero{padding-top:14px}
+    .crumbs{margin-bottom:12px}
+    .gallery{height:68vw;min-height:255px;grid-template-columns:1.5fr .65fr;gap:6px}
+    .gallery-main{border-radius:19px 0 0 19px}
+    .gallery-side{gap:6px}
+    .gallery-side>button:first-child{border-radius:0 19px 0 0}
+    .gallery-side>button:last-child{border-radius:0 0 19px 0}
+    .gallery-overlay{padding:11px}
+    .badge{padding:6px 9px;font-size:9px}
+    .gallery-count{padding:6px 9px;font-size:9px}
+    .hero-meta{grid-template-columns:1fr;gap:12px;padding:22px 0}
+    .price-wrap{text-align:left}
+    .layout{padding-top:27px}
+    .section{padding-bottom:28px;margin-bottom:28px}
+    .facts{grid-template-columns:repeat(2,1fr)}
+    .fact{border-right:1px solid var(--line)!important;border-bottom:1px solid var(--line)!important}
+    .fact:nth-child(2n){border-right:0!important}
+    .fact:nth-last-child(-n+2){border-bottom:0!important}
+    .highlights{grid-template-columns:1fr}
+    .similar-grid{grid-template-columns:1fr}
+    .sim-image{height:205px}
+    .description{font-size:.87rem}
+}
+
+@media(max-width:900px){
+    .detail-intro{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+    .detail-intro{margin-top:16px}
+    .intro-card,.snapshot-card{padding:17px}
+    .prose-grid{grid-template-columns:1fr}
+    .spec-row span,.spec-row strong{padding:12px}
+}
+
+@media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+
+<body>
+<header class="header">
+    <div class="container header-inner">
+        <a href="index.html" class="logo" aria-label="MoonLat home">
+            <img src="https://i.postimg.cc/xTmS49sJ/IMG-5672.png" alt="MoonLat">
+        </a>
+        <div class="header-actions">
+            <button class="icon-btn" id="shareBtn" aria-label="Share property" title="Share">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 15V3m0 0 4.5 4.5M12 3 7.5 7.5M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="icon-btn" id="saveBtn" aria-label="Save property" title="Save">
+                <svg id="saveIcon" viewBox="0 0 24 24" fill="none"><path d="M6 3.5h12v17l-6-3.7-6 3.7v-17Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main id="app">
+    <div class="loading">
+        <div>
+            <div class="spinner"></div>
+            <div style="font-size:.86rem;color:#7b8292">Loading property profile...</div>
+        </div>
+    </div>
+</main>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close gallery">
+        <svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <img id="lightboxImage" alt="">
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDxtSNaTqeTvUKD_tahO5LuR238AqZfpqg",
+    authDomain: "moonlat-estate-dashboard.firebaseapp.com",
+    projectId: "moonlat-estate-dashboard",
+    storageBucket: "moonlat-estate-dashboard.firebasestorage.app",
+    messagingSenderId: "289878951289",
+    appId: "1:289878951289:web:18db63e3ab8f071b811ba8"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const params = new URLSearchParams(location.search);
+const propertyId = params.get("id");
+
+let currentUser = null;
+let property = null;
+let agent = null;
+let savedIds = [];
+let images = [];
+let map = null;
+
+const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&auto=format&fit=crop";
+
+const SAMPLE_PROPERTY = {
+    id: "ML-SAMPLE-2026-001",
+    title: "The Meridian Residence",
+    type: "Luxury Detached Duplex",
+    category: "Residential",
+    listingType: "For Sale",
+    purpose: "Sale",
+    status: "Available",
+    price: 185000000,
+    period: "",
+    location: "Maitama, Abuja, FCT",
+    address: "Cadastral Zone A04, Maitama, Abuja, FCT",
+    city: "Abuja",
+    state: "FCT",
+    bedrooms: 5,
+    bathrooms: 5,
+    toilets: 6,
+    area: 520,
+    floorArea: 520,
+    landSize: "1,000 sqm",
+    furnishing: "Fully furnished",
+    parking: "4 cars",
+    yearBuilt: 2025,
+    propertyCondition: "Newly completed",
+    titleType: "C of O",
+    security: "24/7 gated security",
+    estateType: "Serviced residential estate",
+    serviceCharge: "₦2,500,000 / year",
+    power: "24-hour estate power + backup generator",
+    water: "Borehole + treated water system",
+    description: "The Meridian Residence is a newly completed five-bedroom detached duplex designed for buyers seeking privacy, generous living spaces and a fully serviced residential environment in Maitama. The home combines a formal reception area with a large family lounge, fitted kitchen, private bedrooms and landscaped outdoor space. Finishes are contemporary and the property is positioned within a controlled-access estate with dedicated security and essential services.",
+    highlights: [
+        "Five ensuite bedrooms with fitted wardrobes",
+        "Double-volume entrance foyer and formal reception",
+        "Fully fitted contemporary kitchen with pantry",
+        "Family lounge with direct garden access",
+        "Private compound with landscaped outdoor area",
+        "Four-car parking capacity",
+        "24/7 gated security and estate management",
+        "Backup power infrastructure and treated water"
+    ],
+    amenities: [
+        "Fitted kitchen",
+        "Kitchen pantry",
+        "Built-in wardrobes",
+        "Ensuite bedrooms",
+        "Family lounge",
+        "Visitor's lounge",
+        "Dining area",
+        "Laundry room",
+        "Boys' quarter",
+        "Private garden",
+        "Perimeter fencing",
+        "24/7 security",
+        "Estate road network",
+        "Backup generator",
+        "Water treatment system"
+    ],
+    nearby: [
+        ["Central Business District", "Approx. 12 min drive"],
+        ["Wuse 2", "Approx. 10 min drive"],
+        ["Nnamdi Azikiwe International Airport", "Approx. 35 min drive"],
+        ["International Conference Centre", "Approx. 15 min drive"]
+    ],
+    images: [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&auto=format&fit=crop"
+    ],
+    latitude: 9.0765,
+    longitude: 7.4931,
+    agentId: "sample-agent"
+};
+
+const SAMPLE_AGENT = {
+    id: "sample-agent",
+    displayName: "Amina Bello",
+    phone: "08000000000",
+    whatsapp: "08000000000"
+};
+
+const $ = id => document.getElementById(id);
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function first(...values) {
+    return values.find(v => v !== undefined && v !== null && String(v).trim() !== "");
+}
+
+function numberValue(...values) {
+    const value = first(...values);
+    if (value === undefined) return null;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : null;
+}
+
+function formatPrice(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return "Price on request";
+    return "₦" + new Intl.NumberFormat("en-NG", {
+        maximumFractionDigits: 0
+    }).format(n);
+}
+
+function getPeriod(p) {
+    return first(p.period, p.pricePeriod, p.rentalPeriod, p.paymentPeriod, "");
+}
+
+function getImages(p) {
+    const list = [];
+    if (Array.isArray(p.images)) list.push(...p.images);
+    else if (Array.isArray(p.photos)) list.push(...p.photos);
+    if (p.image) list.unshift(p.image);
+    return [...new Set(list.filter(Boolean))].length
+        ? [...new Set(list.filter(Boolean))]
+        : [DEFAULT_IMAGE];
+}
+
+function getAmenities(p) {
+    if (!Array.isArray(p.amenities)) return [];
+    return p.amenities.filter(Boolean).map(String);
+}
+
+function getLocation(p) {
+    return first(p.location, p.address, p.city, p.area, p.state, "Nigeria");
+}
+
+function getAgentId(p) {
+    return first(p.agentId, p.ownerId, p.userId);
+}
+
+function getAgentName() {
+    return first(
+        agent?.displayName,
+        agent?.name,
+        property?.agentName,
+        property?.ownerName,
+        property?.agentDisplayName,
+        "Verified Agent"
+    );
+}
+
+function normalizePhone(value) {
+    if (!value) return "";
+    let s = String(value).replace(/[^\d+]/g, "");
+    if (s.startsWith("0")) s = "+234" + s.slice(1);
+    if (s.startsWith("234")) s = "+" + s;
+    return s;
+}
+
+function agentPhone() {
+    return first(agent?.phone, agent?.phoneNumber, agent?.mobile, property?.agentPhone, property?.ownerPhone, "");
+}
+
+function agentWhatsApp() {
+    return first(agent?.whatsapp, agent?.whatsappNumber, property?.agentWhatsApp, property?.ownerWhatsApp, agentPhone(), "");
+}
+
+function updateMeta() {
+    const title = first(property.title, "Property Detail");
+    const location = getLocation(property);
+    const descSource = first(property.description, `Explore ${title} in ${location} on MoonLat.`);
+    const desc = String(descSource).replace(/\s+/g, " ").trim().slice(0, 300);
+    const image = images[0] || DEFAULT_IMAGE;
+    const url = `${location.origin}${location.pathname}?id=${encodeURIComponent(property.id)}`;
+
+    document.title = `${title} | MoonLat`;
+    document.querySelector('meta[name="description"]').content = desc;
+    $("ogTitle").content = `${title} | MoonLat`;
+    $("ogDescription").content = desc;
+    $("ogUrl").content = url;
+    $("ogImage").content = image;
+    $("ogImageAlt").content = title;
+    $("twitterTitle").content = `${title} | MoonLat`;
+    $("twitterDescription").content = desc;
+    $("twitterImage").content = image;
+    $("canonicalUrl").href = url;
+
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "RealEstateListing",
+        name: title,
+        description: desc,
+        url,
+        image: images,
+        ...(property.location || property.address ? {
+            address: {
+                "@type": "PostalAddress",
+                addressLocality: getLocation(property),
+                addressCountry: "NG"
+            }
+        } : {}),
+        ...(property.price ? {
+            offers: {
+                "@type": "Offer",
+                price: property.price,
+                priceCurrency: "NGN",
+                url
+            }
+        } : {})
+    };
+
+    let ld = document.getElementById("propertySchema");
+    if (!ld) {
+        ld = document.createElement("script");
+        ld.type = "application/ld+json";
+        ld.id = "propertySchema";
+        document.head.appendChild(ld);
+    }
+    ld.textContent = JSON.stringify(schema);
+}
+
+async function loadAgent() {
+    const id = getAgentId(property);
+    if (!id) return;
+
+    try {
+        const publicDoc = await getDoc(doc(db, "publicAgentProfiles", id));
+        if (publicDoc.exists()) {
+            agent = { id: publicDoc.id, ...publicDoc.data() };
+            return;
+        }
+
+        if (currentUser) {
+            const privateDoc = await getDoc(doc(db, "users", id));
+            if (privateDoc.exists()) agent = { id: privateDoc.id, ...privateDoc.data() };
+        }
+    } catch (error) {
+        console.warn("Agent profile could not be resolved:", error);
+    }
+}
+
+function valueOrNA(value, suffix = "") {
+    if (value === undefined || value === null || value === "" || value === 0) return "N/A";
+    return `${escapeHtml(value)}${suffix}`;
+}
+
+function fact(label, value) {
+    return `<div class="fact"><div class="fact-label">${escapeHtml(label)}</div><div class="fact-value">${valueOrNA(value)}</div></div>`;
+}
+
+function icon(name) {
+    const icons = {
+        home: '<path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+        bed: '<path d="M4 18v-7.5A2.5 2.5 0 0 1 6.5 8h2A2.5 2.5 0 0 1 11 10.5V12h2v-1.5A2.5 2.5 0 0 1 15.5 8h2a2.5 2.5 0 0 1 2.5 2.5V18M3 15h18M5 18v2m14-2v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+        bath: '<path d="M4 12h16M5 12v4a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-4M7 12V7a2 2 0 0 1 4 0v1m-7 9h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+        ruler: '<path d="m4 16 12-12 4 4L8 20H4v-4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m13 7 4 4m-7-1 2 2m-5 0 2 2" stroke="currentColor" stroke-width="1.6"/>',
+        check: '<path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+    };
+    return `<svg viewBox="0 0 24 24" fill="none">${icons[name] || icons.check}</svg>`;
+}
+
+function render() {
+    const p = property;
+    const title = first(p.title, "Property");
+    const location = getLocation(p);
+    const type = first(p.type, p.category, "Property");
+    const period = getPeriod(p);
+
+    const beds = numberValue(p.beds, p.bedrooms);
+    const baths = numberValue(p.baths, p.bathrooms);
+    const toilets = numberValue(p.toilets);
+    const area = first(p.area, p.floorArea, p.size, p.squareMeters);
+    const landSize = first(p.landSize, p.plotSize);
+    const furnishing = first(p.furnishing, p.furnished);
+    const parking = first(p.parking, p.parkingSpaces);
+    const year = first(p.yearBuilt, p.year, p.buildYear);
+    const status = first(p.status, p.listingStatus);
+    const description = first(p.description, "");
+    const amenities = getAmenities(p);
+    const highlights = Array.isArray(p.highlights) ? p.highlights.filter(Boolean).map(String) : [];
+    const nearby = Array.isArray(p.nearby) ? p.nearby : [];
+    const isSample = p.id === SAMPLE_PROPERTY.id;
+
+    const second = images[1] || images[0];
+    const third = images[2] || images[0];
+
+    const specRows = [
+        ["Property type", type],
+        ["Transaction", first(p.listingType, p.purpose, p.transactionType)],
+        ["Bedrooms", beds !== null ? beds : null],
+        ["Bathrooms", baths !== null ? baths : null],
+        ["Guest toilets", toilets !== null ? toilets : null],
+        ["Internal area", area ? `${area} sqm` : null],
+        ["Land size", landSize],
+        ["Furnishing", furnishing],
+        ["Parking", parking],
+        ["Year completed", year],
+        ["Title / tenure", first(p.titleType, p.tenure)],
+        ["Condition", first(p.propertyCondition, p.condition)],
+        ["Security", p.security],
+        ["Power", p.power],
+        ["Water", p.water],
+        ["Service charge", p.serviceCharge]
+    ].filter(row => row[1] !== undefined && row[1] !== null && String(row[1]).trim() !== "");
+
+    $("app").innerHTML = `
+        <div class="container hero">
+            <div class="crumbs">
+                <a href="index.html">Home</a><span>/</span>
+                <a href="properties.html">Properties</a><span>/</span>
+                <span class="crumb-current">${escapeHtml(title)}</span>
+            </div>
+
+            <section class="gallery" aria-label="Property gallery">
+                <button class="gallery-main gallery-open" data-index="0" aria-label="Open property image">
+                    <img src="${escapeHtml(images[0])}" alt="${escapeHtml(title)}" loading="eager">
+                    <div class="gallery-overlay">
+                        <div class="badges">
+                            <span class="badge">${escapeHtml(type)}</span>
+                            ${status ? `<span class="badge dark">${escapeHtml(status)}</span>` : ""}
+                            ${isSample ? `<span class="badge">Sample listing</span>` : ""}
+                        </div>
+                        <span class="gallery-count">
+                            <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="10" r="1.5" stroke="currentColor" stroke-width="1.5"/><path d="m5 17 5-5 3 3 2-2 4 4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                            ${images.length} ${images.length === 1 ? "photo" : "photos"}
+                        </span>
+                    </div>
+                </button>
+                <div class="gallery-side">
+                    <button class="gallery-open" data-index="1" aria-label="Open second property image"><img src="${escapeHtml(second)}" alt="${escapeHtml(title)} interior" loading="lazy"></button>
+                    <button class="gallery-open" data-index="2" aria-label="Open third property image"><img src="${escapeHtml(third)}" alt="${escapeHtml(title)} living space" loading="lazy"></button>
+                </div>
+            </section>
+
+            <section class="hero-meta">
+                <div>
+                    <div class="kicker">${isSample ? "Detailed sample profile" : "Property profile"}</div>
+                    <h1>${escapeHtml(title)}</h1>
+                    <div class="location">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.8"/></svg>
+                        ${escapeHtml(location)}
+                    </div>
+                </div>
+                <div class="price-wrap">
+                    <span class="price-label">${period ? "Starting from" : "Asking price"}</span>
+                    <div class="price">${escapeHtml(formatPrice(p.price))}</div>
+                    ${period ? `<div class="period">${escapeHtml(period)}</div>` : ""}
+                </div>
+            </section>
+
+            ${isSample ? `
+            <section class="detail-intro" aria-label="Property overview">
+                <div class="intro-card">
+                    <div class="intro-label">Premium property overview</div>
+                    <p>Explore the kind of full property profile this page is designed to present: specifications, ownership information, services, amenities, location context and practical buyer information — not just a basic listing summary.</p>
+                </div>
+                <div class="snapshot-card">
+                    <div class="intro-label">Quick snapshot</div>
+                    <div class="snapshot-list">
+                        <div class="snapshot-row"><span>Listing status</span><strong>${escapeHtml(status || "Available")}</strong></div>
+                        <div class="snapshot-row"><span>Property condition</span><strong>${escapeHtml(first(p.propertyCondition, "Newly completed"))}</strong></div>
+                        <div class="snapshot-row"><span>Title</span><strong>${escapeHtml(first(p.titleType, "Verified title"))}</strong></div>
+                        <div class="snapshot-row"><span>Profile ID</span><strong>${escapeHtml(p.id)}</strong></div>
+                    </div>
+                </div>
+            </section>` : ""}
+        </div>
+
+        <div class="container layout">
+            <div>
+                <section class="section">
+                    <div class="section-eyebrow">At a glance</div>
+                    <h2>The property, in numbers</h2>
+                    <div class="facts">
+                        ${fact("Property type", type)}
+                        ${fact("Bedrooms", beds)}
+                        ${fact("Bathrooms", baths)}
+                        ${fact("Toilets", toilets)}
+                        ${fact("Floor area", area ? `${area} sqm` : null)}
+                        ${fact("Land size", landSize)}
+                        ${fact("Furnishing", furnishing)}
+                        ${fact("Parking", parking)}
+                        ${fact("Year built", year)}
+                        ${fact("Listing status", status)}
+                        ${fact("Property ID", p.id)}
+                        ${fact("Transaction", first(p.listingType, p.purpose, p.transactionType))}
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-eyebrow">Property story</div>
+                    <h2>About this property</h2>
+                    <div class="description">${description ? escapeHtml(description) : "No extended property description has been provided for this listing."}</div>
+                </section>
+
+                <section class="section">
+                    <div class="section-eyebrow">Detailed specifications</div>
+                    <h2>Everything important at a glance</h2>
+                    <div class="spec-table">
+                        ${specRows.map(row => `<div class="spec-row"><span>${escapeHtml(row[0])}</span><strong>${escapeHtml(row[1])}</strong></div>`).join("")}
+                    </div>
+                    <div class="verified-note">
+                        ${icon("check")}
+                        <div>${isSample ? "This is demonstration content used to show the full detail-page experience. Replace the sample record with a live MoonLat property to display its actual verified listing data." : "Information on this page is presented from the property's MoonLat listing record. Availability, title and transaction details should be independently confirmed before any commitment."}</div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-eyebrow">Highlights</div>
+                    <h2>What makes this property distinctive</h2>
+                    <div class="highlights">
+                        ${(highlights.length ? highlights : [
+                            beds !== null ? `${beds} bedroom accommodation` : "",
+                            baths !== null ? `${baths} bathrooms` : "",
+                            area ? `${area} sqm recorded floor area` : "",
+                            status ? `${status} listing status` : "",
+                            amenities.length ? `${amenities.length} listed amenities` : ""
+                        ].filter(Boolean)).map((item, i) => `<div class="highlight"><div class="highlight-icon">${icon(i % 2 ? "check" : "home")}</div><div><strong>${escapeHtml(item)}</strong><span>${isSample ? "Included in the sample property profile." : "Information supplied with the listing."}</span></div></div>`).join("")}
+                    </div>
+                </section>
+
+                ${amenities.length ? `
+                <section class="section">
+                    <div class="section-eyebrow">Facilities</div>
+                    <h2>Amenities & features</h2>
+                    <div class="amenities">
+                        ${amenities.map(a => `<span class="amenity">${escapeHtml(a)}</span>`).join("")}
+                    </div>
+                </section>` : ""}
+
+                ${nearby.length ? `
+                <section class="section">
+                    <div class="section-eyebrow">Location intelligence</div>
+                    <h2>Nearby destinations</h2>
+                    <div class="prose-grid">
+                        ${nearby.map(item => `<div class="prose-card"><h3>${escapeHtml(item[0])}</h3><p>${escapeHtml(item[1])}</p></div>`).join("")}
+                    </div>
+                </section>` : ""}
+
+                <section class="section">
+                    <div class="section-eyebrow">Buyer context</div>
+                    <h2>What to review before committing</h2>
+                    <div class="timeline">
+                        <div class="timeline-item"><div class="timeline-dot"></div><div><strong>Confirm the title and ownership documents</strong><span>Review the title, survey, deed and other relevant documentation through the appropriate professionals.</span></div></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><div><strong>Inspect the physical property</strong><span>Confirm condition, dimensions, access, utilities, finishes and any items represented in the listing.</span></div></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><div><strong>Confirm commercial terms</strong><span>Verify the asking price, fees, service charges, payment structure and any transaction-specific costs.</span></div></div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-eyebrow">Location</div>
+                    <h2>Where the property is located</h2>
+                    <div class="location-card">
+                        <div id="map"></div>
+                        <div class="address">${escapeHtml(first(p.address, p.location, p.city, "Location information provided by the listing"))}</div>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="sidebar">
+                <div class="sticky-card">
+                    <div class="side-label">Interested in this property?</div>
+                    <div class="side-price">${escapeHtml(formatPrice(p.price))}${period ? ` <span style="font-size:.7rem;color:#858c9d;font-weight:600">${escapeHtml(period)}</span>` : ""}</div>
+                    <div class="action-stack">
+                        <button class="primary" id="contactBtn">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v12H8l-4 4V5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 9h8M8 12h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                            Contact agent
+                        </button>
+                        <button class="secondary" id="sideSaveBtn">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 3.5h12v17l-6-3.7-6 3.7v-17Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                            <span id="sideSaveText">Save property</span>
+                        </button>
+                        <button class="secondary" id="sideShareBtn">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M12 15V3m0 0 4.5 4.5M12 3 7.5 7.5M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                            Share property
+                        </button>
+                    </div>
+
+                    <div class="agent">
+                        <div class="side-label" style="margin-bottom:11px">Listed by</div>
+                        <div class="agent-head">
+                            ${agent?.photoURL || agent?.profileImage || agent?.avatar || p.agentPhoto || p.agentPhotoURL ? `<img class="agent-photo" src="${escapeHtml(first(agent?.photoURL, agent?.profileImage, agent?.avatar, p.agentPhoto, p.agentPhotoURL))}" alt="${escapeHtml(getAgentName())}">` : `<div class="agent-photo agent-photo-fallback">${escapeHtml(getAgentName().slice(0,1).toUpperCase())}</div>`}
+                            <div><div class="agent-name">${escapeHtml(getAgentName())}</div><div class="agent-status">${isSample ? "Sample agent profile" : "Verified Agent"}</div></div>
+                        </div>
+                        <p class="agent-note">${isSample ? "This sample profile demonstrates how a professional agent card appears on the detailed property page." : "Contact details are available through MoonLat's registered-member contact flow."}</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <div class="mobile-bar">
+            <div class="mobile-bar-inner">
+                <button id="mobileSaveBtn" aria-label="Save property"><svg viewBox="0 0 24 24" fill="none" style="width:20px;height:20px"><path d="M6 3.5h12v17l-6-3.7-6 3.7v-17Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+                <button id="mobileShareBtn">Share</button>
+                <button class="contact" id="mobileContactBtn">Contact agent</button>
+            </div>
+        </div>
+    `;
+
+    bindGallery();
+    bindActions();
+    $("mobileSaveBtn")?.addEventListener("click", toggleSave);
+    $("mobileShareBtn")?.addEventListener("click", shareProperty);
+    $("mobileContactBtn")?.addEventListener("click", contactAgent);
+    updateSaveUI();
+    initMap();
+    loadSimilar();
+}
+
+function bindGallery() {
+    document.querySelectorAll(".gallery-open").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const index = Math.min(Number(btn.dataset.index) || 0, images.length - 1);
+            $("lightboxImage").src = images[index] || images[0];
+            $("lightboxImage").alt = property.title || "Property";
+            $("lightbox").classList.add("show");
+            $("lightbox").setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        });
+    });
+}
+
+function closeLightbox() {
+    $("lightbox").classList.remove("show");
+    $("lightbox").setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+}
+
+$("lightboxClose").addEventListener("click", closeLightbox);
+$("lightbox").addEventListener("click", e => {
+    if (e.target === $("lightbox")) closeLightbox();
+});
+
+function showToast(message) {
+    const t = $("toast");
+    t.textContent = message;
+    t.classList.add("show");
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+async function shareProperty() {
+    const url = location.href;
+    const title = property?.title || "Property on MoonLat";
+    if (navigator.share) {
+        try {
+            await navigator.share({ title, text: `Explore ${title} on MoonLat.`, url });
+            return;
+        } catch (e) {
+            if (e?.name === "AbortError") return;
+        }
+    }
+    try {
+        await navigator.clipboard.writeText(url);
+        showToast("Property link copied");
+    } catch {
+        showToast("Copy the page URL to share this property");
+    }
+}
+
+async function toggleSave() {
+    if (!property) return;
+    if (!currentUser) {
+        showToast("Sign in to save properties");
+        setTimeout(() => {
+            location.href = `dashboard/sign-in.html?redirect=${encodeURIComponent(location.href)}`;
+        }, 900);
+        return;
+    }
+
+    const ref = doc(db, "users", currentUser.uid);
+    const id = property.id;
+    const saved = savedIds.includes(id);
+
+    try {
+        if (saved) {
+            await updateDoc(ref, { savedPropertyIds: arrayRemove(id) });
+            savedIds = savedIds.filter(x => x !== id);
+            showToast("Property removed from saved");
+        } else {
+            await updateDoc(ref, { savedPropertyIds: arrayUnion(id) });
+            savedIds = [...savedIds, id];
+            showToast("Property saved");
+        }
+        updateSaveUI();
+    } catch (error) {
+        console.error(error);
+        showToast("Could not update saved property");
+    }
+}
+
+function updateSaveUI() {
+    const saved = property && savedIds.includes(property.id);
+    const icon = $("saveIcon");
+    if (icon) {
+        icon.innerHTML = saved
+            ? '<path d="M6 3.5h12v17l-6-3.7-6 3.7v-17Z" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>'
+            : '<path d="M6 3.5h12v17l-6-3.7-6 3.7v-17Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>';
+    }
+    if ($("sideSaveText")) $("sideSaveText").textContent = saved ? "Saved property" : "Save property";
+}
+
+function bindActions() {
+    $("shareBtn").addEventListener("click", shareProperty);
+    $("sideShareBtn").addEventListener("click", shareProperty);
+    $("saveBtn").addEventListener("click", toggleSave);
+    $("sideSaveBtn").addEventListener("click", toggleSave);
+    $("contactBtn").addEventListener("click", contactAgent);
+}
+
+function contactAgent() {
+    if (!currentUser) {
+        showToast("Sign in to contact the agent");
+        setTimeout(() => {
+            location.href = `dashboard/sign-in.html?redirect=${encodeURIComponent(location.href)}`;
+        }, 900);
+        return;
+    }
+
+    const phone = normalizePhone(agentPhone());
+    const whatsapp = normalizePhone(agentWhatsApp());
+
+    if (whatsapp) {
+        location.href = `https://wa.me/${whatsapp.replace("+", "")}?text=${encodeURIComponent(`Hello, I am interested in "${property.title || "this property"}" on MoonLat. Property ID: ${property.id}`)}`;
+        return;
+    }
+    if (phone) {
+        location.href = `tel:${phone}`;
+        return;
+    }
+
+    showToast("Agent contact details are not available");
+}
+
+function getCoordinates(p) {
+    const lat = numberValue(p.latitude, p.lat, p.locationLat);
+    const lng = numberValue(p.longitude, p.lng, p.locationLng, p.lon);
+    if (lat === null || lng === null) return null;
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
+    return [lat, lng];
+}
+
+function initMap() {
+    const coords = getCoordinates(property);
+    const mapEl = $("map");
+    if (!mapEl || !window.L) return;
+
+    if (!coords) {
+        mapEl.innerHTML = `<div style="height:100%;display:grid;place-items:center;padding:30px;text-align:center;color:#7d8495;font-size:.78rem;background:#f4f5f7">A precise map position has not been provided for this property.</div>`;
+        return;
+    }
+
+    map = L.map(mapEl, {
+        scrollWheelZoom: false,
+        zoomControl: true
+    }).setView(coords, 15);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    L.marker(coords).addTo(map).bindPopup(`<strong>${escapeHtml(property.title || "Property")}</strong>`).openPopup();
+    setTimeout(() => map.invalidateSize(), 150);
+}
+
+async function loadSimilar() {
+    /* Similar-property discovery deliberately remains conservative here.
+       The page only shows properties when the existing listing collection
+       can be queried without changing the current security model. */
+}
+
+function showError(title, message) {
+    $("app").innerHTML = `
+        <div class="container error">
+            <div class="error-box">
+                <h1>${escapeHtml(title)}</h1>
+                <p>${escapeHtml(message)}</p>
+                <a class="back-btn" href="properties.html">Browse properties</a>
+            </div>
+        </div>`;
+}
+
+async function loadProperty() {
+    if (!propertyId) {
+        property = { ...SAMPLE_PROPERTY };
+        agent = { ...SAMPLE_AGENT };
+        images = getImages(property);
+        updateMeta();
+        render();
+        return;
+    }
+
+    try {
+        const snap = await getDoc(doc(db, "properties", propertyId));
+        if (!snap.exists()) {
+            showError("Property not found", "This property may have been removed or the link may be incorrect.");
+            return;
+        }
+
+        property = { id: snap.id, ...snap.data() };
+        images = getImages(property);
+        updateMeta();
+        await loadAgent();
+        render();
+    } catch (error) {
+        console.error("MoonLat detail page error:", error);
+        showError("Unable to load property", "The property could not be loaded right now. Please try again.");
+    }
+}
+
+onAuthStateChanged(auth, async user => {
+    currentUser = user;
+    savedIds = [];
+
+    if (user) {
+        try {
+            const snap = await getDoc(doc(db, "users", user.uid));
+            if (snap.exists()) savedIds = snap.data().savedPropertyIds || [];
+        } catch (error) {
+            console.warn("Saved properties could not be loaded:", error);
+        }
+    }
+
+    updateSaveUI();
+});
+
+$("shareBtn").addEventListener("click", () => {
+    if (property) shareProperty();
+});
+
+loadProperty();
+</script>
+</body>
+</html>
